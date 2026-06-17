@@ -26,8 +26,8 @@ export default function TrailerViewer() {
         ))}
       </div>
 
-      {/* View controls — pinned to bottom */}
-      <div className="flex items-center justify-center mb-2 gap-3 py-5">
+      {/* View controls — centred in viewer area (excludes right panel) */}
+      <div className="flex items-center justify-center mb-2 gap-3 py-5 pr-[360px] md:pr-[440px] lg:pr-[500px] xl:pr-[551px]">
         <button
           aria-label="360 View"
           className="w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors"

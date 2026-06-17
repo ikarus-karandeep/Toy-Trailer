@@ -34,8 +34,8 @@ export default function Configurator() {
           <img src="/Logo Up.png" className="w-30 h-20" />
         </div>
 
-        {/* View toggle — top center */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10">
+        {/* View toggle — centered in viewer area (excludes right panel) */}
+        <div className="absolute top-6 left-0 right-[360px] md:right-[440px] lg:right-[500px] xl:right-[551px] flex justify-center z-10">
           <ViewToggle />
         </div>
 
