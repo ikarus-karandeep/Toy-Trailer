@@ -4,9 +4,11 @@ import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import AlertMessage from '../../components/AlertMessage'
 
-export default function AddOnsPanel() {
+export default function AddOnsPanel({ activeSectionTitle }) {
   const { waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning } =
     useConfigurator()
+
+  const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
   const handleBathroom = (id) => {
     setBathroom(bathroom === id ? null : id)
@@ -14,57 +16,63 @@ export default function AddOnsPanel() {
 
   return (
     <>
-      <OptionSection title="WATER PACKAGE & SINK">
-        <div className="flex flex-col gap-2">
-          {WATER_OPTIONS.map((opt) => (
-            <OptionPill
-              key={opt.id}
-              label={opt.label}
-              price={opt.price}
-              isMulti
-              isSelected={waterPackage === opt.id}
-              onClick={() => setWaterPackage(waterPackage === opt.id ? null : opt.id)}
-            />
-          ))}
-        </div>
-        <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
-      </OptionSection>
+      {show('WATER PACKAGE & SINK') && (
+        <OptionSection title="WATER PACKAGE & SINK">
+          <div className="flex flex-col gap-2">
+            {WATER_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price}
+                isMulti
+                isSelected={waterPackage === opt.id}
+                onClick={() => setWaterPackage(waterPackage === opt.id ? null : opt.id)}
+              />
+            ))}
+          </div>
+          <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
+        </OptionSection>
+      )}
 
-      <OptionSection title="BATHROOM PACKAGES">
-        <div className="flex flex-col gap-2">
-          {BATHROOM_OPTIONS.map((opt) => (
-            <OptionPill
-              key={opt.id}
-              label={opt.label}
-              price={opt.price}
-              isSelected={bathroom === opt.id}
-              onClick={() => handleBathroom(opt.id)}
-            />
-          ))}
-        </div>
-        <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
-      </OptionSection>
+      {show('BATHROOM PACKAGES') && (
+        <OptionSection title="BATHROOM PACKAGES">
+          <div className="flex flex-col gap-2">
+            {BATHROOM_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price}
+                isSelected={bathroom === opt.id}
+                onClick={() => handleBathroom(opt.id)}
+              />
+            ))}
+          </div>
+          <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
+        </OptionSection>
+      )}
 
-      <OptionSection title="AWNINGS">
-        <img
-          src="/Awnings.png"
-          alt="Awning preview"
-          className="w-full rounded-xl object-cover"
-          onError={(e) => { e.currentTarget.style.display = 'none' }}
-        />
-        <div className="flex flex-col gap-2 mt-2">
-          {AWNING_OPTIONS.map((opt) => (
-            <OptionPill
-              key={opt.id}
-              label={opt.label}
-              price={opt.price}
-              isMulti
-              isSelected={awning.includes(opt.id)}
-              onClick={() => toggleAwning(opt.id)}
-            />
-          ))}
-        </div>
-      </OptionSection>
+      {show('AWNINGS') && (
+        <OptionSection title="AWNINGS">
+          <img
+            src="/Awnings.png"
+            alt="Awning preview"
+            className="w-full rounded-xl object-cover"
+            onError={(e) => { e.currentTarget.style.display = 'none' }}
+          />
+          <div className="flex flex-col gap-2 mt-2">
+            {AWNING_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price}
+                isMulti
+                isSelected={awning.includes(opt.id)}
+                onClick={() => toggleAwning(opt.id)}
+              />
+            ))}
+          </div>
+        </OptionSection>
+      )}
     </>
   )
 }

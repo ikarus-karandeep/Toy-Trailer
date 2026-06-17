@@ -98,10 +98,10 @@ export default function SummaryPanel() {
   const items = getItems()
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-end">
+    <div className="fixed inset-0 z-50 flex items-center justify-center lg:items-end lg:justify-end">
       <div className="absolute inset-0 bg-black/60" onClick={() => setSummaryOpen(false)} />
       <div
-        className="relative bg-[#1a1a1a] w-[580px] max-h-[90vh] flex flex-col overflow-hidden mr-4 mb-4 rounded-2xl animate-slide-up"
+        className="relative bg-[#1a1a1a] w-[calc(100%-32px)] max-w-[580px] max-h-[90dvh] flex flex-col overflow-hidden lg:mr-4 lg:mb-4 rounded-2xl animate-slide-up"
         style={{
           border: '1px solid transparent',
           backgroundImage: 'linear-gradient(#1a1a1a, #1a1a1a), linear-gradient(135deg, #F05637 0%, #FFCDC0 50%, #F05637 100%)',

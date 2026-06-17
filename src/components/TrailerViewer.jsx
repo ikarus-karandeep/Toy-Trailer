@@ -2,7 +2,7 @@ const DOT_COUNT = 5
 
 export default function TrailerViewer() {
   return (
-    <div className="relative flex-1 flex flex-col min-h-0 pb-[72px]">
+    <div className="relative flex-1 flex flex-col min-h-0 pb-0 lg:pb-[72px]">
 
       {/* Trailer image — fills available space */}
       <div className="relative flex-1 flex items-center justify-center min-h-0 px-8 md:px-20">
@@ -26,8 +26,8 @@ export default function TrailerViewer() {
         ))}
       </div> */}
 
-      {/* View controls — centred in viewer area (excludes right panel) */}
-      <div className="flex items-center justify-center mb-2 gap-3 py-5 pr-[360px] md:pr-[440px] lg:pr-[500px] xl:pr-[551px]">
+      {/* View controls — centred in viewer area (excludes right panel), hidden on mobile/tablet */}
+      <div className="hidden lg:flex items-center justify-center mb-2 gap-3 py-5 lg:pr-[500px] xl:pr-[551px]">
         <button
           aria-label="360 View"
           className="w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors"
