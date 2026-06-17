@@ -1,11 +1,11 @@
 import { useConfigurator } from '../context/ConfiguratorContext'
 
 export default function PanelActions() {
-  const { totalPrice } = useConfigurator()
+  const { totalPrice, setSummaryOpen } = useConfigurator()
 
   return (
-    <div className="flex-shrink-0 w-[360px] md:w-[440px] lg:w-[500px] xl:w-[551px] flex items-center gap-3 h-[82px]">
-      <button className="flex-1 flex items-center justify-center gap-2 px-4 h-full rounded-lg hover:bg-[#2a2a2a] transition-colors"
+    <div className="flex-shrink-0 w-[360px] md:w-[440px] lg:w-[500px] xl:w-[551px] flex items-center gap-3 h-[82px] pr-4">
+      <button onClick={() => setSummaryOpen(true)} className="flex-1 flex items-center justify-center gap-2 px-4 h-full rounded-lg hover:bg-[#2a2a2a] transition-colors"
         style={{
           border: '1px solid transparent',
           backgroundImage: 'linear-gradient(#0e0e0e, #0e0e0e), radial-gradient(circle, #F05637, #FFCDC0, #F26B4F, #FBA490, #F15E40)',

@@ -3,6 +3,7 @@ import ViewToggle from '../components/ViewToggle'
 import TrailerViewer from '../components/TrailerViewer'
 import BottomNav from '../components/BottomNav'
 import PanelActions from '../components/PanelActions'
+import SummaryPanel from '../components/SummaryPanel'
 import SizeCapacityPanel from './panels/SizeCapacityPanel'
 import ExteriorPanel from './panels/ExteriorPanel'
 import InteriorPanel from './panels/InteriorPanel'
@@ -50,13 +51,15 @@ export default function Configurator() {
 
       {/* Right: config panel overlaid on top of bg */}
       <div className="absolute top-0 right-0 h-full w-[360px] md:w-[440px] lg:w-[500px] xl:w-[551px] flex flex-col z-20 pb-[72px]">
-        <aside className="flex-1 overflow-y-auto mt-[30px] scrollbar-hide">
+        <aside className="flex-1 overflow-y-auto mt-[30px] pr-4 scrollbar-hide">
           {ActivePanel && <ActivePanel />}
         </aside>
       </div>
 
+      <SummaryPanel />
+
       {/* PanelActions — fixed to bottom of viewport */}
-      <div className="fixed bottom-2 right-0 w-[360px] md:w-[440px] lg:w-[500px] xl:w-[551px] z-30 ">
+      <div className="fixed bottom-2 right-0 w-[360px] md:w-[440px] lg:w-[500px] xl:w-[551px] z-30 pr-4">
         <PanelActions />
       </div>
     </div>

@@ -5,6 +5,7 @@ const ConfiguratorContext = createContext(null)
 export function ConfiguratorProvider({ children }) {
   const [activeTab, setActiveTab] = useState('SIZE & CAPACITY')
   const [viewMode, setViewMode] = useState('EXTERIOR')
+  const [summaryOpen, setSummaryOpen] = useState(false)
 
   // Size & Capacity
   const [width, setWidth] = useState('8ft')
@@ -81,6 +82,7 @@ export function ConfiguratorProvider({ children }) {
       value={{
         activeTab, setActiveTab,
         viewMode, setViewMode,
+        summaryOpen, setSummaryOpen,
         width, setWidth,
         length, setLength,
         interiorHeight, setInteriorHeight,

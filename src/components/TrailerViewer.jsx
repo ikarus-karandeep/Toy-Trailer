@@ -15,7 +15,7 @@ export default function TrailerViewer() {
       </div>
 
       {/* Dot navigation — vertically centred on right edge */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+      {/* <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2">
         {Array.from({ length: DOT_COUNT }).map((_, i) => (
           <div
             key={i}
@@ -24,7 +24,7 @@ export default function TrailerViewer() {
             }`}
           />
         ))}
-      </div>
+      </div> */}
 
       {/* View controls — centred in viewer area (excludes right panel) */}
       <div className="flex items-center justify-center mb-2 gap-3 py-5 pr-[360px] md:pr-[440px] lg:pr-[500px] xl:pr-[551px]">
