@@ -27,7 +27,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
     <>
       {show('WIDTH') && (
         <OptionSection title="WIDTH">
-          <div className="flex gap-2 [&>*]:flex-1">
+          <div className="flex flex-wrap gap-2 py-2 lg:py-2">
             {WIDTH_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -57,7 +57,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
       {show('LENGTH') && (
         <OptionSection title="LENGTH">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-wrap gap-2 py-2 gap-2">
             {LENGTH_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -87,7 +87,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
       {show('INTERIOR HEIGHT') && (
         <OptionSection title="INTERIOR HEIGHT">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-wrap gap-2">
             {INTERIOR_HEIGHT_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -105,7 +105,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
       {show('AXLE') && (
         <OptionSection title="AXLE">
-          <div className="flex gap-2 [&>*]:flex-1">
+          <div className="flex flex-wrap gap-2 py-2 lg:py-3">
             {AXLE_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -120,7 +120,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
           <img
             src="/Axle.png"
             alt="Axle preview"
-            className="w-full object-contain mt-1 rounded"
+            className="w-3/4 mx-auto object-contain mt-1 rounded"
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
         </OptionSection>

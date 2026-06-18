@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useMemo } from 'react'
 
 const ConfiguratorContext = createContext(null)
 
@@ -49,6 +49,10 @@ export function ConfiguratorProvider({ children }) {
   const [waterPackage, setWaterPackage] = useState('largewater')
   const [bathroom, setBathroom] = useState(null)
   const [awning, setAwningRaw] = useState([])
+
+  const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
+  const markTabVisited = (tab) => setVisitedTabs(prev => new Set([...prev, tab]))
+  const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
 
   const totalPrice = 106995
 
@@ -115,6 +119,7 @@ export function ConfiguratorProvider({ children }) {
         bathroom, setBathroom,
         awning, toggleAwning,
         totalPrice,
+        completionPercent, markTabVisited,
       }}
     >
       {children}

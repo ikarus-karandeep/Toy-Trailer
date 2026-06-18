@@ -45,7 +45,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             ))}
           </div>
 
-          <div className="grid grid-cols-3 gap-2 mt-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-3 gap-2 mt-3">
             {COLOR_OPTIONS.map((opt) => (
               <ColorSwatch
                 key={opt.id}
@@ -79,7 +79,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
           <img
             src="/Cabinets.png"
             alt="Front style preview"
-            className="mt-4 w-full rounded-xl object-cover"
+            className="mt-3 w-3/4 mx-auto rounded-xl object-cover"
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
 
@@ -145,7 +145,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
           <img
             src="/wheel.png"
             alt="Wheel preview"
-            className="w-48 mx-auto mt-3 object-contain"
+            className="w-32 mx-auto mt-2 object-contain"
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
         </OptionSection>
@@ -159,7 +159,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             onChange={setSpareTire}
           />
           {spareTire && (
-            <div className="flex gap-2 mt-2 [&>*]:flex-1">
+            <div className="flex flex-wrap gap-2 mt-2 py-2 lg:py-3">
               {LUG_OPTIONS.map((opt) => (
                 <OptionPill
                   key={opt.id}

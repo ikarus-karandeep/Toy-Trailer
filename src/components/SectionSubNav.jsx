@@ -16,7 +16,7 @@ export default function SectionSubNav({ sectionIdx, setSectionIdx }) {
         <button
           key={section}
           onClick={() => handleClick(i)}
-          className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-colors ${
+          className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase transition-colors ${
             sectionIdx === i
               ? 'bg-[#DA634B] text-white'
               : 'bg-[#2a2a2a] border border-[#3a3a3a] text-gray-400 hover:border-[#DA634B] hover:text-white'

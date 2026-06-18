@@ -11,7 +11,7 @@ export default function OptionPill({
   return (
     <button
       onClick={onClick}
-      className={`w-full relative flex items-center justify-between gap-2 px-4 py-2.5 rounded-full border text-sm font-semibold tracking-wider uppercase transition-all duration-150 text-left ${
+      className={`w-fit relative flex items-center justify-between gap-2 px-3 py-2 lg:py-3 rounded-full border text-xs font-semibold tracking-wider uppercase transition-all duration-150 text-left ${
         isSelected
           ? 'border-[#DA634B] text-white bg-transparent'
           : 'border-[#3a3a3a] text-gray-300 bg-[#2a2a2a] hover:border-[#555] hover:text-white'

@@ -24,15 +24,15 @@ const PANELS = {
 }
 
 export default function Configurator() {
-  const { activeTab } = useConfigurator()
-  const [sectionIdx, setSectionIdx] = useState(null)
+  const { activeTab, viewMode, setViewMode } = useConfigurator()
+  const [sectionIdx, setSectionIdx] = useState(0)
   const ActivePanel = PANELS[activeTab]
 
   const activeSectionTitle = sectionIdx !== null
     ? PANEL_SECTIONS[activeTab]?.[sectionIdx]
     : undefined
 
-  const handleTabClick = () => setSectionIdx(null)
+  const handleTabClick = () => setSectionIdx(0)
 
   return (
     <>
@@ -45,11 +45,13 @@ export default function Configurator() {
         </div>
 
         {/* Header row — overlaid top */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-center px-4 pt-3 pb-1">
-          <div className="absolute left-4">
-            <img src="/Logo Up.png" className="w-20 h-14 object-contain" />
+        <div className="absolute top-0 left-0 right-0 z-20 flex items-center px-4 pt-3 pb-1">
+          <img src="/Logo Up.png" className="w-20 h-14 object-contain" />
+          <div className="hidden sm:flex absolute left-0 right-0 justify-center pointer-events-none">
+            <div className="pointer-events-auto">
+              <ViewToggle />
+            </div>
           </div>
-          <ViewToggle />
         </div>
 
         {/* Bottom overlay — all controls sit on top of viewer */}
@@ -61,18 +63,27 @@ export default function Configurator() {
           )}
 
           {/* View controls — above drawer content */}
-          <div className="flex items-center justify-center gap-3 py-2 ">
-            <button aria-label="360 View" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
-              <img src="/eyes.png" />
+          <div className="flex items-center justify-center gap-2 py-2">
+            <button aria-label="360 View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+              <img src="/eyes.png" className="w-4 h-4 object-contain" />
             </button>
-            <button aria-label="Scenic View" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
-              <img src="/view.png" />
+            <button aria-label="Scenic View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+              <img src="/view.png" className="w-4 h-4 object-contain" />
             </button>
-            <button aria-label="Customize" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
-              <img src="/Dimension.png" />
+            <button aria-label="Customize" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+              <img src="/Dimension.png" className="w-4 h-4 object-contain" />
             </button>
-            <button className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all">
-              VIEW IN YOUR DRIVEWAY
+
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all">
+              <span className="sm:hidden">AR</span>
+              <span className="hidden sm:inline">VIEW IN YOUR DRIVEWAY</span>
+            </button>
+            {/* Phone-only: single view mode toggle */}
+            <button
+              onClick={() => setViewMode(viewMode === 'EXTERIOR' ? 'INTERIOR' : 'EXTERIOR')}
+              className="sm:hidden flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
+            >
+              VIEW {viewMode}
             </button>
           </div>
 
@@ -89,12 +100,12 @@ export default function Configurator() {
           </div>
 
           {/* Main tab navigation */}
-          <div className="px-2 py-1">
+          <div className="px-4 py-1 mb-2">
             <BottomNav onTabClick={handleTabClick} fullWidth />
           </div>
 
           {/* Summary / Connect */}
-          <div className="px-0 pb-2">
+          <div className="px-4 pb-2">
             <PanelActions />
           </div>
         </div>
@@ -107,7 +118,7 @@ export default function Configurator() {
         <div className="absolute inset-0 flex flex-col">
 
           {/* Logo — top left */}
-          <div className="absolute top-5 left-6 z-10">
+          <div className="absolute top-6 left-6 z-10">
             <img src="/Logo Up.png" className="w-30 h-20" />
           </div>
 
@@ -120,7 +131,7 @@ export default function Configurator() {
           <TrailerViewer />
 
           {/* Bottom nav */}
-          <div className="absolute bottom-2 left-0 right-[360px] md:right-[440px] lg:right-[500px] xl:right-[551px] flex justify-center items-center z-60">
+          <div className="absolute bottom-6 left-0 right-[360px] md:right-[440px] lg:right-[500px] xl:right-[551px] flex justify-center items-center z-60">
             <BottomNav />
           </div>
         </div>
@@ -133,7 +144,7 @@ export default function Configurator() {
         </div>
 
         {/* PanelActions — fixed to bottom of viewport */}
-        <div className="fixed bottom-2 right-0 w-[360px] md:w-[440px] lg:w-[500px] xl:w-[551px] z-30 pr-4">
+        <div className="fixed bottom-6 right-0 w-[360px] md:w-[440px] lg:w-[500px] xl:w-[551px] z-30 pr-4">
           <PanelActions />
         </div>
       </div>

@@ -25,7 +25,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     <>
       {show('FLOOR') && (
         <OptionSection title="FLOOR">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-wrap gap-2">
             {FLOOR_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -42,7 +42,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
 
       {show('WALLS') && (
         <OptionSection title="WALLS">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-wrap gap-2">
             {WALL_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -92,7 +92,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <img
             src="/Cabinets.png"
             alt="Cabinet preview"
-            className="w-full rounded-xl object-cover mt-2"
+            className="w-3/4 mx-auto rounded-xl object-cover mt-2"
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
 
@@ -109,7 +109,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
 
       {show('TOOL BOX') && (
         <OptionSection title="TOOL BOX">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-[max-content_max-content] gap-x-2 gap-y-2">
             {TOOL_BOX_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
