@@ -18,27 +18,33 @@ export const TABS = [
 
 // Size & Capacity
 export const WIDTH_OPTIONS = [
-  { id: '6ft', label: "6'", price: 9999, note: "6' WIDE BASE FOR 18' - 24'" },
-  { id: '8ft', label: "8'", price: 9999, note: "8' WIDE BASE FOR 26' - 34'" },
+  { id: '7ft',   label: "7'",   price: 9999, note: "7' WIDE BASE FOR 14' - 24'" },
+  { id: '8.5ft', label: "8.5'", price: 9999, note: "8.5' WIDE BASE FOR 26' - 36'" },
 ];
 
 export const LENGTH_OPTIONS = [
-  { id: '8x26', label: "8' x 26'", price: 9999 },
-  { id: '8x28', label: "8' x 28'", price: 9999 },
-  { id: '8x30', label: "8' x 30'", price: 9999 },
-  { id: '8x32', label: "8' x 32'", price: 9999 },
-  { id: '8x34', label: "8' x 34'", price: 9999 },
+  { id: '14', label: "14'", price: 9999 },
+  { id: '16', label: "16'", price: 9999 },
+  { id: '18', label: "18'", price: 9999 },
+  { id: '20', label: "20'", price: 9999 },
+  { id: '22', label: "22'", price: 9999 },
+  { id: '24', label: "24'", price: 9999 },
+  { id: '26', label: "26'", price: 9999 },
+  { id: '28', label: "28'", price: 9999 },
+  { id: '30', label: "30'", price: 9999 },
+  { id: '32', label: "32'", price: 9999 },
+  { id: '34', label: "34'", price: 9999 },
+  { id: '36', label: "36'", price: 9999 },
 ];
 
 export const INTERIOR_HEIGHT_OPTIONS = [
-  { id: '6ft7', label: '6\' 7"', isStandard: true },
-  { id: '7ft0', label: '7\' 0"', price: 9999 },
-  { id: '8ft0', label: '8\' 0"', price: 9999 },
-  { id: '8ft6', label: '8\' 6"', price: 9999 },
-  { id: '9ft0', label: '9\' 0"', price: 9999 },
-  { id: '9ft6', label: '9\' 6"', price: 9999 },
+  { id: '7ft0', label: '7\' 0"',  isStandard: true },
+  { id: '7ft6', label: '7\' 6"',  price: 9999 },
+  { id: '8ft0', label: '8\' 0"',  price: 9999 },
+  { id: '8ft6', label: '8\' 6"',  price: 9999 },
+  { id: '9ft0', label: '9\' 0"',  price: 9999 },
+  { id: '9ft6', label: '9\' 6"',  price: 9999 },
   { id: '10ft0', label: '10\' 0"', price: 9999 },
-  { id: '10ft6', label: '10\' 6"', price: 9999 },
 ];
 
 export const AXLE_OPTIONS = [

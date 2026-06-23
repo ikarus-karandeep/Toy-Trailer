@@ -8,8 +8,8 @@ export function ConfiguratorProvider({ children }) {
   const [summaryOpen, setSummaryOpen] = useState(false)
 
   // Size & Capacity
-  const [width, setWidth] = useState('8ft')
-  const [length, setLength] = useState('8x26')
+  const [width, setWidth] = useState('7ft')
+  const [length, setLength] = useState('26')
   const [interiorHeight, setInteriorHeight] = useState('7ft0')
   const [axle, setAxle] = useState('tandem')
   const [axleRating, setAxleRating] = useState('5200torsion')
