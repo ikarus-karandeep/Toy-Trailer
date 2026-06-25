@@ -65,28 +65,24 @@ export default function Configurator() {
   return (
     <>
       {/* ── TABLET / MOBILE layout (below lg) ── */}
-      <div className="lg:hidden h-dvh flex flex-col overflow-hidden bg-viewer">
+      <div className="lg:hidden relative h-dvh flex flex-col overflow-hidden bg-viewer">
 
-        {/* Header row */}
-        <div className="flex-shrink-0 z-20 flex items-center px-4 pt-3 pb-1">
-          <img src="/Logo Up.png" className="w-20 h-14 object-contain" />
-          <div className="hidden sm:flex absolute left-0 right-0 justify-center pointer-events-none">
+        {/* Logo — absolute over canvas */}
+        <div className="absolute top-0 left-0 right-0 z-20 flex items-center px-4 pt-3 pb-1 pointer-events-none">
+          <img src="/Logo Up.png" className="w-20 h-14 object-contain pointer-events-auto" />
+          <div className="hidden sm:flex absolute left-0 right-0 justify-center">
             <div className="pointer-events-auto">
               <ViewToggle />
             </div>
           </div>
         </div>
 
-        {/* Trailer viewer — fills remaining space above controls */}
-        <div className="flex-1 min-h-0 flex flex-col">
+        {/* Trailer viewer + view controls overlaid */}
+        <div className="flex-1 min-h-0 flex flex-col relative">
           <TrailerViewer />
-        </div>
 
-        {/* Bottom controls — natural document flow, never behind canvas */}
-        <div className="flex-shrink-0 z-20">
-
-          {/* View controls */}
-          <div className="flex items-center justify-center gap-2 py-2">
+          {/* View controls — overlaid at bottom of canvas */}
+          <div className="absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-2">
             <button aria-label="360 View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
               <img src="/eyes.png" className="w-4 h-4 object-contain" />
             </button>
@@ -103,7 +99,6 @@ export default function Configurator() {
               <span className="sm:hidden">AR</span>
               <span className="hidden sm:inline">VIEW IN YOUR DRIVEWAY</span>
             </button>
-            {/* Phone-only: single view mode toggle */}
             <button
               onClick={() => setViewMode(viewMode === 'EXTERIOR' ? 'INTERIOR' : 'EXTERIOR')}
               className="sm:hidden flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
@@ -111,6 +106,10 @@ export default function Configurator() {
               VIEW {viewMode}
             </button>
           </div>
+        </div>
+
+        {/* Bottom controls — in flow below canvas */}
+        <div className="flex-shrink-0 z-20">
 
           {/* Drawer — only when a section is selected */}
           {sectionIdx !== null && (
@@ -147,8 +146,8 @@ export default function Configurator() {
       {/* ── DESKTOP layout (lg+) ── */}
       <div className="hidden lg:block relative h-dvh overflow-hidden bg-viewer">
 
-        {/* Background layer */}
-        <div className="absolute inset-0 flex flex-col">
+        {/* Background layer — constrained to the left of the right panel */}
+        <div className="absolute top-0 left-0 bottom-0 right-[360px] md:right-[440px] lg:right-[500px] xl:right-[551px] flex flex-col">
 
           {/* Logo — top left */}
           <div className="absolute top-6 left-6 z-10">
@@ -156,7 +155,7 @@ export default function Configurator() {
           </div>
 
           {/* View toggle — centered in viewer area */}
-          <div className="absolute top-6 left-0 right-[360px] md:right-[440px] lg:right-[500px] xl:right-[551px] flex justify-center z-10">
+          <div className="absolute top-6 left-0 right-0 flex justify-center z-10">
             <ViewToggle />
           </div>
 
@@ -164,7 +163,7 @@ export default function Configurator() {
           <TrailerViewer />
 
           {/* Bottom nav */}
-          <div className="absolute bottom-6 left-0 right-[360px] md:right-[440px] lg:right-[500px] xl:right-[551px] flex justify-center items-center z-60">
+          <div className="flex-shrink-0 flex justify-center items-center py-6">
             <BottomNav />
           </div>
         </div>

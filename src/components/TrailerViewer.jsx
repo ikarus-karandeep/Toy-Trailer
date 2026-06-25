@@ -326,7 +326,7 @@ export default function TrailerViewer() {
   }
 
   return (
-    <div className="relative flex-1 flex flex-col min-h-0 pb-0 lg:pb-[72px]">
+    <div className="relative flex-1 flex flex-col min-h-0">
       <div className="relative flex-1 min-h-0">
         <div className="absolute inset-0">
           <Suspense
@@ -376,31 +376,31 @@ export default function TrailerViewer() {
             />
           )}
         </div>
-      </div>
 
-      {/* View controls — desktop only */}
-      <div className="hidden lg:flex items-center justify-center mb-6 gap-3 py-5 lg:pr-[500px] xl:pr-[551px]">
-        <button aria-label="360 View" className="w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
-          <img src="/eyes.png" alt="" />
-        </button>
-        <button aria-label="Scenic View" className="w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
-          <img src="/view.png" alt="" />
-        </button>
-        <button
-          aria-label="Toggle Dimensions"
-          onClick={() => setShowDimensions(prev => !prev)}
-          className={`w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${
-            showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'
-          }`}
-        >
-          <img src="/Dimension.png" alt="" />
-        </button>
-        <button
-          onClick={handleViewInDriveway}
-          className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
-        >
-          VIEW IN YOUR DRIVEWAY
-        </button>
+        {/* View controls — overlaid on canvas, desktop only */}
+        <div className="hidden lg:flex absolute bottom-6 left-0 right-0 items-center justify-center gap-3 z-10">
+          <button aria-label="360 View" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+            <img src="/eyes.png" alt="" />
+          </button>
+          <button aria-label="Scenic View" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+            <img src="/view.png" alt="" />
+          </button>
+          <button
+            aria-label="Toggle Dimensions"
+            onClick={() => setShowDimensions(prev => !prev)}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${
+              showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'
+            }`}
+          >
+            <img src="/Dimension.png" alt="" />
+          </button>
+          <button
+            onClick={handleViewInDriveway}
+            className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
+          >
+            VIEW IN YOUR DRIVEWAY
+          </button>
+        </div>
       </div>
 
       {showQR && (
