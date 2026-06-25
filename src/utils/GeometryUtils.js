@@ -276,6 +276,8 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
 
   position.needsUpdate = true
   geometry.computeVertexNormals()
+  geometry.computeBoundingBox()
+  geometry.computeBoundingSphere()
 }
 
 

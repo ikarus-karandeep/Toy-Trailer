@@ -1,8 +1,11 @@
-import { Suspense, useRef, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Suspense, useRef, useEffect, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, useGLTF, Environment, Center } from '@react-three/drei'
+import { Box3, Vector3 } from 'three'
 import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { useConfigurator } from '../context/ConfiguratorContext'
+import ARViewer from './ARViewer'
+import QRModal from './QRModal'
 
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
 
@@ -22,11 +25,19 @@ function getHeightFt(id) {
 
 // ── 3D model ──────────────────────────────────────────────────────────────────
 
+const LERP_SPEED = 0.08
+const LERP_THRESHOLD = 0.0005
+
 function TrailerModel({ widthFt, lengthFt, heightFt }) {
   const { scene: baseScene }   = useGLTF('/models/Base.glb')
   const { scene: meshesScene } = useGLTF('/models/Base Meshes.glb')
   const store     = useRef(new Map())
   const loggedRef = useRef(false)
+
+  // Current animated values (lerped) and target values (from props)
+  const animRef   = useRef({ widthFt, lengthFt, heightFt })
+  const targetRef = useRef({ widthFt, lengthFt, heightFt })
+  const dirtyRef  = useRef(true) // force first deform once bounds are ready
 
   useEffect(() => {
     if (!loggedRef.current) {
@@ -40,11 +51,8 @@ function TrailerModel({ widthFt, lengthFt, heightFt }) {
     }
   }, [baseScene, meshesScene])
 
+  // Compute global bounds once; mark dirty so useFrame applies the first deform
   useEffect(() => {
-    // Compute global Z center once from original vertex positions across all meshes.
-    // Per-mesh zCenter is wrong for wall panels (entire panel on one side) — inner
-    // and outer faces end up on opposite sides of the local midpoint, so they get
-    // pushed in opposite directions and the wall explodes in thickness.
     if (!store.current.has('_globalZCenter')) {
       let gMinZ = Infinity, gMaxZ = -Infinity
       let gMinX = Infinity, gMaxX = -Infinity
@@ -55,10 +63,8 @@ function TrailerModel({ widthFt, lengthFt, heightFt }) {
           for (let i = 0; i < pos.count; i++) {
             const x = pos.getX(i)
             const z = pos.getZ(i)
-            if (z < gMinZ) gMinZ = z
-            if (z > gMaxZ) gMaxZ = z
-            if (x < gMinX) gMinX = x
-            if (x > gMaxX) gMaxX = x
+            if (z < gMinZ) gMinZ = z; if (z > gMaxZ) gMaxZ = z
+            if (x < gMinX) gMinX = x; if (x > gMaxX) gMaxX = x
           }
         })
       })
@@ -68,31 +74,57 @@ function TrailerModel({ widthFt, lengthFt, heightFt }) {
       store.current.set('_globalXMax', gMaxX)
       console.log(`[TrailerModel] global Z center: ${gc.toFixed(4)}m | X span: ${gMinX.toFixed(3)}–${gMaxX.toFixed(3)}`)
     }
+    dirtyRef.current = true
+  }, [baseScene, meshesScene])
+
+  // Update targets when props change — useFrame handles the smooth lerp
+  useEffect(() => {
+    targetRef.current = { widthFt, lengthFt, heightFt }
+  }, [widthFt, lengthFt, heightFt])
+
+  useFrame(() => {
+    // Wait until global bounds are ready
+    if (!store.current.has('_globalZCenter')) return
+
+    const curr = animRef.current
+    const tgt  = targetRef.current
+
+    const nw = curr.widthFt  + (tgt.widthFt  - curr.widthFt)  * LERP_SPEED
+    const nl = curr.lengthFt + (tgt.lengthFt - curr.lengthFt) * LERP_SPEED
+    const nh = curr.heightFt + (tgt.heightFt - curr.heightFt) * LERP_SPEED
+
+    const moved =
+      Math.abs(nw - curr.widthFt)  > LERP_THRESHOLD ||
+      Math.abs(nl - curr.lengthFt) > LERP_THRESHOLD ||
+      Math.abs(nh - curr.heightFt) > LERP_THRESHOLD
+
+    if (!moved && !dirtyRef.current) return
+
+    dirtyRef.current = false
+    animRef.current = { widthFt: nw, lengthFt: nl, heightFt: nh }
+
     const globalZCenter = store.current.get('_globalZCenter')
     const globalXMin    = store.current.get('_globalXMin')
     const globalXMax    = store.current.get('_globalXMax')
 
-    console.group(`[TrailerModel] deform pass | width:${widthFt}ft length:${lengthFt}ft height:${heightFt}ft | globalZCenter:${globalZCenter.toFixed(4)}`)
-    ;[baseScene, meshesScene].forEach((scene, si) => {
+    ;[baseScene, meshesScene].forEach((scene) => {
       scene.traverse((child) => {
         if (!child.isMesh || !child.geometry) return
-        console.log(`  [mesh ${si}] "${child.name || child.uuid}" attrs:`, Object.keys(child.geometry.attributes))
         applyDimensionDeformations({
           geometry: child.geometry,
           store: store.current,
           uuid: child.uuid,
           meshName: child.name || child.uuid,
-          widthFt,
-          lengthFt,
-          heightFt,
+          widthFt: nw,
+          lengthFt: nl,
+          heightFt: nh,
           globalZCenter,
           globalXMin,
           globalXMax,
         })
       })
     })
-    console.groupEnd()
-  }, [baseScene, meshesScene, widthFt, lengthFt, heightFt])
+  })
 
   return (
     <>
@@ -106,14 +138,192 @@ useGLTF.preload('/models/Base.glb')
 useGLTF.preload('/models/Base Meshes.glb')
 
 
+// ── bounds projector (runs inside Canvas so it has camera + renderer access) ──
+
+function BoundsCalculator({ groupRef, onUpdate }) {
+  const { camera, size } = useThree()
+
+  useFrame(() => {
+    if (!groupRef.current) return
+    const box = new Box3().setFromObject(groupRef.current)
+    if (box.isEmpty()) return
+
+    const project = (x, y, z) => {
+      const v = new Vector3(x, y, z).project(camera)
+      return { x: ((v.x + 1) / 2) * size.width, y: ((-v.y + 1) / 2) * size.height }
+    }
+
+    const { min, max } = box
+    const center = new Vector3()
+    box.getCenter(center)
+    
+    // camera direction relative to center
+    const dir = new Vector3().copy(camera.position).sub(center)
+
+    // Offset to keep lines from clipping into the trailer
+    const axisSpacingOffset = 0.5
+    const yAxisSpacingOffset = 0.5
+
+    const zXAxis = dir.z > 0 ? max.z + axisSpacingOffset : min.z - axisSpacingOffset
+    const xYAxis = dir.x > 0 ? max.x + yAxisSpacingOffset : min.x - yAxisSpacingOffset
+    const zYAxis = dir.z > 0 ? max.z + yAxisSpacingOffset : min.z - yAxisSpacingOffset
+    const xZAxis = dir.x > 0 ? max.x + axisSpacingOffset : min.x - axisSpacingOffset
+
+    // Width (X axis line)
+    const widthDims = dir.x > 0 ? [
+      project(max.x, min.y, zXAxis), project(min.x, min.y, zXAxis)
+    ] : [
+      project(min.x, min.y, zXAxis), project(max.x, min.y, zXAxis)
+    ]
+
+    // Height (Y axis line)
+    const heightDims = [
+      project(xYAxis, min.y, zYAxis), project(xYAxis, max.y, zYAxis)
+    ]
+
+    // Length (Z axis line)
+    const lengthDims = dir.z > 0 ? [
+      project(xZAxis, min.y, max.z), project(xZAxis, min.y, min.z)
+    ] : [
+      project(xZAxis, min.y, min.z), project(xZAxis, min.y, max.z)
+    ]
+
+    onUpdate({
+      heightBot: heightDims[0],
+      heightTop: heightDims[1],
+      widthStart: widthDims[0],
+      widthEnd: widthDims[1],
+      lenStart: lengthDims[0],
+      lenEnd: lengthDims[1],
+      w: size.width,
+      h: size.height,
+    })
+  })
+
+  return null
+}
+
+
+// ── dimension overlay ─────────────────────────────────────────────────────────
+
+function formatFt(ft) {
+  const whole = Math.floor(ft)
+  const inches = Math.round((ft - whole) * 12)
+  return inches === 0 ? `${whole}'` : `${whole}' ${inches}"`
+}
+
+function DimLabel({ x, y, text, anchor = 'middle' }) {
+  const w = text.length * 7.5 + 18
+  const h = 24
+  const rx = anchor === 'end' ? x - w - 6 : anchor === 'start' ? x + 6 : x - w / 2
+  return (
+    <g>
+      <rect x={rx} y={y - h / 2} width={w} height={h} rx="4" fill="rgba(255,255,255,0.92)" />
+      <text x={rx + w / 2} y={y} textAnchor="middle" dominantBaseline="middle"
+        fontSize="12" fontWeight="600" fontFamily="ui-sans-serif,system-ui" fill="#111827">
+        {text}
+      </text>
+    </g>
+  )
+}
+
+function DimensionOverlay({ widthFt, lengthFt, heightFt, bounds }) {
+  if (!bounds) return null
+
+  const { heightTop, heightBot, lenStart, lenEnd, widthStart, widthEnd, w, h } = bounds
+  const heightMidY = (heightTop.y + heightBot.y) / 2
+  const heightMidX = (heightTop.x + heightBot.x) / 2
+  const lenMidY = (lenStart.y + lenEnd.y) / 2
+  const lenMidX = (lenStart.x + lenEnd.x) / 2
+  const widthMidY = (widthStart.y + widthEnd.y) / 2
+  const widthMidX = (widthStart.x + widthEnd.x) / 2
+
+  return (
+    <div className="absolute inset-0 pointer-events-none select-none">
+      <svg className="absolute inset-0 w-full h-full" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
+        <defs>
+          <marker id="da-fwd" markerWidth="9" markerHeight="9"
+            refX="9" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+            <polygon points="0 0,9 4.5,0 9" fill="white" />
+          </marker>
+          <marker id="da-rev" markerWidth="9" markerHeight="9"
+            refX="0" refY="4.5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+            <polygon points="0 0,9 4.5,0 9" fill="white" />
+          </marker>
+        </defs>
+
+        {/* Height — vertical */}
+        <line x1={heightTop.x} y1={heightTop.y} x2={heightBot.x} y2={heightBot.y}
+          stroke="white" strokeWidth="1.5"
+          markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
+        <DimLabel x={heightMidX - 10} y={heightMidY} text={`${formatFt(heightFt)} height`} anchor="end" />
+
+        {/* Length — usually Z axis */}
+        <line x1={lenStart.x} y1={lenStart.y} x2={lenEnd.x} y2={lenEnd.y}
+          stroke="white" strokeWidth="1.5"
+          markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
+        <DimLabel x={lenMidX} y={lenMidY + 16} text={`${formatFt(lengthFt)} length`} />
+
+        {/* Width — usually X axis */}
+        <line x1={widthStart.x} y1={widthStart.y} x2={widthEnd.x} y2={widthEnd.y}
+          stroke="white" strokeWidth="1.5"
+          markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
+        <DimLabel x={widthMidX} y={widthMidY + 16} text={`${formatFt(widthFt)} wide`} />
+      </svg>
+    </div>
+  )
+}
+
+
 // ── viewer ────────────────────────────────────────────────────────────────────
 
 export default function TrailerViewer() {
   const { width, length, interiorHeight } = useConfigurator()
+  const [showDimensions, setShowDimensions] = useState(false)
+  const [screenBounds, setScreenBounds] = useState(null)
+  const [arUrl, setArUrl] = useState(null)
+  const [arExporting, setArExporting] = useState(false)
+  const [showQR, setShowQR] = useState(false)
+  const modelGroupRef = useRef()
 
   const widthFt  = WIDTH_FT[width]          ?? 7
   const lengthFt = getLengthFt(length)
   const heightFt = getHeightFt(interiorHeight)
+
+  const handleViewInDriveway = () => setShowQR(true)
+
+  const handleOpenAR = async () => {
+    if (!modelGroupRef.current || arExporting) return
+    setArExporting(true)
+    try {
+      const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
+      const exporter = new GLTFExporter()
+      exporter.parse(
+        modelGroupRef.current,
+        (result) => {
+          const blob = new Blob([result], { type: 'model/gltf-binary' })
+          setArUrl(URL.createObjectURL(blob))
+          setShowQR(false)
+          setArExporting(false)
+        },
+        (err) => {
+          console.error('GLB export failed:', err)
+          setArExporting(false)
+        },
+        { binary: true }
+      )
+    } catch (err) {
+      console.error('AR export error:', err)
+      setArExporting(false)
+    }
+  }
+
+  const handleCloseQR = () => setShowQR(false)
+
+  const handleCloseAR = () => {
+    if (arUrl) URL.revokeObjectURL(arUrl)
+    setArUrl(null)
+  }
 
   return (
     <div className="relative flex-1 flex flex-col min-h-0 pb-0 lg:pb-[72px]">
@@ -136,12 +346,17 @@ export default function TrailerViewer() {
               <directionalLight position={[-5, 3, -5]} intensity={0.4} />
               <Environment preset="city" />
               <Center>
-                <TrailerModel
-                  widthFt={widthFt}
-                  lengthFt={lengthFt}
-                  heightFt={heightFt}
-                />
+                <group ref={modelGroupRef}>
+                  <TrailerModel
+                    widthFt={widthFt}
+                    lengthFt={lengthFt}
+                    heightFt={heightFt}
+                  />
+                </group>
               </Center>
+              {showDimensions && (
+                <BoundsCalculator groupRef={modelGroupRef} onUpdate={setScreenBounds} />
+              )}
               <OrbitControls
                 enablePan={true}
                 minDistance={1.5}
@@ -151,8 +366,16 @@ export default function TrailerViewer() {
               />
             </Canvas>
           </Suspense>
-        </div>
 
+          {showDimensions && (
+            <DimensionOverlay
+              widthFt={widthFt}
+              lengthFt={lengthFt}
+              heightFt={heightFt}
+              bounds={screenBounds}
+            />
+          )}
+        </div>
       </div>
 
       {/* View controls — desktop only */}
@@ -163,13 +386,31 @@ export default function TrailerViewer() {
         <button aria-label="Scenic View" className="w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
           <img src="/view.png" alt="" />
         </button>
-        <button aria-label="Customize" className="w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+        <button
+          aria-label="Toggle Dimensions"
+          onClick={() => setShowDimensions(prev => !prev)}
+          className={`w-11 h-9 flex items-center py-5 justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${
+            showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'
+          }`}
+        >
           <img src="/Dimension.png" alt="" />
         </button>
-        <button className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all">
+        <button
+          onClick={handleViewInDriveway}
+          className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
+        >
           VIEW IN YOUR DRIVEWAY
         </button>
       </div>
+
+      {showQR && (
+        <QRModal
+          onClose={handleCloseQR}
+          onOpenAR={handleOpenAR}
+          exporting={arExporting}
+        />
+      )}
+      {arUrl && <ARViewer url={arUrl} onClose={handleCloseAR} />}
     </div>
   )
 }

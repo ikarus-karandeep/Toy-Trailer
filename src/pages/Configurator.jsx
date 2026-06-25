@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import '@google/model-viewer'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import { PANEL_SECTIONS } from '../constants/configData'
 import ViewToggle from '../components/ViewToggle'
@@ -26,6 +27,33 @@ const PANELS = {
 export default function Configurator() {
   const { activeTab, viewMode, setViewMode } = useConfigurator()
   const [sectionIdx, setSectionIdx] = useState(0)
+  const mobileARRef = useRef()
+  const [arModelReady, setArModelReady] = useState(false)
+  const [arLaunching, setArLaunching] = useState(false)
+
+  useEffect(() => {
+    const viewer = mobileARRef.current
+    if (!viewer) return
+    const onLoad = () => setArModelReady(true)
+    viewer.addEventListener('load', onLoad)
+    return () => viewer.removeEventListener('load', onLoad)
+  }, [])
+
+  const handleMobileAR = () => {
+    const viewer = mobileARRef.current
+    if (!viewer) return
+    if (arModelReady && viewer.canActivateAR) {
+      viewer.activateAR()
+    } else {
+      setArLaunching(true)
+      const onReady = () => {
+        viewer.removeEventListener('load', onReady)
+        if (viewer.canActivateAR) viewer.activateAR()
+        setArLaunching(false)
+      }
+      viewer.addEventListener('load', onReady)
+    }
+  }
   const ActivePanel = PANELS[activeTab]
 
   const activeSectionTitle = sectionIdx !== null
@@ -37,15 +65,10 @@ export default function Configurator() {
   return (
     <>
       {/* ── TABLET / MOBILE layout (below lg) ── */}
-      <div className="lg:hidden relative h-dvh overflow-hidden bg-viewer">
+      <div className="lg:hidden h-dvh flex flex-col overflow-hidden bg-viewer">
 
-        {/* Trailer viewer — fills entire screen */}
-        <div className="absolute inset-0 flex flex-col">
-          <TrailerViewer />
-        </div>
-
-        {/* Header row — overlaid top */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex items-center px-4 pt-3 pb-1">
+        {/* Header row */}
+        <div className="flex-shrink-0 z-20 flex items-center px-4 pt-3 pb-1">
           <img src="/Logo Up.png" className="w-20 h-14 object-contain" />
           <div className="hidden sm:flex absolute left-0 right-0 justify-center pointer-events-none">
             <div className="pointer-events-auto">
@@ -54,15 +77,15 @@ export default function Configurator() {
           </div>
         </div>
 
-        {/* Bottom overlay — all controls sit on top of viewer */}
-        <div className="absolute bottom-0 left-0 right-0 z-20">
+        {/* Trailer viewer — fills remaining space above controls */}
+        <div className="flex-1 min-h-0 flex flex-col">
+          <TrailerViewer />
+        </div>
 
-          {/* Gradient fade — only when drawer is closed */}
-          {sectionIdx === null && (
-            <div className="h-16 pointer-events-none" />
-          )}
+        {/* Bottom controls — natural document flow, never behind canvas */}
+        <div className="flex-shrink-0 z-20">
 
-          {/* View controls — above drawer content */}
+          {/* View controls */}
           <div className="flex items-center justify-center gap-2 py-2">
             <button aria-label="360 View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
               <img src="/eyes.png" className="w-4 h-4 object-contain" />
@@ -73,8 +96,10 @@ export default function Configurator() {
             <button aria-label="Customize" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
               <img src="/Dimension.png" className="w-4 h-4 object-contain" />
             </button>
-
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all">
+            <button
+              onClick={handleMobileAR}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
+            >
               <span className="sm:hidden">AR</span>
               <span className="hidden sm:inline">VIEW IN YOUR DRIVEWAY</span>
             </button>
@@ -95,9 +120,7 @@ export default function Configurator() {
           )}
 
           {/* Section pills */}
-          <div className="">
-            <SectionSubNav sectionIdx={sectionIdx} setSectionIdx={setSectionIdx} />
-          </div>
+          <SectionSubNav sectionIdx={sectionIdx} setSectionIdx={setSectionIdx} />
 
           {/* Main tab navigation */}
           <div className="px-4 py-1 mb-2">
@@ -109,6 +132,16 @@ export default function Configurator() {
             <PanelActions />
           </div>
         </div>
+
+        {/* Hidden model-viewer preloads in background so AR launches instantly on tap */}
+        <model-viewer
+          ref={mobileARRef}
+          src={`${window.location.origin}/models/Base.glb`}
+          ar
+          ar-modes="quick-look webxr scene-viewer"
+          class="absolute w-0 h-0 opacity-0 pointer-events-none overflow-hidden"
+        />
+
       </div>
 
       {/* ── DESKTOP layout (lg+) ── */}
@@ -151,6 +184,12 @@ export default function Configurator() {
 
       {/* Summary panel — works on both layouts */}
       <SummaryPanel />
+
+      {arLaunching && (
+        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+          <span className="text-white text-sm tracking-widest uppercase">Launching AR...</span>
+        </div>
+      )}
     </>
   )
 }
