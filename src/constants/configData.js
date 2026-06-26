@@ -1,10 +1,10 @@
 export const PANEL_SECTIONS = {
   'SIZE & CAPACITY': ['WIDTH', 'LENGTH', 'INTERIOR HEIGHT', 'AXLE', 'AXLE RATING & SUSPENSION', 'SPREAD AXLE'],
-  'EXTERIOR': ['EXTERIOR FINISH', 'FRONT STYLE', 'EXTERIOR BUILD', 'PROTECTION PACKAGE', 'WHEEL', 'SPARE TIRE'],
-  'INTERIOR': ['FLOOR', 'WALLS', 'CEILING', 'CABINETS', 'TOOL BOX'],
+  'EXTERIOR': ['EXTERIOR FINISH', 'FRONT STYLE', 'FRONT STYLE ADDONS', 'EXTERIOR BUILD', 'PROTECTION PACKAGE', 'WHEEL', 'SPARE TIRE', 'SIDE DOOR'],
+  'INTERIOR': ['FLOOR', 'WALLS', 'CEILING', 'CABINETS', 'TOOL BOX', 'DOOR SIDES'],
   'SYSTEMS': ['ELECTRICAL', '12V BATTERY SYSTEM', 'LIGHTS', 'VENTILATION', 'CLIMATE CONTROL'],
   'LOADING': ['RAMP TYPE', 'TIE DOWNS (MULTI-CHOICE)', 'JACKS (MULTI-CHOICE)'],
-  'ADD-ONS': ['WATER PACKAGE & SINK', 'BATHROOM PACKAGES', 'AWNINGS'],
+  'ADD-ONS': ['WATER PACKAGE & SINK', 'BATHROOM PACKAGES', 'AWNINGS', 'BASE ADDONS'],
 }
 
 export const TABS = [
@@ -48,8 +48,11 @@ export const INTERIOR_HEIGHT_OPTIONS = [
 ];
 
 export const AXLE_OPTIONS = [
-  { id: 'tandem', label: 'TANDEM', isStandard: true },
-  { id: 'triple', label: 'TRIPLE', price: 9999 },
+  { id: 'baseatp',         label: 'BASE ATP',          isStandard: true },
+  { id: 'atpangledside',   label: 'ATP ANGLED SIDE',   price: 9999 },
+  { id: 'atpflatside',     label: 'ATP FLAT SIDE',     price: 9999 },
+  { id: 'panelangledside', label: 'PANEL ANGLED SIDE', price: 9999 },
+  { id: 'panelflatside',   label: 'PANEL FLAT SIDE',   price: 9999 },
 ];
 
 export const AXLE_RATING_OPTIONS = [
@@ -58,8 +61,8 @@ export const AXLE_RATING_OPTIONS = [
   { id: '7000dropspring', label: '7000 lb Drop Spring', price: 9999 },
   { id: '7000torsion', label: '7000 lb Torsion', price: 9999 },
   { id: '8000torsion16k', label: '8000 lb Torsion 16K', price: 9999 },
-  { id: 'triple5200torsion', label: 'Triple 5200 lb Torsion', price: 9999 },
-  { id: 'triple7000torsion', label: 'Triple 7000 lb Torsion', price: 9999 },
+  { id: '10000lbtandem', label: '10,000 lb Tandem', price: 9999 },
+  // { id: 'triple7000torsion', label: 'Triple 7000 lb Torsion', price: 9999 },
 ];
 
 // Exterior
@@ -79,6 +82,13 @@ export const COLOR_OPTIONS = [
   { id: 'purple', label: 'PURPLE', color: '#6b2fa0' , image: '/Purple.png'},
   { id: 'yellow', label: 'YELLOW', color: '#c8a800' , image: '/Yellow.png'},
 ];
+
+export const SIDE_DOOR_OPTIONS = [
+  { id: 'flatpanel',    label: 'FLAT PANEL',         isStandard: true },
+  { id: 'singledoor',  label: 'SINGLE DOOR',         price: 9999 },
+  { id: 'doubledoor',  label: 'DOUBLE DOOR',         price: 9999 },
+  { id: 'generatorbox', label: 'GENERATOR BOX',      price: 9999 },
+]
 
 export const FRONT_STYLE_OPTIONS = [
   { id: 'vnose', label: 'V-NOSE W/ ATP DIAMOND PLATE', isStandard: true },

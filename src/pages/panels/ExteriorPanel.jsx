@@ -8,6 +8,7 @@ import {
   PROTECTION_OPTIONS,
   WHEEL_OPTIONS,
   LUG_OPTIONS,
+  SIDE_DOOR_OPTIONS,
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
@@ -24,6 +25,13 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     wheel, setWheel,
     spareTire, setSpareTire,
     lugType, setLugType,
+    sideDoorsType, setSideDoorsType,
+    angledLights, setAngledLights,
+    stairs, setStairs,
+    vNoseETrack, setVNoseETrack,
+    batteryBox, setBatteryBox,
+    extendedTripleTongue, setExtendedTripleTongue,
+    rearSpoiler, setRearSpoiler,
   } = useConfigurator()
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
@@ -94,6 +102,40 @@ export default function ExteriorPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
+      {show('FRONT STYLE ADDONS') && (
+        <OptionSection title="FRONT STYLE ADDONS">
+          <div className="flex flex-col gap-3">
+            <ToggleSwitch
+              label="STAIRS"
+              checked={stairs}
+              onChange={setStairs}
+            />
+            <ToggleSwitch
+              label="ANGLED LIGHTS"
+              checked={angledLights}
+              onChange={setAngledLights}
+            />
+            <ToggleSwitch
+              label="BATTERY BOX"
+              checked={batteryBox}
+              onChange={setBatteryBox}
+            />
+            {frontStyle === 'vnose' && (
+              <ToggleSwitch
+                label="V-NOSE E TRACK"
+                checked={vNoseETrack}
+                onChange={setVNoseETrack}
+              />
+            )}
+          </div>
+          {frontStyle !== 'vnose' && (
+            <p className="text-gray-500 text-xs tracking-wider uppercase mt-2">
+              V-Nose E Track requires V-Nose front style
+            </p>
+          )}
+        </OptionSection>
+      )}
+
       {show('EXTERIOR BUILD') && (
         <OptionSection title="EXTERIOR BUILD">
           <div className="flex flex-col gap-2">
@@ -107,6 +149,19 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 onClick={() => setExteriorBuild(opt.id)}
               />
             ))}
+          </div>
+          
+          <div className="mt-4 flex flex-col gap-3">
+            <ToggleSwitch
+              label="EXTENDED TRIPLE TONGUE"
+              checked={extendedTripleTongue}
+              onChange={setExtendedTripleTongue}
+            />
+            <ToggleSwitch
+              label="REAR SPOILER WING"
+              checked={rearSpoiler}
+              onChange={setRearSpoiler}
+            />
           </div>
         </OptionSection>
       )}
@@ -148,6 +203,23 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             className="w-32 mx-auto mt-2 object-contain"
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
+        </OptionSection>
+      )}
+
+      {show('SIDE DOOR') && (
+        <OptionSection title="SIDE DOOR">
+          <div className="flex flex-col gap-2">
+            {SIDE_DOOR_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price}
+                isStandard={opt.isStandard}
+                isSelected={sideDoorsType === opt.id}
+                onClick={() => setSideDoorsType(opt.id)}
+              />
+            ))}
+          </div>
         </OptionSection>
       )}
 

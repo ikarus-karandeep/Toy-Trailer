@@ -1,9 +1,9 @@
-import { Suspense, useRef, useEffect, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, useGLTF, Environment, Center } from '@react-three/drei'
+import { OrbitControls, Environment, Center } from '@react-three/drei'
 import { Box3, Vector3 } from 'three'
-import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { useConfigurator } from '../context/ConfiguratorContext'
+import ModularTrailerModel from './ModularTrailerModel'
 import ARViewer from './ARViewer'
 import QRModal from './QRModal'
 
@@ -22,121 +22,6 @@ const HEIGHT_FEET_MAP = {
 function getHeightFt(id) {
   return HEIGHT_FEET_MAP[id] ?? 7
 }
-
-// ── 3D model ──────────────────────────────────────────────────────────────────
-
-const LERP_SPEED = 0.08
-const LERP_THRESHOLD = 0.0005
-
-function TrailerModel({ widthFt, lengthFt, heightFt }) {
-  const { scene: baseScene }   = useGLTF('/models/Base.glb')
-  const { scene: meshesScene } = useGLTF('/models/Base Meshes.glb')
-  const store     = useRef(new Map())
-  const loggedRef = useRef(false)
-
-  // Current animated values (lerped) and target values (from props)
-  const animRef   = useRef({ widthFt, lengthFt, heightFt })
-  const targetRef = useRef({ widthFt, lengthFt, heightFt })
-  const dirtyRef  = useRef(true) // force first deform once bounds are ready
-
-  useEffect(() => {
-    if (!loggedRef.current) {
-      loggedRef.current = true
-      ;[baseScene, meshesScene].forEach((scene, si) => {
-        scene.traverse((child) => {
-          if (!child.isMesh || !child.geometry) return
-          console.log(`[model ${si}] mesh "${child.name}" attributes:`, Object.keys(child.geometry.attributes))
-        })
-      })
-    }
-  }, [baseScene, meshesScene])
-
-  // Compute global bounds once; mark dirty so useFrame applies the first deform
-  useEffect(() => {
-    if (!store.current.has('_globalZCenter')) {
-      let gMinZ = Infinity, gMaxZ = -Infinity
-      let gMinX = Infinity, gMaxX = -Infinity
-      ;[baseScene, meshesScene].forEach((scene) => {
-        scene.traverse((child) => {
-          if (!child.isMesh || !child.geometry?.attributes.position) return
-          const pos = child.geometry.attributes.position
-          for (let i = 0; i < pos.count; i++) {
-            const x = pos.getX(i)
-            const z = pos.getZ(i)
-            if (z < gMinZ) gMinZ = z; if (z > gMaxZ) gMaxZ = z
-            if (x < gMinX) gMinX = x; if (x > gMaxX) gMaxX = x
-          }
-        })
-      })
-      const gc = (gMinZ + gMaxZ) / 2
-      store.current.set('_globalZCenter', gc)
-      store.current.set('_globalXMin', gMinX)
-      store.current.set('_globalXMax', gMaxX)
-      console.log(`[TrailerModel] global Z center: ${gc.toFixed(4)}m | X span: ${gMinX.toFixed(3)}–${gMaxX.toFixed(3)}`)
-    }
-    dirtyRef.current = true
-  }, [baseScene, meshesScene])
-
-  // Update targets when props change — useFrame handles the smooth lerp
-  useEffect(() => {
-    targetRef.current = { widthFt, lengthFt, heightFt }
-  }, [widthFt, lengthFt, heightFt])
-
-  useFrame(() => {
-    // Wait until global bounds are ready
-    if (!store.current.has('_globalZCenter')) return
-
-    const curr = animRef.current
-    const tgt  = targetRef.current
-
-    const nw = curr.widthFt  + (tgt.widthFt  - curr.widthFt)  * LERP_SPEED
-    const nl = curr.lengthFt + (tgt.lengthFt - curr.lengthFt) * LERP_SPEED
-    const nh = curr.heightFt + (tgt.heightFt - curr.heightFt) * LERP_SPEED
-
-    const moved =
-      Math.abs(nw - curr.widthFt)  > LERP_THRESHOLD ||
-      Math.abs(nl - curr.lengthFt) > LERP_THRESHOLD ||
-      Math.abs(nh - curr.heightFt) > LERP_THRESHOLD
-
-    if (!moved && !dirtyRef.current) return
-
-    dirtyRef.current = false
-    animRef.current = { widthFt: nw, lengthFt: nl, heightFt: nh }
-
-    const globalZCenter = store.current.get('_globalZCenter')
-    const globalXMin    = store.current.get('_globalXMin')
-    const globalXMax    = store.current.get('_globalXMax')
-
-    ;[baseScene, meshesScene].forEach((scene) => {
-      scene.traverse((child) => {
-        if (!child.isMesh || !child.geometry) return
-        applyDimensionDeformations({
-          geometry: child.geometry,
-          store: store.current,
-          uuid: child.uuid,
-          meshName: child.name || child.uuid,
-          widthFt: nw,
-          lengthFt: nl,
-          heightFt: nh,
-          globalZCenter,
-          globalXMin,
-          globalXMax,
-        })
-      })
-    })
-  })
-
-  return (
-    <>
-      <primitive object={baseScene} />
-      <primitive object={meshesScene} />
-    </>
-  )
-}
-
-useGLTF.preload('/models/Base.glb')
-useGLTF.preload('/models/Base Meshes.glb')
-
 
 // ── bounds projector (runs inside Canvas so it has camera + renderer access) ──
 
@@ -284,7 +169,17 @@ export default function TrailerViewer() {
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
   const [showQR, setShowQR] = useState(false)
+  const [clickedName, setClickedName] = useState(null)
+  const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
+
+  const handleMeshClick = (e) => {
+    e.stopPropagation()
+    const name = e.object.name || e.object.uuid
+    if (nameTimerRef.current) clearTimeout(nameTimerRef.current)
+    setClickedName(name)
+    nameTimerRef.current = setTimeout(() => setClickedName(null), 2000)
+  }
 
   const widthFt  = WIDTH_FT[width]          ?? 7
   const lengthFt = getLengthFt(length)
@@ -346,8 +241,8 @@ export default function TrailerViewer() {
               <directionalLight position={[-5, 3, -5]} intensity={0.4} />
               <Environment preset="city" />
               <Center>
-                <group ref={modelGroupRef}>
-                  <TrailerModel
+                <group ref={modelGroupRef} onClick={handleMeshClick}>
+                  <ModularTrailerModel
                     widthFt={widthFt}
                     lengthFt={lengthFt}
                     heightFt={heightFt}
@@ -362,7 +257,7 @@ export default function TrailerViewer() {
                 minDistance={1.5}
                 maxDistance={10}
                 minPolarAngle={0.2}
-                maxPolarAngle={Math.PI / 2}
+                maxPolarAngle={Math.PI * 0.65}
               />
             </Canvas>
           </Suspense>
@@ -374,6 +269,14 @@ export default function TrailerViewer() {
               heightFt={heightFt}
               bounds={screenBounds}
             />
+          )}
+
+          {clickedName && (
+            <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+              <div className="bg-black/70 text-white text-sm font-medium px-4 py-2 rounded-lg tracking-wide">
+                {clickedName}
+              </div>
+            </div>
           )}
         </div>
 

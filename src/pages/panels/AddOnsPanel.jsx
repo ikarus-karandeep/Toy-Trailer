@@ -3,9 +3,11 @@ import { WATER_OPTIONS, BATHROOM_OPTIONS, AWNING_OPTIONS } from '../../constants
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import AlertMessage from '../../components/AlertMessage'
+import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function AddOnsPanel({ activeSectionTitle }) {
-  const { waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning } =
+  const { waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
+    gullwingEscapeDoor, setGullwingEscapeDoor } =
     useConfigurator()
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
@@ -71,6 +73,21 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
+        </OptionSection>
+      )}
+
+      {show('BASE ADDONS') && (
+        <OptionSection title="BASE ADDONS">
+          <div className="flex flex-col gap-3">
+            <ToggleSwitch
+              label="GULLWING ESCAPE DOOR"
+              checked={gullwingEscapeDoor}
+              onChange={setGullwingEscapeDoor}
+            />
+          </div>
+          <p className="text-gray-400 text-xs tracking-wider uppercase mt-2">
+            Replaces the standard side egress with a gullwing-style escape door
+          </p>
         </OptionSection>
       )}
     </>

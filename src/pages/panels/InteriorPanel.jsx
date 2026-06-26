@@ -9,6 +9,7 @@ import {
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
+import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function InteriorPanel({ activeSectionTitle }) {
   const {
@@ -17,6 +18,9 @@ export default function InteriorPanel({ activeSectionTitle }) {
     ceiling, setCeiling,
     cabinets, toggleCabinet,
     toolBox, setToolBox,
+    leftSide, setLeftSide,
+    rightSide, setRightSide,
+    winchSystem, setWinchSystem,
   } = useConfigurator()
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
@@ -104,6 +108,13 @@ export default function InteriorPanel({ activeSectionTitle }) {
               </li>
             ))}
           </ul>
+          <div className="mt-4">
+            <ToggleSwitch
+              label="WINCH SYSTEM"
+              checked={winchSystem}
+              onChange={setWinchSystem}
+            />
+          </div>
         </OptionSection>
       )}
 
@@ -120,6 +131,26 @@ export default function InteriorPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
+        </OptionSection>
+      )}
+
+      {show('DOOR SIDES') && (
+        <OptionSection title="DOOR SIDES">
+          <div className="flex flex-col gap-3">
+            <ToggleSwitch
+              label="LEFT SIDE DOORS"
+              checked={leftSide}
+              onChange={setLeftSide}
+            />
+            <ToggleSwitch
+              label="RIGHT SIDE DOORS"
+              checked={rightSide}
+              onChange={setRightSide}
+            />
+          </div>
+          <p className="text-gray-400 text-xs tracking-wider uppercase mt-2">
+            Controls which sides display door panels or covers
+          </p>
         </OptionSection>
       )}
     </>

@@ -128,10 +128,10 @@ export function applyMoveNodeChain({ geometry, store, uuid, nodes }) {
 // ─── Combined dimension deformation (width + length + height in one pass) ─────
 
 // Base dimensions — the model is exported at these values (rest state = zero delta)
-const BASE_WIDTH_FT  = 8
+const BASE_WIDTH_FT = 8
 const BASE_LENGTH_FT = 26
 const BASE_HEIGHT_FT = 6 + 7 / 12   // 6'7"
-const FEET_TO_M      = 0.305         // matches the Blender "Feet to Meter" node
+const FEET_TO_M = 0.305         // matches the Blender "Feet to Meter" node
 
 /**
  * Applies width, length, and height deformations in a single vertex pass.
@@ -152,28 +152,68 @@ const FEET_TO_M      = 0.305         // matches the Blender "Feet to Meter" node
  * @param {number} params.lengthFt  - target length in feet (e.g. 26–34)
  * @param {number} params.heightFt  - target height in feet (e.g. 6.58–10.5)
  */
-export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, globalZCenter, globalXMin, globalXMax }) {
+export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, globalZCenter, globalXMin, globalXMax, we, ie }) {
   const position = geometry.attributes.position
   if (!position) {
     console.warn(`[deform] "${meshName}" — SKIP: no position attribute`)
     return
   }
 
-  // Feet → meter deltas  (same arithmetic as the Blender node)
-  const deltaWidth  = (widthFt  - BASE_WIDTH_FT)  * FEET_TO_M  // negative = narrowing
-  const deltaLength = (lengthFt - BASE_LENGTH_FT) * FEET_TO_M  // positive = extending rear
-  const deltaHeight = (heightFt - BASE_HEIGHT_FT) * FEET_TO_M  // positive = raising ceiling
+  // ── Size Adjustments: exact Blender node graph math ──────────────────────────
+  //
+  // The Blender "Size Adjustments" group uses this formula per Move node:
+  //   Offset = Delta_Offset + Factor × inputValue
+  // applied as: new_pos = orig_pos + Offset × vertex_weight
+  //
+  // The Delta_Offset constants are absolute Blender-coordinate values baked into
+  // the rest-state mesh. To get a DELTA from base we compute:
+  //   delta = (Offset at target) - (Offset at base)
+  //         = Factor × (targetValue - baseValue)
+  //
+  // ── LENGTH (X-axis, _rearselection) ─────────────────────────────────────────
+  // Two Move nodes in series:
+  //   Move 1: Delta_Offset=32.000, Factor=1.000, Input=min(length, 27')
+  //           → delta₁ = 1.000 × (min(L,27) − min(26,27)) = min(L,27) − 26
+  //   Move 2: Delta_Offset=0.000,  Factor=1.300, Input=max(length − 27', 0)
+  //           → delta₂ = 1.300 × max(L − 27, 0)     [excess beyond 27' scaled 1.3×]
+  const BASE_CLAMP_FT  = 27          // "Limit to 27'" clamp node
+  const EXCESS_FACTOR  = 1.300       // Factor on second Move node
+  const stage1Length   = (Math.min(lengthFt, BASE_CLAMP_FT) - BASE_LENGTH_FT) * FEET_TO_M
+  const stage2Length   = Math.max(lengthFt - BASE_CLAMP_FT, 0)              * FEET_TO_M * EXCESS_FACTOR
+  const deltaLength    = stage1Length + stage2Length
+
+  // ── WIDTH (Z-axis in Three.js, _leftselection / _rightselection) ─────────────
+  // Two Move nodes, one per side:
+  //   Move 3 (Left):  Delta_Offset=-8.500, Factor=0.500, Input=widthFt × FEET_TO_M
+  //   Move 4 (Right): Delta_Offset=+8.500, Factor=0.500, Input=widthFt × FEET_TO_M
+  // Both have Factor=0.500, so delta = 0.500 × (W − W₀) × FEET_TO_M
+  const WIDTH_FACTOR   = 0.500       // Factor on Move 3 / Move 4 nodes
+  const deltaWidth     = (widthFt - BASE_WIDTH_FT) * FEET_TO_M * WIDTH_FACTOR
+
+  // ── HEIGHT (Y-axis, _topselection) ───────────────────────────────────────────
+  // Move 5: Delta_Offset=0.500, Factor=1.000, Input=heightFt × FEET_TO_M
+  //   delta = 1.000 × (H − H₀) × FEET_TO_M
+  // The "Less Than" + Switch nodes gate the width moves to only apply where
+  // height < some threshold — this is handled implicitly by vertex weights.
+  const deltaHeight    = (heightFt - BASE_HEIGHT_FT) * FEET_TO_M  // Factor=1.000
+
 
   cacheOriginalPositions(store, uuid, position.array)
   const original = getOriginalPositions(store, uuid)
   const count = position.count
 
-  // Bounding box from originals — never recomputed from deformed positions
+  // Bounding box computed in world space (we/ie = worldMatrix / invWorldMatrix elements)
   let minX = Infinity, maxX = -Infinity
   let minY = Infinity, maxY = -Infinity
   let minZ = Infinity, maxZ = -Infinity
   for (let i = 0; i < count; i++) {
-    const ox = original[i * 3], oy = original[i * 3 + 1], oz = original[i * 3 + 2]
+    let ox = original[i * 3], oy = original[i * 3 + 1], oz = original[i * 3 + 2]
+    if (we) {
+      const wx = we[0]*ox + we[4]*oy + we[8]*oz + we[12]
+      const wy = we[1]*ox + we[5]*oy + we[9]*oz + we[13]
+      const wz = we[2]*ox + we[6]*oy + we[10]*oz + we[14]
+      ox = wx; oy = wy; oz = wz
+    }
     if (ox < minX) minX = ox; if (ox > maxX) maxX = ox
     if (oy < minY) minY = oy; if (oy > maxY) maxY = oy
     if (oz < minZ) minZ = oz; if (oz > maxZ) maxZ = oz
@@ -184,13 +224,13 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   // and get pushed in opposite directions, exploding wall thickness.
   const meshZCenter = (minZ + maxZ) / 2
   const zCenter = globalZCenter !== undefined ? globalZCenter : meshZCenter
-  const zRange  = (maxZ - minZ) / 2
-  const yRange  = maxY - minY
+  const zRange = (maxZ - minZ) / 2
+  const yRange = maxY - minY
 
-  const leftSel  = geometry.attributes._leftselection
+  const leftSel = geometry.attributes._leftselection
   const rightSel = geometry.attributes._rightselection
-  const rearSel  = geometry.attributes._rearselection
-  const topSel   = geometry.attributes._topselection
+  const rearSel = geometry.attributes._rearselection
+  const topSel = geometry.attributes._topselection
 
   // ── Per-mesh attribute diagnostics (logged once) ─────────────────────────────
   if (!store.has(`_logged_${uuid}`)) {
@@ -208,49 +248,54 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
       return `${label}:[${minW.toFixed(3)}–${maxW.toFixed(3)}] nonZero:${nonZero}/${attr.count}`
     }
 
-    console.groupCollapsed(`[deform INIT] "${meshName}" verts:${count}`)
-    console.log('Attrs on mesh:', Object.keys(geometry.attributes).join(', '))
-    console.log(selStats(leftSel,  '_leftselection'))
-    console.log(selStats(rightSel, '_rightselection'))
-    console.log(selStats(rearSel,  '_rearselection'))
-    console.log(selStats(topSel,   '_topselection'))
-    console.log(`BBox Z: ${minZ.toFixed(3)}–${maxZ.toFixed(3)}, meshZCenter:${meshZCenter.toFixed(3)}, usedZCenter:${zCenter.toFixed(3)}, zRange:${zRange.toFixed(3)}`)
-    console.groupEnd()
-  }
+    const missing = []
+    if (!leftSel)  missing.push('_leftselection')
+    if (!rightSel) missing.push('_rightselection')
+    if (!rearSel)  missing.push('_rearselection')
+    if (!topSel)   missing.push('_topselection')
+    if (missing.length > 0) {
+      console.warn(`[NO-ATTRS] "${meshName}" missing: ${missing.join(', ')} → using fallback`)
+    }
 
-  // ── Width deformation tracking ────────────────────────────────────────────────
-  let maxW = 0, minDeltaZ = Infinity, maxDeltaZ = -Infinity
-  let overweightCount = 0
+    // Log attr weight ranges once per mesh — reveals zero-weighted attrs that look present but do nothing
+    const maxVal = (attr) => {
+      if (!attr) return 'MISSING'
+      let m = 0
+      for (let i = 0; i < attr.count; i++) { const v = attr.getX(i); if (v > m) m = v }
+      return m.toFixed(4)
+    }
+    console.log(`[ATTRS] "${meshName}" L:${maxVal(leftSel)} R:${maxVal(rightSel)} rear:${maxVal(rearSel)} top:${maxVal(topSel)}`)
+  }
 
   for (let i = 0; i < count; i++) {
     let ox = original[i * 3]
     let oy = original[i * 3 + 1]
     let oz = original[i * 3 + 2]
 
-    // Width (Z axis) — selection weights drive which edges move
-    if (leftSel && rightSel) {
-      const w   = leftSel.getX(i) + rightSel.getX(i)
-      const dir = oz > zCenter ? 1 : -1
-      const dz  = dir * deltaWidth * w
-      oz += dz
-      if (w > maxW) maxW = w
-      if (w > 1.001) overweightCount++
-      if (dz < minDeltaZ) minDeltaZ = dz
-      if (dz > maxDeltaZ) maxDeltaZ = dz
-    } else if (deltaWidth !== 0 && zRange > 0) {
-      const t  = (oz - zCenter) / zRange    // –1…+1
-      const dz = t * deltaWidth
-      oz += dz
-      if (dz < minDeltaZ) minDeltaZ = dz
-      if (dz > maxDeltaZ) maxDeltaZ = dz
+    // Transform local → world space so direction/deformation math is axis-aligned
+    if (we) {
+      const wx = we[0]*ox + we[4]*oy + we[8]*oz + we[12]
+      const wy = we[1]*ox + we[5]*oy + we[9]*oz + we[13]
+      const wz = we[2]*ox + we[6]*oy + we[10]*oz + we[14]
+      ox = wx; oy = wy; oz = wz
     }
 
-    // Length (X axis) — rear-only (Blender node behaviour)
+    // Width (Z axis) — each selection drives its own direction independently.
+    // In this model left = +Z, right = -Z (verified from outer-hull behavior).
+    // Combining both into one weighted term and using vertex position for direction
+    // was wrong for interior meshes (e.g. cabinets) whose inner faces can sit on
+    // the "wrong" side of zCenter and would be displaced backwards.
+    if (leftSel || rightSel) {
+      if (leftSel) oz += deltaWidth * leftSel.getX(i)   // +Z = left wall
+      if (rightSel) oz -= deltaWidth * rightSel.getX(i)  // -Z = right wall
+    } else if (deltaWidth !== 0 && zRange > 0) {
+      const t = (oz - zCenter) / zRange    // –1…+1
+      oz += t * deltaWidth
+    }
+
+    // Length (X axis) — rear-only, no bbox fallback (matches Blender node)
     if (rearSel) {
       ox += deltaLength * rearSel.getX(i)
-    } else if (xRange > 0) {
-      const t = (ox - xCenter) / xRange
-      ox += t * deltaLength
     }
 
     // Height (Y axis) — floor anchored, ceiling rises
@@ -261,17 +306,15 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
       oy += t * deltaHeight
     }
 
-    position.setXYZ(i, ox, oy, oz)
-  }
+    // Transform world → local space before writing back
+    if (ie) {
+      const lx = ie[0]*ox + ie[4]*oy + ie[8]*oz + ie[12]
+      const ly = ie[1]*ox + ie[5]*oy + ie[9]*oz + ie[13]
+      const lz = ie[2]*ox + ie[6]*oy + ie[10]*oz + ie[14]
+      ox = lx; oy = ly; oz = lz
+    }
 
-  // ── Width change summary (every call, only when delta is non-zero) ────────────
-  if (deltaWidth !== 0) {
-    const mode = (leftSel && rightSel) ? 'ATTR' : 'fallback'
-    console.log(
-      `[deform WIDTH] "${meshName}" | widthFt:${widthFt} Δ:${deltaWidth.toFixed(3)}m | mode:${mode}` +
-      ` | dZ range:[${minDeltaZ.toFixed(3)}, ${maxDeltaZ.toFixed(3)}]` +
-      (mode === 'ATTR' ? ` | maxCombinedWeight:${maxW.toFixed(3)} overweightVerts:${overweightCount}` : '')
-    )
+    position.setXYZ(i, ox, oy, oz)
   }
 
   position.needsUpdate = true
@@ -295,7 +338,7 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
  */
 export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
   const position = geometry.attributes.position
-  const leftSel  = geometry.attributes._leftselection
+  const leftSel = geometry.attributes._leftselection
   const rightSel = geometry.attributes._rightselection
 
   if (!position || !leftSel || !rightSel) return
@@ -304,9 +347,9 @@ export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
   const original = getOriginalPositions(store, uuid)
 
   geometry.computeBoundingBox()
-  const bbox   = geometry.boundingBox
+  const bbox = geometry.boundingBox
   const zCenter = (bbox.min.z + bbox.max.z) / 2
-  const zRange  = (bbox.max.z - bbox.min.z) / 2
+  const zRange = (bbox.max.z - bbox.min.z) / 2
 
   for (let i = 0; i < position.count; i++) {
     const ox = original[i * 3]
@@ -314,8 +357,8 @@ export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
     const oz = original[i * 3 + 2]
 
     const totalWeight = leftSel.getX(i) + rightSel.getX(i)
-    const direction   = oz > zCenter ? -1 : 1
-    const newZ        = oz + direction * zRange * totalWeight * widthFactor
+    const direction = oz > zCenter ? -1 : 1
+    const newZ = oz + direction * zRange * totalWeight * widthFactor
 
     position.setXYZ(i, ox, oy, newZ)
   }

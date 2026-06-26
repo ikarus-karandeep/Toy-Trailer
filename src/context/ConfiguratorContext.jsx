@@ -11,7 +11,7 @@ export function ConfiguratorProvider({ children }) {
   const [width, setWidth] = useState('7ft')
   const [length, setLength] = useState('26')
   const [interiorHeight, setInteriorHeight] = useState('7ft0')
-  const [axle, setAxle] = useState('tandem')
+  const [axle, setAxle] = useState('baseatp')
   const [axleRating, setAxleRating] = useState('5200torsion')
   const [spreadAxle, setSpreadAxle] = useState(true)
 
@@ -19,6 +19,7 @@ export function ConfiguratorProvider({ children }) {
   const [exteriorFinish, setExteriorFinish] = useState('standard')
   const [selectedColor, setSelectedColor] = useState('pink')
   const [frontStyle, setFrontStyle] = useState('vnose')
+  const [sideDoorsType, setSideDoorsType] = useState('flatpanel')
   const [exteriorBuild, setExteriorBuild] = useState('fullscrewless')
   const [protection, setProtection] = useState('onepieceroof')
   const [wheel, setWheel] = useState('aluminumradial')
@@ -31,6 +32,8 @@ export function ConfiguratorProvider({ children }) {
   const [ceiling, setCeiling] = useState('thermal')
   const [cabinets, setCabinetsRaw] = useState(['vnosebase'])
   const [toolBox, setToolBox] = useState('frontbox')
+  const [leftSide, setLeftSide] = useState(true)
+  const [rightSide, setRightSide] = useState(true)
 
   // Systems
   const [electrical, setElectrical] = useState('110v8space')
@@ -42,6 +45,7 @@ export function ConfiguratorProvider({ children }) {
   // Loading
   const [rampType, setRampType] = useState('heavyduty')
   const [atpRamp, setAtpRamp] = useState(true)
+  const [rearDoor, setRearDoor] = useState(true)
   const [tieDowns, setTieDownsRaw] = useState(['drings'])
   const [jacks, setJacksRaw] = useState(['folddownstabilizer'])
 
@@ -49,6 +53,23 @@ export function ConfiguratorProvider({ children }) {
   const [waterPackage, setWaterPackage] = useState('largewater')
   const [bathroom, setBathroom] = useState(null)
   const [awning, setAwningRaw] = useState([])
+
+  // Front Style addons (Front Style node graph)
+  const [angledLights, setAngledLights] = useState(false)
+  const [stairs, setStairs] = useState(false)
+  const [vNoseETrack, setVNoseETrack] = useState(false)
+  const [batteryBox, setBatteryBox] = useState(false)
+
+  // Base addons (Base node graph)
+  const [gullwingEscapeDoor, setGullwingEscapeDoor] = useState(false)
+
+  // Cabinet Addons
+  const [winchSystem, setWinchSystem] = useState(false)
+
+  // System/Exterior Addons (from Addons node graph)
+  const [extendedTripleTongue, setExtendedTripleTongue] = useState(false)
+  const [radioPackageSpeaker, setRadioPackageSpeaker] = useState(false)
+  const [rearSpoiler, setRearSpoiler] = useState(false)
 
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = (tab) => setVisitedTabs(prev => new Set([...prev, tab]))
@@ -94,6 +115,7 @@ export function ConfiguratorProvider({ children }) {
         axleRating, setAxleRating,
         spreadAxle, setSpreadAxle,
         exteriorFinish, setExteriorFinish,
+        sideDoorsType, setSideDoorsType,
         selectedColor, setSelectedColor,
         frontStyle, setFrontStyle,
         exteriorBuild, setExteriorBuild,
@@ -106,6 +128,8 @@ export function ConfiguratorProvider({ children }) {
         ceiling, setCeiling,
         cabinets, toggleCabinet,
         toolBox, setToolBox,
+        leftSide, setLeftSide,
+        rightSide, setRightSide,
         electrical, setElectrical,
         battery, setBattery,
         lights, toggleLight,
@@ -113,11 +137,21 @@ export function ConfiguratorProvider({ children }) {
         climateControl, setClimateControl,
         rampType, setRampType,
         atpRamp, setAtpRamp,
+        rearDoor, setRearDoor,
         tieDowns, toggleTieDown,
         jacks, toggleJack,
         waterPackage, setWaterPackage,
         bathroom, setBathroom,
         awning, toggleAwning,
+        angledLights, setAngledLights,
+        stairs, setStairs,
+        vNoseETrack, setVNoseETrack,
+        batteryBox, setBatteryBox,
+        gullwingEscapeDoor, setGullwingEscapeDoor,
+        winchSystem, setWinchSystem,
+        extendedTripleTongue, setExtendedTripleTongue,
+        radioPackageSpeaker, setRadioPackageSpeaker,
+        rearSpoiler, setRearSpoiler,
         totalPrice,
         completionPercent, markTabVisited,
       }}

@@ -9,6 +9,7 @@ import {
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import AlertMessage from '../../components/AlertMessage'
+import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function SystemsPanel({ activeSectionTitle }) {
   const {
@@ -17,6 +18,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
     lights, toggleLight,
     ventilation, setVentilation,
     climateControl, setClimateControl,
+    radioPackageSpeaker, setRadioPackageSpeaker,
   } = useConfigurator()
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
@@ -37,6 +39,13 @@ export default function SystemsPanel({ activeSectionTitle }) {
             ))}
           </div>
           <AlertMessage message="12-SPACE PANEL REQUIRED FOR AC/BATH UPGRADES" />
+          <div className="mt-4">
+            <ToggleSwitch
+              label="RADIO PACKAGE SPEAKER"
+              checked={radioPackageSpeaker}
+              onChange={setRadioPackageSpeaker}
+            />
+          </div>
         </OptionSection>
       )}
 

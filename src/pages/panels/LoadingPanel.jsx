@@ -6,7 +6,7 @@ import AlertMessage from '../../components/AlertMessage'
 import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function LoadingPanel({ activeSectionTitle }) {
-  const { rampType, setRampType, atpRamp, setAtpRamp, tieDowns, toggleTieDown, jacks, toggleJack } =
+  const { rampType, setRampType, atpRamp, setAtpRamp, rearDoor, setRearDoor, tieDowns, toggleTieDown, jacks, toggleJack } =
     useConfigurator()
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
@@ -38,7 +38,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
           <AlertMessage message="8'+ HEIGHT REQUIRED FOR SUPER DUTY RAMP" />
 
-          <div className="mt-2">
+          <div className="mt-2 flex flex-col gap-2">
+            <ToggleSwitch
+              label="REAR DOOR"
+              checked={rearDoor}
+              onChange={setRearDoor}
+            />
             <ToggleSwitch
               label="ATP / RTP RAMP & FLAP"
               checked={atpRamp}
