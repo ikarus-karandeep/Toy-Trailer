@@ -1,7 +1,7 @@
 /**
- * geometryUtils.js
  * Reusable geometry deformation utilities for Blender Geometry Node setups
  */
+import { BlenderNodes } from './BlenderNodes'
 
 // ─── Core: store original vertex positions ────────────────────────────────────
 
@@ -151,8 +151,9 @@ const FEET_TO_M = 0.305         // matches the Blender "Feet to Meter" node
  * @param {number} params.widthFt   - target width  in feet (e.g. 6 or 8)
  * @param {number} params.lengthFt  - target length in feet (e.g. 26–34)
  * @param {number} params.heightFt  - target height in feet (e.g. 6.58–10.5)
+ * @param {boolean} params.hasCabinet - whether the trailer has a cabinet
  */
-export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, globalZCenter, globalXMin, globalXMax, we, ie }) {
+export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, hasCabinet, globalZCenter, globalXMin, globalXMax, we, ie }) {
   const position = geometry.attributes.position
   if (!position) {
     console.warn(`[deform] "${meshName}" — SKIP: no position attribute`)
@@ -176,26 +177,26 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   //           → delta₁ = 1.000 × (min(L,27) − min(26,27)) = min(L,27) − 26
   //   Move 2: Delta_Offset=0.000,  Factor=1.300, Input=max(length − 27', 0)
   //           → delta₂ = 1.300 × max(L − 27, 0)     [excess beyond 27' scaled 1.3×]
-  const BASE_CLAMP_FT  = 27          // "Limit to 27'" clamp node
-  const EXCESS_FACTOR  = 1.300       // Factor on second Move node
-  const stage1Length   = (Math.min(lengthFt, BASE_CLAMP_FT) - BASE_LENGTH_FT) * FEET_TO_M
-  const stage2Length   = Math.max(lengthFt - BASE_CLAMP_FT, 0)              * FEET_TO_M * EXCESS_FACTOR
-  const deltaLength    = stage1Length + stage2Length
+  const BASE_CLAMP_FT = 27          // "Limit to 27'" clamp node
+  const EXCESS_FACTOR = 1.300       // Factor on second Move node
+  const stage1Length = (Math.min(lengthFt, BASE_CLAMP_FT) - BASE_LENGTH_FT) * FEET_TO_M
+  const stage2Length = Math.max(lengthFt - BASE_CLAMP_FT, 0) * FEET_TO_M * EXCESS_FACTOR
+  const deltaLength = stage1Length + stage2Length
 
   // ── WIDTH (Z-axis in Three.js, _leftselection / _rightselection) ─────────────
   // Two Move nodes, one per side:
   //   Move 3 (Left):  Delta_Offset=-8.500, Factor=0.500, Input=widthFt × FEET_TO_M
   //   Move 4 (Right): Delta_Offset=+8.500, Factor=0.500, Input=widthFt × FEET_TO_M
   // Both have Factor=0.500, so delta = 0.500 × (W − W₀) × FEET_TO_M
-  const WIDTH_FACTOR   = 0.500       // Factor on Move 3 / Move 4 nodes
-  const deltaWidth     = (widthFt - BASE_WIDTH_FT) * FEET_TO_M * WIDTH_FACTOR
+  const WIDTH_FACTOR = 0.500       // Factor on Move 3 / Move 4 nodes
+  const deltaWidth = (widthFt - BASE_WIDTH_FT) * FEET_TO_M * WIDTH_FACTOR
 
   // ── HEIGHT (Y-axis, _topselection) ───────────────────────────────────────────
   // Move 5: Delta_Offset=0.500, Factor=1.000, Input=heightFt × FEET_TO_M
   //   delta = 1.000 × (H − H₀) × FEET_TO_M
   // The "Less Than" + Switch nodes gate the width moves to only apply where
   // height < some threshold — this is handled implicitly by vertex weights.
-  const deltaHeight    = (heightFt - BASE_HEIGHT_FT) * FEET_TO_M  // Factor=1.000
+  const deltaHeight = (heightFt - BASE_HEIGHT_FT) * FEET_TO_M  // Factor=1.000
 
 
   cacheOriginalPositions(store, uuid, position.array)
@@ -209,9 +210,9 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   for (let i = 0; i < count; i++) {
     let ox = original[i * 3], oy = original[i * 3 + 1], oz = original[i * 3 + 2]
     if (we) {
-      const wx = we[0]*ox + we[4]*oy + we[8]*oz + we[12]
-      const wy = we[1]*ox + we[5]*oy + we[9]*oz + we[13]
-      const wz = we[2]*ox + we[6]*oy + we[10]*oz + we[14]
+      const wx = we[0] * ox + we[4] * oy + we[8] * oz + we[12]
+      const wy = we[1] * ox + we[5] * oy + we[9] * oz + we[13]
+      const wz = we[2] * ox + we[6] * oy + we[10] * oz + we[14]
       ox = wx; oy = wy; oz = wz
     }
     if (ox < minX) minX = ox; if (ox > maxX) maxX = ox
@@ -227,10 +228,12 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const zRange = (maxZ - minZ) / 2
   const yRange = maxY - minY
 
-  const leftSel = geometry.attributes._leftselection
-  const rightSel = geometry.attributes._rightselection
-  const rearSel = geometry.attributes._rearselection
-  const topSel = geometry.attributes._topselection
+  const leftSel = geometry.attributes._leftselection || geometry.attributes._LEFTSELECTION
+  const rightSel = geometry.attributes._rightselection || geometry.attributes._RIGHTSELECTION
+  const rearSel2 = geometry.attributes._rearselection2 || geometry.attributes._REARSELECTION2
+  const rearSel1 = geometry.attributes._rearselection || geometry.attributes._REARSELECTION
+  const rearSel = lengthFt < 27 && rearSel2 ? rearSel2 : rearSel1
+  const topSel = geometry.attributes._topselection || geometry.attributes._TOPSELECTION
 
   // ── Per-mesh attribute diagnostics (logged once) ─────────────────────────────
   if (!store.has(`_logged_${uuid}`)) {
@@ -249,10 +252,10 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
     }
 
     const missing = []
-    if (!leftSel)  missing.push('_leftselection')
+    if (!leftSel) missing.push('_leftselection')
     if (!rightSel) missing.push('_rightselection')
-    if (!rearSel)  missing.push('_rearselection')
-    if (!topSel)   missing.push('_topselection')
+    if (!rearSel) missing.push('_rearselection')
+    if (!topSel) missing.push('_topselection')
     if (missing.length > 0) {
       console.warn(`[NO-ATTRS] "${meshName}" missing: ${missing.join(', ')} → using fallback`)
     }
@@ -274,9 +277,9 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
 
     // Transform local → world space so direction/deformation math is axis-aligned
     if (we) {
-      const wx = we[0]*ox + we[4]*oy + we[8]*oz + we[12]
-      const wy = we[1]*ox + we[5]*oy + we[9]*oz + we[13]
-      const wz = we[2]*ox + we[6]*oy + we[10]*oz + we[14]
+      const wx = we[0] * ox + we[4] * oy + we[8] * oz + we[12]
+      const wy = we[1] * ox + we[5] * oy + we[9] * oz + we[13]
+      const wz = we[2] * ox + we[6] * oy + we[10] * oz + we[14]
       ox = wx; oy = wy; oz = wz
     }
 
@@ -308,9 +311,9 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
 
     // Transform world → local space before writing back
     if (ie) {
-      const lx = ie[0]*ox + ie[4]*oy + ie[8]*oz + ie[12]
-      const ly = ie[1]*ox + ie[5]*oy + ie[9]*oz + ie[13]
-      const lz = ie[2]*ox + ie[6]*oy + ie[10]*oz + ie[14]
+      const lx = ie[0] * ox + ie[4] * oy + ie[8] * oz + ie[12]
+      const ly = ie[1] * ox + ie[5] * oy + ie[9] * oz + ie[13]
+      const lz = ie[2] * ox + ie[6] * oy + ie[10] * oz + ie[14]
       ox = lx; oy = ly; oz = lz
     }
 
@@ -338,8 +341,8 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
  */
 export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
   const position = geometry.attributes.position
-  const leftSel = geometry.attributes._leftselection
-  const rightSel = geometry.attributes._rightselection
+  const leftSel = geometry.attributes._leftselection || geometry.attributes._LEFTSELECTION
+  const rightSel = geometry.attributes._rightselection || geometry.attributes._RIGHTSELECTION
 
   if (!position || !leftSel || !rightSel) return
 

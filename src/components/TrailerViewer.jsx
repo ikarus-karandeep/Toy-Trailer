@@ -1,7 +1,7 @@
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Environment, Center } from '@react-three/drei'
-import { Box3, Vector3 } from 'three'
+import { Box3, Box3Helper, Color, Vector3 } from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
 import ARViewer from './ARViewer'
@@ -27,10 +27,18 @@ function getHeightFt(id) {
 
 function BoundsCalculator({ groupRef, onUpdate }) {
   const { camera, size } = useThree()
+  const box = useMemo(() => new Box3(), [])
 
   useFrame(() => {
     if (!groupRef.current) return
-    const box = new Box3().setFromObject(groupRef.current)
+
+    box.makeEmpty()
+    groupRef.current.traverseVisible((child) => {
+      if (!child.isMesh || !child.geometry) return
+      if (!child.geometry.boundingBox) child.geometry.computeBoundingBox()
+      _childBox.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld)
+      box.union(_childBox)
+    })
     if (box.isEmpty()) return
 
     const project = (x, y, z) => {
@@ -73,6 +81,11 @@ function BoundsCalculator({ groupRef, onUpdate }) {
       project(xZAxis, min.y, min.z), project(xZAxis, min.y, max.z)
     ]
 
+    // Convert scene units (metres) → feet for labels
+    const M_TO_FT = 3.28084
+    const boxSize = new Vector3()
+    box.getSize(boxSize)
+
     onUpdate({
       heightBot: heightDims[0],
       heightTop: heightDims[1],
@@ -82,12 +95,42 @@ function BoundsCalculator({ groupRef, onUpdate }) {
       lenEnd: lengthDims[1],
       w: size.width,
       h: size.height,
+      measuredWidthFt: boxSize.x * M_TO_FT,
+      measuredHeightFt: boxSize.y * M_TO_FT,
+      measuredLengthFt: boxSize.z * M_TO_FT,
     })
   })
 
   return null
 }
 
+
+// ── 3-D bounding box wireframe (red lines inside the canvas) ──────────────────
+
+// Reused every frame — avoids per-frame allocations
+const _childBox = new Box3()
+
+function BoundingBoxWireframe({ groupRef }) {
+  const box = useMemo(() => new Box3(), [])
+  const helper = useMemo(() => new Box3Helper(box, new Color(0xff0000)), [box])
+
+  useFrame(() => {
+    if (!groupRef.current) return
+
+    // traverseVisible skips meshes hidden by option switching (visible = false)
+    box.makeEmpty()
+    groupRef.current.traverseVisible((child) => {
+      if (!child.isMesh || !child.geometry) return
+      if (!child.geometry.boundingBox) child.geometry.computeBoundingBox()
+      _childBox.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld)
+      box.union(_childBox)
+    })
+
+    if (!box.isEmpty()) helper.updateMatrixWorld(true)
+  })
+
+  return <primitive object={helper} />
+}
 
 // ── dimension overlay ─────────────────────────────────────────────────────────
 
@@ -112,10 +155,13 @@ function DimLabel({ x, y, text, anchor = 'middle' }) {
   )
 }
 
-function DimensionOverlay({ widthFt, lengthFt, heightFt, bounds }) {
+function DimensionOverlay({ bounds }) {
   if (!bounds) return null
 
-  const { heightTop, heightBot, lenStart, lenEnd, widthStart, widthEnd, w, h } = bounds
+  const {
+    heightTop, heightBot, lenStart, lenEnd, widthStart, widthEnd, w, h,
+    measuredWidthFt, measuredHeightFt, measuredLengthFt,
+  } = bounds
   const heightMidY = (heightTop.y + heightBot.y) / 2
   const heightMidX = (heightTop.x + heightBot.x) / 2
   const lenMidY = (lenStart.y + lenEnd.y) / 2
@@ -141,19 +187,19 @@ function DimensionOverlay({ widthFt, lengthFt, heightFt, bounds }) {
         <line x1={heightTop.x} y1={heightTop.y} x2={heightBot.x} y2={heightBot.y}
           stroke="white" strokeWidth="1.5"
           markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
-        <DimLabel x={heightMidX - 10} y={heightMidY} text={`${formatFt(heightFt)} height`} anchor="end" />
+        <DimLabel x={heightMidX - 10} y={heightMidY} text={`${formatFt(measuredHeightFt)} height`} anchor="end" />
 
         {/* Length — usually Z axis */}
         <line x1={lenStart.x} y1={lenStart.y} x2={lenEnd.x} y2={lenEnd.y}
           stroke="white" strokeWidth="1.5"
           markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
-        <DimLabel x={lenMidX} y={lenMidY + 16} text={`${formatFt(lengthFt)} length`} />
+        <DimLabel x={lenMidX} y={lenMidY + 16} text={`${formatFt(measuredLengthFt)} length`} />
 
         {/* Width — usually X axis */}
         <line x1={widthStart.x} y1={widthStart.y} x2={widthEnd.x} y2={widthEnd.y}
           stroke="white" strokeWidth="1.5"
           markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
-        <DimLabel x={widthMidX} y={widthMidY + 16} text={`${formatFt(widthFt)} wide`} />
+        <DimLabel x={widthMidX} y={widthMidY + 16} text={`${formatFt(measuredWidthFt)} wide`} />
       </svg>
     </div>
   )
@@ -169,6 +215,7 @@ export default function TrailerViewer() {
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
   const [showQR, setShowQR] = useState(false)
+  const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
@@ -213,6 +260,36 @@ export default function TrailerViewer() {
     }
   }
 
+  const handleDownload = async () => {
+    if (!modelGroupRef.current || downloading) return
+    setDownloading(true)
+    try {
+      const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
+      const exporter = new GLTFExporter()
+      exporter.parse(
+        modelGroupRef.current,
+        (result) => {
+          const blob = new Blob([result], { type: 'model/gltf-binary' })
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `trailer-${lengthFt}ft-${widthFt}ft.glb`
+          a.click()
+          URL.revokeObjectURL(url)
+          setDownloading(false)
+        },
+        (err) => {
+          console.error('GLB export failed:', err)
+          setDownloading(false)
+        },
+        { binary: true }
+      )
+    } catch (err) {
+      console.error('Download error:', err)
+      setDownloading(false)
+    }
+  }
+
   const handleCloseQR = () => setShowQR(false)
 
   const handleCloseAR = () => {
@@ -250,7 +327,10 @@ export default function TrailerViewer() {
                 </group>
               </Center>
               {showDimensions && (
-                <BoundsCalculator groupRef={modelGroupRef} onUpdate={setScreenBounds} />
+                <>
+                  <BoundsCalculator groupRef={modelGroupRef} onUpdate={setScreenBounds} />
+                  <BoundingBoxWireframe groupRef={modelGroupRef} />
+                </>
               )}
               <OrbitControls
                 enablePan={true}
@@ -263,12 +343,7 @@ export default function TrailerViewer() {
           </Suspense>
 
           {showDimensions && (
-            <DimensionOverlay
-              widthFt={widthFt}
-              lengthFt={lengthFt}
-              heightFt={heightFt}
-              bounds={screenBounds}
-            />
+            <DimensionOverlay bounds={screenBounds} />
           )}
 
           {clickedName && (
@@ -302,6 +377,23 @@ export default function TrailerViewer() {
             className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
           >
             VIEW IN YOUR DRIVEWAY
+          </button>
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            aria-label="Download GLB"
+            className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {downloading ? (
+              <svg className="animate-spin w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
+              </svg>
+            )}
           </button>
         </div>
       </div>

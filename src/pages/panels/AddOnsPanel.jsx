@@ -7,8 +7,10 @@ import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function AddOnsPanel({ activeSectionTitle }) {
   const { waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
-    gullwingEscapeDoor, setGullwingEscapeDoor } =
+    gullwingEscapeDoor, setGullwingEscapeDoor, length } =
     useConfigurator()
+
+  const lengthFt = parseInt(length, 10)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -73,6 +75,9 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
+          {lengthFt < 29 && (
+            <AlertMessage message="AWNING REQUIRES A MINIMUM TRAILER LENGTH OF 29 FT" />
+          )}
         </OptionSection>
       )}
 

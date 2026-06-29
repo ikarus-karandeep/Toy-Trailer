@@ -52,13 +52,13 @@ const FRONT_STYLE_MESH_MAP = {
 // Mesh names exactly match the GLB (note: V-Nose uses a hyphen, Flat_Front uses underscores).
 const CABINET_MESH_MAP = {
     vnose: {
-        cabinet:     'V-Nose_Cabinet',
-        overhead:    'V-Nose_Overhead_Cabinet',
+        cabinet: 'V-Nose_Cabinet',
+        overhead: 'V-Nose_Overhead_Cabinet',
         toolboxSlot: 'V-Nose_Cabinet_Toolbox_Slot',
     },
     flatfront: {
-        cabinet:     'Flat_Front_Cabinet',
-        overhead:    'Flat_Front_Overhead_Cabinet',
+        cabinet: 'Flat_Front_Cabinet',
+        overhead: 'Flat_Front_Overhead_Cabinet',
         toolboxSlot: 'Flat_Front_Cabinet_Toolbox_Slot',
     },
 }
@@ -94,24 +94,24 @@ const AXLE_MESH_MAP = {
 // "Generator Box Condition" node (see useEffect below).
 const DOOR_MESH_MAP = {
     //  Door Style Switch output 0: No Door / Flat Panel (default)
-    flatpanel:    {
-        doorsL: 'Flat_Door_Panel_L',       doorsR: 'Flat_Door_Panel_R',
-        atpL:   'ATP_Flat_Door_Panel_L',   atpR:   'ATP_Flat_Door_Panel_R',
+    flatpanel: {
+        doorsL: 'Flat_Door_Panel_L', doorsR: 'Flat_Door_Panel_R',
+        atpL: 'ATP_Flat_Door_Panel_L', atpR: 'ATP_Flat_Door_Panel_R',
     },
     //  Door Style Switch output 1: Single Door
-    singledoor:   {
-        doorsL: 'Single_Door_L',           doorsR: 'Single_Door_R',
-        atpL:   'ATP_For_Single_Door_L',   atpR:   'ATP_For_Single_Door_R',
+    singledoor: {
+        doorsL: 'Single_Door_L', doorsR: 'Single_Door_R',
+        atpL: 'ATP_For_Single_Door_L', atpR: 'ATP_For_Single_Door_R',
     },
     //  Door Style Switch output 2: Double Door
-    doubledoor:   {
-        doorsL: 'Double_Door_L',           doorsR: 'Double_Door_R',
-        atpL:   'ATP_For_DoubleDoor_L',    atpR:   'ATP_For_DoubleDoor_R',
+    doubledoor: {
+        doorsL: 'Double_Door_L', doorsR: 'Double_Door_R',
+        atpL: 'ATP_For_DoubleDoor_L', atpR: 'ATP_For_DoubleDoor_R',
     },
     //  Door Style Switch output 3: Generator Box
     generatorbox: {
-        doorsL: 'Generator_Box_Plate_L',         doorsR: 'Generator_Box_Plate_R',
-        atpL:   'ATP_Plate_Generator_Box_L',     atpR:   'ATP_Plate_Generator_Box_R',
+        doorsL: 'Generator_Box_Plate_L', doorsR: 'Generator_Box_Plate_R',
+        atpL: 'ATP_Plate_Generator_Box_L', atpR: 'ATP_Plate_Generator_Box_R',
     },
 }
 
@@ -121,9 +121,9 @@ const DOOR_MESH_MAP = {
 // Menu Switch: selects which mesh to show based on rampType.
 // Object Info (Original/Relative) → world-transform handled by the deform system.
 const REAR_DOOR_MESH_MAP = {
-    barndoors:  'Barn_Door',
-    heavyduty:  'Heavy_Duty_Ramp',
-    superduty:  'Super_Duty_Ramp',   // update name if mesh differs in GLB
+    barndoors: 'Barn_Door',
+    heavyduty: 'Heavy_Duty_Ramp',
+    superduty: 'Super_Duty_Ramp',   // update name if mesh differs in GLB
 }
 
 // ── Front Style addons: Super Switch per addon type ────────────────────────
@@ -132,18 +132,28 @@ const REAR_DOOR_MESH_MAP = {
 // Angled Lights + V-Nose E Track have no variant (boolean gate only).
 const FRONT_STYLE_ADDON_MESH_MAP = {
     vnose: {
-        stairs:  'Stair_(V-Nose)',
+        stairs: 'Stair_(V-Nose)',
         battery: 'Battery_storage_(V-Nose_Cabinet)',
     },
     flatfront: {
-        stairs:  'Stair_(Flat_Front)',
+        stairs: 'Stair_(Flat_Front)',
         battery: 'Battery_storage_(Flat_Cabinet)',
     },
+}
+
+// ── Extended Triple Tongue: 2 mesh variants (one per front style) ───────────
+// Mirrors the Blender tongue node — same Super Switch pattern as stairs/battery.
+// Mesh names match the GLB objects visible in the Outliner.
+const TONGUE_MESH_MAP = {
+    vnose:     'Extended_Triple_Tongue_V-Nose',
+    flatfront:  'Extended_Triple_Tongue_Flat_Front',
 }
 
 
 export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
     const config = useConfigurator()
+
+    const hasCabinet = config.cabinets?.includes('vnosebase') || config.cabinets?.includes('flatfrontbase')
 
     const { scene: base } = useGLTF(PATHS.base)
     const { scene: baseMeshes } = useGLTF(PATHS.baseMeshes)
@@ -155,7 +165,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
     const { scene: cabinetsGLB } = useGLTF(PATHS.cabinets)
     const { scene: awning } = useGLTF(PATHS.awning)
     const { scene: bathroom } = useGLTF(PATHS.bathroom)
-    const { scene: spoiler } = useGLTF(PATHS.spoiler)  // eslint-disable-line no-unused-vars
+    const { scene: spoiler } = useGLTF(PATHS.spoiler)
     const { scene: axleConfig } = useGLTF(PATHS.axleConfig)
     const { scene: axle } = useGLTF(PATHS.axle)
     const { scene: wheels } = useGLTF(PATHS.wheels)
@@ -220,18 +230,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const doorVariant = DOOR_MESH_MAP[config.sideDoorsType] ?? DOOR_MESH_MAP.flatpanel
 
         // Left Side / Right Side boolean gates (And/Not/Not pattern in graph).
-        const leftSide  = config.leftSide   // Interior tab: DOOR SIDES → LEFT SIDE DOORS
+        const leftSide = config.leftSide   // Interior tab: DOOR SIDES → LEFT SIDE DOORS
         const rightSide = config.rightSide  // Interior tab: DOOR SIDES → RIGHT SIDE DOORS
 
         // Build active mesh lists per side → Join Geometry (sideDoors.glb)
         const activeDoorMeshes = [
-            ...(leftSide  ? [doorVariant.doorsL] : []),   // And(leftSide,  doorType)
+            ...(leftSide ? [doorVariant.doorsL] : []),   // And(leftSide,  doorType)
             ...(rightSide ? [doorVariant.doorsR] : []),   // And(rightSide, doorType)
         ]
 
         // Build active ATP trim lists per side → Join Geometry (extFinish.glb)
         const activeAtpMeshes = [
-            ...(leftSide  ? [doorVariant.atpL] : []),
+            ...(leftSide ? [doorVariant.atpL] : []),
             ...(rightSide ? [doorVariant.atpR] : []),
         ]
 
@@ -289,12 +299,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         if (config.jacks?.includes('5kelectrictongue')) {
             activeAddonMeshes.push('Electric_Jack')
         }
-        
+
         // AC Unit (Climate Control)
         if (config.climateControl && config.climateControl !== 'none' && config.climateControl !== 'wirebrace') {
             activeAddonMeshes.push('AC_Unit')
         }
 
+        // ── tongue.glb: always visible, variant switches with front style
+        // Extended_Triple_Tongue_V-Nose (default) ↔ Extended_Triple_Tongue_Flat_Front
+        BlenderNodes.switchMesh(tongue, TONGUE_MESH_MAP[config.frontStyle] ?? TONGUE_MESH_MAP.vnose)
+
+        // ── addons.glb: Extended Triple Tongue addon — gated by toggle
         if (config.extendedTripleTongue) {
             activeAddonMeshes.push('Extended_Triple_Tongue')
         }
@@ -302,7 +317,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         if (config.radioPackageSpeaker) {
             activeAddonMeshes.push('Radio_Package_Speaker')
         }
-        
+
         if (config.lights?.includes('racing')) {
             activeAddonMeshes.push('Racing_Lights')
         }
@@ -320,7 +335,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const activeCabinetMeshes = []
 
         // Boolean inputs (mapping the array states to the node graph booleans)
-        const hasCabinet = config.cabinets.includes('vnosebase') || config.cabinets.includes('flatfrontbase')
         const hasOverhead = config.cabinets.includes('vnoseoverhead') || config.cabinets.includes('flatfrontoverhead')
         const hasToolbox = config.toolBox && config.toolBox !== 'none'
         const hasWinch = config.winchSystem
@@ -348,9 +362,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         // The E-Track and other tie downs are generated instances in Blender.
         // We select the baked GLB meshes directly (D-Rings / Airline tracking missing in GLB currently)
         const activeCargoMeshes = []
-        if (config.tieDowns?.includes('etrack')) {
-            activeCargoMeshes.push('Floor_E-Track', 'Wall_E-Track')
-        }
+        // We'll hide the static E-Tracks and generate them dynamically instead to multiply the mesh
         BlenderNodes.switchMeshes(cargo, activeCargoMeshes)
 
         // Spread Axle ON = 2 tyres (tandem), OFF = 3 tyres (tri-axle)
@@ -388,20 +400,85 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         config.extendedTripleTongue, config.radioPackageSpeaker, config.rearSpoiler,
         config.climateControl, config.jacks, config.lights,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
-        cabinetsGLB, cargo, spoiler
+        cabinetsGLB, cargo, spoiler, tongue
     ])
-    // BlenderNodes.transformGeometry — tongue positioned at trailer front face
-    const positionedTongue = useMemo(() => {
-        let templateMesh = null
-        tongue.traverse(child => { if (child.isMesh && !templateMesh) templateMesh = child })
-        if (!templateMesh) return null
-        const frontX = -(lengthFt * FEET_TO_M) / 2
-        const transformed = BlenderNodes.transformGeometry(
-            templateMesh.geometry.clone(),
-            new THREE.Vector3(frontX, 0, 0),
-        )
-        return new THREE.Mesh(transformed, templateMesh.material)
-    }, [tongue, lengthFt])
+
+    // ── Emulate Blender "E-Track" Array Generation Node ────────────────────────
+    const generatedETracks = useMemo(() => {
+        // Find the base template meshes (we assume they are the original single-piece objects)
+        let floorTemplate = null
+        let wallTemplate = null
+        cargo.traverse(child => {
+            if (child.isMesh && child.name.includes('Floor_E-Track')) floorTemplate = child
+            if (child.isMesh && child.name.includes('Wall_E-Track')) wallTemplate = child
+        })
+
+        // The true rear X coordinate of the trailer uses the same clamped delta logic from GeometryUtils
+        const BASE_LENGTH_FT = 26
+        const FEET_TO_M = 0.305
+        const BASE_CLAMP_FT = 27
+        const EXCESS_FACTOR = 1.300
+        const stage1Length = (Math.min(lengthFt, BASE_CLAMP_FT) - BASE_LENGTH_FT) * FEET_TO_M
+        const stage2Length = Math.max(lengthFt - BASE_CLAMP_FT, 0) * FEET_TO_M * EXCESS_FACTOR
+        const deltaLength = stage1Length + stage2Length
+        const trueRearX = -(BASE_LENGTH_FT * FEET_TO_M + deltaLength)
+
+        // Node: Switch
+        const switchNode = hasCabinet ? 0.325 : -0.320
+        // Node: Subtract (Trailer Length - Switch). The Trailer Length is passed as a negative X coordinate.
+        const subtractNode = BlenderNodes.Math.Subtract(trueRearX, switchNode)
+        // Node: Multiply -> Array Length
+        const targetLength = BlenderNodes.Math.Multiply(subtractNode, -1.000)
+
+        const stepSize = 0.076
+        const count = Math.max(1, Math.ceil(Math.abs(targetLength) / stepSize))
+
+        const points = new Float32Array(count * 3)
+        // Assume trailer array generates along -X from the Switch offset
+        const startX = switchNode
+        for (let i = 0; i < count; i++) {
+            points[i * 3] = startX - (i * stepSize)
+            points[i * 3 + 1] = 0
+            points[i * 3 + 2] = 0
+        }
+
+        const pointsGeometry = new THREE.BufferGeometry()
+        pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
+
+        console.log(`[E-Track Debug] targetLength: ${targetLength}, count: ${count}, startX: ${startX}`)
+        if (floorTemplate) {
+            console.log(`[E-Track Debug] floorTemplate position:`, floorTemplate.position.toArray())
+            console.log(`[E-Track Debug] floorTemplate rotation:`, floorTemplate.rotation.toArray())
+            const a = floorTemplate.geometry.attributes
+            const present = ['_leftselection', '_rightselection', '_rearselection', '_topselection'].filter(k => !!a[k])
+            console.log(`[E-Track Debug] floorTemplate attributes:`, present)
+        }
+        if (wallTemplate) {
+            console.log(`[E-Track Debug] wallTemplate position:`, wallTemplate.position.toArray())
+            console.log(`[E-Track Debug] wallTemplate rotation:`, wallTemplate.rotation.toArray())
+            const a = wallTemplate.geometry.attributes
+            const present = ['_leftselection', '_rightselection', '_rearselection', '_topselection'].filter(k => !!a[k])
+            console.log(`[E-Track Debug] wallTemplate attributes:`, present)
+        }
+
+        const instances = []
+        if (floorTemplate && config.tieDowns?.includes('flooretrack')) {
+            const floorInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, floorTemplate)
+            floorInstanced.position.copy(floorTemplate.position)
+            floorInstanced.rotation.copy(floorTemplate.rotation)
+            floorInstanced.scale.copy(floorTemplate.scale)
+            instances.push(<primitive key="floor-etrack" object={floorInstanced} />)
+        }
+        if (wallTemplate && config.tieDowns?.includes('walletrack')) {
+            const wallInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, wallTemplate)
+            wallInstanced.position.copy(wallTemplate.position)
+            wallInstanced.rotation.copy(wallTemplate.rotation)
+            wallInstanced.scale.copy(wallTemplate.scale)
+            instances.push(<primitive key="wall-etrack" object={wallInstanced} />)
+        }
+
+        return instances
+    }, [cargo, lengthFt, hasCabinet, config.tieDowns])
 
     const activeScenes = useMemo(() => {
         const scenes = [
@@ -414,17 +491,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             cargo,
         ]
         if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
-        if (config.awning && config.awning !== 'none') scenes.push(awning)
+        if (config.awning?.length > 0 && lengthFt >= 29) scenes.push(awning)
         if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
         if (config.rearSpoiler) scenes.push(spoiler)
         return scenes
     }, [
         config.cabinets, config.awning, config.bathroom, config.rearSpoiler,
+        lengthFt,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler
     ])
 
     activeScenesRef.current = activeScenes
+
+    useEffect(() => {
+        dirtyRef.current = true
+    }, [activeScenes])
 
     useFrame(() => {
         if (!store.current.has('_globalZCenter')) return
@@ -442,21 +524,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const globalZCenter = store.current.get('_globalZCenter')
         const globalXMin = store.current.get('_globalXMin')
         const globalXMax = store.current.get('_globalXMax')
-        // Log axle config attribute check once
-        const axleScenes = { axle, axleConfig, wheels }
-        Object.entries(axleScenes).forEach(([label, scene]) => {
-            const logKey = `_axle_logged_${scene.uuid}`
-            if (store.current.has(logKey)) return
-            store.current.set(logKey, true)
-            console.group(`[axle-attrs] ${label}`)
-            scene.traverse(c => {
-                if (!c.isMesh || !c.geometry) return
-                const a = c.geometry.attributes
-                const present = ['_leftselection','_rightselection','_rearselection','_topselection'].filter(k => !!a[k])
-                console.log(`  "${c.name || c.uuid}" → ${present.length ? present.join(', ') : 'NO selection attrs'}`)
-            })
-            console.groupEnd()
-        })
 
         activeScenesRef.current.forEach(scene => {
             scene.traverse(child => {
@@ -488,7 +555,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             {activeScenes.map(scene => (
                 <primitive key={scene.uuid} object={scene} />
             ))}
-            {positionedTongue && <primitive object={positionedTongue} />}
+            <primitive key={tongue.uuid} object={tongue} />
+            {generatedETracks}
         </group>
     )
 }
