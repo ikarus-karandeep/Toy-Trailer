@@ -61,7 +61,7 @@ export function ConfiguratorProvider({ children }) {
   const [batteryBox, setBatteryBox] = useState(false)
 
   // Base addons (Base node graph)
-  const [gullwingEscapeDoor, setGullwingEscapeDoor] = useState(false)
+  const [escapeDoor, setEscapeDoor] = useState('none')
   const [generatorBox, setGeneratorBox] = useState(false)
 
   // Cabinet Addons
@@ -71,6 +71,12 @@ export function ConfiguratorProvider({ children }) {
   const [extendedTripleTongue, setExtendedTripleTongue] = useState(false)
   const [radioPackageSpeaker, setRadioPackageSpeaker] = useState(false)
   const [rearSpoiler, setRearSpoiler] = useState(false)
+
+  // Structural / Exterior Addons
+  const [ladderRacks, setLadderRacks] = useState(false)
+  const [sidewallVents, setSidewallVents] = useState(false)
+  const [recessedTireBox, setRecessedTireBox] = useState(false)
+  const [interiorTireMount, setInteriorTireMount] = useState(false)
 
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = (tab) => setVisitedTabs(prev => new Set([...prev, tab]))
@@ -148,12 +154,16 @@ export function ConfiguratorProvider({ children }) {
         stairs, setStairs,
         vNoseETrack, setVNoseETrack,
         batteryBox, setBatteryBox,
-        gullwingEscapeDoor, setGullwingEscapeDoor,
+        escapeDoor, setEscapeDoor,
         generatorBox, setGeneratorBox,
         winchSystem, setWinchSystem,
         extendedTripleTongue, setExtendedTripleTongue,
         radioPackageSpeaker, setRadioPackageSpeaker,
         rearSpoiler, setRearSpoiler,
+        ladderRacks, setLadderRacks,
+        sidewallVents, setSidewallVents,
+        recessedTireBox, setRecessedTireBox,
+        interiorTireMount, setInteriorTireMount,
         totalPrice,
         completionPercent, markTabVisited,
       }}

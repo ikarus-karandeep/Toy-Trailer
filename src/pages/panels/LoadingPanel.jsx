@@ -38,7 +38,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
           <AlertMessage message="8'+ HEIGHT REQUIRED FOR SUPER DUTY RAMP" />
 
-          <div className="mt-2 flex flex-col gap-2">
+          {/* <div className="mt-2 flex flex-col gap-2">
             <ToggleSwitch
               label="REAR DOOR"
               checked={rearDoor}
@@ -49,7 +49,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               checked={atpRamp}
               onChange={setAtpRamp}
             />
-          </div>
+          </div> */}
         </OptionSection>
       )}
 

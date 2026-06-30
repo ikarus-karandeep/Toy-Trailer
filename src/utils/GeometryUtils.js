@@ -185,6 +185,20 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const baseOffset2 = Math.max(BASE_LENGTH_FT - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
   const deltaLength = ((targetOffset1 + targetOffset2) - (baseOffset1 + baseOffset2)) * FEET_TO_M
 
+  // Partial Deltas to match 3 chained Geometry Nodes in Blender
+  // Node 1: Handles length changes ABOVE 27ft
+  const delta1 = (Math.max(lengthFt - 27, 0) - Math.max(BASE_LENGTH_FT - 27, 0)) * FEET_TO_M
+  
+  // Node 2: Handles length changes BETWEEN 23.5ft and 27ft
+  const clampL2 = Math.max(Math.min(lengthFt, 27), 23.5)
+  const clampB2 = Math.max(Math.min(BASE_LENGTH_FT, 27), 23.5)
+  const delta2 = (clampL2 - clampB2) * FEET_TO_M
+
+  // Node 3: Handles length changes BELOW 23.5ft
+  const minL3 = Math.min(lengthFt, 23.5)
+  const minB3 = Math.min(BASE_LENGTH_FT, 23.5)
+  const delta3 = (minL3 - minB3) * FEET_TO_M
+
   // ── WIDTH (Z-axis in Three.js, _leftselection / _rightselection) ─────────────
   // Two Move nodes, one per side:
   //   Move 3 (Left):  Delta_Offset=-8.500, Factor=0.500, Input=widthFt × FEET_TO_M
@@ -230,46 +244,36 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const zRange = (maxZ - minZ) / 2
   const yRange = maxY - minY
 
-  const leftSel = geometry.attributes._leftselection || geometry.attributes._LEFTSELECTION
-  const rightSel = geometry.attributes._rightselection || geometry.attributes._RIGHTSELECTION
-  const rearSel2 = geometry.attributes._rearselection2 || geometry.attributes._REARSELECTION2
-  const rearSel1 = geometry.attributes._rearselection || geometry.attributes._REARSELECTION
-  const rearSel = lengthFt < 27 && rearSel2 ? rearSel2 : rearSel1
-  const topSel = geometry.attributes._topselection || geometry.attributes._TOPSELECTION
+  const attrKeys = Object.keys(geometry.attributes)
+  const key3 = attrKeys.find(k => k.toLowerCase().includes('rearselection3'))
+  const key2 = attrKeys.find(k => k.toLowerCase().includes('rearselection2'))
+  const key1 = attrKeys.find(k => k.toLowerCase().includes('rearselection') && !k.toLowerCase().includes('rearselection2') && !k.toLowerCase().includes('rearselection3'))
+  const topKey = attrKeys.find(k => k.toLowerCase().includes('topselection'))
+  const leftKey = attrKeys.find(k => k.toLowerCase().includes('leftselection'))
+  const rightKey = attrKeys.find(k => k.toLowerCase().includes('rightselection'))
 
-  // ── Per-mesh attribute diagnostics (logged once) ─────────────────────────────
-  if (!store.has(`_logged_${uuid}`)) {
-    store.set(`_logged_${uuid}`, true)
+  const leftSel = leftKey ? geometry.attributes[leftKey] : null
+  const rightSel = rightKey ? geometry.attributes[rightKey] : null
+  const rearSel3 = key3 ? geometry.attributes[key3] : null
+  const rearSel2 = key2 ? geometry.attributes[key2] : null
+  const rearSel1 = key1 ? geometry.attributes[key1] : null
+  const topSel = topKey ? geometry.attributes[topKey] : null
 
-    const selStats = (attr, label) => {
-      if (!attr) return `${label}:MISSING`
-      let minW = Infinity, maxW = -Infinity, nonZero = 0
-      for (let i = 0; i < attr.count; i++) {
-        const v = attr.getX(i)
-        if (v < minW) minW = v
-        if (v > maxW) maxW = v
-        if (v > 0) nonZero++
-      }
-      return `${label}:[${minW.toFixed(3)}–${maxW.toFixed(3)}] nonZero:${nonZero}/${attr.count}`
-    }
+  const hasSel3 = !!rearSel3;
+  const hasSel2 = !!rearSel2;
+  const hasSel1 = !!rearSel1;
 
-    const missing = []
-    if (!leftSel) missing.push('_leftselection')
-    if (!rightSel) missing.push('_rightselection')
-    if (!rearSel) missing.push('_rearselection')
-    if (!topSel) missing.push('_topselection')
-    if (missing.length > 0) {
-      console.warn(`[NO-ATTRS] "${meshName}" missing: ${missing.join(', ')} → using fallback`)
-    }
-
-    // Log attr weight ranges once per mesh — reveals zero-weighted attrs that look present but do nothing
-    const maxVal = (attr) => {
-      if (!attr) return 'MISSING'
-      let m = 0
-      for (let i = 0; i < attr.count; i++) { const v = attr.getX(i); if (v > m) m = v }
-      return m.toFixed(4)
-    }
-    console.log(`[ATTRS] "${meshName}" L:${maxVal(leftSel)} R:${maxVal(rightSel)} rear:${maxVal(rearSel)} top:${maxVal(topSel)}`)
+  // Cascade missing deltas to older nodes (if a mesh hasn't been updated with newer maps)
+  let applyDelta3 = 0, applyDelta2 = 0, applyDelta1 = 0;
+  if (hasSel3) {
+      applyDelta3 = delta3;
+      applyDelta2 = delta2;
+      applyDelta1 = delta1;
+  } else if (hasSel2) {
+      applyDelta2 = delta2 + delta3;
+      applyDelta1 = delta1;
+  } else if (hasSel1) {
+      applyDelta1 = delta1 + delta2 + delta3;
   }
 
   for (let i = 0; i < count; i++) {
@@ -298,9 +302,19 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
       oz += t * deltaWidth
     }
 
-    // Length (X axis) — rear-only, no bbox fallback (matches Blender node)
-    if (rearSel) {
-      ox += deltaLength * rearSel.getX(i)
+    // Length (X axis) — rear-only, applying partial chained deltas
+    if (hasSel1 || hasSel2 || hasSel3) {
+      let move = 0;
+      if (hasSel3) move += applyDelta3 * rearSel3.getX(i);
+      if (hasSel2) move += applyDelta2 * rearSel2.getX(i);
+      if (hasSel1) move += applyDelta1 * rearSel1.getX(i);
+      ox += move;
+    } else if (deltaLength !== 0 && globalXMax !== undefined && globalXMin !== undefined) {
+      const globalXRange = globalXMin - globalXMax
+      if (globalXRange !== 0) {
+        const t = (ox - globalXMax) / globalXRange
+        ox += t * deltaLength
+      }
     }
 
     // Height (Y axis) — floor anchored, ceiling rises

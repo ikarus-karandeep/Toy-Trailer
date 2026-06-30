@@ -6,7 +6,7 @@ import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
 
-const LERP_SPEED = 0.08
+const LERP_SPEED = 0.18
 const LERP_THRESHOLD = 0.0005
 const FEET_TO_M = 0.305
 
@@ -24,6 +24,7 @@ const PATHS = {
     bathroom: '/models/Packaging/Full Bathroom.glb',
     spoiler: '/models/Packaging/Rear Spoiler.glb',
     gullwingDoor: '/models/Packaging/Gullwing Door.glb',
+    escapeDoor: '/models/Packaging/Escape Door.glb',
     axleConfig: '/models/Structure/Axle Configs.glb',
     axle: '/models/Structure/Axle.glb',
     wheels: '/models/Structure/Wheels.glb',
@@ -156,6 +157,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
 
     const hasCabinet = config.cabinets?.includes('vnosebase') || config.cabinets?.includes('flatfrontbase')
 
+    const effectiveSideDoorsType = parseFloat(config.length) < 23.5 ? 'flatpanel' : config.sideDoorsType
+    if (parseFloat(config.length) < 23.5 && config.sideDoorsType !== 'flatpanel') {
+        console.warn('[ModularTrailerModel] Side door forced to flat panel — trailer length < 23.5 ft')
+    }
+
     const { scene: base } = useGLTF(PATHS.base)
     const { scene: baseMeshes } = useGLTF(PATHS.baseMeshes)
     const { scene: frontStyle } = useGLTF(PATHS.frontStyle)
@@ -168,6 +174,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
     const { scene: bathroom } = useGLTF(PATHS.bathroom)
     const { scene: spoiler } = useGLTF(PATHS.spoiler)
     const { scene: gullwingDoor } = useGLTF(PATHS.gullwingDoor)
+    const { scene: escapeDoorScene } = useGLTF(PATHS.escapeDoor)
     const { scene: axleConfig } = useGLTF(PATHS.axleConfig)
     const { scene: axle } = useGLTF(PATHS.axle)
     const { scene: wheels } = useGLTF(PATHS.wheels)
@@ -218,18 +225,29 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const rearDoorMesh = REAR_DOOR_MESH_MAP[config.rampType] ?? REAR_DOOR_MESH_MAP.heavyduty
         BlenderNodes.switchMesh(rearDoors, config.rearDoor ? rearDoorMesh : null)
 
-        // ── Base Meshes: Gullwing Escape Door condition ────────────────────────
+        // ── Base Meshes: Escape Door condition ────────────────────────
         // Mirrors the Blender "Base" node group.
-        // Group Input -> Not -> Super Switch: hides the vanilla inner walls when
-        // the Gullwing Escape Door is enabled (its mesh lives in addons.glb).
-        const leftWall = baseMeshes.getObjectByName('Left_side_wall_Vanilla')
-        const rightWall = baseMeshes.getObjectByName('Right_side_wall_Vanilla')
-        if (leftWall) leftWall.visible = !config.gullwingEscapeDoor
-        if (rightWall) rightWall.visible = !config.gullwingEscapeDoor
+        // Group Input -> Base Interior goes into Super Toggle, gated by Escape Door menu index.
+        const baseInterior = baseMeshes.getObjectByName('Base_Interior') || baseMeshes.getObjectByName('Base Interior')
+        const leftWall = baseMeshes.getObjectByName('Left_side_wall_Vanilla') || baseMeshes.getObjectByName('Left side wall Vanilla')
+        const rightWall = baseMeshes.getObjectByName('Right_side_wall_Vanilla') || baseMeshes.getObjectByName('Right side wall Vanilla')
+        
+        if (baseInterior && !baseInterior.userData._loggedAttrs) {
+            baseInterior.userData._loggedAttrs = true
+            console.log('[DEBUG] baseInterior attributes:', Object.keys(baseInterior.geometry.attributes))
+        }
+        if (leftWall && !leftWall.userData._loggedAttrs) {
+            leftWall.userData._loggedAttrs = true
+            console.log('[DEBUG] leftWall attributes:', Object.keys(leftWall.geometry.attributes))
+        }
+        
+        if (baseInterior) baseInterior.visible = config.escapeDoor === 'none'
+        if (leftWall) leftWall.visible = config.escapeDoor === 'none'
+        if (rightWall) rightWall.visible = true
 
         // ── Side Doors & Generator Box: mirrors the Blender node graph ─────────
         // Door Style Switch → selects the mesh row from DOOR_MESH_MAP
-        const doorVariant = DOOR_MESH_MAP[config.sideDoorsType] ?? DOOR_MESH_MAP.flatpanel
+        const doorVariant = DOOR_MESH_MAP[effectiveSideDoorsType] ?? DOOR_MESH_MAP.flatpanel
 
         // Left Side / Right Side boolean gates (And/Not/Not pattern in graph).
         const leftSide = config.leftSide   // Interior tab: DOOR SIDES → LEFT SIDE DOORS
@@ -242,7 +260,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         ]
 
         // Cabinet + Single Door or Flat Panel: also show Generator Box Plates per side
-        if (hasCabinet && (config.sideDoorsType === 'singledoor' || config.sideDoorsType === 'flatpanel')) {
+        if (hasCabinet && (effectiveSideDoorsType === 'singledoor' || effectiveSideDoorsType === 'flatpanel')) {
             if (leftSide) activeDoorMeshes.push('Generator_Box_Plate_L')
             if (rightSide) activeDoorMeshes.push('Generator_Box_Plate_R')
         }
@@ -303,6 +321,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         }
 
         // Gullwing Escape Door lives in its own Packaging GLB (added to activeScenes below)
+        const activeGullwingMeshes = []
+        if (config.escapeDoor === 'gullwing') {
+            activeGullwingMeshes.push('Gullwing_Escape_Door_2')
+            
+            const variantPrefix = config.spreadAxle ? '2X' : '3X'
+            const style = config.axle.includes('angled') ? 'Angled' : 'Flat'
+            activeGullwingMeshes.push(`${variantPrefix}_Axle_${style}_Side_For_GED`)
+        }
+        BlenderNodes.switchMeshes(gullwingDoor, activeGullwingMeshes)
 
         // Winch System
         if (config.winchSystem) {
@@ -334,6 +361,20 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
 
         if (config.lights?.includes('racing')) {
             activeAddonMeshes.push('Racing_Lights')
+        }
+
+        // Ladder Racks: instanced via useMemo (Top_Supports mesh is the template, never shown directly)
+
+        if (config.sidewallVents) {
+            activeAddonMeshes.push('Aluminum_Sidewall_Vents')
+        }
+
+        if (config.recessedTireBox) {
+            activeAddonMeshes.push('Recessed_Tire_Box')
+        }
+
+        if (config.interiorTireMount) {
+            activeAddonMeshes.push('Interior_Tire_Mount')
         }
 
         BlenderNodes.switchMeshes(addons, activeAddonMeshes)
@@ -375,6 +416,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
 
         BlenderNodes.switchMeshes(cabinetsGLB, activeCabinetMeshes)
 
+        // ── Bathroom GLB: Sink Area conditional visibility ─────────────────────
+        // Sink Area requires all 3: bathroom selected + no generator box + v-nose (not flat front)
+        const showSink = Boolean(config.bathroom && config.bathroom !== 'none')
+            && !config.generatorBox
+            && config.frontStyle !== 'flatfront'
+
+        const activeBathroomMeshes = ['Bathroom']
+        if (showSink) activeBathroomMeshes.push('Sink_Area')
+        BlenderNodes.switchMeshes(bathroom, activeBathroomMeshes)
+
         // ── Cargo & Tie-Downs: Node Graph ──────────────────────────────────────
         // The E-Track and other tie downs are generated instances in Blender.
         // We select the baked GLB meshes directly (D-Rings / Airline tracking missing in GLB currently)
@@ -408,16 +459,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)
         BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
     }, [
-        config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType,
+        config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
         config.wheel, config.axle, config.axleRating, config.spreadAxle,
         config.cabinets, config.toolBox,
         config.leftSide, config.rightSide,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
-        config.gullwingEscapeDoor, config.generatorBox, config.winchSystem, config.tieDowns,
+        config.escapeDoor, config.generatorBox, config.winchSystem, config.tieDowns,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.rearSpoiler,
         config.climateControl, config.jacks, config.lights,
+        config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount,
+        config.bathroom,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
-        cabinetsGLB, cargo, spoiler, tongue
+        cabinetsGLB, cargo, spoiler, tongue, bathroom
     ])
 
     // ── Emulate Blender "E-Track" Array Generation Node ────────────────────────
@@ -499,6 +552,62 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         return instances
     }, [cargo, lengthFt, hasCabinet, config.tieDowns])
 
+    // ── Ladder Racks: Instance on Points (mirrors Blender Mesh Line → Instance on Points) ──
+    // Top_Supports is a single cross-member instanced along the trailer length.
+    // Y and Z come from the template's position (roof height); X spans front→rear.
+    const generatedLadderRacks = useMemo(() => {
+        if (!config.ladderRacks) return []
+
+        let rackTemplate = null
+        addons.traverse(child => {
+            if (child.isMesh && child.name === 'Top_Supports') rackTemplate = child
+        })
+        if (!rackTemplate) return []
+
+        // Trailer length calculation
+        const BASE_LENGTH_FT = 32
+        const BASE_CLAMP_FT = 27
+        const EXCESS_FACTOR = 1.000
+        const targetOffset1 = Math.min(lengthFt, BASE_CLAMP_FT)
+        const targetOffset2 = Math.max(lengthFt - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
+        const baseOffset1 = Math.min(BASE_LENGTH_FT, BASE_CLAMP_FT)
+        const baseOffset2 = Math.max(BASE_LENGTH_FT - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
+        const deltaLength = ((targetOffset1 + targetOffset2) - (baseOffset1 + baseOffset2)) * FEET_TO_M
+        const trueRearX = -(BASE_LENGTH_FT * FEET_TO_M + deltaLength)
+
+        // Physical span of the racks along the trailer (with a slight 0.3m / 1ft inset matching the Offset node)
+        const offsetMeters = 0.3
+        const totalSpan = Math.abs(trueRearX) - offsetMeters
+
+        // Fixed 6ft gap between each rack
+        const RACK_SPACING_M = 6 * FEET_TO_M
+        const count = Math.max(2, Math.floor(totalSpan / RACK_SPACING_M) + 1)
+
+        // We must divide the local points by the object's scale, because setting instanced.scale
+        // scales the ENTIRE object including the point coordinates!
+        const sx = rackTemplate.scale.x || 1
+        const points = new Float32Array(count * 3)
+
+        for (let i = 0; i < count; i++) {
+            // Distribute along +X locally at fixed 6ft intervals.
+            // The template has a 180-degree rotation which will perfectly flip this array backwards over the roof of the trailer!
+            points[i * 3]     = (i * RACK_SPACING_M) / sx
+            points[i * 3 + 1] = 0
+            points[i * 3 + 2] = 0
+        }
+
+        const pointsGeometry = new THREE.BufferGeometry()
+        pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
+
+        // Create instances and apply the FULL transform of the original template
+        const instanced = BlenderNodes.instanceOnPoints(pointsGeometry, rackTemplate)
+        instanced.position.copy(rackTemplate.position)
+        instanced.rotation.copy(rackTemplate.rotation)
+        instanced.scale.copy(rackTemplate.scale)
+
+        return [<primitive key="ladder-racks" object={instanced} />]
+    }, [addons, lengthFt, config.ladderRacks])
+
     const activeScenes = useMemo(() => {
         const scenes = [
             base, baseMeshes,
@@ -514,13 +623,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         if (config.awning?.length > 0 && lengthFt >= 29) scenes.push(awning)
         if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
         if (config.rearSpoiler) scenes.push(spoiler)
-        if (config.gullwingEscapeDoor) scenes.push(gullwingDoor)
+        if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)
+        if (config.escapeDoor === '54x48') scenes.push(escapeDoorScene)
         return scenes
     }, [
-        config.cabinets, config.awning, config.bathroom, config.rearSpoiler, config.gullwingEscapeDoor,
+        config.cabinets, config.awning, config.bathroom, config.rearSpoiler, config.escapeDoor,
         lengthFt,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
-        tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor
+        tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor, escapeDoorScene
     ])
 
     activeScenesRef.current = activeScenes
@@ -577,6 +687,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
                 <primitive key={scene.uuid} object={scene} />
             ))}
             {generatedETracks}
+            {generatedLadderRacks}
         </group>
     )
 }

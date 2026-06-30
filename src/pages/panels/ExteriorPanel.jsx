@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
 import {
   EXTERIOR_FINISH_OPTIONS,
@@ -32,7 +33,14 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     batteryBox, setBatteryBox,
     extendedTripleTongue, setExtendedTripleTongue,
     rearSpoiler, setRearSpoiler,
+    length,
   } = useConfigurator()
+
+  const isShortTrailer = parseFloat(length) < 23.5
+
+  useEffect(() => {
+    if (isShortTrailer) setSideDoorsType('flatpanel')
+  }, [isShortTrailer])
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -208,7 +216,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
       {show('SIDE DOOR') && (
         <OptionSection title="SIDE DOOR">
-          <div className="flex flex-col gap-2">
+          <div className={`flex flex-col gap-2 ${isShortTrailer ? 'opacity-50 pointer-events-none' : ''}`}>
             {SIDE_DOOR_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -220,6 +228,11 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
+          {isShortTrailer && (
+            <p className="text-yellow-500 text-xs tracking-wider uppercase mt-1">
+              SIDE DOOR NOT AVAILABLE FOR TRAILERS UNDER 23.5'
+            </p>
+          )}
         </OptionSection>
       )}
 

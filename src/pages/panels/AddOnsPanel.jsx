@@ -1,5 +1,5 @@
 import { useConfigurator } from '../../context/ConfiguratorContext'
-import { WATER_OPTIONS, BATHROOM_OPTIONS, AWNING_OPTIONS } from '../../constants/configData'
+import {  BATHROOM_OPTIONS, AWNING_OPTIONS, ESCAPE_DOOR_OPTIONS } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import AlertMessage from '../../components/AlertMessage'
@@ -7,8 +7,12 @@ import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function AddOnsPanel({ activeSectionTitle }) {
   const { waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
-    gullwingEscapeDoor, setGullwingEscapeDoor,
-    generatorBox, setGeneratorBox, cabinets, length } =
+    escapeDoor, setEscapeDoor,
+    generatorBox, setGeneratorBox, cabinets, length,
+    ladderRacks, setLadderRacks,
+    sidewallVents, setSidewallVents,
+    recessedTireBox, setRecessedTireBox,
+    interiorTireMount, setInteriorTireMount } =
     useConfigurator()
 
   const hasCabinet = cabinets.includes('vnosebase') || cabinets.includes('flatfrontbase')
@@ -23,7 +27,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
 
   return (
     <>
-      {show('WATER PACKAGE & SINK') && (
+      {/* {show('WATER PACKAGE & SINK') && (
         <OptionSection title="WATER PACKAGE & SINK">
           <div className="flex flex-col gap-2">
             {WATER_OPTIONS.map((opt) => (
@@ -39,7 +43,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           </div>
           <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
         </OptionSection>
-      )}
+      )} */}
 
       {show('BATHROOM PACKAGES') && (
         <OptionSection title="BATHROOM PACKAGES">
@@ -86,12 +90,21 @@ export default function AddOnsPanel({ activeSectionTitle }) {
 
       {show('BASE ADDONS') && (
         <OptionSection title="BASE ADDONS">
-          <div className="flex flex-col gap-3">
-            <ToggleSwitch
-              label="GULLWING ESCAPE DOOR"
-              checked={gullwingEscapeDoor}
-              onChange={setGullwingEscapeDoor}
-            />
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2 mb-4">
+              <div className="text-xs font-semibold text-gray-400 mb-1 tracking-wider">ESCAPE DOOR</div>
+              <div className="flex flex-wrap gap-2">
+                {ESCAPE_DOOR_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    isSelected={escapeDoor === opt.id}
+                    onClick={() => setEscapeDoor(opt.id)}
+                  />
+                ))}
+              </div>
+            </div>
             <ToggleSwitch
               label="GENERATOR BOX"
               checked={generatorBox}
@@ -102,6 +115,26 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 Generator box is hidden when cabinets are applied
               </p>
             )}
+            <ToggleSwitch
+              label="LADDER RACKS"
+              checked={ladderRacks}
+              onChange={setLadderRacks}
+            />
+            <ToggleSwitch
+              label="ALUMINUM SIDEWALL VENTS"
+              checked={sidewallVents}
+              onChange={setSidewallVents}
+            />
+            <ToggleSwitch
+              label="RECESSED TIRE BOX"
+              checked={recessedTireBox}
+              onChange={setRecessedTireBox}
+            />
+            <ToggleSwitch
+              label="INTERIOR TIRE MOUNT"
+              checked={interiorTireMount}
+              onChange={setInteriorTireMount}
+            />
           </div>
           <p className="text-gray-400 text-xs tracking-wider uppercase mt-2">
             Replaces the standard side egress with a gullwing-style escape door

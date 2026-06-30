@@ -95,10 +95,10 @@ function BoundsCalculator({ groupRef, onUpdate, widthFt, lengthFt, heightFt }) {
       lenEnd: lengthDims[1],
       w: size.width,
       h: size.height,
-      // Calculate exact dimensions mathematically to match Blender perfectly without floating-point variance
-      measuredWidthFt: 8.57 + (widthFt - 7),
-      measuredHeightFt: 8.53 + (heightFt - 7),
-      measuredLengthFt: 53.2 + (lengthFt - 36),
+      // Calculate exact dimensions from the actual bounding box so added models affect the displayed values
+      measuredWidthFt: boxSize.z * M_TO_FT,
+      measuredHeightFt: boxSize.y * M_TO_FT,
+      measuredLengthFt: boxSize.x * M_TO_FT,
     })
   })
 

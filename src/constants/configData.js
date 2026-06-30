@@ -143,10 +143,10 @@ export const CEILING_OPTIONS = [
 export const CABINET_OPTIONS = [
   { id: 'vnosebase', label: 'V-NOSE BASE CABINETS', price: 9999 },
   { id: 'vnoseoverhead', label: 'V-NOSE OVERHEAD CABINETS', price: 9999 },
-  { id: 'basewall', label: 'BASE CABINETS - WALL RUN', price: 9999 },
-  { id: 'overheadwall', label: 'OVERHEAD CABINETS - WALL RUN', price: 9999 },
-  { id: 'folddownshelf', label: 'FOLD DOWN SHELF', price: 9999 },
-  { id: 'wheelwall', label: 'WHEEL WALL CABINET', price: 9999 },
+  // { id: 'basewall', label: 'BASE CABINETS - WALL RUN', price: 9999 },
+  // { id: 'overheadwall', label: 'OVERHEAD CABINETS - WALL RUN', price: 9999 },
+  // { id: 'folddownshelf', label: 'FOLD DOWN SHELF', price: 9999 },
+  // { id: 'wheelwall', label: 'WHEEL WALL CABINET', price: 9999 },
 ];
 
 export const CABINET_NOTES = [
@@ -157,8 +157,8 @@ export const CABINET_NOTES = [
 export const TOOL_BOX_OPTIONS = [
   { id: 'none', label: 'NONE' },
   { id: 'frontbox', label: 'FRONT BOX', price: 9999 },
-  { id: 'sidebox', label: 'SIDE BOX', price: 9999 },
-  { id: 'both', label: 'BOTH', price: 9999 },
+  // { id: 'sidebox', label: 'SIDE BOX', price: 9999 },
+  // { id: 'both', label: 'BOTH', price: 9999 },
 ];
 
 // Systems
@@ -189,11 +189,11 @@ export const VENTILATION_OPTIONS = [
 export const CLIMATE_CONTROL_OPTIONS = [
   { id: 'none', label: 'NO CLIMATE CONTROL' },
   { id: '13000btu', label: '13,000 BTU A/C + HEAT STRIP', price: 9999 },
-  { id: '15000btu', label: '15,000 BTU A/C + HEAT STRIP', price: 9999 },
-  { id: 'ministplit13k', label: 'MINI SPLIT 13K BTU', price: 9999 },
-  { id: 'ministplit18k', label: 'MINI SPLIT 18K BTU', price: 9999 },
-  { id: 'ministplit24k', label: 'MINI SPLIT 24K BTU', price: 9999 },
-  { id: 'wirebrace', label: 'WIRE & BRACE FOR A/C (PREP ONLY)', price: 9999 },
+  // { id: '15000btu', label: '15,000 BTU A/C + HEAT STRIP', price: 9999 },
+  // { id: 'ministplit13k', label: 'MINI SPLIT 13K BTU', price: 9999 },
+  // { id: 'ministplit18k', label: 'MINI SPLIT 18K BTU', price: 9999 },
+  // { id: 'ministplit24k', label: 'MINI SPLIT 24K BTU', price: 9999 },
+  // { id: 'wirebrace', label: 'WIRE & BRACE FOR A/C (PREP ONLY)', price: 9999 },
 ];
 
 // Loading
@@ -204,24 +204,24 @@ export const RAMP_OPTIONS = [
 ];
 
 export const TIE_DOWN_OPTIONS = [
-  { id: 'drings', label: 'D-RINGS' },
+  // { id: 'drings', label: 'D-RINGS' },
   { id: 'walletrack', label: 'WALL E-TRACK' },
   { id: 'flooretrack', label: 'FLOOR E-TRACK + STEEL BACKER' },
-  { id: 'additionalwalldrings', label: 'ADDITIONAL WALL D-RINGS' },
-  { id: 'additionalfloordrings', label: 'ADDITIONAL FLOOR D-RINGS + BACKER' },
+  // { id: 'additionalwalldrings', label: 'ADDITIONAL WALL D-RINGS' },
+  // { id: 'additionalfloordrings', label: 'ADDITIONAL FLOOR D-RINGS + BACKER' },
 ];
 
 export const JACK_OPTIONS = [
-  { id: 'folddownstabilizer', label: 'FOLD DOWN STABILIZER JACKS' },
-  { id: '5kscissor', label: '5K SCISSOR JACKS' },
+  // { id: 'folddownstabilizer', label: 'FOLD DOWN STABILIZER JACKS' },
+  // { id: '5kscissor', label: '5K SCISSOR JACKS' },
   { id: '5kelectrictongue', label: '5K ELECTRIC TONGUE JACK + BATTERY' },
 ];
 
 // Add-Ons
-export const WATER_OPTIONS = [
-  { id: 'largewater', label: 'LARGE WATER PACKAGE', price: 9999 },
-  { id: 'largesink', label: 'LARGE SINK PACKAGE', price: 9999 },
-];
+// export const WATER_OPTIONS = [
+//   { id: 'largewater', label: 'LARGE WATER PACKAGE', price: 9999 },
+//   { id: 'largesink', label: 'LARGE SINK PACKAGE', price: 9999 },
+// ];
 
 export const BATHROOM_OPTIONS = [
   { id: 'fullbath', label: 'FULL BATHROOM PACKAGE', price: 9999 },
@@ -234,4 +234,10 @@ export const AWNING_OPTIONS = [
   // { id: 'awning20', label: "ELECTRIC AWNING 20'", price: 9999 },
   // { id: 'awning22', label: "ELECTRIC AWNING 22'", price: 9999 },
   // { id: 'awning24', label: "ELECTRIC AWNING 24'", price: 9999 },
+];
+
+export const ESCAPE_DOOR_OPTIONS = [
+  { id: 'none', label: 'N/A' },
+  { id: '54x48', label: '54"x48"', price: 9999 },
+  { id: 'gullwing', label: 'GULLWING', price: 9999 },
 ];

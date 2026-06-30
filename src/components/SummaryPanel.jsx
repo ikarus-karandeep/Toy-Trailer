@@ -4,7 +4,7 @@ import {
   WIDTH_OPTIONS, LENGTH_OPTIONS, INTERIOR_HEIGHT_OPTIONS, AXLE_OPTIONS, AXLE_RATING_OPTIONS,
   ELECTRICAL_OPTIONS, BATTERY_OPTIONS, LIGHT_OPTIONS, VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS,
   RAMP_OPTIONS, TIE_DOWN_OPTIONS, JACK_OPTIONS,
-  WATER_OPTIONS, BATHROOM_OPTIONS, AWNING_OPTIONS,
+   BATHROOM_OPTIONS, AWNING_OPTIONS,
   EXTERIOR_FINISH_OPTIONS, COLOR_OPTIONS, FRONT_STYLE_OPTIONS, EXTERIOR_BUILD_OPTIONS,
   PROTECTION_OPTIONS, WHEEL_OPTIONS, FLOOR_OPTIONS, WALL_OPTIONS, CEILING_OPTIONS,
   CABINET_OPTIONS, TOOL_BOX_OPTIONS,
@@ -72,7 +72,7 @@ export default function SummaryPanel() {
     }
     if (activeTab === 'ADD-ONS') {
       const items = []
-      if (waterPackage) { const o = find(WATER_OPTIONS, waterPackage); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setWaterPackage(null) }) }
+      // if (waterPackage) { const o = find(WATER_OPTIONS, waterPackage); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setWaterPackage(null) }) }
       if (bathroom) { const o = find(BATHROOM_OPTIONS, bathroom); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setBathroom(null) }) }
       awning.forEach(id => { const o = find(AWNING_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleAwning(id) }) })
       return items

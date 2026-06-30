@@ -143,7 +143,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
-      {show('DOOR SIDES') && (
+      {/* {show('DOOR SIDES') && (
         <OptionSection title="DOOR SIDES">
           <div className="flex flex-col gap-3">
             <ToggleSwitch
@@ -161,7 +161,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
             Controls which sides display door panels or covers
           </p>
         </OptionSection>
-      )}
+      )} */}
     </>
   )
 }
