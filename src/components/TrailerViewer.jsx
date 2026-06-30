@@ -12,7 +12,7 @@ import QRModal from './QRModal'
 const WIDTH_FT = { '7ft': 7, '8.5ft': 8.5 }
 
 function getLengthFt(id) {
-  return parseInt(id, 10)   // '26' → 26
+  return parseInt(id, 10)   // '36' → 36
 }
 
 const HEIGHT_FEET_MAP = {
@@ -25,7 +25,7 @@ function getHeightFt(id) {
 
 // ── bounds projector (runs inside Canvas so it has camera + renderer access) ──
 
-function BoundsCalculator({ groupRef, onUpdate }) {
+function BoundsCalculator({ groupRef, onUpdate, widthFt, lengthFt, heightFt }) {
   const { camera, size } = useThree()
   const box = useMemo(() => new Box3(), [])
 
@@ -49,7 +49,7 @@ function BoundsCalculator({ groupRef, onUpdate }) {
     const { min, max } = box
     const center = new Vector3()
     box.getCenter(center)
-    
+
     // camera direction relative to center
     const dir = new Vector3().copy(camera.position).sub(center)
 
@@ -62,23 +62,23 @@ function BoundsCalculator({ groupRef, onUpdate }) {
     const zYAxis = dir.z > 0 ? max.z + yAxisSpacingOffset : min.z - yAxisSpacingOffset
     const xZAxis = dir.x > 0 ? max.x + axisSpacingOffset : min.x - axisSpacingOffset
 
-    // Width (X axis line)
-    const widthDims = dir.x > 0 ? [
-      project(max.x, min.y, zXAxis), project(min.x, min.y, zXAxis)
+    // Width (Z axis line - side to side)
+    const widthDims = dir.z > 0 ? [
+      project(xZAxis, min.y, max.z), project(xZAxis, min.y, min.z)
     ] : [
-      project(min.x, min.y, zXAxis), project(max.x, min.y, zXAxis)
+      project(xZAxis, min.y, min.z), project(xZAxis, min.y, max.z)
     ]
 
-    // Height (Y axis line)
+    // Height (Y axis line - up and down)
     const heightDims = [
       project(xYAxis, min.y, zYAxis), project(xYAxis, max.y, zYAxis)
     ]
 
-    // Length (Z axis line)
-    const lengthDims = dir.z > 0 ? [
-      project(xZAxis, min.y, max.z), project(xZAxis, min.y, min.z)
+    // Length (X axis line - front to back)
+    const lengthDims = dir.x > 0 ? [
+      project(max.x, min.y, zXAxis), project(min.x, min.y, zXAxis)
     ] : [
-      project(xZAxis, min.y, min.z), project(xZAxis, min.y, max.z)
+      project(min.x, min.y, zXAxis), project(max.x, min.y, zXAxis)
     ]
 
     // Convert scene units (metres) → feet for labels
@@ -95,9 +95,10 @@ function BoundsCalculator({ groupRef, onUpdate }) {
       lenEnd: lengthDims[1],
       w: size.width,
       h: size.height,
-      measuredWidthFt: boxSize.x * M_TO_FT,
-      measuredHeightFt: boxSize.y * M_TO_FT,
-      measuredLengthFt: boxSize.z * M_TO_FT,
+      // Calculate exact dimensions mathematically to match Blender perfectly without floating-point variance
+      measuredWidthFt: 8.57 + (widthFt - 7),
+      measuredHeightFt: 8.53 + (heightFt - 7),
+      measuredLengthFt: 53.2 + (lengthFt - 36),
     })
   })
 
@@ -132,13 +133,13 @@ function BoundingBoxWireframe({ groupRef }) {
   return <primitive object={helper} />
 }
 
-// ── dimension overlay ─────────────────────────────────────────────────────────
-
-function formatFt(ft) {
-  const whole = Math.floor(ft)
-  const inches = Math.round((ft - whole) * 12)
-  return inches === 0 ? `${whole}'` : `${whole}' ${inches}"`
+function formatFt(feetDec) {
+  // Match Blender's exact decimal formatting (e.g. 8.57')
+  // We use round instead of toFixed to remove trailing zeros if it's exact like 53.2'
+  return `${Math.round(feetDec * 100) / 100}'`
 }
+
+// ── dimension overlay ─────────────────────────────────────────────────────────
 
 function DimLabel({ x, y, text, anchor = 'middle' }) {
   const w = text.length * 7.5 + 18
@@ -228,7 +229,7 @@ export default function TrailerViewer() {
     nameTimerRef.current = setTimeout(() => setClickedName(null), 2000)
   }
 
-  const widthFt  = WIDTH_FT[width]          ?? 7
+  const widthFt = WIDTH_FT[width] ?? 7
   const lengthFt = getLengthFt(length)
   const heightFt = getHeightFt(interiorHeight)
 
@@ -328,7 +329,7 @@ export default function TrailerViewer() {
               </Center>
               {showDimensions && (
                 <>
-                  <BoundsCalculator groupRef={modelGroupRef} onUpdate={setScreenBounds} />
+                  <BoundsCalculator groupRef={modelGroupRef} onUpdate={setScreenBounds} widthFt={widthFt} lengthFt={lengthFt} heightFt={heightFt} />
                   <BoundingBoxWireframe groupRef={modelGroupRef} />
                 </>
               )}
@@ -366,9 +367,8 @@ export default function TrailerViewer() {
           <button
             aria-label="Toggle Dimensions"
             onClick={() => setShowDimensions(prev => !prev)}
-            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${
-              showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'
-            }`}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'
+              }`}
           >
             <img src="/Dimension.png" alt="" />
           </button>

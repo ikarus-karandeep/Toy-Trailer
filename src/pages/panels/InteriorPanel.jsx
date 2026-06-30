@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
 import {
   FLOOR_OPTIONS,
@@ -22,6 +23,12 @@ export default function InteriorPanel({ activeSectionTitle }) {
     rightSide, setRightSide,
     winchSystem, setWinchSystem,
   } = useConfigurator()
+
+  const hasCabinet = cabinets.includes('vnosebase') || cabinets.includes('flatfrontbase')
+
+  useEffect(() => {
+    if (!hasCabinet && winchSystem) setWinchSystem(false)
+  }, [hasCabinet])
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -108,13 +115,15 @@ export default function InteriorPanel({ activeSectionTitle }) {
               </li>
             ))}
           </ul>
-          <div className="mt-4">
-            <ToggleSwitch
-              label="WINCH SYSTEM"
-              checked={winchSystem}
-              onChange={setWinchSystem}
-            />
-          </div>
+          {hasCabinet && (
+            <div className="mt-4">
+              <ToggleSwitch
+                label="WINCH SYSTEM"
+                checked={winchSystem}
+                onChange={setWinchSystem}
+              />
+            </div>
+          )}
         </OptionSection>
       )}
 

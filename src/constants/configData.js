@@ -84,10 +84,9 @@ export const COLOR_OPTIONS = [
 ];
 
 export const SIDE_DOOR_OPTIONS = [
-  { id: 'flatpanel',    label: 'FLAT PANEL',         isStandard: true },
-  { id: 'singledoor',  label: 'SINGLE DOOR',         price: 9999 },
-  { id: 'doubledoor',  label: 'DOUBLE DOOR',         price: 9999 },
-  { id: 'generatorbox', label: 'GENERATOR BOX',      price: 9999 },
+  { id: 'flatpanel',   label: 'FLAT PANEL',   isStandard: true },
+  { id: 'singledoor',  label: 'SINGLE DOOR',  price: 9999 },
+  { id: 'doubledoor',  label: 'DOUBLE DOOR',  price: 9999 },
 ]
 
 export const FRONT_STYLE_OPTIONS = [
@@ -225,14 +224,14 @@ export const WATER_OPTIONS = [
 ];
 
 export const BATHROOM_OPTIONS = [
-  { id: 'halfbath', label: 'HALF BATHROOM PACKAGE', price: 9999 },
-  { id: 'full34x34', label: 'FULL BATHROOM - 34" x 34"', price: 9999 },
-  { id: 'full36x36', label: 'FULL BATHROOM - 36" x 36"', price: 9999 },
+  { id: 'fullbath', label: 'FULL BATHROOM PACKAGE', price: 9999 },
+  // { id: 'full34x34', label: 'FULL BATHROOM - 34" x 34"', price: 9999 },
+  // { id: 'full36x36', label: 'FULL BATHROOM - 36" x 36"', price: 9999 },
 ];
 
 export const AWNING_OPTIONS = [
   { id: 'awning18', label: "ELECTRIC AWNING 18'", price: 9999 },
-  { id: 'awning20', label: "ELECTRIC AWNING 20'", price: 9999 },
-  { id: 'awning22', label: "ELECTRIC AWNING 22'", price: 9999 },
-  { id: 'awning24', label: "ELECTRIC AWNING 24'", price: 9999 },
+  // { id: 'awning20', label: "ELECTRIC AWNING 20'", price: 9999 },
+  // { id: 'awning22', label: "ELECTRIC AWNING 22'", price: 9999 },
+  // { id: 'awning24', label: "ELECTRIC AWNING 24'", price: 9999 },
 ];

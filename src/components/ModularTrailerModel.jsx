@@ -23,6 +23,7 @@ const PATHS = {
     awning: '/models/Packaging/Electric Awning.glb',
     bathroom: '/models/Packaging/Full Bathroom.glb',
     spoiler: '/models/Packaging/Rear Spoiler.glb',
+    gullwingDoor: '/models/Packaging/Gullwing Door.glb',
     axleConfig: '/models/Structure/Axle Configs.glb',
     axle: '/models/Structure/Axle.glb',
     wheels: '/models/Structure/Wheels.glb',
@@ -145,8 +146,8 @@ const FRONT_STYLE_ADDON_MESH_MAP = {
 // Mirrors the Blender tongue node — same Super Switch pattern as stairs/battery.
 // Mesh names match the GLB objects visible in the Outliner.
 const TONGUE_MESH_MAP = {
-    vnose:     'Extended_Triple_Tongue_V-Nose',
-    flatfront:  'Extended_Triple_Tongue_Flat_Front',
+    vnose: 'Extended_Triple_Tongue_V-Nose',
+    flatfront: 'Extended_Triple_Tongue_Flat_Front',
 }
 
 
@@ -166,6 +167,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
     const { scene: awning } = useGLTF(PATHS.awning)
     const { scene: bathroom } = useGLTF(PATHS.bathroom)
     const { scene: spoiler } = useGLTF(PATHS.spoiler)
+    const { scene: gullwingDoor } = useGLTF(PATHS.gullwingDoor)
     const { scene: axleConfig } = useGLTF(PATHS.axleConfig)
     const { scene: axle } = useGLTF(PATHS.axle)
     const { scene: wheels } = useGLTF(PATHS.wheels)
@@ -239,11 +241,28 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             ...(rightSide ? [doorVariant.doorsR] : []),   // And(rightSide, doorType)
         ]
 
+        // Cabinet + Single Door or Flat Panel: also show Generator Box Plates per side
+        if (hasCabinet && (config.sideDoorsType === 'singledoor' || config.sideDoorsType === 'flatpanel')) {
+            if (leftSide) activeDoorMeshes.push('Generator_Box_Plate_L')
+            if (rightSide) activeDoorMeshes.push('Generator_Box_Plate_R')
+        }
+
+        // Generator Box add-on: show plates + ATP trim per side
+        if (config.generatorBox) {
+            if (leftSide) activeDoorMeshes.push('Generator_Box_Plate_L')
+            if (rightSide) activeDoorMeshes.push('Generator_Box_Plate_R')
+        }
+
         // Build active ATP trim lists per side → Join Geometry (extFinish.glb)
         const activeAtpMeshes = [
             ...(leftSide ? [doorVariant.atpL] : []),
             ...(rightSide ? [doorVariant.atpR] : []),
         ]
+
+        if (config.generatorBox) {
+            if (leftSide) activeAtpMeshes.push('ATP_Plate_Generator_Box_L')
+            if (rightSide) activeAtpMeshes.push('ATP_Plate_Generator_Box_R')
+        }
 
         BlenderNodes.switchMeshes(sideDoors, activeDoorMeshes)
         BlenderNodes.switchMeshes(extFinish, activeAtpMeshes)
@@ -254,8 +273,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         // each call hides everything not in its list, overwriting the previous.
         const activeAddonMeshes = []
 
-        // Generator Box Condition (Side Doors graph)
-        if (config.sideDoorsType === 'generatorbox') {
+        // Generator Box — hidden when cabinet is present (cabinet occupies the same space)
+        if (config.generatorBox && !hasCabinet) {
             activeAddonMeshes.push('Generator_Box')
         }
 
@@ -283,12 +302,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             activeAddonMeshes.push('Angled_Lights')
         }
 
-        // Gullwing Escape Door: Super Switch
-        // NOT(gullwing) is handled on the Base Interior side in baseMeshes.glb;
-        // the 3D door mesh lives in addons.glb.
-        if (config.gullwingEscapeDoor) {
-            activeAddonMeshes.push('Gullwing_Escape_Door')
-        }
+        // Gullwing Escape Door lives in its own Packaging GLB (added to activeScenes below)
 
         // Winch System
         if (config.winchSystem) {
@@ -349,10 +363,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             activeCabinetMeshes.push(cabinetVariant.overhead)
         }
 
-        // 3. Cabinet Toolbox & Slot
-        // The Boolean Switch in the graph requires BOTH Cabinet AND Cabinet Toolbox to be true
-        if (hasCabinet && hasToolbox) {
+        // 3. Cabinet Toolbox Slot — always visible when cabinet is active (empty slot)
+        if (hasCabinet) {
             activeCabinetMeshes.push(cabinetVariant.toolboxSlot)
+        }
+
+        // 4. Cabinet Toolbox insert — only when a toolbox option is selected
+        if (hasCabinet && hasToolbox) {
             activeCabinetMeshes.push('Cabinet_Toolbox')
         }
 
@@ -396,7 +413,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         config.cabinets, config.toolBox,
         config.leftSide, config.rightSide,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
-        config.gullwingEscapeDoor, config.winchSystem, config.tieDowns,
+        config.gullwingEscapeDoor, config.generatorBox, config.winchSystem, config.tieDowns,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.rearSpoiler,
         config.climateControl, config.jacks, config.lights,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
@@ -414,17 +431,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         })
 
         // The true rear X coordinate of the trailer uses the same clamped delta logic from GeometryUtils
-        const BASE_LENGTH_FT = 26
+        const BASE_LENGTH_FT = 32
         const FEET_TO_M = 0.305
         const BASE_CLAMP_FT = 27
-        const EXCESS_FACTOR = 1.300
-        const stage1Length = (Math.min(lengthFt, BASE_CLAMP_FT) - BASE_LENGTH_FT) * FEET_TO_M
-        const stage2Length = Math.max(lengthFt - BASE_CLAMP_FT, 0) * FEET_TO_M * EXCESS_FACTOR
-        const deltaLength = stage1Length + stage2Length
+        const EXCESS_FACTOR = 1.000
+        const targetOffset1 = Math.min(lengthFt, BASE_CLAMP_FT)
+        const targetOffset2 = Math.max(lengthFt - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
+        const baseOffset1 = Math.min(BASE_LENGTH_FT, BASE_CLAMP_FT)
+        const baseOffset2 = Math.max(BASE_LENGTH_FT - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
+        const deltaLength = ((targetOffset1 + targetOffset2) - (baseOffset1 + baseOffset2)) * FEET_TO_M
         const trueRearX = -(BASE_LENGTH_FT * FEET_TO_M + deltaLength)
 
         // Node: Switch
-        const switchNode = hasCabinet ? 0.325 : -0.320
+        const switchNode = hasCabinet ? 0 : 0
         // Node: Subtract (Trailer Length - Switch). The Trailer Length is passed as a negative X coordinate.
         const subtractNode = BlenderNodes.Math.Subtract(trueRearX, switchNode)
         // Node: Multiply -> Array Length
@@ -484,6 +503,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const scenes = [
             base, baseMeshes,
             frontStyle, rearDoors, sideDoors, extFinish,
+            tongue,
             wheels,
             axleConfig,
             axle,
@@ -494,12 +514,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         if (config.awning?.length > 0 && lengthFt >= 29) scenes.push(awning)
         if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
         if (config.rearSpoiler) scenes.push(spoiler)
+        if (config.gullwingEscapeDoor) scenes.push(gullwingDoor)
         return scenes
     }, [
-        config.cabinets, config.awning, config.bathroom, config.rearSpoiler,
+        config.cabinets, config.awning, config.bathroom, config.rearSpoiler, config.gullwingEscapeDoor,
         lengthFt,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
-        wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler
+        tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor
     ])
 
     activeScenesRef.current = activeScenes
@@ -555,7 +576,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             {activeScenes.map(scene => (
                 <primitive key={scene.uuid} object={scene} />
             ))}
-            <primitive key={tongue.uuid} object={tongue} />
             {generatedETracks}
         </group>
     )

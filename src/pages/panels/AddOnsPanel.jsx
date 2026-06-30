@@ -7,8 +7,11 @@ import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function AddOnsPanel({ activeSectionTitle }) {
   const { waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
-    gullwingEscapeDoor, setGullwingEscapeDoor, length } =
+    gullwingEscapeDoor, setGullwingEscapeDoor,
+    generatorBox, setGeneratorBox, cabinets, length } =
     useConfigurator()
+
+  const hasCabinet = cabinets.includes('vnosebase') || cabinets.includes('flatfrontbase')
 
   const lengthFt = parseInt(length, 10)
 
@@ -89,6 +92,16 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               checked={gullwingEscapeDoor}
               onChange={setGullwingEscapeDoor}
             />
+            <ToggleSwitch
+              label="GENERATOR BOX"
+              checked={generatorBox}
+              onChange={setGeneratorBox}
+            />
+            {hasCabinet && (
+              <p className="text-yellow-500 text-xs tracking-wider uppercase -mt-1">
+                Generator box is hidden when cabinets are applied
+              </p>
+            )}
           </div>
           <p className="text-gray-400 text-xs tracking-wider uppercase mt-2">
             Replaces the standard side egress with a gullwing-style escape door

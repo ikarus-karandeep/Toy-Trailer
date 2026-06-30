@@ -129,8 +129,8 @@ export function applyMoveNodeChain({ geometry, store, uuid, nodes }) {
 
 // Base dimensions — the model is exported at these values (rest state = zero delta)
 const BASE_WIDTH_FT = 8
-const BASE_LENGTH_FT = 26
-const BASE_HEIGHT_FT = 6 + 7 / 12   // 6'7"
+const BASE_LENGTH_FT = 32
+const BASE_HEIGHT_FT = 8
 const FEET_TO_M = 0.305         // matches the Blender "Feet to Meter" node
 
 /**
@@ -178,10 +178,12 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   //   Move 2: Delta_Offset=0.000,  Factor=1.300, Input=max(length − 27', 0)
   //           → delta₂ = 1.300 × max(L − 27, 0)     [excess beyond 27' scaled 1.3×]
   const BASE_CLAMP_FT = 27          // "Limit to 27'" clamp node
-  const EXCESS_FACTOR = 1.300       // Factor on second Move node
-  const stage1Length = (Math.min(lengthFt, BASE_CLAMP_FT) - BASE_LENGTH_FT) * FEET_TO_M
-  const stage2Length = Math.max(lengthFt - BASE_CLAMP_FT, 0) * FEET_TO_M * EXCESS_FACTOR
-  const deltaLength = stage1Length + stage2Length
+  const EXCESS_FACTOR = 1.000       // Factor on second Move node
+  const targetOffset1 = Math.min(lengthFt, BASE_CLAMP_FT)
+  const targetOffset2 = Math.max(lengthFt - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
+  const baseOffset1 = Math.min(BASE_LENGTH_FT, BASE_CLAMP_FT)
+  const baseOffset2 = Math.max(BASE_LENGTH_FT - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
+  const deltaLength = ((targetOffset1 + targetOffset2) - (baseOffset1 + baseOffset2)) * FEET_TO_M
 
   // ── WIDTH (Z-axis in Three.js, _leftselection / _rightselection) ─────────────
   // Two Move nodes, one per side:

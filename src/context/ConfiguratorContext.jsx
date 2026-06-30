@@ -9,7 +9,7 @@ export function ConfiguratorProvider({ children }) {
 
   // Size & Capacity
   const [width, setWidth] = useState('7ft')
-  const [length, setLength] = useState('26')
+  const [length, setLength] = useState('36')
   const [interiorHeight, setInteriorHeight] = useState('7ft0')
   const [axle, setAxle] = useState('baseatp')
   const [axleRating, setAxleRating] = useState('5200torsion')
@@ -62,6 +62,7 @@ export function ConfiguratorProvider({ children }) {
 
   // Base addons (Base node graph)
   const [gullwingEscapeDoor, setGullwingEscapeDoor] = useState(false)
+  const [generatorBox, setGeneratorBox] = useState(false)
 
   // Cabinet Addons
   const [winchSystem, setWinchSystem] = useState(false)
@@ -148,6 +149,7 @@ export function ConfiguratorProvider({ children }) {
         vNoseETrack, setVNoseETrack,
         batteryBox, setBatteryBox,
         gullwingEscapeDoor, setGullwingEscapeDoor,
+        generatorBox, setGeneratorBox,
         winchSystem, setWinchSystem,
         extendedTripleTongue, setExtendedTripleTongue,
         radioPackageSpeaker, setRadioPackageSpeaker,
