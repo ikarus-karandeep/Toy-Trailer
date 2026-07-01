@@ -164,13 +164,20 @@ function DimAxis({ start, end, ft, label, axis }) {
 export default function ModelDimensions({ groupRef }) {
   const [dims, setDims] = useState(null)
   const lastCamRef = useRef(new THREE.Vector3(Infinity, 0, 0))
+  const lastSizeRef = useRef(new THREE.Vector3())
 
   useFrame(({ camera }) => {
     if (!groupRef.current) return
-    if (camera.position.distanceTo(lastCamRef.current) < CAM_THRESHOLD) return
-    lastCamRef.current.copy(camera.position)
     const d = computeDims(groupRef.current, camera)
-    if (d) setDims(d)
+    if (!d) return
+
+    const camMoved = camera.position.distanceTo(lastCamRef.current) >= CAM_THRESHOLD
+    const modelResized = !lastSizeRef.current.equals(_size)
+    if (!camMoved && !modelResized) return
+
+    lastCamRef.current.copy(camera.position)
+    lastSizeRef.current.copy(_size)
+    setDims(d)
   })
 
   if (!dims) return null
