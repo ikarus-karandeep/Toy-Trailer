@@ -59,6 +59,9 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             ))}
           </div>
           <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
+          {hasCabinet && (
+            <AlertMessage message="SINK AREA IS HIDDEN WHEN CABINETS ARE INSTALLED" />
+          )}
         </OptionSection>
       )}
 

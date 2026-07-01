@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import {
-  WIDTH_OPTIONS, LENGTH_OPTIONS, INTERIOR_HEIGHT_OPTIONS, AXLE_OPTIONS, AXLE_RATING_OPTIONS,
+  WIDTH_OPTIONS, LENGTH_OPTIONS, INTERIOR_HEIGHT_OPTIONS, AXLE_RATING_OPTIONS,
   ELECTRICAL_OPTIONS, BATTERY_OPTIONS, LIGHT_OPTIONS, VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS,
   RAMP_OPTIONS, TIE_DOWN_OPTIONS, JACK_OPTIONS,
    BATHROOM_OPTIONS, AWNING_OPTIONS,
@@ -42,7 +42,7 @@ export default function SummaryPanel() {
   if (!summaryOpen) return null
 
   const getItems = () => {
-    const { width, length, interiorHeight, axle, axleRating,
+    const { width, length, interiorHeight, axleAngled, axleAtp, axleRating,
       electrical, battery, lights, toggleLight, ventilation, climateControl,
       rampType, tieDowns, toggleTieDown, jacks, toggleJack,
       waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
@@ -54,7 +54,10 @@ export default function SummaryPanel() {
       const w = find(WIDTH_OPTIONS, width); if (w) items.push({ label: `WIDTH: ${w.label}`, price: w.price })
       const l = find(LENGTH_OPTIONS, length); if (l) items.push({ label: `LENGTH: ${l.label}`, price: l.price })
       const h = find(INTERIOR_HEIGHT_OPTIONS, interiorHeight); if (h && !h.isStandard) items.push({ label: `HEIGHT: ${h.label}`, price: h.price })
-      const a = find(AXLE_OPTIONS, axle); if (a && !a.isStandard) items.push({ label: `AXLE: ${a.label}`, price: a.price })
+      if (axleAngled || axleAtp) {
+        const axleLabel = [axleAngled ? 'ANGLED' : 'FLAT', axleAtp ? '+ ATP' : ''].filter(Boolean).join(' ')
+        items.push({ label: `AXLE: ${axleLabel}`, price: axleAtp ? 9999 : 0 })
+      }
       const ar = find(AXLE_RATING_OPTIONS, axleRating); if (ar && !ar.isStandard) items.push({ label: ar.label, price: ar.price })
       return items
     }

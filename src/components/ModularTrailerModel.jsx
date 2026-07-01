@@ -78,14 +78,15 @@ const AXLE_RATING_MESH_MAP = {
 }
 
 // Maps axle style + tandem(2x)/triple(3x) → mesh name(s) inside Axle.glb
-// Triple rating options drive the 3X variant; all others use 2X
-const AXLE_MESH_MAP = {
-    atpangledside: { '2x': '2X_ATP_Angled_Side', '3x': '3X_ATP_Angled_Side' },
-    atpflatside: { '2x': '2X_ATP_Flat_Side', '3x': '3X_ATP_Flat_Side' },
-    baseatp: { '2x': 'Side_Panel_ATP', '3x': 'Side_Panel_ATP' },
-    panelangledside: { '2x': '2X_Axle_Angled_Side', '3x': '3X_Axle_Angled_Side' },
-    panelflatside: { '2x': '2X_Axle_Flat_Side', '3x': '3X_Axle_Flat_Side' },
-}
+// Exact names as stored in the GLB (Three.js sanitizes spaces → underscores on load)
+// Structural (Side Panels section — no ATP gate, always shown):
+//   Side_Panel_Bottom_Strip              always visible base skirt
+//   2X_Axle_Flat_Side / 3X_Axle_Flat_Side     flat cover (no angled)
+//   2X_Axle_Angled_Side / 3X_Axle_Angled_Side  angled cover
+// Finishes (ATP-gated via Super Toggle in Blender graph):
+//   Side_Panel_ATP                       Base ATP strip
+//   2X_ATP_Flat_Side / 3X_ATP_Flat_Side         ATP flat trim
+//   2X_ATP_Angled_Side / 3X_ATP_Angled_Side      ATP angled trim
 
 // ── Side Doors & Generator Box: Door Style Switch node ────────────────────────
 // Mirrors the Blender "Side Doors and Generator Box" node group.
@@ -259,8 +260,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             ...(rightSide ? [doorVariant.doorsR] : []),   // And(rightSide, doorType)
         ]
 
-        // Cabinet + Single Door or Flat Panel: also show Generator Box Plates per side
-        if (hasCabinet && (effectiveSideDoorsType === 'singledoor' || effectiveSideDoorsType === 'flatpanel')) {
+        // Single Door or Flat Panel: show Generator Box Plates per side (structural, not cabinet-dependent)
+        if (effectiveSideDoorsType === 'singledoor' || effectiveSideDoorsType === 'flatpanel') {
             if (leftSide) activeDoorMeshes.push('Generator_Box_Plate_L')
             if (rightSide) activeDoorMeshes.push('Generator_Box_Plate_R')
         }
@@ -277,13 +278,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             ...(rightSide ? [doorVariant.atpR] : []),
         ]
 
-        if (config.generatorBox) {
+        // Single Door or Flat Panel: ATP plates mirror the generator box plate visibility
+        if (effectiveSideDoorsType === 'singledoor' || effectiveSideDoorsType === 'flatpanel' || config.generatorBox) {
             if (leftSide) activeAtpMeshes.push('ATP_Plate_Generator_Box_L')
             if (rightSide) activeAtpMeshes.push('ATP_Plate_Generator_Box_R')
         }
 
         BlenderNodes.switchMeshes(sideDoors, activeDoorMeshes)
-        BlenderNodes.switchMeshes(extFinish, activeAtpMeshes)
+        // When ATP is OFF, suppress all extFinish ATP trim meshes globally
+        BlenderNodes.switchMeshes(extFinish, config.axleAtp ? activeAtpMeshes : [])
 
         // ── Addons.glb: unified mesh list ──────────────────────────────────────────
         // All addon meshes are collected into ONE array and applied in a single
@@ -326,7 +329,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             activeGullwingMeshes.push('Gullwing_Escape_Door_2')
             
             const variantPrefix = config.spreadAxle ? '2X' : '3X'
-            const style = config.axle.includes('angled') ? 'Angled' : 'Flat'
+            const style = config.axleAngled ? 'Angled' : 'Flat'
             activeGullwingMeshes.push(`${variantPrefix}_Axle_${style}_Side_For_GED`)
         }
         BlenderNodes.switchMeshes(gullwingDoor, activeGullwingMeshes)
@@ -421,6 +424,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const showSink = Boolean(config.bathroom && config.bathroom !== 'none')
             && !config.generatorBox
             && config.frontStyle !== 'flatfront'
+            && !hasCabinet
 
         const activeBathroomMeshes = ['Bathroom']
         if (showSink) activeBathroomMeshes.push('Sink_Area')
@@ -440,27 +444,29 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         BlenderNodes.switchMesh(wheels, WHEELS_VARIANT_MAP[variant])
         const prefix = variant === '3x' ? '3X_' : '2X_'
 
-        // Emulate the Geometry Node graph for Wheels (Joins structural panels + finishes)
+        // Emulate the Geometry Node graph for Wheels — Blender "Wheels" node group
+        // ── Side Panels section (no ATP gate — structural, always shown) ──────────
         const activeAxleMeshes = []
 
-        // 1. Structural Panel (Straight or Angled)
-        const isAngled = config.axle.includes('angled')
-        activeAxleMeshes.push(`${prefix}Axle_${isAngled ? 'Angled' : 'Flat'}_Side`)
+        // Base structural skirt — always visible regardless of ATP or angle
+        activeAxleMeshes.push('Side_Panel_Bottom_Strip')
 
-        // 2. Exterior Finish (ATP Trim)
-        if (config.axle.includes('atp')) {
-            if (config.axle === 'baseatp') {
-                activeAxleMeshes.push('Side_Panel_ATP')
-            } else {
-                activeAxleMeshes.push(`${prefix}ATP_${isAngled ? 'Angled' : 'Flat'}_Side`)
-            }
+        // Cover panel — always shown, angled or flat based on toggle
+        activeAxleMeshes.push(`${prefix}Axle_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+
+        // ── Finishes section (gated by ATP Super Toggle in Blender graph) ─────────
+        if (config.axleAtp) {
+            // Base ATP strip
+            activeAxleMeshes.push('Side_Panel_ATP')
+            // ATP directional trim — follows same angled/flat toggle
+            activeAxleMeshes.push(`${prefix}ATP_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
         }
 
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)
         BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
     }, [
         config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
-        config.wheel, config.axle, config.axleRating, config.spreadAxle,
+        config.wheel, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
         config.cabinets, config.toolBox,
         config.leftSide, config.rightSide,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,

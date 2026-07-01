@@ -1,9 +1,9 @@
-import { Suspense, useMemo, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Suspense, useRef, useState } from 'react'
+import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment, Center } from '@react-three/drei'
-import { Box3, Box3Helper, Color, Vector3 } from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
+import ModelDimensions from './ModelDimensions'
 import ARViewer from './ARViewer'
 import QRModal from './QRModal'
 
@@ -23,196 +23,10 @@ function getHeightFt(id) {
   return HEIGHT_FEET_MAP[id] ?? 7
 }
 
-// ── bounds projector (runs inside Canvas so it has camera + renderer access) ──
-
-function BoundsCalculator({ groupRef, onUpdate, widthFt, lengthFt, heightFt }) {
-  const { camera, size } = useThree()
-  const box = useMemo(() => new Box3(), [])
-
-  useFrame(() => {
-    if (!groupRef.current) return
-
-    box.makeEmpty()
-    groupRef.current.traverseVisible((child) => {
-      if (!child.isMesh || !child.geometry) return
-      if (!child.geometry.boundingBox) child.geometry.computeBoundingBox()
-      _childBox.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld)
-      box.union(_childBox)
-    })
-    if (box.isEmpty()) return
-
-    const project = (x, y, z) => {
-      const v = new Vector3(x, y, z).project(camera)
-      return { x: ((v.x + 1) / 2) * size.width, y: ((-v.y + 1) / 2) * size.height }
-    }
-
-    const { min, max } = box
-    const center = new Vector3()
-    box.getCenter(center)
-
-    // camera direction relative to center
-    const dir = new Vector3().copy(camera.position).sub(center)
-
-    // Offset to keep lines from clipping into the trailer
-    const axisSpacingOffset = 0.5
-    const yAxisSpacingOffset = 0.5
-
-    const zXAxis = dir.z > 0 ? max.z + axisSpacingOffset : min.z - axisSpacingOffset
-    const xYAxis = dir.x > 0 ? max.x + yAxisSpacingOffset : min.x - yAxisSpacingOffset
-    const zYAxis = dir.z > 0 ? max.z + yAxisSpacingOffset : min.z - yAxisSpacingOffset
-    const xZAxis = dir.x > 0 ? max.x + axisSpacingOffset : min.x - axisSpacingOffset
-
-    // Width (Z axis line - side to side)
-    const widthDims = dir.z > 0 ? [
-      project(xZAxis, min.y, max.z), project(xZAxis, min.y, min.z)
-    ] : [
-      project(xZAxis, min.y, min.z), project(xZAxis, min.y, max.z)
-    ]
-
-    // Height (Y axis line - up and down)
-    const heightDims = [
-      project(xYAxis, min.y, zYAxis), project(xYAxis, max.y, zYAxis)
-    ]
-
-    // Length (X axis line - front to back)
-    const lengthDims = dir.x > 0 ? [
-      project(max.x, min.y, zXAxis), project(min.x, min.y, zXAxis)
-    ] : [
-      project(min.x, min.y, zXAxis), project(max.x, min.y, zXAxis)
-    ]
-
-    // Convert scene units (metres) → feet for labels
-    const M_TO_FT = 3.28084
-    const boxSize = new Vector3()
-    box.getSize(boxSize)
-
-    onUpdate({
-      heightBot: heightDims[0],
-      heightTop: heightDims[1],
-      widthStart: widthDims[0],
-      widthEnd: widthDims[1],
-      lenStart: lengthDims[0],
-      lenEnd: lengthDims[1],
-      w: size.width,
-      h: size.height,
-      // Calculate exact dimensions from the actual bounding box so added models affect the displayed values
-      measuredWidthFt: boxSize.z * M_TO_FT,
-      measuredHeightFt: boxSize.y * M_TO_FT,
-      measuredLengthFt: boxSize.x * M_TO_FT,
-    })
-  })
-
-  return null
-}
-
-
-// ── 3-D bounding box wireframe (red lines inside the canvas) ──────────────────
-
-// Reused every frame — avoids per-frame allocations
-const _childBox = new Box3()
-
-function BoundingBoxWireframe({ groupRef }) {
-  const box = useMemo(() => new Box3(), [])
-  const helper = useMemo(() => new Box3Helper(box, new Color(0xff0000)), [box])
-
-  useFrame(() => {
-    if (!groupRef.current) return
-
-    // traverseVisible skips meshes hidden by option switching (visible = false)
-    box.makeEmpty()
-    groupRef.current.traverseVisible((child) => {
-      if (!child.isMesh || !child.geometry) return
-      if (!child.geometry.boundingBox) child.geometry.computeBoundingBox()
-      _childBox.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld)
-      box.union(_childBox)
-    })
-
-    if (!box.isEmpty()) helper.updateMatrixWorld(true)
-  })
-
-  return <primitive object={helper} />
-}
-
-function formatFt(feetDec) {
-  // Match Blender's exact decimal formatting (e.g. 8.57')
-  // We use round instead of toFixed to remove trailing zeros if it's exact like 53.2'
-  return `${Math.round(feetDec * 100) / 100}'`
-}
-
-// ── dimension overlay ─────────────────────────────────────────────────────────
-
-function DimLabel({ x, y, text, anchor = 'middle' }) {
-  const w = text.length * 7.5 + 18
-  const h = 24
-  const rx = anchor === 'end' ? x - w - 6 : anchor === 'start' ? x + 6 : x - w / 2
-  return (
-    <g>
-      <rect x={rx} y={y - h / 2} width={w} height={h} rx="4" fill="rgba(255,255,255,0.92)" />
-      <text x={rx + w / 2} y={y} textAnchor="middle" dominantBaseline="middle"
-        fontSize="12" fontWeight="600" fontFamily="ui-sans-serif,system-ui" fill="#111827">
-        {text}
-      </text>
-    </g>
-  )
-}
-
-function DimensionOverlay({ bounds }) {
-  if (!bounds) return null
-
-  const {
-    heightTop, heightBot, lenStart, lenEnd, widthStart, widthEnd, w, h,
-    measuredWidthFt, measuredHeightFt, measuredLengthFt,
-  } = bounds
-  const heightMidY = (heightTop.y + heightBot.y) / 2
-  const heightMidX = (heightTop.x + heightBot.x) / 2
-  const lenMidY = (lenStart.y + lenEnd.y) / 2
-  const lenMidX = (lenStart.x + lenEnd.x) / 2
-  const widthMidY = (widthStart.y + widthEnd.y) / 2
-  const widthMidX = (widthStart.x + widthEnd.x) / 2
-
-  return (
-    <div className="absolute inset-0 pointer-events-none select-none">
-      <svg className="absolute inset-0 w-full h-full" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
-        <defs>
-          <marker id="da-fwd" markerWidth="9" markerHeight="9"
-            refX="9" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
-            <polygon points="0 0,9 4.5,0 9" fill="white" />
-          </marker>
-          <marker id="da-rev" markerWidth="9" markerHeight="9"
-            refX="0" refY="4.5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
-            <polygon points="0 0,9 4.5,0 9" fill="white" />
-          </marker>
-        </defs>
-
-        {/* Height — vertical */}
-        <line x1={heightTop.x} y1={heightTop.y} x2={heightBot.x} y2={heightBot.y}
-          stroke="white" strokeWidth="1.5"
-          markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
-        <DimLabel x={heightMidX - 10} y={heightMidY} text={`${formatFt(measuredHeightFt)} height`} anchor="end" />
-
-        {/* Length — usually Z axis */}
-        <line x1={lenStart.x} y1={lenStart.y} x2={lenEnd.x} y2={lenEnd.y}
-          stroke="white" strokeWidth="1.5"
-          markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
-        <DimLabel x={lenMidX} y={lenMidY + 16} text={`${formatFt(measuredLengthFt)} length`} />
-
-        {/* Width — usually X axis */}
-        <line x1={widthStart.x} y1={widthStart.y} x2={widthEnd.x} y2={widthEnd.y}
-          stroke="white" strokeWidth="1.5"
-          markerStart="url(#da-rev)" markerEnd="url(#da-fwd)" />
-        <DimLabel x={widthMidX} y={widthMidY + 16} text={`${formatFt(measuredWidthFt)} wide`} />
-      </svg>
-    </div>
-  )
-}
-
-
 // ── viewer ────────────────────────────────────────────────────────────────────
 
 export default function TrailerViewer() {
-  const { width, length, interiorHeight } = useConfigurator()
-  const [showDimensions, setShowDimensions] = useState(false)
-  const [screenBounds, setScreenBounds] = useState(null)
+  const { width, length, interiorHeight, showDimensions, setShowDimensions } = useConfigurator()
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
   const [showQR, setShowQR] = useState(false)
@@ -328,10 +142,7 @@ export default function TrailerViewer() {
                 </group>
               </Center>
               {showDimensions && (
-                <>
-                  <BoundsCalculator groupRef={modelGroupRef} onUpdate={setScreenBounds} widthFt={widthFt} lengthFt={lengthFt} heightFt={heightFt} />
-                  <BoundingBoxWireframe groupRef={modelGroupRef} />
-                </>
+                <ModelDimensions groupRef={modelGroupRef} />
               )}
               <OrbitControls
                 enablePan={true}
@@ -342,10 +153,6 @@ export default function TrailerViewer() {
               />
             </Canvas>
           </Suspense>
-
-          {showDimensions && (
-            <DimensionOverlay bounds={screenBounds} />
-          )}
 
           {clickedName && (
             <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none">

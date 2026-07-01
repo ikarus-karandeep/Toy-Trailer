@@ -11,7 +11,8 @@ export function ConfiguratorProvider({ children }) {
   const [width, setWidth] = useState('7ft')
   const [length, setLength] = useState('36')
   const [interiorHeight, setInteriorHeight] = useState('7ft0')
-  const [axle, setAxle] = useState('baseatp')
+  const [axleAngled, setAxleAngled] = useState(false)
+  const [axleAtp, setAxleAtp] = useState(true)
   const [axleRating, setAxleRating] = useState('5200torsion')
   const [spreadAxle, setSpreadAxle] = useState(true)
 
@@ -78,6 +79,8 @@ export function ConfiguratorProvider({ children }) {
   const [recessedTireBox, setRecessedTireBox] = useState(false)
   const [interiorTireMount, setInteriorTireMount] = useState(false)
 
+  const [showDimensions, setShowDimensions] = useState(false)
+
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = (tab) => setVisitedTabs(prev => new Set([...prev, tab]))
   const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
@@ -118,7 +121,8 @@ export function ConfiguratorProvider({ children }) {
         width, setWidth,
         length, setLength,
         interiorHeight, setInteriorHeight,
-        axle, setAxle,
+        axleAngled, setAxleAngled,
+        axleAtp, setAxleAtp,
         axleRating, setAxleRating,
         spreadAxle, setSpreadAxle,
         exteriorFinish, setExteriorFinish,
@@ -164,6 +168,7 @@ export function ConfiguratorProvider({ children }) {
         sidewallVents, setSidewallVents,
         recessedTireBox, setRecessedTireBox,
         interiorTireMount, setInteriorTireMount,
+        showDimensions, setShowDimensions,
         totalPrice,
         completionPercent, markTabVisited,
       }}

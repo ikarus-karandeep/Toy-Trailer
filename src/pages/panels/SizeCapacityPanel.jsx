@@ -3,7 +3,6 @@ import {
   WIDTH_OPTIONS,
   LENGTH_OPTIONS,
   INTERIOR_HEIGHT_OPTIONS,
-  AXLE_OPTIONS,
   AXLE_RATING_OPTIONS,
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
@@ -15,7 +14,8 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
     width, setWidth,
     length, setLength,
     interiorHeight, setInteriorHeight,
-    axle, setAxle,
+    axleAngled, setAxleAngled,
+    axleAtp, setAxleAtp,
     axleRating, setAxleRating,
     spreadAxle, setSpreadAxle,
   } = useConfigurator()
@@ -105,17 +105,80 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
       {show('AXLE') && (
         <OptionSection title="AXLE">
-          <div className="flex flex-wrap gap-2 py-2 lg:py-3">
-            {AXLE_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isStandard={opt.isStandard}
-                isSelected={axle === opt.id}
-                onClick={() => setAxle(opt.id)}
-              />
-            ))}
+          <div className="flex flex-col gap-3 py-2 lg:py-3">
+
+            {/* Angled Toggle */}
+            <div className="flex items-center justify-between bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-3 gap-4">
+              <div>
+                <span className="text-white text-sm font-semibold tracking-widest uppercase">ANGLED</span>
+                <p className="text-gray-400 text-xs mt-0.5">Angled side panel vs flat side panel</p>
+              </div>
+              <button
+                role="switch"
+                aria-checked={axleAngled}
+                onClick={() => setAxleAngled(!axleAngled)}
+                className={`relative inline-flex flex-shrink-0 items-center w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
+                  axleAngled ? 'bg-[#DA634B]' : 'bg-[#3a3a3a]'
+                }`}
+              >
+                <span
+                  className={`inline-block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ${
+                    axleAngled ? 'translate-x-6' : 'translate-x-0.5'
+                  }`}
+                />
+                {axleAngled && (
+                  <svg className="absolute right-1.5 w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* ATP Toggle */}
+            <div className="flex items-center justify-between bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-3 gap-4">
+              <div>
+                <span className="text-white text-sm font-semibold tracking-widest uppercase">ATP</span>
+                <p className="text-gray-400 text-xs mt-0.5">Add ATP exterior trim finish</p>
+              </div>
+              <button
+                role="switch"
+                aria-checked={axleAtp}
+                onClick={() => setAxleAtp(!axleAtp)}
+                className={`relative inline-flex flex-shrink-0 items-center w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
+                  axleAtp ? 'bg-[#DA634B]' : 'bg-[#3a3a3a]'
+                }`}
+              >
+                <span
+                  className={`inline-block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ${
+                    axleAtp ? 'translate-x-6' : 'translate-x-0.5'
+                  }`}
+                />
+                {axleAtp && (
+                  <svg className="absolute right-1.5 w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* Live preview summary */}
+            <div className="flex gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 bg-[#1f1f1f] border border-[#3a3a3a] rounded px-3 py-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#DA634B] flex-shrink-0" />
+                BASE ATP — always included
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 bg-[#1f1f1f] border border-[#3a3a3a] rounded px-3 py-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#DA634B] flex-shrink-0" />
+                PANEL — {axleAngled ? 'ANGLED' : 'FLAT'}
+              </span>
+              {axleAtp && (
+                <span className="inline-flex items-center gap-1.5 text-xs text-[#DA634B] bg-[#1f1f1f] border border-[#DA634B]/30 rounded px-3 py-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#DA634B] flex-shrink-0" />
+                  ATP — {axleAngled ? 'ANGLED' : 'FLAT'}
+                </span>
+              )}
+            </div>
+
           </div>
           <img
             src="/Axle.png"
