@@ -76,8 +76,8 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
 
     if (orbitControlsRef.current) {
       orbitControlsRef.current.target.copy(center)
-      orbitControlsRef.current.minDistance = maxDim * 0.3
-      orbitControlsRef.current.maxDistance = maxDim * 10
+      orbitControlsRef.current.minDistance = maxDim * 0.1
+      orbitControlsRef.current.maxDistance = maxDim * 3
       orbitControlsRef.current.update()
     }
 
@@ -246,7 +246,7 @@ export default function TrailerViewer() {
                 ref={orbitControlsRef}
                 enablePan={true}
                 minPolarAngle={0.2}
-                maxPolarAngle={Math.PI * 0.65}
+                maxPolarAngle={Math.PI * 0.52}
               />
             </Canvas>
           </Suspense>
