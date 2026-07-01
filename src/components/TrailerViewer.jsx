@@ -1,6 +1,6 @@
 ﻿import { Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Environment, Center } from '@react-three/drei'
+import { OrbitControls, Stage } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
@@ -33,7 +33,7 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
   const bboxNeedsRescanRef = useRef(true)
   const pendingRef = useRef(0)
 
-  // On model resize: rescan bbox for the resize handler, but do NOT move the camera
+  // On model resize: rescan bbox and re-center camera on the new model
   useEffect(() => {
     bboxNeedsRescanRef.current = true
     pendingRef.current = 5
@@ -57,9 +57,6 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
     lastBboxRef.current = bbox.clone()
     bboxNeedsRescanRef.current = false
 
-    // Model resized after initial load — bbox updated, camera stays put
-    if (!isFirstLoad) return
-
     const center = new THREE.Vector3()
     bbox.getCenter(center)
     const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
@@ -72,10 +69,19 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
     const distForHeight = (bboxSize.y / 2) / Math.tan(halfFovV)
     const fitDist = Math.max(distForWidth, distForHeight) * 1.1
 
-    camera.position.set(center.x, center.y, center.z + fitDist)
-
-    if (orbitControlsRef.current) {
-      orbitControlsRef.current.target.copy(center)
+    if (isFirstLoad) {
+      camera.position.set(center.x, center.y, center.z + fitDist)
+      if (orbitControlsRef.current) {
+        orbitControlsRef.current.target.copy(center)
+        orbitControlsRef.current.minDistance = maxDim * 0.1
+        orbitControlsRef.current.maxDistance = maxDim * 3
+        orbitControlsRef.current.update()
+      }
+    } else if (orbitControlsRef.current) {
+      // Shift camera and target by the same X delta — no zoom, just slides to new center
+      const deltaX = center.x - orbitControlsRef.current.target.x
+      camera.position.x += deltaX
+      orbitControlsRef.current.target.x = center.x
       orbitControlsRef.current.minDistance = maxDim * 0.1
       orbitControlsRef.current.maxDistance = maxDim * 3
       orbitControlsRef.current.update()
@@ -217,23 +223,26 @@ export default function TrailerViewer() {
             }
           >
             <Canvas
+              shadows
               camera={{ fov: 50 }}
               style={{ width: '100%', height: '100%' }}
               gl={{ antialias: true }}
             >
-              <ambientLight intensity={0.6} />
-              <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
-              <directionalLight position={[-5, 3, -5]} intensity={0.4} />
-              <Environment preset="city" />
-              <Center>
-                <group ref={modelGroupRef} >
+              <Stage
+                intensity={0.5}
+                preset="rembrandt"
+                shadows={{ type: 'contact', opacity: 0.2, blur: 3 }}
+                environment="city"
+                adjustCamera={false}
+              >
+                <group ref={modelGroupRef}>
                   <ModularTrailerModel
                     widthFt={widthFt}
                     lengthFt={lengthFt}
                     heightFt={heightFt}
                   />
                 </group>
-              </Center>
+              </Stage>
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
               )}

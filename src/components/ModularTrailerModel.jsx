@@ -666,15 +666,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             scene.traverse(child => {
                 if (!child.isMesh || !child.geometry) return
 
-                // Build world-space matrix elements once per mesh (transform never changes)
-                const invKey = `_inv_${child.uuid}`
-                if (!store.current.has(invKey)) {
-                    child.updateWorldMatrix(true, false)
-                    store.current.set(invKey, child.matrixWorld.clone().invert().elements)
-                }
                 child.updateWorldMatrix(true, false)
                 const we = child.matrixWorld.elements
-                const ie = store.current.get(invKey)
+                const ie = child.matrixWorld.clone().invert().elements
 
                 applyDimensionDeformations({
                     geometry: child.geometry, store: store.current,

@@ -121,7 +121,17 @@ export function applyMoveNodeChain({ geometry, store, uuid, nodes }) {
     })
   }
 
-  geometry.computeVertexNormals()
+  // Same as applyDimensionDeformations: restore cached normals instead of recomputing.
+  // computeVertexNormals() on non-indexed geometry produces flat shading.
+  const normalAttr = geometry.attributes.normal
+  if (normalAttr) {
+    const normalKey = uuid + '_normals'
+    if (!store.has(normalKey)) {
+      store.set(normalKey, normalAttr.array.slice())
+    }
+    normalAttr.array.set(store.get(normalKey))
+    normalAttr.needsUpdate = true
+  }
 }
 
 
@@ -337,7 +347,23 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   }
 
   position.needsUpdate = true
-  geometry.computeVertexNormals()
+
+  // Restore original GLB normals instead of recomputing from scratch.
+  // computeVertexNormals() on non-indexed GLB geometry (the common case, especially
+  // after Draco decode) assigns each triangle's flat geometric normal to all its
+  // vertices — equivalent to flatShading:true — and destroys Blender's smooth groups.
+  // Since deformations here are axis-aligned translations on mostly-planar faces,
+  // the original normals remain correct after deformation.
+  const normalAttr = geometry.attributes.normal
+  if (normalAttr) {
+    const normalKey = uuid + '_normals'
+    if (!store.has(normalKey)) {
+      store.set(normalKey, normalAttr.array.slice())
+    }
+    normalAttr.array.set(store.get(normalKey))
+    normalAttr.needsUpdate = true
+  }
+
   geometry.computeBoundingBox()
   geometry.computeBoundingSphere()
 }
@@ -383,5 +409,14 @@ export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
   }
 
   position.needsUpdate = true
-  geometry.computeVertexNormals()
+  // Restore cached normals — same reasoning as applyDimensionDeformations.
+  const normalAttr = geometry.attributes.normal
+  if (normalAttr) {
+    const normalKey = uuid + '_normals'
+    if (!store.has(normalKey)) {
+      store.set(normalKey, normalAttr.array.slice())
+    }
+    normalAttr.array.set(store.get(normalKey))
+    normalAttr.needsUpdate = true
+  }
 }
