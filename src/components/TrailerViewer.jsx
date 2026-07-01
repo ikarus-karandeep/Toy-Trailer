@@ -1,6 +1,7 @@
-import { Suspense, useRef, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
+﻿import { Suspense, useEffect, useRef, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Environment, Center } from '@react-three/drei'
+import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
 import ModelDimensions from './ModelDimensions'
@@ -12,7 +13,7 @@ import QRModal from './QRModal'
 const WIDTH_FT = { '7ft': 7, '8.5ft': 8.5 }
 
 function getLengthFt(id) {
-  return parseInt(id, 10)   // '36' → 36
+  return parseInt(id, 10) // '36' → 36
 }
 
 const HEIGHT_FEET_MAP = {
@@ -21,6 +22,96 @@ const HEIGHT_FEET_MAP = {
 }
 function getHeightFt(id) {
   return HEIGHT_FEET_MAP[id] ?? 7
+}
+
+// ── camera fit — model always stays in canvas on resize ───────────────────────
+
+function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
+  const { camera, size } = useThree()
+  const lastBboxRef = useRef(null)
+  const cameraInitRef = useRef(false)
+  const bboxNeedsRescanRef = useRef(true)
+  const pendingRef = useRef(0)
+
+  // On model resize: rescan bbox for the resize handler, but do NOT move the camera
+  useEffect(() => {
+    bboxNeedsRescanRef.current = true
+    pendingRef.current = 5
+  }, [configKey])
+
+  useFrame(() => {
+    if (!bboxNeedsRescanRef.current) return
+    if (pendingRef.current > 0) { pendingRef.current--; return }
+    if (!modelGroupRef.current) return
+
+    let hasMeshes = false
+    modelGroupRef.current.traverse((o) => { if (o.isMesh) hasMeshes = true })
+    if (!hasMeshes) return
+
+    const bbox = new THREE.Box3().setFromObject(modelGroupRef.current)
+    const bboxSize = new THREE.Vector3()
+    bbox.getSize(bboxSize)
+    if (bboxSize.length() < 0.01) return
+
+    const isFirstLoad = !cameraInitRef.current
+    lastBboxRef.current = bbox.clone()
+    bboxNeedsRescanRef.current = false
+
+    // Model resized after initial load — bbox updated, camera stays put
+    if (!isFirstLoad) return
+
+    const center = new THREE.Vector3()
+    bbox.getCenter(center)
+    const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
+
+    const aspect = size.width / size.height
+    const fovRad = (camera.fov * Math.PI) / 180
+    const halfFovH = Math.atan(aspect * Math.tan(fovRad / 2))
+    const halfFovV = fovRad / 2
+    const distForWidth = (bboxSize.x / 2) / Math.tan(halfFovH)
+    const distForHeight = (bboxSize.y / 2) / Math.tan(halfFovV)
+    const fitDist = Math.max(distForWidth, distForHeight) * 1.1
+
+    camera.position.set(center.x, center.y, center.z + fitDist)
+
+    if (orbitControlsRef.current) {
+      orbitControlsRef.current.target.copy(center)
+      orbitControlsRef.current.minDistance = maxDim * 0.3
+      orbitControlsRef.current.maxDistance = maxDim * 10
+      orbitControlsRef.current.update()
+    }
+
+    cameraInitRef.current = true
+  })
+
+  // On canvas resize, always refit to the new canvas dimensions (both grow and shrink)
+  useEffect(() => {
+    if (!lastBboxRef.current || !camera.isPerspectiveCamera) return
+
+    const bbox = lastBboxRef.current
+    const bboxSize = new THREE.Vector3()
+    bbox.getSize(bboxSize)
+
+    const target = orbitControlsRef.current
+      ? orbitControlsRef.current.target.clone()
+      : (() => { const c = new THREE.Vector3(); bbox.getCenter(c); return c })()
+
+    const dir = camera.position.clone().sub(target)
+    if (dir.length() === 0) return
+
+    const aspect = size.width / size.height
+    const fovRad = (camera.fov * Math.PI) / 180
+    const halfFovH = Math.atan(aspect * Math.tan(fovRad / 2))
+    const halfFovV = fovRad / 2
+    const distForWidth = (bboxSize.x / 2) / Math.tan(halfFovH)
+    const distForHeight = (bboxSize.y / 2) / Math.tan(halfFovV)
+    const fitDist = Math.max(distForWidth, distForHeight) * 1.1
+
+    camera.position.copy(target.clone().add(dir.normalize().multiplyScalar(fitDist)))
+    orbitControlsRef.current?.update()
+  }, [size.width, size.height]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return null
 }
 
 // ── viewer ────────────────────────────────────────────────────────────────────
@@ -34,18 +125,20 @@ export default function TrailerViewer() {
   const [clickedName, setClickedName] = useState(null)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
+  const orbitControlsRef = useRef()
 
-  const handleMeshClick = (e) => {
-    e.stopPropagation()
-    const name = e.object.name || e.object.uuid
-    if (nameTimerRef.current) clearTimeout(nameTimerRef.current)
-    setClickedName(name)
-    nameTimerRef.current = setTimeout(() => setClickedName(null), 2000)
-  }
+  // const handleMeshClick = (e) => {
+  //   e.stopPropagation()
+  //   const name = e.object.name || e.object.uuid
+  //   if (nameTimerRef.current) clearTimeout(nameTimerRef.current)
+  //   setClickedName(name)
+  //   nameTimerRef.current = setTimeout(() => setClickedName(null), 2000)
+  // }
 
   const widthFt = WIDTH_FT[width] ?? 7
   const lengthFt = getLengthFt(length)
   const heightFt = getHeightFt(interiorHeight)
+  const configKey = `${widthFt}-${lengthFt}-${heightFt}`
 
   const handleViewInDriveway = () => setShowQR(true)
 
@@ -124,7 +217,7 @@ export default function TrailerViewer() {
             }
           >
             <Canvas
-              camera={{ position: [0, 5, 25], fov: 50 }}
+              camera={{ fov: 50 }}
               style={{ width: '100%', height: '100%' }}
               gl={{ antialias: true }}
             >
@@ -133,7 +226,7 @@ export default function TrailerViewer() {
               <directionalLight position={[-5, 3, -5]} intensity={0.4} />
               <Environment preset="city" />
               <Center>
-                <group ref={modelGroupRef} onClick={handleMeshClick}>
+                <group ref={modelGroupRef} >
                   <ModularTrailerModel
                     widthFt={widthFt}
                     lengthFt={lengthFt}
@@ -144,10 +237,14 @@ export default function TrailerViewer() {
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
               )}
+              <CameraFit
+                modelGroupRef={modelGroupRef}
+                orbitControlsRef={orbitControlsRef}
+                configKey={configKey}
+              />
               <OrbitControls
+                ref={orbitControlsRef}
                 enablePan={true}
-                minDistance={1.5}
-                maxDistance={10}
                 minPolarAngle={0.2}
                 maxPolarAngle={Math.PI * 0.65}
               />
@@ -174,8 +271,7 @@ export default function TrailerViewer() {
           <button
             aria-label="Toggle Dimensions"
             onClick={() => setShowDimensions(prev => !prev)}
-            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'
-              }`}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/Dimension.png" alt="" />
           </button>
@@ -216,3 +312,7 @@ export default function TrailerViewer() {
     </div>
   )
 }
+
+
+
+
