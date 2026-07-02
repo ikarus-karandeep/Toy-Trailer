@@ -1,33 +1,146 @@
 import '@google/model-viewer'
-import { useRef, useEffect } from 'react'
+import { Suspense, useRef, useState } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { Stage, OrbitControls } from '@react-three/drei'
+import * as THREE from 'three'
+import LZString from 'lz-string'
+import { ConfiguratorProvider, useConfigurator } from '../context/ConfiguratorContext'
+import ModularTrailerModel from '../components/ModularTrailerModel'
+import ARViewer from '../components/ARViewer'
 
-export default function ARPage() {
-  const modelRef = useRef()
-  const modelUrl = `${window.location.origin}/models/Base.glb`
+const WIDTH_FT = { '7ft': 7, '8.5ft': 8.5 }
+const HEIGHT_MAP = { '7ft0': 7, '7ft6': 7.5, '8ft0': 8, '8ft6': 8.5, '9ft0': 9, '9ft6': 9.5, '10ft0': 10 }
 
-  useEffect(() => {
-    const viewer = modelRef.current
-    if (!viewer) return
-    const onLoad = () => {
-      if (viewer.canActivateAR) viewer.activateAR()
+async function exportGLB(mesh) {
+  const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
+  const exportGroup = new THREE.Group()
+  mesh.updateWorldMatrix(true, true)
+  mesh.traverse(child => {
+    if (!child.isMesh) return
+    let visible = true
+    let node = child
+    while (node) { if (!node.visible) { visible = false; break } node = node.parent }
+    if (!visible) return
+    child.updateWorldMatrix(true, false)
+    if (child.isInstancedMesh) {
+      const cloned = new THREE.InstancedMesh(child.geometry.clone(), child.material, child.count)
+      const m = new THREE.Matrix4()
+      for (let i = 0; i < child.count; i++) { child.getMatrixAt(i, m); m.premultiply(child.matrixWorld); cloned.setMatrixAt(i, m) }
+      cloned.instanceMatrix.needsUpdate = true
+      cloned.name = child.name
+      exportGroup.add(cloned)
+    } else {
+      const geo = child.geometry.clone()
+      geo.applyMatrix4(child.matrixWorld)
+      const cloned = new THREE.Mesh(geo, child.material)
+      cloned.name = child.name
+      exportGroup.add(cloned)
     }
-    viewer.addEventListener('load', onLoad)
-    return () => viewer.removeEventListener('load', onLoad)
-  }, [])
+  })
+  return new Promise((resolve, reject) =>
+    new GLTFExporter().parse(exportGroup, resolve, reject, { binary: true })
+  )
+}
+
+function ARPageContent() {
+  const { width, length, interiorHeight } = useConfigurator()
+  const modelGroupRef = useRef()
+  const [arUrl, setArUrl] = useState(null)
+  const [exporting, setExporting] = useState(false)
+
+  const widthFt = WIDTH_FT[width] ?? 7
+  const lengthFt = parseInt(length, 10) || 36
+  const heightFt = HEIGHT_MAP[interiorHeight] ?? 7
+
+  const handleViewInAR = async () => {
+    if (!modelGroupRef.current || exporting) return
+    setExporting(true)
+    try {
+      const result = await exportGLB(modelGroupRef.current)
+      const blob = new Blob([result], { type: 'model/gltf-binary' })
+      setArUrl(URL.createObjectURL(blob))
+    } catch (err) {
+      console.error('[ARPage] export error:', err)
+      setExporting(false)
+    }
+  }
+
+  if (arUrl) {
+    return (
+      <ARViewer
+        url={arUrl}
+        onClose={() => {
+          URL.revokeObjectURL(arUrl)
+          setArUrl(null)
+          setExporting(false)
+        }}
+      />
+    )
+  }
 
   return (
-    <model-viewer
-      ref={modelRef}
-      src={modelUrl}
-      ar
-      ar-modes="quick-look webxr scene-viewer"
-      reveal="auto"
-      camera-controls
-      tone-mapping="commerce"
-      shadow-intensity="1"
-      exposure="0.7"
-      touch-action="pan-y pinch-zoom"
-      class="fixed inset-0 w-full h-full block"
-    />
+    <div className="fixed inset-0 bg-black">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center w-full h-full">
+            <span className="text-gray-400 text-sm tracking-widest uppercase">Loading Model...</span>
+          </div>
+        }
+      >
+        <Canvas
+          shadows
+          camera={{ fov: 50 }}
+          style={{ width: '100%', height: '100%' }}
+          gl={{ antialias: true }}
+        >
+          <Stage
+            intensity={0.5}
+            preset="rembrandt"
+            shadows={{ type: 'contact', opacity: 0.2, blur: 3 }}
+            environment="city"
+            adjustCamera
+          >
+            <group ref={modelGroupRef}>
+              <ModularTrailerModel widthFt={widthFt} lengthFt={lengthFt} heightFt={heightFt} />
+            </group>
+          </Stage>
+          <OrbitControls enablePan minPolarAngle={0.2} maxPolarAngle={Math.PI * 0.52} />
+        </Canvas>
+      </Suspense>
+
+      <div className="absolute bottom-10 left-0 right-0 flex justify-center pointer-events-none">
+        <button
+          onClick={handleViewInAR}
+          disabled={exporting}
+          className="pointer-events-auto flex items-center gap-2 px-8 py-4 bg-[#DA634B] rounded-xl text-base font-semibold tracking-widest uppercase text-white hover:bg-[#c5573f] transition-all disabled:opacity-50"
+        >
+          {exporting ? 'Preparing...' : 'View in AR'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default function ARPage() {
+  let initialConfig = {}
+  try {
+    const hash = window.location.hash
+    const queryStart = hash.indexOf('?')
+    if (queryStart >= 0) {
+      const raw = hash.slice(queryStart + 1)
+      const match = raw.match(/(?:^|&)c=([^&]*)/)
+      if (match) {
+        const decoded = LZString.decompressFromEncodedURIComponent(decodeURIComponent(match[1]))
+        if (decoded) initialConfig = JSON.parse(decoded)
+      }
+    }
+  } catch {
+    console.warn('[ARPage] Failed to parse config from URL — using defaults')
+  }
+
+  return (
+    <ConfiguratorProvider initialConfig={initialConfig}>
+      <ARPageContent />
+    </ConfiguratorProvider>
   )
 }

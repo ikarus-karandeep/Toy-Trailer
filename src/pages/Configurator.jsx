@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
-import '@google/model-viewer'
+import { useState, useRef } from 'react'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import { PANEL_SECTIONS } from '../constants/configData'
 import ViewToggle from '../components/ViewToggle'
@@ -27,33 +26,9 @@ const PANELS = {
 export default function Configurator() {
   const { activeTab, viewMode, setViewMode, showDimensions, setShowDimensions } = useConfigurator()
   const [sectionIdx, setSectionIdx] = useState(0)
-  const mobileARRef = useRef()
-  const [arModelReady, setArModelReady] = useState(false)
-  const [arLaunching, setArLaunching] = useState(false)
+  const viewerRef = useRef()
 
-  useEffect(() => {
-    const viewer = mobileARRef.current
-    if (!viewer) return
-    const onLoad = () => setArModelReady(true)
-    viewer.addEventListener('load', onLoad)
-    return () => viewer.removeEventListener('load', onLoad)
-  }, [])
-
-  const handleMobileAR = () => {
-    const viewer = mobileARRef.current
-    if (!viewer) return
-    if (arModelReady && viewer.canActivateAR) {
-      viewer.activateAR()
-    } else {
-      setArLaunching(true)
-      const onReady = () => {
-        viewer.removeEventListener('load', onReady)
-        if (viewer.canActivateAR) viewer.activateAR()
-        setArLaunching(false)
-      }
-      viewer.addEventListener('load', onReady)
-    }
-  }
+  const handleMobileAR = () => viewerRef.current?.openARViewer()
   const ActivePanel = PANELS[activeTab]
 
   const activeSectionTitle = sectionIdx !== null
@@ -91,7 +66,7 @@ export default function Configurator() {
 
           {/* Trailer Viewer */}
           <div className="flex-1 min-h-0 flex flex-col relative">
-            <TrailerViewer />
+            <TrailerViewer ref={viewerRef} />
 
             {/* Mobile View controls — overlaid at bottom of canvas */}
             <div className="lg:hidden absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-2">
@@ -160,25 +135,10 @@ export default function Configurator() {
           <PanelActions />
         </div>
 
-        {/* Hidden model-viewer preloads in background so AR launches instantly on tap */}
-        <model-viewer
-          ref={mobileARRef}
-          src={`${window.location.origin}/models/Base.glb`}
-          ar
-          ar-modes="quick-look webxr scene-viewer"
-          class="absolute w-0 h-0 opacity-0 pointer-events-none overflow-hidden"
-        />
-
       </div>
 
       {/* Summary panel — works on both layouts */}
       <SummaryPanel />
-
-      {arLaunching && (
-        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
-          <span className="text-white text-sm tracking-widest uppercase">Launching AR...</span>
-        </div>
-      )}
     </>
   )
 }

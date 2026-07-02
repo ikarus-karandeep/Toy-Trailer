@@ -233,15 +233,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const leftWall = baseMeshes.getObjectByName('Left_side_wall_Vanilla') || baseMeshes.getObjectByName('Left side wall Vanilla')
         const rightWall = baseMeshes.getObjectByName('Right_side_wall_Vanilla') || baseMeshes.getObjectByName('Right side wall Vanilla')
         
-        if (baseInterior && !baseInterior.userData._loggedAttrs) {
-            baseInterior.userData._loggedAttrs = true
-            console.log('[DEBUG] baseInterior attributes:', Object.keys(baseInterior.geometry.attributes))
-        }
-        if (leftWall && !leftWall.userData._loggedAttrs) {
-            leftWall.userData._loggedAttrs = true
-            console.log('[DEBUG] leftWall attributes:', Object.keys(leftWall.geometry.attributes))
-        }
-        
         if (baseInterior) baseInterior.visible = config.escapeDoor === 'none'
         if (leftWall) leftWall.visible = config.escapeDoor === 'none'
         if (rightWall) rightWall.visible = true
@@ -522,22 +513,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
 
         const pointsGeometry = new THREE.BufferGeometry()
         pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
-
-        console.log(`[E-Track Debug] targetLength: ${targetLength}, count: ${count}, startX: ${startX}`)
-        if (floorTemplate) {
-            console.log(`[E-Track Debug] floorTemplate position:`, floorTemplate.position.toArray())
-            console.log(`[E-Track Debug] floorTemplate rotation:`, floorTemplate.rotation.toArray())
-            const a = floorTemplate.geometry.attributes
-            const present = ['_leftselection', '_rightselection', '_rearselection', '_topselection'].filter(k => !!a[k])
-            console.log(`[E-Track Debug] floorTemplate attributes:`, present)
-        }
-        if (wallTemplate) {
-            console.log(`[E-Track Debug] wallTemplate position:`, wallTemplate.position.toArray())
-            console.log(`[E-Track Debug] wallTemplate rotation:`, wallTemplate.rotation.toArray())
-            const a = wallTemplate.geometry.attributes
-            const present = ['_leftselection', '_rightselection', '_rearselection', '_topselection'].filter(k => !!a[k])
-            console.log(`[E-Track Debug] wallTemplate attributes:`, present)
-        }
 
         const instances = []
         if (floorTemplate && config.tieDowns?.includes('flooretrack')) {

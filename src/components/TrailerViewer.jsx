@@ -1,4 +1,4 @@
-﻿import { Suspense, useEffect, useRef, useState } from 'react'
+﻿import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Stage } from '@react-three/drei'
 import * as THREE from 'three'
@@ -22,6 +22,72 @@ const HEIGHT_FEET_MAP = {
 }
 function getHeightFt(id) {
   return HEIGHT_FEET_MAP[id] ?? 7
+}
+
+async function parseGLB(mesh) {
+  const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
+
+  const exportGroup = new THREE.Group()
+  mesh.updateWorldMatrix(true, true)
+
+  const skipped = []
+  const included = []
+
+  mesh.traverse(child => {
+    if (!child.isMesh) return
+
+    // Walk the ancestor chain to determine effective visibility
+    let visible = true
+    let invisibleAncestor = null
+    let node = child
+    while (node) {
+      if (!node.visible) { visible = false; invisibleAncestor = node.name || node.type; break }
+      node = node.parent
+    }
+
+    if (!visible) {
+      skipped.push({ name: child.name, reason: `ancestor "${invisibleAncestor}" is hidden` })
+      return
+    }
+
+    child.updateWorldMatrix(true, false)
+
+    if (child.isInstancedMesh) {
+      const cloned = new THREE.InstancedMesh(child.geometry.clone(), child.material, child.count)
+      const m = new THREE.Matrix4()
+      for (let i = 0; i < child.count; i++) {
+        child.getMatrixAt(i, m)
+        m.premultiply(child.matrixWorld)
+        cloned.setMatrixAt(i, m)
+      }
+      cloned.instanceMatrix.needsUpdate = true
+      cloned.name = child.name
+      exportGroup.add(cloned)
+      included.push({ name: child.name, type: 'InstancedMesh', count: child.count })
+    } else {
+      const clonedGeo = child.geometry.clone()
+      clonedGeo.applyMatrix4(child.matrixWorld)
+      const cloned = new THREE.Mesh(clonedGeo, child.material)
+      cloned.name = child.name
+      exportGroup.add(cloned)
+      included.push({ name: child.name, type: 'Mesh' })
+    }
+  })
+
+  console.group('[AR Export] parseGLB summary')
+  console.log('Total meshes included:', included.length)
+  console.log('Total meshes skipped:', skipped.length)
+  console.log('Included:', included.map(m => m.name))
+  console.log('Skipped (hidden):', skipped.map(m => `${m.name} — ${m.reason}`))
+  console.groupEnd()
+
+  if (included.length === 0) {
+    console.error('[AR Export] exportGroup is EMPTY — no visible meshes found. Check modelGroupRef is populated.')
+  }
+
+  return new Promise((resolve, reject) => {
+    new GLTFExporter().parse(exportGroup, resolve, reject, { binary: true })
+  })
 }
 
 // ── camera fit — model always stays in canvas on resize ───────────────────────
@@ -122,7 +188,7 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
 
 // ── viewer ────────────────────────────────────────────────────────────────────
 
-export default function TrailerViewer() {
+const TrailerViewer = forwardRef(function TrailerViewer(_, ref) {
   const { width, length, interiorHeight, showDimensions, setShowDimensions } = useConfigurator()
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
@@ -149,57 +215,49 @@ export default function TrailerViewer() {
   const handleViewInDriveway = () => setShowQR(true)
 
   const handleOpenAR = async () => {
-    if (!modelGroupRef.current || arExporting) return
+    console.log('[AR Export] handleOpenAR called — modelGroupRef.current:', modelGroupRef.current)
+    if (!modelGroupRef.current) { console.error('[AR Export] modelGroupRef.current is null — aborting'); return }
+    if (arExporting) { console.warn('[AR Export] already exporting, skipping'); return }
+    const childCount = modelGroupRef.current.children.length
+    console.log('[AR Export] modelGroupRef children count:', childCount)
+    modelGroupRef.current.traverse(o => {
+      if (o.isMesh) console.log(`  mesh: ${o.name || '(unnamed)'}  visible=${o.visible}`)
+    })
     setArExporting(true)
     try {
-      const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
-      const exporter = new GLTFExporter()
-      exporter.parse(
-        modelGroupRef.current,
-        (result) => {
-          const blob = new Blob([result], { type: 'model/gltf-binary' })
-          setArUrl(URL.createObjectURL(blob))
-          setShowQR(false)
-          setArExporting(false)
-        },
-        (err) => {
-          console.error('GLB export failed:', err)
-          setArExporting(false)
-        },
-        { binary: true }
-      )
+      const result = await parseGLB(modelGroupRef.current)
+      console.log('[AR Export] GLB result type:', typeof result, 'byteLength:', result?.byteLength)
+      const blob = new Blob([result], { type: 'model/gltf-binary' })
+      const url = URL.createObjectURL(blob)
+      console.log('[AR Export] blob URL created:', url)
+      setArUrl(url)
+      setShowQR(false)
     } catch (err) {
-      console.error('AR export error:', err)
+      console.error('[AR Export] export error:', err)
+    } finally {
       setArExporting(false)
     }
   }
+
+  useImperativeHandle(ref, () => ({
+    openARViewer: handleOpenAR,
+  }))
 
   const handleDownload = async () => {
     if (!modelGroupRef.current || downloading) return
     setDownloading(true)
     try {
-      const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
-      const exporter = new GLTFExporter()
-      exporter.parse(
-        modelGroupRef.current,
-        (result) => {
-          const blob = new Blob([result], { type: 'model/gltf-binary' })
-          const url = URL.createObjectURL(blob)
-          const a = document.createElement('a')
-          a.href = url
-          a.download = `trailer-${lengthFt}ft-${widthFt}ft.glb`
-          a.click()
-          URL.revokeObjectURL(url)
-          setDownloading(false)
-        },
-        (err) => {
-          console.error('GLB export failed:', err)
-          setDownloading(false)
-        },
-        { binary: true }
-      )
+      const result = await parseGLB(modelGroupRef.current)
+      const blob = new Blob([result], { type: 'model/gltf-binary' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `trailer-${lengthFt}ft-${widthFt}ft.glb`
+      a.click()
+      URL.revokeObjectURL(url)
     } catch (err) {
       console.error('Download error:', err)
+    } finally {
       setDownloading(false)
     }
   }
@@ -320,8 +378,6 @@ export default function TrailerViewer() {
       {arUrl && <ARViewer url={arUrl} onClose={handleCloseAR} />}
     </div>
   )
-}
+})
 
-
-
-
+export default TrailerViewer
