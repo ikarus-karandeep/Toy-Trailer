@@ -26,6 +26,7 @@ const PANELS = {
 export default function Configurator({ onModelReady }) {
   const { activeTab, viewMode, setViewMode, showDimensions, setShowDimensions } = useConfigurator()
   const [sectionIdx, setSectionIdx] = useState(0)
+  const [fullscreen, setFullscreen] = useState(false)
   const viewerRef = useRef()
 
   const handleMobileAR = () => viewerRef.current?.openARViewer()
@@ -43,7 +44,7 @@ export default function Configurator({ onModelReady }) {
       <div className="relative h-dvh flex flex-col lg:block overflow-hidden bg-viewer">
 
         {/* ── LEFT SIDE / MAIN VIEWER AREA ── */}
-        <div className="flex-1 min-h-0 flex flex-col relative lg:absolute lg:top-0 lg:left-0 lg:bottom-0 lg:right-[500px] xl:right-[551px]">
+        <div className={`flex-1 min-h-0 flex flex-col relative lg:absolute lg:top-0 lg:left-0 lg:bottom-0 transition-all duration-300 ${fullscreen ? 'lg:right-0' : 'lg:right-[500px] xl:right-[551px]'}`}>
           
           {/* Logo & Top View Toggle */}
           <div className="absolute top-0 left-0 right-0 z-20 flex items-center px-4 pt-3 pb-1 pointer-events-none lg:top-6 lg:left-6 lg:px-0 lg:pt-0 lg:pb-0">
@@ -66,11 +67,15 @@ export default function Configurator({ onModelReady }) {
 
           {/* Trailer Viewer */}
           <div className="flex-1 min-h-0 flex flex-col relative">
-            <TrailerViewer ref={viewerRef} onModelReady={onModelReady} />
+            <TrailerViewer ref={viewerRef} onModelReady={onModelReady} fullscreen={fullscreen} onToggleFullscreen={() => setFullscreen(prev => !prev)} />
 
             {/* Mobile View controls — overlaid at bottom of canvas */}
             <div className="lg:hidden absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-2">
-              <button aria-label="360 View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+              <button
+                aria-label="Toggle Fullscreen"
+                onClick={() => setFullscreen(prev => !prev)}
+                className={`w-8 h-7 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${fullscreen ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+              >
                 <img src="/eyes.png" className="w-4 h-4 object-contain" />
               </button>
               <button aria-label="Scenic View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
@@ -106,7 +111,7 @@ export default function Configurator({ onModelReady }) {
         </div>
 
         {/* ── RIGHT/BOTTOM PANEL AREA ── */}
-        <div className="flex-shrink-0 z-20 flex flex-col lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-[500px] xl:w-[551px] lg:pb-[72px]">
+        <div className={`flex-shrink-0 z-20 flex flex-col lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-[500px] xl:w-[551px] lg:pb-[72px] transition-all duration-300 ${fullscreen ? 'hidden' : ''}`}>
           
           {/* Mobile Panel Layout */}
           <div className="lg:hidden flex flex-col">
@@ -131,7 +136,7 @@ export default function Configurator({ onModelReady }) {
         </div>
 
         {/* Desktop PanelActions */}
-        <div className="hidden lg:block fixed bottom-6 right-0 w-[500px] xl:w-[551px] z-30 pr-4">
+        <div className={`fixed bottom-6 right-0 w-[500px] xl:w-[551px] z-30 pr-4 ${fullscreen ? 'hidden' : 'hidden lg:block'}`}>
           <PanelActions />
         </div>
 

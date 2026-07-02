@@ -1,17 +1,23 @@
 import '@google/model-viewer'
 import { useRef, useState, useEffect } from 'react'
+import { isAndroidDevice } from '../utils/arPlatform'
 
 export default function ARViewer({ url, onClose }) {
   const modelRef = useRef()
   const [status, setStatus] = useState('loading') // loading | ready | unsupported
+  const [showPrompt, setShowPrompt] = useState(false)
 
   useEffect(() => {
     const viewer = modelRef.current
     if (!viewer) return
     const handleLoad = () => {
       if (viewer.canActivateAR) {
-        viewer.activateAR()
         setStatus('ready')
+        if (isAndroidDevice()) {
+          setShowPrompt(true)
+        } else {
+          viewer.activateAR()
+        }
       } else {
         setStatus('unsupported')
       }
@@ -38,14 +44,14 @@ export default function ARViewer({ url, onClose }) {
         ref={modelRef}
         src={url}
         ar
-        ar-modes="quick-look webxr scene-viewer"
+        ar-modes={isAndroidDevice() ? 'webxr' : 'quick-look webxr'}
         reveal="auto"
         camera-controls
         tone-mapping="commerce"
         shadow-intensity="1"
         exposure="0.7"
         touch-action="pan-y pinch-zoom"
-        class={`w-full h-full block ${status !== 'unsupported' ? 'opacity-0 pointer-events-none' : ''}`}
+        className={`w-full h-full block ${status !== 'unsupported' ? 'opacity-0 pointer-events-none' : ''}`}
       />
 
       {status === 'loading' && (
@@ -54,20 +60,31 @@ export default function ARViewer({ url, onClose }) {
         </div>
       )}
 
-      {status === 'ready' && (
-        <button
-          onClick={handleTap}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-6 w-full"
-        >
-          <div className="w-20 h-20 rounded-full bg-[#DA634B] flex items-center justify-center">
-            <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M9.5 6.5l7 5.5-7 5.5z" />
-            </svg>
+      {status === 'ready' && showPrompt && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/55 backdrop-blur-sm px-4">
+          <div className="w-full max-w-md rounded-[28px] bg-[#2a2a2a] border border-white/10 shadow-2xl px-5 pt-6 pb-5">
+            <h2 className="text-white text-[22px] leading-tight font-extrabold">
+              View in AR?
+            </h2>
+            <p className="mt-3 text-white/70 text-[14px] leading-relaxed">
+              You can view this object in 3D and place it in your surroundings using augmented reality.
+            </p>
+            <div className="mt-7 grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setShowPrompt(false)}
+                className="h-12 rounded-full bg-white/10 text-white text-sm font-semibold hover:bg-white/15 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleTap}
+                className="h-12 rounded-full bg-[#5a5a5a] text-white text-sm font-semibold hover:bg-[#686868] transition-colors"
+              >
+                View in AR
+              </button>
+            </div>
           </div>
-          <span className="text-white text-sm font-semibold tracking-widest uppercase">
-            Tap to View in AR
-          </span>
-        </button>
+        </div>
       )}
 
       {status === 'unsupported' && (

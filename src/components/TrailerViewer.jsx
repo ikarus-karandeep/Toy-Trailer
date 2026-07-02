@@ -7,6 +7,7 @@ import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
 import ModelDimensions from './ModelDimensions'
 import QRModal from './QRModal'
+import { isAndroidDevice } from '../utils/arPlatform'
 
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
 
@@ -211,11 +212,12 @@ function SceneReadyNotifier({ meshRef, onReady }) {
   return null
 }
 
-const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady }, ref) {
+const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen }, ref) {
   const { width, length, interiorHeight, showDimensions, setShowDimensions } = useConfigurator()
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
   const [showQR, setShowQR] = useState(false)
+  const [showARPrompt, setShowARPrompt] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
   const nameTimerRef = useRef(null)
@@ -274,7 +276,13 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady }, ref) {
     if (!viewer) return
     const handleLoad = () => {
       viewer.removeEventListener('load', handleLoad)
-      if (viewer.canActivateAR) viewer.activateAR()
+      if (viewer.canActivateAR) {
+        if (isAndroidDevice()) {
+          setShowARPrompt(true)
+        } else {
+          viewer.activateAR()
+        }
+      }
     }
     viewer.addEventListener('load', handleLoad)
     viewer.setAttribute('src', arUrl)
@@ -305,6 +313,12 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady }, ref) {
   const handleCloseAR = () => {
     if (arUrl) URL.revokeObjectURL(arUrl)
     setArUrl(null)
+    setShowARPrompt(false)
+  }
+
+  const handleOpenFromPrompt = () => {
+    const viewer = arViewerRef.current
+    if (viewer?.canActivateAR) viewer.activateAR()
   }
 
   return (
@@ -370,7 +384,11 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady }, ref) {
 
         {/* View controls — overlaid on canvas, desktop only */}
         <div className="hidden lg:flex absolute bottom-6 left-0 right-0 items-center justify-center gap-3 z-10">
-          <button aria-label="360 View" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+          <button
+            aria-label="Toggle Fullscreen"
+            onClick={onToggleFullscreen}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${fullscreen ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+          >
             <img src="/eyes.png" alt="" />
           </button>
           <button aria-label="Scenic View" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
@@ -416,12 +434,38 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady }, ref) {
           exporting={arExporting}
         />
       )}
+      {showARPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm px-4">
+          <div className="w-full max-w-md rounded-[28px] bg-[#2a2a2a] border border-white/10 shadow-2xl px-5 pt-6 pb-5">
+            <h2 className="text-white text-[22px] leading-tight font-extrabold">
+              View in AR?
+            </h2>
+            <p className="mt-3 text-white/70 text-[14px] leading-relaxed">
+              You can view this object in 3D and place it in your surroundings using augmented reality.
+            </p>
+            <div className="mt-7 grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setShowARPrompt(false)}
+                className="h-12 rounded-full bg-white/10 text-white text-sm font-semibold hover:bg-white/15 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleOpenFromPrompt}
+                className="h-12 rounded-full bg-[#5a5a5a] text-white text-sm font-semibold hover:bg-[#686868] transition-colors"
+              >
+                View in AR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <model-viewer
         ref={arViewerRef}
         ar
-        ar-modes="quick-look scene-viewer webxr"
+        ar-modes={isAndroidDevice() ? 'webxr' : 'quick-look webxr'}
         reveal="auto"
-        class="fixed top-0 left-0 w-px h-px opacity-0 pointer-events-none"
+        className="fixed top-0 left-0 w-px h-px opacity-0 pointer-events-none"
       />
     </div>
   )
