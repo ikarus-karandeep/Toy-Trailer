@@ -23,7 +23,7 @@ const PANELS = {
   'ADD-ONS': AddOnsPanel,
 }
 
-export default function Configurator() {
+export default function Configurator({ onModelReady }) {
   const { activeTab, viewMode, setViewMode, showDimensions, setShowDimensions } = useConfigurator()
   const [sectionIdx, setSectionIdx] = useState(0)
   const viewerRef = useRef()
@@ -66,7 +66,7 @@ export default function Configurator() {
 
           {/* Trailer Viewer */}
           <div className="flex-1 min-h-0 flex flex-col relative">
-            <TrailerViewer ref={viewerRef} />
+            <TrailerViewer ref={viewerRef} onModelReady={onModelReady} />
 
             {/* Mobile View controls — overlaid at bottom of canvas */}
             <div className="lg:hidden absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-2">

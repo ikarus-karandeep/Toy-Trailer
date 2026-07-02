@@ -9,7 +9,12 @@ export default function ARViewer({ url, onClose }) {
     const viewer = modelRef.current
     if (!viewer) return
     const handleLoad = () => {
-      setStatus(viewer.canActivateAR ? 'ready' : 'unsupported')
+      if (viewer.canActivateAR) {
+        viewer.activateAR()
+        setStatus('ready')
+      } else {
+        setStatus('unsupported')
+      }
     }
     viewer.addEventListener('load', handleLoad)
     return () => viewer.removeEventListener('load', handleLoad)
@@ -45,7 +50,7 @@ export default function ARViewer({ url, onClose }) {
 
       {status === 'loading' && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-white text-sm tracking-widest uppercase">Loading Model...</span>
+          <img src="/loader.gif" alt="Loading" className="w-24 h-24" />
         </div>
       )}
 

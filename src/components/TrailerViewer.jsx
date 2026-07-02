@@ -1,11 +1,11 @@
-﻿import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
+﻿import '@google/model-viewer'
+import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Stage } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
 import ModelDimensions from './ModelDimensions'
-import ARViewer from './ARViewer'
 import QRModal from './QRModal'
 
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
@@ -188,7 +188,30 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
 
 // ── viewer ────────────────────────────────────────────────────────────────────
 
-const TrailerViewer = forwardRef(function TrailerViewer(_, ref) {
+function SceneReadyNotifier({ meshRef, onReady }) {
+  const triggered = useRef(false)
+  useEffect(() => {
+    if (triggered.current) return
+    // Poll every frame until the group has actual meshes — handles both
+    // procedural (immediate) and async-loaded (delayed) model types.
+    const check = () => {
+      if (triggered.current) return
+      if (!meshRef.current) { requestAnimationFrame(check); return }
+      let hasMeshes = false
+      meshRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
+      if (hasMeshes) {
+        triggered.current = true
+        onReady(meshRef.current)
+      } else {
+        requestAnimationFrame(check)
+      }
+    }
+    requestAnimationFrame(check)
+  }, [meshRef, onReady])
+  return null
+}
+
+const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady }, ref) {
   const { width, length, interiorHeight, showDimensions, setShowDimensions } = useConfigurator()
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
@@ -198,6 +221,7 @@ const TrailerViewer = forwardRef(function TrailerViewer(_, ref) {
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
   const orbitControlsRef = useRef()
+  const arViewerRef = useRef()
 
   // const handleMeshClick = (e) => {
   //   e.stopPropagation()
@@ -243,6 +267,20 @@ const TrailerViewer = forwardRef(function TrailerViewer(_, ref) {
     openARViewer: handleOpenAR,
   }))
 
+  // Auto-activate AR on the hidden model-viewer once the GLB blob URL is ready
+  useEffect(() => {
+    if (!arUrl) return
+    const viewer = arViewerRef.current
+    if (!viewer) return
+    const handleLoad = () => {
+      viewer.removeEventListener('load', handleLoad)
+      if (viewer.canActivateAR) viewer.activateAR()
+    }
+    viewer.addEventListener('load', handleLoad)
+    viewer.setAttribute('src', arUrl)
+    return () => viewer.removeEventListener('load', handleLoad)
+  }, [arUrl])
+
   const handleDownload = async () => {
     if (!modelGroupRef.current || downloading) return
     setDownloading(true)
@@ -276,7 +314,7 @@ const TrailerViewer = forwardRef(function TrailerViewer(_, ref) {
           <Suspense
             fallback={
               <div className="flex items-center justify-center w-full h-full">
-                <span className="text-gray-400 text-sm tracking-widest uppercase">Loading model...</span>
+                <img src="/loader.gif" alt="Loading" className="w-24 h-24" />
               </div>
             }
           >
@@ -300,6 +338,9 @@ const TrailerViewer = forwardRef(function TrailerViewer(_, ref) {
                     heightFt={heightFt}
                   />
                 </group>
+                {onModelReady && (
+                  <SceneReadyNotifier meshRef={modelGroupRef} onReady={onModelReady} />
+                )}
               </Stage>
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
@@ -375,7 +416,13 @@ const TrailerViewer = forwardRef(function TrailerViewer(_, ref) {
           exporting={arExporting}
         />
       )}
-      {arUrl && <ARViewer url={arUrl} onClose={handleCloseAR} />}
+      <model-viewer
+        ref={arViewerRef}
+        ar
+        ar-modes="quick-look scene-viewer webxr"
+        reveal="auto"
+        class="fixed top-0 left-0 w-px h-px opacity-0 pointer-events-none"
+      />
     </div>
   )
 })

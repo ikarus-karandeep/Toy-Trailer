@@ -1,5 +1,5 @@
 import '@google/model-viewer'
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useRef, useState, useEffect, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stage, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
@@ -42,17 +42,23 @@ async function exportGLB(mesh) {
   )
 }
 
+function ModelReadyTrigger({ onReady }) {
+  useEffect(() => { onReady() }, [onReady])
+  return null
+}
+
 function ARPageContent() {
   const { width, length, interiorHeight } = useConfigurator()
   const modelGroupRef = useRef()
   const [arUrl, setArUrl] = useState(null)
   const [exporting, setExporting] = useState(false)
+  const hasTriggered = useRef(false)
 
   const widthFt = WIDTH_FT[width] ?? 7
   const lengthFt = parseInt(length, 10) || 36
   const heightFt = HEIGHT_MAP[interiorHeight] ?? 7
 
-  const handleViewInAR = async () => {
+  const handleViewInAR = useCallback(async () => {
     if (!modelGroupRef.current || exporting) return
     setExporting(true)
     try {
@@ -63,7 +69,13 @@ function ARPageContent() {
       console.error('[ARPage] export error:', err)
       setExporting(false)
     }
-  }
+  }, [exporting])
+
+  const handleModelReady = useCallback(() => {
+    if (hasTriggered.current) return
+    hasTriggered.current = true
+    handleViewInAR()
+  }, [handleViewInAR])
 
   if (arUrl) {
     return (
@@ -73,6 +85,7 @@ function ARPageContent() {
           URL.revokeObjectURL(arUrl)
           setArUrl(null)
           setExporting(false)
+          hasTriggered.current = false
         }}
       />
     )
@@ -106,17 +119,16 @@ function ARPageContent() {
           </Stage>
           <OrbitControls enablePan minPolarAngle={0.2} maxPolarAngle={Math.PI * 0.52} />
         </Canvas>
+        <ModelReadyTrigger onReady={handleModelReady} />
       </Suspense>
 
-      <div className="absolute bottom-10 left-0 right-0 flex justify-center pointer-events-none">
-        <button
-          onClick={handleViewInAR}
-          disabled={exporting}
-          className="pointer-events-auto flex items-center gap-2 px-8 py-4 bg-[#DA634B] rounded-xl text-base font-semibold tracking-widest uppercase text-white hover:bg-[#c5573f] transition-all disabled:opacity-50"
-        >
-          {exporting ? 'Preparing...' : 'View in AR'}
-        </button>
-      </div>
+      {exporting && (
+        <div className="absolute bottom-10 left-0 right-0 flex justify-center">
+          <span className="text-white text-sm font-semibold tracking-widest uppercase opacity-70">
+            Preparing AR...
+          </span>
+        </div>
+      )}
     </div>
   )
 }

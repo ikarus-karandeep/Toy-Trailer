@@ -49,7 +49,7 @@ export default function QRModal({ onClose, onOpenAR, exporting }) {
   }
 
   const encoded = LZString.compressToEncodedURIComponent(JSON.stringify(delta))
-  const url = `${window.location.origin}/#ar?c=${encoded}`
+  const url = `${window.location.origin}/?arKey=${encoded}`
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -65,7 +65,7 @@ export default function QRModal({ onClose, onOpenAR, exporting }) {
             level="H"
             imageSettings={{
               src: '/ikarus_logo.png',
-              width: 52,
+              width: 44,
               height: 52,
               excavate: true,
             }}
