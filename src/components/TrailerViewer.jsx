@@ -7,7 +7,9 @@ import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
 import ModelDimensions from './ModelDimensions'
 import QRModal from './QRModal'
+import ModelReportPanel from './ModelReportPanel'
 import { isAndroidDevice } from '../utils/arPlatform'
+import { generateModelReport } from '../utils/modelReport'
 
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
 
@@ -220,10 +222,12 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [showARPrompt, setShowARPrompt] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
+  const [modelReport, setModelReport] = useState(null)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
   const orbitControlsRef = useRef()
   const arViewerRef = useRef()
+  const modelReportRef = useRef(null)
 
   // const handleMeshClick = (e) => {
   //   e.stopPropagation()
@@ -307,6 +311,25 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
       setDownloading(false)
     }
   }
+
+  useEffect(() => { modelReportRef.current = modelReport }, [modelReport])
+
+  useEffect(() => {
+    window.gltfreport = async () => {
+      if (modelReportRef.current) { setModelReport(null); return }
+      if (!modelGroupRef.current) { console.warn('[gltfreport] Model not ready'); return }
+      console.log('[gltfreport] Generating report...')
+      try {
+        const glbBuffer = await parseGLB(modelGroupRef.current)
+        const report = await generateModelReport(glbBuffer, modelGroupRef.current, `trailer-${lengthFt}ft-${widthFt}ft.glb`)
+        setModelReport(report)
+        console.log('[gltfreport] Done')
+      } catch (err) {
+        console.error('[gltfreport] Error:', err)
+      }
+    }
+    return () => { delete window.gltfreport }
+  }, [])
 
   const handleCloseQR = () => setShowQR(false)
 
@@ -467,6 +490,9 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
         reveal="auto"
         className="fixed top-0 left-0 w-px h-px opacity-0 pointer-events-none"
       />
+      {modelReport && (
+        <ModelReportPanel report={modelReport} onClose={() => setModelReport(null)} />
+      )}
     </div>
   )
 })
