@@ -5,10 +5,10 @@ import { useConfigurator } from '../context/ConfiguratorContext'
 // Mirror the defaults from ConfiguratorContext — only changed fields are encoded
 // so the QR payload stays small and the QR code stays scannable.
 const DEFAULTS = {
-  width: '7ft', length: '36', interiorHeight: '7ft0',
+  width: '7ft', length: '32', interiorHeight: '7ft0',
   axleAngled: false, axleAtp: true, axleRating: '5200torsion', spreadAxle: true,
   frontStyle: 'vnose', sideDoorsType: 'flatpanel', wheel: 'aluminumradial',
-  rampType: 'heavyduty', rearDoor: true, leftSide: true, rightSide: true,
+  rampType: 'barndoors', rearDoor: true, leftSide: true, rightSide: true,
   cabinets: ['vnosebase'], toolBox: 'frontbox',
   lights: ['dome', 'racing'], tieDowns: ['drings'], jacks: ['folddownstabilizer'],
   bathroom: null, awning: [],

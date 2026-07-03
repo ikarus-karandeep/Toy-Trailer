@@ -55,7 +55,7 @@ function ARPageContent() {
   const hasTriggered = useRef(false)
 
   const widthFt = WIDTH_FT[width] ?? 7
-  const lengthFt = parseInt(length, 10) || 36
+  const lengthFt = parseInt(length, 10) || 32
   const heightFt = HEIGHT_MAP[interiorHeight] ?? 7
 
   const handleViewInAR = useCallback(async () => {

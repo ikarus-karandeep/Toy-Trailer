@@ -12,7 +12,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Size & Capacity
   const [width, setWidth] = useState(ic.width ?? '7ft')
-  const [length, setLength] = useState(ic.length ?? '36')
+  const [length, setLength] = useState(ic.length ?? '32')
   const [interiorHeight, setInteriorHeight] = useState(ic.interiorHeight ?? '7ft0')
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
   const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)
@@ -47,7 +47,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'wirebrace')
 
   // Loading
-  const [rampType, setRampType] = useState(ic.rampType ?? 'heavyduty')
+  const [rampType, setRampType] = useState(ic.rampType ?? 'barndoors')
   const [atpRamp, setAtpRamp] = useState(ic.atpRamp ?? true)
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
   const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])

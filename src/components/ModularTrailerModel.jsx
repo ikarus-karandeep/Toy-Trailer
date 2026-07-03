@@ -1,10 +1,11 @@
 import { useRef, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
+import { patchTriplanarMaterial, generateBoxProjectionUVs } from '../utils/TriplanarMaterial'
 
 const LERP_SPEED = 0.18
 const LERP_THRESHOLD = 0.0005
@@ -144,6 +145,18 @@ const FRONT_STYLE_ADDON_MESH_MAP = {
     },
 }
 
+// ── Shell color textures: config selectedColor → BaseColor file ──────────────
+const SHELL_TEXTURES = {
+    pink:       '/Materials/Pink_Shell_BaseColor.jpg',
+    pewter:     '/Materials/Pewter_Shell_BaseColor.jpg',
+    emerald:    '/Materials/Emerald Green_Shell_BaseColor.jpg',
+    brandywine: '/Materials/Brandy Wine_Shell_BaseColor.jpg',
+    sierra:     '/Materials/Sierra Desert_Shell_BaseColor.jpg',
+    orange:     '/Materials/Orange_Shell_BaseColor.jpg',
+    purple:     '/Materials/Purple_Shell_BaseColor.jpg',
+    yellow:     '/Materials/Yellow_Shell_BaseColor.jpg',
+}
+
 // ── Extended Triple Tongue: 2 mesh variants (one per front style) ───────────
 // Mirrors the Blender tongue node — same Super Switch pattern as stairs/battery.
 // Mesh names match the GLB objects visible in the Outliner.
@@ -182,13 +195,159 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
     const { scene: addons } = useGLTF(PATHS.addons)
     const { scene: cargo } = useGLTF(PATHS.cargo)
 
+    const shellTextures = useTexture(SHELL_TEXTURES)
+    const normalMap = useTexture('/Materials/Metallic_Grates_Normal.png')
+    const tyreTextures = useTexture({
+        baseColor: '/Materials/Tyre_Rubber/Tyre_Rubber_BaseColor.png',
+        normal:    '/Materials/Tyre_Rubber/Tyre_Rubber_Normal.png',
+        roughness: '/Materials/Tyre_Rubber/Tyre_Rubber_Roughness.png',
+    })
+
     const store = useRef(new Map())
     const animRef = useRef({ widthFt, lengthFt, heightFt })
     const targetRef = useRef({ widthFt, lengthFt, heightFt })
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
 
+    // DEBUG: log mesh names + material names as Three.js sees them after GLB load
+    useEffect(() => {
+        const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo }
+        Object.entries(allScenes).forEach(([sceneName, scene]) => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const mats = Array.isArray(child.material)
+                    ? child.material.map(m => m.name || '(unnamed)')
+                    : [child.material?.name || '(unnamed)']
+                console.log(`[${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}]`)
+            })
+        })
+    }, [])
 
+    // ── Apply shell color texture to every MAT_Shell material slot ───────────
+    // Checks mesh.userData.useTriplanar per mesh:
+    //   true  → patchTriplanarMaterial (world-space, no UV stretch on deformed geometry)
+    //   false → standard UV mapping (mat.map set directly)
+    useEffect(() => {
+        const texture = shellTextures[config.selectedColor]
+        if (!texture) return
+        texture.colorSpace = THREE.SRGBColorSpace
+        texture.wrapS = THREE.RepeatWrapping
+        texture.wrapT = THREE.RepeatWrapping
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+        allScenes.forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+
+                mats.forEach((mat, i) => {
+                    if (mat?.name !== 'MAT_Shell') return
+
+                    if (child.userData?.useTriplanar) {
+                        // Clone base material preserving GLB PBR properties, then patch shader
+                        const base = mat.clone()
+                        base.map = texture
+                        const patched = patchTriplanarMaterial(base, 1.0)
+                        if (isArray) child.material[i] = patched
+                        else child.material = patched
+                    } else {
+                        mat.map = texture
+                        mat.needsUpdate = true
+                    }
+                })
+            })
+        })
+    }, [
+        config.selectedColor, shellTextures,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
+
+    // ── Apply Metallic Grates normal map ─────────────────────────────────────
+    useEffect(() => {
+        normalMap.colorSpace = THREE.NoColorSpace
+        normalMap.wrapS = THREE.RepeatWrapping
+        normalMap.wrapT = THREE.RepeatWrapping
+        normalMap.needsUpdate = true  // reupload texture with new wrap/colorSpace to GPU
+
+        const applyGrates = (child, mat, i, isArray) => {
+            generateBoxProjectionUVs(child, 0.3, true)
+            // Clone + replace so the new material compiles fresh WITH USE_NORMALMAP defined.
+            // Mutating an already-compiled material risks the shader not picking up normalMap.
+            const next = mat.clone()
+            next.normalMap = normalMap
+            next.metalness = 1
+            next.roughness = 0.1
+            if (isArray) child.material[i] = next
+            else child.material = next
+        }
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+
+        // Apply only to meshes whose material name normalises to 'metallicgrates'
+        allScenes.forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (normalized === 'metallicgrates') applyGrates(child, mat, i, isArray)
+                })
+            })
+        })
+    }, [
+        normalMap,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
+
+    // ── Apply Tyre Rubber material maps ──────────────────────────────────────
+    useEffect(() => {
+        const { baseColor, normal, roughness } = tyreTextures
+        baseColor.colorSpace = THREE.SRGBColorSpace
+        normal.colorSpace    = THREE.NoColorSpace
+        roughness.colorSpace = THREE.NoColorSpace
+        ;[baseColor, normal, roughness].forEach(t => {
+            t.wrapS = THREE.RepeatWrapping
+            t.wrapT = THREE.RepeatWrapping
+            t.needsUpdate = true
+        })
+
+        ;[wheels, axleConfig].forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (!normalized?.includes('tyre') && !normalized?.includes('tire')) return
+                    const next = mat.clone()
+                    next.map          = baseColor
+                    next.normalMap    = normal
+                    next.roughnessMap = roughness
+                    next.roughness    = 1.0  // let map have full control; GLB scalar would suppress it
+                    next.metalness    = 0.0  // rubber is non-metallic
+                    next.needsUpdate  = true
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
+            })
+        })
+    }, [tyreTextures, wheels, axleConfig])
 
     // Compute global bounds from base scenes
     useEffect(() => {
@@ -223,7 +382,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         // ── Rear Doors: mirrors the Blender node graph ───────────────────────
         // Menu Switch → selects the correct mesh from REAR_DOOR_MESH_MAP
         // Rear Door boolean (Group Input) → gates the entire output on/off
-        const rearDoorMesh = REAR_DOOR_MESH_MAP[config.rampType] ?? REAR_DOOR_MESH_MAP.heavyduty
+        const rearDoorMesh = REAR_DOOR_MESH_MAP[config.rampType] ?? REAR_DOOR_MESH_MAP.barndoors
         BlenderNodes.switchMesh(rearDoors, config.rearDoor ? rearDoorMesh : null)
 
         // ── Base Meshes: Escape Door condition ────────────────────────
@@ -668,3 +827,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
 }
 
 Object.values(PATHS).forEach(path => useGLTF.preload(path))
+Object.values(SHELL_TEXTURES).forEach(path => useTexture.preload(path))
+useTexture.preload('/Materials/Metallic_Grates_Normal.png')
+useTexture.preload('/Materials/Tyre_Rubber/Tyre_Rubber_BaseColor.png')
+useTexture.preload('/Materials/Tyre_Rubber/Tyre_Rubber_Normal.png')
+useTexture.preload('/Materials/Tyre_Rubber/Tyre_Rubber_Roughness.png')

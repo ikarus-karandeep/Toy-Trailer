@@ -198,9 +198,9 @@ export const CLIMATE_CONTROL_OPTIONS = [
 
 // Loading
 export const RAMP_OPTIONS = [
+  { id: 'barndoors', label: 'DOUBLE BARN DOORS', price: 9999 },
   { id: 'heavyduty', label: 'HEAVY DUTY RAMP - 4500 LB', price: 9999 },
   { id: 'superduty', label: 'SUPER DUTY RAMP - 7,000 LB', price: 9999 },
-  { id: 'barndoors', label: 'DOUBLE BARN DOORS', price: 9999 },
 ];
 
 export const TIE_DOWN_OPTIONS = [

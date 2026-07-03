@@ -101,6 +101,8 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
   const cameraInitRef = useRef(false)
   const bboxNeedsRescanRef = useRef(true)
   const pendingRef = useRef(0)
+  const lerpTargetRef = useRef(null) // { camX, targetX }
+  const listenerAttachedRef = useRef(false)
 
   // On model resize: rescan bbox and re-center camera on the new model
   useEffect(() => {
@@ -109,6 +111,32 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
   }, [configKey])
 
   useFrame(() => {
+    // Attach once — cancel the lerp the instant the user grabs the model,
+    // otherwise CameraFit and OrbitControls fight and produce a zoom/snap.
+    if (!listenerAttachedRef.current && orbitControlsRef.current) {
+      listenerAttachedRef.current = true
+      orbitControlsRef.current.addEventListener('start', () => {
+        lerpTargetRef.current = null
+      })
+    }
+
+    // Smooth camera slide to new center after model resize
+    if (lerpTargetRef.current && orbitControlsRef.current) {
+      const { camX, targetX } = lerpTargetRef.current
+      const newCamX = camera.position.x + (camX - camera.position.x) * 0.08
+      const newTargX = orbitControlsRef.current.target.x + (targetX - orbitControlsRef.current.target.x) * 0.08
+      camera.position.x = newCamX
+      orbitControlsRef.current.target.x = newTargX
+      orbitControlsRef.current.update()
+      if (Math.abs(newCamX - camX) < 0.001 && Math.abs(newTargX - targetX) < 0.001) {
+        camera.position.x = camX
+        orbitControlsRef.current.target.x = targetX
+        orbitControlsRef.current.update()
+        lerpTargetRef.current = null
+      }
+      return
+    }
+
     if (!bboxNeedsRescanRef.current) return
     if (pendingRef.current > 0) { pendingRef.current--; return }
     if (!modelGroupRef.current) return
@@ -147,13 +175,13 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
         orbitControlsRef.current.update()
       }
     } else if (orbitControlsRef.current) {
-      // Shift camera and target by the same X delta — no zoom, just slides to new center
       const deltaX = center.x - orbitControlsRef.current.target.x
-      camera.position.x += deltaX
-      orbitControlsRef.current.target.x = center.x
       orbitControlsRef.current.minDistance = maxDim * 0.1
       orbitControlsRef.current.maxDistance = maxDim * 3
-      orbitControlsRef.current.update()
+      lerpTargetRef.current = {
+        camX: camera.position.x + deltaX,
+        targetX: center.x,
+      }
     }
 
     cameraInitRef.current = true
