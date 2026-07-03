@@ -93,14 +93,18 @@ export class BlenderNodes {
      * @param {string} targetName
      */
     static switchMesh(scene, targetName) {
-        let matched = false
+        // Hide all meshes first
         scene.traverse(child => {
-            if (!child.isMesh) return
-            const hit = child.name === targetName
-            child.visible = hit
-            if (hit) matched = true
+            if (child.isMesh) child.visible = false
         })
-        return matched
+        if (!targetName) return false
+        // Target may be a Group (multi-primitive mesh) or a plain Mesh — find by name and show all descendants
+        const target = scene.getObjectByName(targetName)
+        if (target) {
+            target.traverse(child => { child.visible = true })
+            return true
+        }
+        return false
     }
 
     /**
@@ -108,15 +112,20 @@ export class BlenderNodes {
      * Shows all meshes whose names are included in targetNames array.
      */
     static switchMeshes(scene, targetNames) {
-        let matched = 0;
         if (!targetNames || !Array.isArray(targetNames)) return 0;
+        // Hide all meshes first
         scene.traverse(child => {
-            if (!child.isMesh) return;
-            const hit = targetNames.includes(child.name);
-            child.visible = hit;
-            if (hit) matched++;
-        });
-        return matched;
+            if (child.isMesh) child.visible = false
+        })
+        let matched = 0
+        for (const name of targetNames) {
+            const target = scene.getObjectByName(name)
+            if (target) {
+                target.traverse(child => { child.visible = true })
+                matched++
+            }
+        }
+        return matched
     }
 
     // -----------------------------------------

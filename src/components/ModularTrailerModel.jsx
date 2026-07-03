@@ -41,8 +41,8 @@ const WHEELS_VARIANT_MAP = {
 
 // Maps frontStyle config value → exact Blender mesh name inside Front Style.glb
 const FRONT_STYLE_MESH_MAP = {
-    vnose: 'V_Nose_w_ATP_Diamond_Plate',
-    flatfront: 'Flat_Front_w_Rounded_ATP_Corners',
+    vnose: 'V-Nose',
+    flatfront: 'Flat_Front',
 }
 
 // Cabinet Super Switch: maps frontStyle → mesh names for each cabinet type.
@@ -230,8 +230,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         // Mirrors the Blender "Base" node group.
         // Group Input -> Base Interior goes into Super Toggle, gated by Escape Door menu index.
         const baseInterior = baseMeshes.getObjectByName('Base_Interior') || baseMeshes.getObjectByName('Base Interior')
-        const leftWall = baseMeshes.getObjectByName('Left_side_wall_Vanilla') || baseMeshes.getObjectByName('Left side wall Vanilla')
-        const rightWall = baseMeshes.getObjectByName('Right_side_wall_Vanilla') || baseMeshes.getObjectByName('Right side wall Vanilla')
+        const leftWall = baseMeshes.getObjectByName('Left_Wall') || baseMeshes.getObjectByName('Left side wall Vanilla')
+        const rightWall = baseMeshes.getObjectByName('Right_Wall') || baseMeshes.getObjectByName('Right side wall Vanilla')
         
         if (baseInterior) baseInterior.visible = config.escapeDoor === 'none'
         if (leftWall) leftWall.visible = config.escapeDoor === 'none'

@@ -90,8 +90,8 @@ export const SIDE_DOOR_OPTIONS = [
 ]
 
 export const FRONT_STYLE_OPTIONS = [
-  { id: 'vnose', label: 'V-NOSE W/ ATP DIAMOND PLATE', isStandard: true },
-  { id: 'flatfront', label: 'FLAT FRONT W/ ROUNDED ATP CORNERS', price: 9999 },
+  { id: 'vnose', label: 'V-NOSE', isStandard: true },
+  { id: 'flatfront', label: 'FLAT FRONT', price: 9999 },
 ];
 
 export const FRONT_STYLE_NOTES = [

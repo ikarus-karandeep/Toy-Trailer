@@ -143,6 +143,9 @@ const BASE_LENGTH_FT = 32
 const BASE_HEIGHT_FT = 8
 const FEET_TO_M = 0.305         // matches the Blender "Feet to Meter" node
 
+// Dedup: each meshName logs its attribute discovery only once per session
+const _loggedMeshAttrs = new Set()
+
 /**
  * Applies width, length, and height deformations in a single vertex pass.
  * Inputs are raw feet values matching the Blender Geometry Nodes Factor input.
@@ -209,6 +212,11 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const minB3 = Math.min(BASE_LENGTH_FT, 23.5)
   const delta3 = (minL3 - minB3) * FEET_TO_M
 
+  // Node 4: Handles length changes BELOW 16.5ft
+  const minL4 = Math.min(lengthFt, 16.5)
+  const minB4 = Math.min(BASE_LENGTH_FT, 16.5)
+  const delta4 = (minL4 - minB4) * FEET_TO_M
+
   // ── WIDTH (Z-axis in Three.js, _leftselection / _rightselection) ─────────────
   // Two Move nodes, one per side:
   //   Move 3 (Left):  Delta_Offset=-8.500, Factor=0.500, Input=widthFt × FEET_TO_M
@@ -255,35 +263,82 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const yRange = maxY - minY
 
   const attrKeys = Object.keys(geometry.attributes)
-  const key3 = attrKeys.find(k => k.toLowerCase().includes('rearselection3'))
-  const key2 = attrKeys.find(k => k.toLowerCase().includes('rearselection2'))
-  const key1 = attrKeys.find(k => k.toLowerCase().includes('rearselection') && !k.toLowerCase().includes('rearselection2') && !k.toLowerCase().includes('rearselection3'))
-  const topKey = attrKeys.find(k => k.toLowerCase().includes('topselection'))
-  const leftKey = attrKeys.find(k => k.toLowerCase().includes('leftselection'))
-  const rightKey = attrKeys.find(k => k.toLowerCase().includes('rightselection'))
+  // Normalize key: lowercase + strip underscores/spaces so "Rear_Selection_4" → "rearselection4"
+  const normKey = k => k.toLowerCase().replace(/[_ ]/g, '')
+  const key4 = attrKeys.find(k => normKey(k).includes('rearselection4'))
+  const key3 = attrKeys.find(k => normKey(k).includes('rearselection3'))
+  const key2 = attrKeys.find(k => normKey(k).includes('rearselection2'))
+  const key1 = attrKeys.find(k => normKey(k).includes('rearselection') && !normKey(k).includes('rearselection2') && !normKey(k).includes('rearselection3') && !normKey(k).includes('rearselection4'))
+  const topKey = attrKeys.find(k => normKey(k).includes('topselection'))
+  const leftKey = attrKeys.find(k => normKey(k).includes('leftselection'))
+  const rightKey = attrKeys.find(k => normKey(k).includes('rightselection'))
 
   const leftSel = leftKey ? geometry.attributes[leftKey] : null
   const rightSel = rightKey ? geometry.attributes[rightKey] : null
+  const rearSel4 = key4 ? geometry.attributes[key4] : null
   const rearSel3 = key3 ? geometry.attributes[key3] : null
   const rearSel2 = key2 ? geometry.attributes[key2] : null
   const rearSel1 = key1 ? geometry.attributes[key1] : null
   const topSel = topKey ? geometry.attributes[topKey] : null
 
+  const hasSel4 = !!rearSel4;
   const hasSel3 = !!rearSel3;
   const hasSel2 = !!rearSel2;
   const hasSel1 = !!rearSel1;
 
-  // Cascade missing deltas to older nodes (if a mesh hasn't been updated with newer maps)
-  let applyDelta3 = 0, applyDelta2 = 0, applyDelta1 = 0;
-  if (hasSel3) {
+  // ── DEBUG: log attribute discovery once per mesh ─────────────────────────────
+  if (!_loggedMeshAttrs.has(meshName)) {
+    _loggedMeshAttrs.add(meshName)
+    console.log(
+      `[deform] "${meshName}" attrs — all:`, attrKeys,
+      '| rearSel1:', key1 ?? 'NONE',
+      '| rearSel2:', key2 ?? 'NONE',
+      '| rearSel3:', key3 ?? 'NONE',
+      '| rearSel4:', key4 ?? 'NONE',
+    )
+  }
+
+  // ── DEBUG: log delta values whenever length is in the sub-16.5 zone ──────────
+  if (lengthFt < 16.5) {
+    console.log(
+      `[deform] "${meshName}" lengthFt=${lengthFt} < 16.5`,
+      '| delta4:', delta4.toFixed(4), '| hasSel4:', hasSel4,
+      '| delta3:', delta3.toFixed(4), '| hasSel3:', hasSel3,
+      '| delta2:', delta2.toFixed(4), '| hasSel2:', hasSel2,
+      '| delta1:', delta1.toFixed(4), '| hasSel1:', hasSel1,
+    )
+  }
+
+  // Cascade missing deltas to older nodes (if a mesh hasn't been updated with newer maps).
+  // When sel4 is present, sel3 only carries the 16.5–23.5 portion (delta3 − delta4).
+  // Old meshes without sel4 use delta3 as-is (it already covers the full <23.5 range).
+  let applyDelta4 = 0, applyDelta3 = 0, applyDelta2 = 0, applyDelta1 = 0;
+  if (hasSel4) {
+      applyDelta4 = delta4;
+      applyDelta3 = delta3 - delta4;
+      applyDelta2 = delta2;
+      applyDelta1 = delta1;
+  } else if (hasSel3) {
       applyDelta3 = delta3;
       applyDelta2 = delta2;
       applyDelta1 = delta1;
   } else if (hasSel2) {
-      applyDelta2 = delta2 + delta3;
+      applyDelta2 = delta2 + delta3 + delta4;
       applyDelta1 = delta1;
   } else if (hasSel1) {
-      applyDelta1 = delta1 + delta2 + delta3;
+      applyDelta1 = delta1 + delta2 + delta3 + delta4;
+  }
+
+  // ── DEBUG: log cascade result when sub-16.5 zone is active ───────────────────
+  if (lengthFt < 16.5) {
+    console.log(
+      `[deform cascade] "${meshName}"`,
+      '| applyDelta4:', applyDelta4.toFixed(4),
+      '| applyDelta3:', applyDelta3.toFixed(4),
+      '| applyDelta2:', applyDelta2.toFixed(4),
+      '| applyDelta1:', applyDelta1.toFixed(4),
+      '| branch used:', hasSel4 ? 'sel4' : hasSel3 ? 'sel3' : hasSel2 ? 'sel2' : hasSel1 ? 'sel1' : 'FALLBACK',
+    )
   }
 
   for (let i = 0; i < count; i++) {
@@ -313,8 +368,9 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
     }
 
     // Length (X axis) — rear-only, applying partial chained deltas
-    if (hasSel1 || hasSel2 || hasSel3) {
+    if (hasSel1 || hasSel2 || hasSel3 || hasSel4) {
       let move = 0;
+      if (hasSel4) move += applyDelta4 * rearSel4.getX(i);
       if (hasSel3) move += applyDelta3 * rearSel3.getX(i);
       if (hasSel2) move += applyDelta2 * rearSel2.getX(i);
       if (hasSel1) move += applyDelta1 * rearSel1.getX(i);
