@@ -1,10 +1,11 @@
 import { useRef, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
+import { patchTriplanarMaterial, generateBoxProjectionUVs } from '../utils/TriplanarMaterial'
 
 const LERP_SPEED = 0.18
 const LERP_THRESHOLD = 0.0005
@@ -41,8 +42,8 @@ const WHEELS_VARIANT_MAP = {
 
 // Maps frontStyle config value → exact Blender mesh name inside Front Style.glb
 const FRONT_STYLE_MESH_MAP = {
-    vnose: 'V_Nose_w_ATP_Diamond_Plate',
-    flatfront: 'Flat_Front_w_Rounded_ATP_Corners',
+    vnose: 'V-Nose',
+    flatfront: 'Flat_Front',
 }
 
 // Cabinet Super Switch: maps frontStyle → mesh names for each cabinet type.
@@ -144,6 +145,18 @@ const FRONT_STYLE_ADDON_MESH_MAP = {
     },
 }
 
+// ── Shell color textures: config selectedColor → BaseColor file ──────────────
+const SHELL_TEXTURES = {
+    pink:       '/Materials/Pink_Shell_BaseColor.jpg',
+    pewter:     '/Materials/Pewter_Shell_BaseColor.jpg',
+    emerald:    '/Materials/Emerald Green_Shell_BaseColor.jpg',
+    brandywine: '/Materials/Brandy Wine_Shell_BaseColor.jpg',
+    sierra:     '/Materials/Sierra Desert_Shell_BaseColor.jpg',
+    orange:     '/Materials/Orange_Shell_BaseColor.jpg',
+    purple:     '/Materials/Purple_Shell_BaseColor.jpg',
+    yellow:     '/Materials/Yellow_Shell_BaseColor.jpg',
+}
+
 // ── Extended Triple Tongue: 2 mesh variants (one per front style) ───────────
 // Mirrors the Blender tongue node — same Super Switch pattern as stairs/battery.
 // Mesh names match the GLB objects visible in the Outliner.
@@ -182,13 +195,208 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
     const { scene: addons } = useGLTF(PATHS.addons)
     const { scene: cargo } = useGLTF(PATHS.cargo)
 
+    const shellTextures = useTexture(SHELL_TEXTURES)
+    const simpleNoise   = useTexture('/Materials/Simple_Noise.png')
+    const normalMap = useTexture('/Materials/Metallic_Grates_Normal.png')
+    const tyreTextures = useTexture({
+        baseColor: '/Materials/Tyre_Rubber_BaseColor.png',
+        normal:    '/Materials/Tyre_Rubber_Normal.png',
+        roughness: '/Materials/Tyre_Rubber_Roughness.png',
+    })
+
     const store = useRef(new Map())
     const animRef = useRef({ widthFt, lengthFt, heightFt })
     const targetRef = useRef({ widthFt, lengthFt, heightFt })
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
+    const grateMeshesRef = useRef([])
 
+    // DEBUG: log mesh names + material names as Three.js sees them after GLB load
+    useEffect(() => {
+        const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo }
+        Object.entries(allScenes).forEach(([sceneName, scene]) => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const mats = Array.isArray(child.material)
+                    ? child.material.map(m => m.name || '(unnamed)')
+                    : [child.material?.name || '(unnamed)']
+                console.log(`[${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
+            })
+        })
+    }, [])
 
+    // ── Apply shell color texture + Simple_Noise bump to every MAT_Shell slot ─
+    // Checks mesh.userData.useTriplanar per mesh:
+    //   true  → patchTriplanarMaterial (world-space, no UV stretch on deformed geometry)
+    //   false → standard UV mapping (mat.map / mat.bumpMap set directly)
+    // Simple_Noise.jpg is applied as a bumpMap (mirrors Blender Bump node:
+    //   Strength=1.0, Distance=0.001, Color Space=Non-Color)
+    useEffect(() => {
+        const texture = shellTextures[config.selectedColor]
+        if (!texture) return
+        texture.colorSpace = THREE.SRGBColorSpace
+        texture.wrapS = THREE.RepeatWrapping
+        texture.wrapT = THREE.RepeatWrapping
+
+        // Configure Simple_Noise as a bump map (non-color, repeating)
+        simpleNoise.colorSpace = THREE.NoColorSpace
+        simpleNoise.wrapS = THREE.RepeatWrapping
+        simpleNoise.wrapT = THREE.RepeatWrapping
+        simpleNoise.needsUpdate = true
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+        allScenes.forEach((scene, sceneIdx) => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+
+                mats.forEach((mat, i) => {
+                    if (mat?.name !== 'MAT_Shell') return
+
+                    // undefined = not tagged in GLB → default to triplanar; only skip when explicitly false
+                    const useTriplanar = child.userData?.useTriplanar !== false
+                    console.log(`[Triplanar] ${child.name} → ${useTriplanar ? 'triplanar' : 'standard UV'}`)
+
+                    if (useTriplanar) {
+                        // Clone base material preserving GLB PBR properties, then patch shader
+                        const base = mat.clone()
+                        base.map       = texture
+                        base.bumpMap   = simpleNoise
+                        base.bumpScale = 0.005
+                        base.roughness = 0.1
+                        const patched = patchTriplanarMaterial(base, {
+                            x: new THREE.Vector2(0.25, 0.75),
+                            y: new THREE.Vector2(0.25, 0.25),
+                            z: new THREE.Vector2(0.25, 0.25),
+                        })
+                        if (isArray) child.material[i] = patched
+                        else child.material = patched
+                    } else {
+                        const next = mat.clone()
+                        next.map       = texture
+                        next.bumpMap   = simpleNoise
+                        next.bumpScale = 0.005
+                        next.roughness = 0.1
+                        next.needsUpdate = true
+                        if (isArray) child.material[i] = next
+                        else child.material = next
+                    }
+                })
+            })
+        })
+    }, [
+        config.selectedColor, shellTextures, simpleNoise,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
+
+    // ── Apply Metallic Grates normal map ─────────────────────────────────────
+    useEffect(() => {
+        normalMap.colorSpace = THREE.NoColorSpace
+        normalMap.wrapS = THREE.RepeatWrapping
+        normalMap.wrapT = THREE.RepeatWrapping
+        normalMap.needsUpdate = true  // reupload texture with new wrap/colorSpace to GPU
+
+        console.log('[grates-debug] normalMap loaded:', normalMap, '| image:', normalMap?.image)
+
+        const applyGrates = (child, mat, i, isArray) => {
+            const uvBefore = child.geometry?.attributes?.uv
+            console.log(`[grates-debug] applyGrates → mesh="${child.name}" | mat="${mat.name}" | uv before:`, uvBefore ? `${uvBefore.count} verts` : 'NONE')
+
+            generateBoxProjectionUVs(child, 0.3, true)
+
+            const uvAfter = child.geometry?.attributes?.uv
+            console.log(`[grates-debug] applyGrates → mesh="${child.name}" | uv after:`, uvAfter ? `${uvAfter.count} verts` : 'STILL NONE')
+
+            // Clone + replace so the new material compiles fresh WITH USE_NORMALMAP defined.
+            // Mutating an already-compiled material risks the shader not picking up normalMap.
+            const next = mat.clone()
+            next.normalMap = normalMap
+            next.normalScale = new THREE.Vector2(0.1, 0.1)
+            next.metalness = 1
+            next.roughness = 0.1
+            next.needsUpdate = true
+            console.log(`[grates-debug] applyGrates → mesh="${child.name}" | next.normalMap:`, next.normalMap, '| next.metalness:', next.metalness)
+            if (isArray) child.material[i] = next
+            else child.material = next
+        }
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+
+        // Apply only to meshes whose material name normalises to 'metallicgrates'
+        const collected = []
+        let gratesHitCount = 0
+        allScenes.forEach((scene, sceneIdx) => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    console.log(`[grates-debug] scene[${sceneIdx}] mesh="${child.name}" | normalized mat="${normalized}"`)
+                    if (normalized === 'metallicgrates') {
+                        gratesHitCount++
+                        applyGrates(child, mat, i, isArray)
+                        collected.push(child)
+                    }
+                })
+            })
+        })
+        grateMeshesRef.current = collected
+        console.log(`[grates-debug] total MAT_MetallicGrates meshes found: ${gratesHitCount}`)
+    }, [
+        normalMap,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
+
+    // ── Apply Tyre Rubber material maps ──────────────────────────────────────
+    useEffect(() => {
+        const { baseColor, normal, roughness } = tyreTextures
+        baseColor.colorSpace = THREE.SRGBColorSpace
+        normal.colorSpace    = THREE.NoColorSpace
+        roughness.colorSpace = THREE.NoColorSpace
+        ;[baseColor, normal, roughness].forEach(t => {
+            t.wrapS = THREE.RepeatWrapping
+            t.wrapT = THREE.RepeatWrapping
+            t.needsUpdate = true
+        })
+
+        ;[wheels, axleConfig].forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (!normalized?.includes('tyre') && !normalized?.includes('tire')) return
+                    const next = mat.clone()
+                    next.map          = baseColor
+                    next.normalMap    = normal
+                    next.normalScale  = new THREE.Vector2(0.1, 0.1)
+                    next.roughnessMap = roughness
+                    next.roughness    = 1.0  // let map have full control; GLB scalar would suppress it
+                    next.metalness    = 0.0  // rubber is non-metallic
+                    next.needsUpdate  = true
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
+            })
+        })
+    }, [tyreTextures, wheels, axleConfig])
 
     // Compute global bounds from base scenes
     useEffect(() => {
@@ -223,24 +431,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         // ── Rear Doors: mirrors the Blender node graph ───────────────────────
         // Menu Switch → selects the correct mesh from REAR_DOOR_MESH_MAP
         // Rear Door boolean (Group Input) → gates the entire output on/off
-        const rearDoorMesh = REAR_DOOR_MESH_MAP[config.rampType] ?? REAR_DOOR_MESH_MAP.heavyduty
+        const rearDoorMesh = REAR_DOOR_MESH_MAP[config.rampType] ?? REAR_DOOR_MESH_MAP.barndoors
         BlenderNodes.switchMesh(rearDoors, config.rearDoor ? rearDoorMesh : null)
 
         // ── Base Meshes: Escape Door condition ────────────────────────
         // Mirrors the Blender "Base" node group.
         // Group Input -> Base Interior goes into Super Toggle, gated by Escape Door menu index.
         const baseInterior = baseMeshes.getObjectByName('Base_Interior') || baseMeshes.getObjectByName('Base Interior')
-        const leftWall = baseMeshes.getObjectByName('Left_side_wall_Vanilla') || baseMeshes.getObjectByName('Left side wall Vanilla')
-        const rightWall = baseMeshes.getObjectByName('Right_side_wall_Vanilla') || baseMeshes.getObjectByName('Right side wall Vanilla')
-        
-        if (baseInterior && !baseInterior.userData._loggedAttrs) {
-            baseInterior.userData._loggedAttrs = true
-            console.log('[DEBUG] baseInterior attributes:', Object.keys(baseInterior.geometry.attributes))
-        }
-        if (leftWall && !leftWall.userData._loggedAttrs) {
-            leftWall.userData._loggedAttrs = true
-            console.log('[DEBUG] leftWall attributes:', Object.keys(leftWall.geometry.attributes))
-        }
+        const leftWall = baseMeshes.getObjectByName('Left_Wall') || baseMeshes.getObjectByName('Left side wall Vanilla')
+        const rightWall = baseMeshes.getObjectByName('Right_Wall') || baseMeshes.getObjectByName('Right side wall Vanilla')
         
         if (baseInterior) baseInterior.visible = config.escapeDoor === 'none'
         if (leftWall) leftWall.visible = config.escapeDoor === 'none'
@@ -523,22 +722,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         const pointsGeometry = new THREE.BufferGeometry()
         pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
 
-        console.log(`[E-Track Debug] targetLength: ${targetLength}, count: ${count}, startX: ${startX}`)
-        if (floorTemplate) {
-            console.log(`[E-Track Debug] floorTemplate position:`, floorTemplate.position.toArray())
-            console.log(`[E-Track Debug] floorTemplate rotation:`, floorTemplate.rotation.toArray())
-            const a = floorTemplate.geometry.attributes
-            const present = ['_leftselection', '_rightselection', '_rearselection', '_topselection'].filter(k => !!a[k])
-            console.log(`[E-Track Debug] floorTemplate attributes:`, present)
-        }
-        if (wallTemplate) {
-            console.log(`[E-Track Debug] wallTemplate position:`, wallTemplate.position.toArray())
-            console.log(`[E-Track Debug] wallTemplate rotation:`, wallTemplate.rotation.toArray())
-            const a = wallTemplate.geometry.attributes
-            const present = ['_leftselection', '_rightselection', '_rearselection', '_topselection'].filter(k => !!a[k])
-            console.log(`[E-Track Debug] wallTemplate attributes:`, present)
-        }
-
         const instances = []
         if (floorTemplate && config.tieDowns?.includes('flooretrack')) {
             const floorInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, floorTemplate)
@@ -666,15 +849,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             scene.traverse(child => {
                 if (!child.isMesh || !child.geometry) return
 
-                // Build world-space matrix elements once per mesh (transform never changes)
-                const invKey = `_inv_${child.uuid}`
-                if (!store.current.has(invKey)) {
-                    child.updateWorldMatrix(true, false)
-                    store.current.set(invKey, child.matrixWorld.clone().invert().elements)
-                }
                 child.updateWorldMatrix(true, false)
                 const we = child.matrixWorld.elements
-                const ie = store.current.get(invKey)
+                const ie = child.matrixWorld.clone().invert().elements
 
                 applyDimensionDeformations({
                     geometry: child.geometry, store: store.current,
@@ -685,17 +862,30 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
                 })
             })
         })
+
+        // Re-bake box-projection UVs for grate meshes now that vertex positions are updated.
+        // force=true overwrites the stale UV buffer written during the initial material setup.
+        grateMeshesRef.current.forEach(mesh => {
+            generateBoxProjectionUVs(mesh, 0.3, true)
+        })
     })
 
     return (
-        <group>
-            {activeScenes.map(scene => (
-                <primitive key={scene.uuid} object={scene} />
-            ))}
-            {generatedETracks}
-            {generatedLadderRacks}
-        </group>
+        <>
+            <group>
+                {activeScenes.map(scene => (
+                    <primitive key={scene.uuid} object={scene} />
+                ))}
+                {generatedETracks}
+                {generatedLadderRacks}
+            </group>
+        </>
     )
 }
 
 Object.values(PATHS).forEach(path => useGLTF.preload(path))
+Object.values(SHELL_TEXTURES).forEach(path => useTexture.preload(path))
+useTexture.preload('/Materials/Metallic_Grates_Normal.png')
+useTexture.preload('/Materials/Tyre_Rubber_BaseColor.png')
+useTexture.preload('/Materials/Tyre_Rubber_Normal.png')
+useTexture.preload('/Materials/Tyre_Rubber_Roughness.png')
