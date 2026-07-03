@@ -391,9 +391,8 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             >
               <Stage
                 intensity={0.5}
-                preset="rembrandt"
+                environment={{ files: '/neutral.hdr' }}
                 shadows={{ type: 'contact', opacity: 0.2, blur: 3 }}
-                environment="city"
                 adjustCamera={false}
               >
                 <group ref={modelGroupRef}>

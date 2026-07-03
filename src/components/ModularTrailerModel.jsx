@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF, useTexture, Environment } from '@react-three/drei'
+import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
@@ -196,7 +196,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
     const { scene: cargo } = useGLTF(PATHS.cargo)
 
     const shellTextures = useTexture(SHELL_TEXTURES)
-    const simpleNoise   = useTexture('/Materials/Simple_Noise.jpg')
+    const simpleNoise   = useTexture('/Materials/Simple_Noise.png')
     const normalMap = useTexture('/Materials/Metallic_Grates_Normal.png')
     const tyreTextures = useTexture({
         baseColor: '/Materials/Tyre_Rubber_BaseColor.png',
@@ -318,7 +318,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             // Mutating an already-compiled material risks the shader not picking up normalMap.
             const next = mat.clone()
             next.normalMap = normalMap
-            next.normalScale = new THREE.Vector2(0.001, 0.001)
+            next.normalScale = new THREE.Vector2(0.1, 0.1)
             next.metalness = 1
             next.roughness = 0.1
             next.needsUpdate = true
@@ -872,7 +872,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
 
     return (
         <>
-            <Environment files="/neutral.hdr" />
             <group>
                 {activeScenes.map(scene => (
                     <primitive key={scene.uuid} object={scene} />

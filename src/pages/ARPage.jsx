@@ -108,9 +108,9 @@ function ARPageContent() {
         >
           <Stage
             intensity={0.5}
-            preset="rembrandt"
+            // preset="rembrandt"
             shadows={{ type: 'contact', opacity: 0.2, blur: 3 }}
-            environment="city"
+            // environment="city"
             adjustCamera
           >
             <group ref={modelGroupRef}>
