@@ -251,6 +251,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
   const [modelReport, setModelReport] = useState(null)
+  const [environment, setEnvironment] = useState('/neutral.hdr')
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
   const orbitControlsRef = useRef()
@@ -372,6 +373,18 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     if (viewer?.canActivateAR) viewer.activateAR()
   }
 
+  const isHdr = environment.endsWith('.hdr')
+  const stageEnvironment = isHdr
+    ? {
+        files: environment,
+        background: false,
+        // ground: { radius: 100, height: 5, scale: 100 },
+      }
+    : {
+        preset: environment,
+        background: false,
+      }
+
   return (
     <div className="relative flex-1 flex flex-col min-h-0">
       <div className="relative flex-1 min-h-0">
@@ -387,19 +400,27 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               shadows
               camera={{ fov: 50 }}
               style={{ width: '100%', height: '100%' }}
-              gl={{ antialias: true }}
+              gl={{
+                antialias: true,
+                // outputColorSpace: THREE.SRGBColorSpace,
+                // toneMapping: THREE.ACESFilmicToneMapping,
+                // toneMappingExposure: 1.0,
+              }}
             >
               <Stage
-                intensity={0.5}
-                environment={{ files: '/neutral.hdr' }}
-                shadows={{ type: 'contact', opacity: 0.2, blur: 3 }}
+                intensity={0.6}
+                environment={stageEnvironment}
+                shadows={isHdr ? false : { type: 'contact', opacity: 0.2, blur: 3 }}
+                center={{ disable: isHdr }}
                 adjustCamera={false}
               >
+                {/* <ambientLight intensity={isHdr ? 0.4 : 0.1} /> */}
                 <group ref={modelGroupRef}>
                   <ModularTrailerModel
                     widthFt={widthFt}
                     lengthFt={lengthFt}
                     heightFt={heightFt}
+                    environment={environment}
                   />
                 </group>
                 {onModelReady && (
@@ -441,7 +462,11 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <img src="/eyes.png" alt="" />
           </button>
-          <button aria-label="Scenic View" className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+          <button 
+            aria-label="Scenic View" 
+            onClick={() => setEnvironment(prev => prev === 'city' ? '/neutral.hdr' : '/neutral.hdr')}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${isHdr ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+          >
             <img src="/view.png" alt="" />
           </button>
           <button

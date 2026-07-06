@@ -166,7 +166,7 @@ const TONGUE_MESH_MAP = {
 }
 
 
-export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
+export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, environment }) {
     const config = useConfigurator()
 
     const hasCabinet = config.cabinets?.includes('vnosebase') || config.cabinets?.includes('flatfrontbase')
@@ -225,6 +225,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         })
     }, [])
 
+    // Hide ground/shadow catcher plane when HDR is active to prevent z-fighting
+    useEffect(() => {
+        const allScenes = [base, baseMeshes, addons]
+        const isHdr = environment?.endsWith('.hdr')
+        allScenes.forEach((scene) => {
+            scene.traverse((child) => {
+                if (child.isMesh) {
+                    const name = child.name.toLowerCase()
+                    if (name.includes('plane') || name.includes('ground') || name.includes('shadowcatcher')) {
+                        child.visible = !isHdr
+                    }
+                }
+            })
+        })
+    }, [environment, base, baseMeshes, addons])
+
     // ── Apply shell color texture + Simple_Noise bump to every MAT_Shell slot ─
     // Checks mesh.userData.useTriplanar per mesh:
     //   true  → patchTriplanarMaterial (world-space, no UV stretch on deformed geometry)
@@ -237,6 +253,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
         texture.colorSpace = THREE.SRGBColorSpace
         texture.wrapS = THREE.RepeatWrapping
         texture.wrapT = THREE.RepeatWrapping
+        texture.needsUpdate = true
 
         // Configure Simple_Noise as a bump map (non-color, repeating)
         simpleNoise.colorSpace = THREE.NoColorSpace
@@ -267,8 +284,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
                         const base = mat.clone()
                         base.map       = texture
                         base.bumpMap   = simpleNoise
-                        base.bumpScale = 0.005
-                        base.roughness = 0.1
+                        base.bumpScale = 0.01
+                        base.roughness = 0.1 // restored glossiness
                         const patched = patchTriplanarMaterial(base, {
                             x: new THREE.Vector2(0.25, 0.75),
                             y: new THREE.Vector2(0.25, 0.25),
@@ -280,9 +297,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
                         const next = mat.clone()
                         next.map       = texture
                         next.bumpMap   = simpleNoise
-                        next.bumpScale = 0.005
-                        next.roughness = 0.1
-                        next.needsUpdate = true
+                        next.bumpScale = 0.01
+                        next.roughness = 0.1 // restored glossiness
+                        // next.needsUpdate = true
                         if (isArray) child.material[i] = next
                         else child.material = next
                     }
