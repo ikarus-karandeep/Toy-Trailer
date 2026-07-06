@@ -287,27 +287,27 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const hasSel1 = !!rearSel1;
 
   // ── DEBUG: log attribute discovery once per mesh ─────────────────────────────
-  if (!_loggedMeshAttrs.has(meshName)) {
-    _loggedMeshAttrs.add(meshName)
-    console.log(
-      `[deform] "${meshName}" attrs — all:`, attrKeys,
-      '| rearSel1:', key1 ?? 'NONE',
-      '| rearSel2:', key2 ?? 'NONE',
-      '| rearSel3:', key3 ?? 'NONE',
-      '| rearSel4:', key4 ?? 'NONE',
-    )
-  }
+  // if (!_loggedMeshAttrs.has(meshName)) {
+  //   _loggedMeshAttrs.add(meshName)
+  //   console.log(
+  //     `[deform] "${meshName}" attrs — all:`, attrKeys,
+  //     '| rearSel1:', key1 ?? 'NONE',
+  //     '| rearSel2:', key2 ?? 'NONE',
+  //     '| rearSel3:', key3 ?? 'NONE',
+  //     '| rearSel4:', key4 ?? 'NONE',
+  //   )
+  // }
 
-  // ── DEBUG: log delta values whenever length is in the sub-16.5 zone ──────────
-  if (lengthFt < 16.5) {
-    console.log(
-      `[deform] "${meshName}" lengthFt=${lengthFt} < 16.5`,
-      '| delta4:', delta4.toFixed(4), '| hasSel4:', hasSel4,
-      '| delta3:', delta3.toFixed(4), '| hasSel3:', hasSel3,
-      '| delta2:', delta2.toFixed(4), '| hasSel2:', hasSel2,
-      '| delta1:', delta1.toFixed(4), '| hasSel1:', hasSel1,
-    )
-  }
+  // // ── DEBUG: log delta values whenever length is in the sub-16.5 zone ──────────
+  // if (lengthFt < 16.5) {
+  //   console.log(
+  //     `[deform] "${meshName}" lengthFt=${lengthFt} < 16.5`,
+  //     '| delta4:', delta4.toFixed(4), '| hasSel4:', hasSel4,
+  //     '| delta3:', delta3.toFixed(4), '| hasSel3:', hasSel3,
+  //     '| delta2:', delta2.toFixed(4), '| hasSel2:', hasSel2,
+  //     '| delta1:', delta1.toFixed(4), '| hasSel1:', hasSel1,
+  //   )
+  // }
 
   // Cascade missing deltas to older nodes (if a mesh hasn't been updated with newer maps).
   // When sel4 is present, sel3 only carries the 16.5–23.5 portion (delta3 − delta4).
@@ -330,16 +330,16 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   }
 
   // ── DEBUG: log cascade result when sub-16.5 zone is active ───────────────────
-  if (lengthFt < 16.5) {
-    console.log(
-      `[deform cascade] "${meshName}"`,
-      '| applyDelta4:', applyDelta4.toFixed(4),
-      '| applyDelta3:', applyDelta3.toFixed(4),
-      '| applyDelta2:', applyDelta2.toFixed(4),
-      '| applyDelta1:', applyDelta1.toFixed(4),
-      '| branch used:', hasSel4 ? 'sel4' : hasSel3 ? 'sel3' : hasSel2 ? 'sel2' : hasSel1 ? 'sel1' : 'FALLBACK',
-    )
-  }
+  // if (lengthFt < 16.5) {
+  //   console.log(
+  //     `[deform cascade] "${meshName}"`,
+  //     '| applyDelta4:', applyDelta4.toFixed(4),
+  //     '| applyDelta3:', applyDelta3.toFixed(4),
+  //     '| applyDelta2:', applyDelta2.toFixed(4),
+  //     '| applyDelta1:', applyDelta1.toFixed(4),
+  //     '| branch used:', hasSel4 ? 'sel4' : hasSel3 ? 'sel3' : hasSel2 ? 'sel2' : hasSel1 ? 'sel1' : 'FALLBACK',
+  //   )
+  // }
 
   for (let i = 0; i < count; i++) {
     let ox = original[i * 3]
