@@ -252,6 +252,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [clickedName, setClickedName] = useState(null)
   const [modelReport, setModelReport] = useState(null)
   const [environment, setEnvironment] = useState('/trailer_hdri.exr')
+  const [showEnvironment, setShowEnvironment] = useState(false)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
   const orbitControlsRef = useRef()
@@ -377,12 +378,12 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const stageEnvironment = isHdr
     ? {
         files: environment,
-        background: false,
-        // ground: { radius: 100, height: 5, scale: 100 },
+        background: showEnvironment,
+        ...(showEnvironment && { ground: { radius: 100, height: 5, scale: 100 } }),
       }
     : {
         preset: environment,
-        background: false,
+        background: showEnvironment,
       }
 
   return (
@@ -470,6 +471,15 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${isHdr ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/view.png" alt="" />
+          </button>
+          <button
+            aria-label="Toggle Environment"
+            onClick={() => setShowEnvironment(prev => !prev)}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showEnvironment ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+          >
+            <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2 20h20M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8M12 4a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
           </button>
           <button
             aria-label="Toggle Dimensions"
