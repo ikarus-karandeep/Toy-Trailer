@@ -398,7 +398,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <Canvas
               shadows
-              camera={{ fov: 50 }}
+              camera={{ fov: 35 }}
               style={{ width: '100%', height: '100%' }}
               gl={{
                 antialias: true,
@@ -440,6 +440,8 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 enablePan={true}
                 minPolarAngle={0.2}
                 maxPolarAngle={Math.PI * 0.52}
+                enableDamping
+                dampingFactor={0.4}
               />
             </Canvas>
           </Suspense>
