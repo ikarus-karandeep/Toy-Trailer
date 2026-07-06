@@ -251,7 +251,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
   const [modelReport, setModelReport] = useState(null)
-  const [environment, setEnvironment] = useState('/neutral.hdr')
+  const [environment, setEnvironment] = useState('/trailer_hdri.exr')
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
   const orbitControlsRef = useRef()
@@ -373,7 +373,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     if (viewer?.canActivateAR) viewer.activateAR()
   }
 
-  const isHdr = environment.endsWith('.hdr')
+  const isHdr = environment.endsWith('.hdr') || environment.endsWith('.exr')
   const stageEnvironment = isHdr
     ? {
         files: environment,
@@ -464,7 +464,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           </button>
           <button 
             aria-label="Scenic View" 
-            onClick={() => setEnvironment(prev => prev === 'city' ? '/neutral.hdr' : '/neutral.hdr')}
+            onClick={() => setEnvironment(prev => prev === 'city' ? '/trailer_hdri.exr' : '/trailer_hdri.exr')}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${isHdr ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/view.png" alt="" />

@@ -259,6 +259,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         simpleNoise.colorSpace = THREE.NoColorSpace
         simpleNoise.wrapS = THREE.RepeatWrapping
         simpleNoise.wrapT = THREE.RepeatWrapping
+        simpleNoise.repeat.set(0.5, 0.5) 
         simpleNoise.needsUpdate = true
 
         const allScenes = [
@@ -282,10 +283,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (useTriplanar) {
                         // Clone base material preserving GLB PBR properties, then patch shader
                         const base = mat.clone()
-                        base.map       = texture
-                        base.bumpMap   = simpleNoise
-                        base.bumpScale = 0.01
-                        base.roughness = 0.1 // restored glossiness
+                        base.map         = texture
+                        base.normalMap   = simpleNoise
+                        base.normalScale = new THREE.Vector2(0.1, 0.1)
+                        base.roughness   = 0.1
                         const patched = patchTriplanarMaterial(base, {
                             x: new THREE.Vector2(0.25, 0.75),
                             y: new THREE.Vector2(0.25, 0.25),
@@ -295,11 +296,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         else child.material = patched
                     } else {
                         const next = mat.clone()
-                        next.map       = texture
-                        next.bumpMap   = simpleNoise
-                        next.bumpScale = 0.01
-                        next.roughness = 0.1 // restored glossiness
-                        // next.needsUpdate = true
+                        next.map         = texture
+                        next.normalMap   = simpleNoise
+                        next.normalScale = new THREE.Vector2(0.1, 0.1)
+                        next.roughness   = 0.1
                         if (isArray) child.material[i] = next
                         else child.material = next
                     }

@@ -108,7 +108,7 @@ uniform vec2 uScaleZ;`
 
   vec3 _ts_x = texture2D(normalMap, vWorldPos.yz * uScaleX).xyz * 2.0 - 1.0;
   vec3 _ts_y = texture2D(normalMap, vWorldPos.xz * uScaleY).xyz * 2.0 - 1.0;
-  vec3 _ts_z = texture2D(normalMap, vWorldPos.xy * uScaleZ).xyz * 2.0 - 1.0;
+  vec3 _ts_z = texture2D(normalMap, vWorldPos.yx * uScaleZ).xyz * 2.0 - 1.0;
 
   _ts_x.xy *= normalScale;
   _ts_y.xy *= normalScale;
