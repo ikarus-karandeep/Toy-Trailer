@@ -309,7 +309,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             const uvBefore = child.geometry?.attributes?.uv
             console.log(`[grates-debug] applyGrates → mesh="${child.name}" | mat="${mat.name}" | uv before:`, uvBefore ? `${uvBefore.count} verts` : 'NONE')
 
-            generateBoxProjectionUVs(child, 0.3, true)
+            generateBoxProjectionUVs(child, 1.2, true)
 
             const uvAfter = child.geometry?.attributes?.uv
             console.log(`[grates-debug] applyGrates → mesh="${child.name}" | uv after:`, uvAfter ? `${uvAfter.count} verts` : 'STILL NONE')
@@ -318,7 +318,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt }) {
             // Mutating an already-compiled material risks the shader not picking up normalMap.
             const next = mat.clone()
             next.normalMap = normalMap
-            next.normalScale = new THREE.Vector2(0.1, 0.1)
+            next.normalScale = new THREE.Vector2(4.0, 4.0)
+            // next.color = new THREE.Color(0x999999) // Darker grey metal
             next.metalness = 1
             next.roughness = 0.1
             next.needsUpdate = true
