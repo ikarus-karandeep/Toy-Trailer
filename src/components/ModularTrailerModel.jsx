@@ -220,6 +220,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         chromeRoughness:     '/Materials/Chrome_Roughness.png',
     })
 
+    const trailerLightsBaseColor = useTexture('/Materials/Trailer_Lights_BaseColor.jpg')
+
     const store = useRef(new Map())
     const animRef = useRef({ widthFt, lengthFt, heightFt })
     const targetRef = useRef({ widthFt, lengthFt, heightFt })
@@ -512,6 +514,43 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         })
     }, [
         roofTextures,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
+
+    // ── Apply Trailer Lights BaseColor texture ────────────────────────────────
+    useEffect(() => {
+        trailerLightsBaseColor.colorSpace = THREE.SRGBColorSpace
+        trailerLightsBaseColor.flipY = false
+        trailerLightsBaseColor.wrapS = THREE.RepeatWrapping
+        trailerLightsBaseColor.wrapT = THREE.RepeatWrapping
+        trailerLightsBaseColor.needsUpdate = true
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+        allScenes.forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_.]+/g, '').toLowerCase()
+                    if (!normalized?.includes('trailerlights')) return
+                    const next = mat.clone()
+                    next.map = trailerLightsBaseColor
+                    next.needsUpdate = true
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
+            })
+        })
+    }, [
+        trailerLightsBaseColor,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
