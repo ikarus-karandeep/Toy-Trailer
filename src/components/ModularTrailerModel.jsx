@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
-import { patchTriplanarMaterial, generateBoxProjectionUVs } from '../utils/TriplanarMaterial'
+import { patchTriplanarMaterial } from '../utils/TriplanarMaterial'
 
 const LERP_SPEED = 0.18
 const LERP_THRESHOLD = 0.0005
@@ -246,7 +246,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const targetRef = useRef({ widthFt, lengthFt, heightFt })
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
-    const grateMeshesRef = useRef([])
     const wheelCoverOriginalMatsRef = useRef(new Map())
 
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
@@ -357,26 +356,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         console.log('[grates-debug] normalMap loaded:', normalMap, '| image:', normalMap?.image)
 
         const applyGrates = (child, mat, i, isArray) => {
-            const uvBefore = child.geometry?.attributes?.uv
-            console.log(`[grates-debug] applyGrates → mesh="${child.name}" | mat="${mat.name}" | uv before:`, uvBefore ? `${uvBefore.count} verts` : 'NONE')
-
-            generateBoxProjectionUVs(child, 1.2, true)
-
-            const uvAfter = child.geometry?.attributes?.uv
-            console.log(`[grates-debug] applyGrates → mesh="${child.name}" | uv after:`, uvAfter ? `${uvAfter.count} verts` : 'STILL NONE')
-
-            // Clone + replace so the new material compiles fresh WITH USE_NORMALMAP defined.
-            // Mutating an already-compiled material risks the shader not picking up normalMap.
-            const next = mat.clone()
-            next.normalMap = normalMap
-            next.normalScale = new THREE.Vector2(4.0, 4.0)
-            // next.color = new THREE.Color(0x999999) // Darker grey metal
-            next.metalness = 1
-            next.roughness = 0.1
-            next.needsUpdate = true
-            console.log(`[grates-debug] applyGrates → mesh="${child.name}" | next.normalMap:`, next.normalMap, '| next.metalness:', next.metalness)
-            if (isArray) child.material[i] = next
-            else child.material = next
+            const base = mat.clone()
+            base.normalMap   = normalMap
+            base.normalScale = new THREE.Vector2(4.0, 4.0)
+            base.metalness   = 1
+            base.roughness   = 0.1
+            const patched = patchTriplanarMaterial(base, 10)
+            if (isArray) child.material[i] = patched
+            else child.material = patched
         }
 
         const allScenes = [
@@ -386,9 +373,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         ]
 
         // Apply only to meshes whose material name normalises to 'metallicgrates'
-        const collected = []
-        let gratesHitCount = 0
-        allScenes.forEach((scene, sceneIdx) => {
+        allScenes.forEach(scene => {
             scene.traverse(child => {
                 if (!child.isMesh) return
                 const isArray = Array.isArray(child.material)
@@ -396,17 +381,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 mats.forEach((mat, i) => {
                     if (!mat) return
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
-                    console.log(`[grates-debug] scene[${sceneIdx}] mesh="${child.name}" | normalized mat="${normalized}"`)
                     if (normalized === 'metallicgrates') {
-                        gratesHitCount++
                         applyGrates(child, mat, i, isArray)
-                        collected.push(child)
                     }
                 })
             })
         })
-        grateMeshesRef.current = collected
-        console.log(`[grates-debug] total MAT_MetallicGrates meshes found: ${gratesHitCount}`)
     }, [
         normalMap,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
@@ -444,9 +424,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const original = wheelCoverOriginalMatsRef.current.get(key)
 
                     if (config.axleAtp) {
+                        normalMap.repeat.set(20, 20)
                         const next = original.clone()
                         next.normalMap   = normalMap
-                        next.normalScale = new THREE.Vector2(4.0, 4.0)
+                        next.normalScale = new THREE.Vector2(1.0, 1.0)
                         next.metalness   = 1
                         next.roughness   = 0.1
                         next.needsUpdate = true
@@ -454,26 +435,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         else child.material = next
                     } else {
                         if (!texture) return
-                        const useTriplanar = child.userData?.useTriplanar !== false
-                        if (useTriplanar) {
-                            const shellMat = original.clone()
-                            shellMat.map         = texture
-                            shellMat.normalMap   = simpleNoise
-                            shellMat.normalScale = new THREE.Vector2(0.025, 0.025)
-                            shellMat.roughness   = 0.05
-                            const patched = patchTriplanarMaterial(shellMat, 1)
-                            if (isArray) child.material[i] = patched
-                            else child.material = patched
-                        } else {
-                            const next = original.clone()
-                            next.map         = texture
-                            next.normalMap   = simpleNoise
-                            next.normalScale = new THREE.Vector2(0.05, 0.05)
-                            next.roughness   = 0.1
-                            next.needsUpdate = true
-                            if (isArray) child.material[i] = next
-                            else child.material = next
-                        }
+                        const next = original.clone()
+                        next.map         = texture
+                        next.normalMap   = simpleNoise
+                        next.normalScale = new THREE.Vector2(0.05, 0.05)
+                        next.roughness   = 0.1
+                        next.needsUpdate = true
+                        if (isArray) child.material[i] = next
+                        else child.material = next
                     }
                 })
             })
@@ -553,6 +522,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     next.normalScale  = new THREE.Vector2(1.0, 1.0)
                     next.roughnessMap = roughness
                     next.roughness    = 1.0
+                    next.side         = THREE.DoubleSide
                     next.needsUpdate  = true
                     if (isArray) child.material[i] = next
                     else child.material = next
@@ -1237,11 +1207,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
 
-        // Re-bake box-projection UVs for grate meshes now that vertex positions are updated.
-        // force=true overwrites the stale UV buffer written during the initial material setup.
-        grateMeshesRef.current.forEach(mesh => {
-            generateBoxProjectionUVs(mesh, 0.3, true)
-        })
     })
 
     return (

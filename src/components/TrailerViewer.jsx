@@ -442,7 +442,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 minPolarAngle={0.2}
                 maxPolarAngle={Math.PI * 0.52}
                 enableDamping
-                dampingFactor={0.4}
+                dampingFactor={0.1}
               />
             </Canvas>
           </Suspense>
