@@ -472,7 +472,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <img src="/view.png" alt="" />
           </button>
-          <button
+          {/* <button
             aria-label="Toggle Environment"
             onClick={() => setShowEnvironment(prev => !prev)}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showEnvironment ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
@@ -480,7 +480,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2 20h20M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8M12 4a4 4 0 100 8 4 4 0 000-8z" />
             </svg>
-          </button>
+          </button> */}
           <button
             aria-label="Toggle Dimensions"
             onClick={() => setShowDimensions(prev => !prev)}
@@ -494,7 +494,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             VIEW IN YOUR DRIVEWAY
           </button>
-          <button
+          {/* <button
             onClick={handleDownload}
             disabled={downloading}
             aria-label="Download GLB"
@@ -510,7 +510,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
               </svg>
             )}
-          </button>
+          </button> */}
         </div>
       </div>
 
