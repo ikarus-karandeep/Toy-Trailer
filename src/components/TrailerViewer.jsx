@@ -251,7 +251,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
   const [modelReport, setModelReport] = useState(null)
-  const [environment, setEnvironment] = useState('/trailer_hdri.exr')
+  const [environment, setEnvironment] = useState('/auto_service_1k.exr')
   const [showEnvironment, setShowEnvironment] = useState(false)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
@@ -467,7 +467,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           </button>
           <button 
             aria-label="Scenic View" 
-            onClick={() => setEnvironment(prev => prev === 'city' ? '/trailer_hdri.exr' : '/trailer_hdri.exr')}
+            onClick={() => setEnvironment(prev => prev === 'city' ? '/auto_service_1k.exr' : '/auto_service_1k.exr')}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${isHdr ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/view.png" alt="" />
