@@ -228,6 +228,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
     const grateMeshesRef = useRef([])
+    const wheelCoverOriginalMatsRef = useRef(new Map())
 
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
     useEffect(() => {
@@ -398,6 +399,81 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
     ])
 
+    // ── Apply Metallic Guard to MAT_WheelCover (ATP on) or MAT_Shell look (ATP off) ──
+    useEffect(() => {
+        const texture = shellTextures[config.selectedColor]
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+
+        allScenes.forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (normalized !== 'matwheelcover') return
+
+                    const key = `${child.uuid}-${i}`
+
+                    // Always store the GLB original on first encounter
+                    if (!wheelCoverOriginalMatsRef.current.has(key)) {
+                        wheelCoverOriginalMatsRef.current.set(key, mat)
+                    }
+                    const original = wheelCoverOriginalMatsRef.current.get(key)
+
+                    if (config.axleAtp) {
+                        const next = original.clone()
+                        next.normalMap   = normalMap
+                        next.normalScale = new THREE.Vector2(4.0, 4.0)
+                        next.metalness   = 1
+                        next.roughness   = 0.1
+                        next.needsUpdate = true
+                        if (isArray) child.material[i] = next
+                        else child.material = next
+                    } else {
+                        if (!texture) return
+                        const useTriplanar = child.userData?.useTriplanar !== false
+                        if (useTriplanar) {
+                            const shellMat = original.clone()
+                            shellMat.map         = texture
+                            shellMat.normalMap   = simpleNoise
+                            shellMat.normalScale = new THREE.Vector2(0.05, 0.05)
+                            shellMat.roughness   = 0.05
+                            const patched = patchTriplanarMaterial(shellMat, {
+                                x: new THREE.Vector2(0.25, 0.75),
+                                y: new THREE.Vector2(0.25, 0.25),
+                                z: new THREE.Vector2(0.25, 0.25),
+                            })
+                            if (isArray) child.material[i] = patched
+                            else child.material = patched
+                        } else {
+                            const next = original.clone()
+                            next.map         = texture
+                            next.normalMap   = simpleNoise
+                            next.normalScale = new THREE.Vector2(0.05, 0.05)
+                            next.roughness   = 0.1
+                            next.needsUpdate = true
+                            if (isArray) child.material[i] = next
+                            else child.material = next
+                        }
+                    }
+                })
+            })
+        })
+    }, [
+        config.axleAtp, config.selectedColor, shellTextures, simpleNoise, normalMap,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
+
     // ── Apply Tyre Rubber material maps ──────────────────────────────────────
     useEffect(() => {
         const { baseColor, normal, roughness } = tyreTextures
@@ -448,27 +524,29 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             t.needsUpdate = true
         })
 
-        wheels.traverse(child => {
-            if (!child.isMesh) return
-            const isArray = Array.isArray(child.material)
-            const mats = isArray ? child.material : [child.material]
-            mats.forEach((mat, i) => {
-                if (!mat) return
-                const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
-                if (normalized?.includes('tyre') || normalized?.includes('tire')) return
-                if (mat?.name === 'MAT_Shell') return
-                const next = mat.clone()
-                next.map          = rimBase
-                next.metalnessMap = rimMetallic
-                next.metalness    = 1.0
-                next.roughnessMap = rimRoughness
-                next.roughness    = 1.0
-                next.needsUpdate  = true
-                if (isArray) child.material[i] = next
-                else child.material = next
+        ;[wheels, axleConfig].forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (normalized?.includes('tyre') || normalized?.includes('tire')) return
+                    if (mat?.name === 'MAT_Shell') return
+                    const next = mat.clone()
+                    next.map          = rimBase
+                    next.metalnessMap = rimMetallic
+                    next.metalness    = 1.0
+                    next.roughnessMap = rimRoughness
+                    next.roughness    = 1.0
+                    next.needsUpdate  = true
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
             })
         })
-    }, [config.wheel, wheelRimTextures, wheels])
+    }, [config.wheel, wheelRimTextures, wheels, axleConfig])
 
     // ── Apply Roof material maps ──────────────────────────────────────────────
     useEffect(() => {
