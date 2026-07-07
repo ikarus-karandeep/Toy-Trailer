@@ -211,13 +211,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         roughness: '/Materials/Roof_Roughness.png',
     })
 
-    const wheelRimTextures = useTexture({
-        blackAlloyBase:      '/Materials/Black_Alloy_BaseColor.png',
-        blackAlloyMetallic:  '/Materials/Black_Alloy_Metallic.png',
-        blackAlloyRoughness: '/Materials/Black_Alloy_Roughness.png',
-        chromeBase:          '/Materials/Chrome_BaseColor.png',
-        chromeMetallic:      '/Materials/Chrome_Metallic.png',
-        chromeRoughness:     '/Materials/Chrome_Roughness.png',
+    const blackAlloyTextures = useTexture({
+        baseColor: '/Materials/Black_Alloy_BaseColor.png',
+        metallic:  '/Materials/Black_Alloy_Metallic.png',
+        roughness: '/Materials/Black_Alloy_Roughness.png',
+    })
+
+    const chromeTextures = useTexture({
+        baseColor: '/Materials/Chrome_BaseColor.png',
+        metallic:  '/Materials/Chrome_Metallic.png',
+        roughness: '/Materials/Chrome_Roughness.png',
     })
 
     const trailerLightsBaseColor = useTexture('/Materials/Trailer_Lights_BaseColor.jpg')
@@ -510,21 +513,24 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         })
     }, [tyreTextures, wheels, axleConfig])
 
-    // ── Apply Wheel Rim material (Chrome for Aluminum Radial, Black Alloy for Black Steel) ──
+    // ── Apply Black Alloy material to meshes with 'blackalloy' in their material name ──
     useEffect(() => {
-        const isChrome = config.wheel === 'aluminumradial'
-        const rimBase      = isChrome ? wheelRimTextures.chromeBase      : wheelRimTextures.blackAlloyBase
-        const rimMetallic  = isChrome ? wheelRimTextures.chromeMetallic  : wheelRimTextures.blackAlloyMetallic
-        const rimRoughness = isChrome ? wheelRimTextures.chromeRoughness : wheelRimTextures.blackAlloyRoughness
-
-        rimBase.colorSpace = THREE.SRGBColorSpace
-        ;[rimBase, rimMetallic, rimRoughness].forEach(t => {
+        const { baseColor, metallic, roughness } = blackAlloyTextures
+        baseColor.colorSpace = THREE.SRGBColorSpace
+        metallic.colorSpace  = THREE.NoColorSpace
+        roughness.colorSpace = THREE.NoColorSpace
+        ;[baseColor, metallic, roughness].forEach(t => {
             t.wrapS = THREE.RepeatWrapping
             t.wrapT = THREE.RepeatWrapping
             t.needsUpdate = true
         })
 
-        ;[wheels, axleConfig].forEach(scene => {
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+        allScenes.forEach(scene => {
             scene.traverse(child => {
                 if (!child.isMesh) return
                 const isArray = Array.isArray(child.material)
@@ -532,13 +538,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 mats.forEach((mat, i) => {
                     if (!mat) return
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
-                    if (normalized?.includes('tyre') || normalized?.includes('tire')) return
-                    if (mat?.name === 'MAT_Shell') return
+                    if (!normalized?.includes('blackalloy')) return
                     const next = mat.clone()
-                    next.map          = rimBase
-                    next.metalnessMap = rimMetallic
+                    next.map          = baseColor
+                    next.metalnessMap = metallic
                     next.metalness    = 1.0
-                    next.roughnessMap = rimRoughness
+                    next.roughnessMap = roughness
                     next.roughness    = 1.0
                     next.needsUpdate  = true
                     if (isArray) child.material[i] = next
@@ -546,7 +551,57 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
-    }, [config.wheel, wheelRimTextures, wheels, axleConfig])
+    }, [
+        blackAlloyTextures,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
+
+    // ── Apply Chrome material to meshes with 'chrome' in their material name ──
+    useEffect(() => {
+        const { baseColor, metallic, roughness } = chromeTextures
+        baseColor.colorSpace = THREE.SRGBColorSpace
+        metallic.colorSpace  = THREE.NoColorSpace
+        roughness.colorSpace = THREE.NoColorSpace
+        ;[baseColor, metallic, roughness].forEach(t => {
+            t.wrapS = THREE.RepeatWrapping
+            t.wrapT = THREE.RepeatWrapping
+            t.needsUpdate = true
+        })
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+        allScenes.forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (!normalized?.includes('chrome')) return
+                    const next = mat.clone()
+                    next.map          = baseColor
+                    next.metalnessMap = metallic
+                    next.metalness    = 1.0
+                    next.roughnessMap = roughness
+                    next.roughness    = 1.0
+                    next.needsUpdate  = true
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
+            })
+        })
+    }, [
+        chromeTextures,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
 
     // ── Apply Roof material maps ──────────────────────────────────────────────
     useEffect(() => {
