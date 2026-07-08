@@ -217,6 +217,109 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
   return null
 }
 
+// ── interior / exterior camera controller ─────────────────────────────────────
+
+function CameraController({ viewMode, modelGroupRef, orbitControlsRef, setIsTransitioning }) {
+  const { camera } = useThree()
+  const lerpTargetRef = useRef(null)
+  const hasInitializedRef = useRef(false)
+  const savedExteriorRef = useRef(null) // snapshot taken just before entering interior
+
+  useEffect(() => {
+    if (!hasInitializedRef.current) {
+      hasInitializedRef.current = true
+      return
+    }
+    if (!orbitControlsRef.current || !modelGroupRef.current) return
+
+    let hasMeshes = false
+    modelGroupRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
+    if (!hasMeshes) return
+
+    let targetPosition, targetLookAt, targetFov
+
+    if (viewMode === 'INTERIOR') {
+      // Save wherever the user was so we can restore it exactly on exit
+      savedExteriorRef.current = {
+        position: camera.position.clone(),
+        target: orbitControlsRef.current.target.clone(),
+        fov: camera.fov,
+      }
+
+      const box = new THREE.Box3().setFromObject(modelGroupRef.current)
+      const center = box.getCenter(new THREE.Vector3())
+      const size = box.getSize(new THREE.Vector3())
+
+      const isLongX = size.x >= size.z
+      const eyeY = box.min.y + size.y * 0.55
+
+      if (isLongX) {
+        targetPosition = new THREE.Vector3(center.x - size.x * 0.38, eyeY, center.z)
+        targetLookAt = new THREE.Vector3(center.x + size.x * 0.3, eyeY, center.z)
+      } else {
+        targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.38)
+        targetLookAt = new THREE.Vector3(center.x, eyeY, center.z + size.z * 0.3)
+      }
+      targetFov = 75
+    } else {
+      // Restore the exact exterior position/target/fov that was saved
+      if (savedExteriorRef.current) {
+        const { position, target, fov } = savedExteriorRef.current
+        targetPosition = position
+        targetLookAt = target
+        targetFov = fov
+      } else {
+        // Fallback on very first exterior render before any snapshot exists
+        const box = new THREE.Box3().setFromObject(modelGroupRef.current)
+        const center = box.getCenter(new THREE.Vector3())
+        const size = box.getSize(new THREE.Vector3())
+        const maxDim = Math.max(size.x, size.y, size.z)
+        const distance = maxDim * 1.8
+        targetPosition = new THREE.Vector3(center.x + distance * 0.5, center.y + distance * 0.6, center.z + distance)
+        targetLookAt = center.clone()
+        targetFov = 35
+      }
+    }
+
+    setIsTransitioning(true)
+    lerpTargetRef.current = { position: targetPosition, lookAt: targetLookAt, fov: targetFov }
+
+    const animateFov = () => {
+      if (!lerpTargetRef.current) return
+      const { fov } = lerpTargetRef.current
+      if (Math.abs(camera.fov - fov) > 0.3) {
+        camera.fov = THREE.MathUtils.lerp(camera.fov, fov, 0.08)
+        camera.updateProjectionMatrix()
+        requestAnimationFrame(animateFov)
+      } else {
+        camera.fov = fov
+        camera.updateProjectionMatrix()
+      }
+    }
+    animateFov()
+  }, [viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useFrame(() => {
+    if (!lerpTargetRef.current || !orbitControlsRef.current) return
+
+    const { position, lookAt } = lerpTargetRef.current
+
+    camera.position.lerp(position, 0.06)
+    orbitControlsRef.current.target.lerp(lookAt, 0.06)
+    orbitControlsRef.current.update()
+
+    if (camera.position.distanceTo(position) < 0.05 && orbitControlsRef.current.target.distanceTo(lookAt) < 0.05) {
+      camera.position.copy(position)
+      orbitControlsRef.current.target.copy(lookAt)
+      orbitControlsRef.current.update()
+      lerpTargetRef.current = null
+      setIsTransitioning(false)
+    }
+  })
+
+  return null
+}
+
 // ── viewer ────────────────────────────────────────────────────────────────────
 
 function SceneReadyNotifier({ meshRef, onReady }) {
@@ -243,7 +346,7 @@ function SceneReadyNotifier({ meshRef, onReady }) {
 }
 
 const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen }, ref) {
-  const { width, length, interiorHeight, showDimensions, setShowDimensions } = useConfigurator()
+  const { width, length, interiorHeight, showDimensions, setShowDimensions, viewMode } = useConfigurator()
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
   const [showQR, setShowQR] = useState(false)
@@ -253,6 +356,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [modelReport, setModelReport] = useState(null)
   const [environment, setEnvironment] = useState('/auto_service_1k.exr')
   const [showEnvironment, setShowEnvironment] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
   const orbitControlsRef = useRef()
@@ -436,9 +540,16 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 orbitControlsRef={orbitControlsRef}
                 configKey={configKey}
               />
+              <CameraController
+                viewMode={viewMode}
+                modelGroupRef={modelGroupRef}
+                orbitControlsRef={orbitControlsRef}
+                setIsTransitioning={setIsTransitioning}
+              />
               <OrbitControls
                 ref={orbitControlsRef}
                 enablePan={true}
+                enabled={!isTransitioning}
                 minPolarAngle={0.2}
                 maxPolarAngle={Math.PI * 0.52}
                 enableDamping
