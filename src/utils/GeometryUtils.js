@@ -138,9 +138,9 @@ export function applyMoveNodeChain({ geometry, store, uuid, nodes }) {
 // ─── Combined dimension deformation (width + length + height in one pass) ─────
 
 // Base dimensions — the model is exported at these values (rest state = zero delta)
-const BASE_WIDTH_FT = 8
+const BASE_WIDTH_FT = 8.5
 const BASE_LENGTH_FT = 32
-const BASE_HEIGHT_FT = 8
+const BASE_HEIGHT_FT = 8.5
 const FEET_TO_M = 0.305         // matches the Blender "Feet to Meter" node
 
 // Dedup: each meshName logs its attribute discovery only once per session

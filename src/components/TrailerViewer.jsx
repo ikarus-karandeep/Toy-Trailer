@@ -1,4 +1,4 @@
-﻿import '@google/model-viewer'
+import '@google/model-viewer'
 import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Stage } from '@react-three/drei'
@@ -10,6 +10,7 @@ import QRModal from './QRModal'
 import ModelReportPanel from './ModelReportPanel'
 import { isAndroidDevice } from '../utils/arPlatform'
 import { generateModelReport } from '../utils/modelReport'
+import { HDRIBox } from './HDRIBox'
 
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
 
@@ -171,13 +172,13 @@ function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
       if (orbitControlsRef.current) {
         orbitControlsRef.current.target.copy(center)
         orbitControlsRef.current.minDistance = maxDim * 0.1
-        orbitControlsRef.current.maxDistance = maxDim * 3
+        orbitControlsRef.current.maxDistance = maxDim * 9999
         orbitControlsRef.current.update()
       }
     } else if (orbitControlsRef.current) {
       const deltaX = center.x - orbitControlsRef.current.target.x
       orbitControlsRef.current.minDistance = maxDim * 0.1
-      orbitControlsRef.current.maxDistance = maxDim * 3
+      orbitControlsRef.current.maxDistance = maxDim * 9999
       lerpTargetRef.current = {
         camX: camera.position.x + deltaX,
         targetX: center.x,
@@ -371,7 +372,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   //   nameTimerRef.current = setTimeout(() => setClickedName(null), 2000)
   // }
 
-  const widthFt = WIDTH_FT[width] ?? 7
+  const widthFt = WIDTH_FT[width] ?? 8.5
   const lengthFt = getLengthFt(length)
   const heightFt = getHeightFt(interiorHeight)
   const configKey = `${widthFt}-${lengthFt}-${heightFt}`
@@ -482,12 +483,11 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const stageEnvironment = isHdr
     ? {
         files: environment,
-        background: showEnvironment,
-        ...(showEnvironment && { ground: { radius: 100, height: 5, scale: 100 } }),
+        background: false,
       }
     : {
         preset: environment,
-        background: showEnvironment,
+        background: false,
       }
 
   return (
@@ -532,6 +532,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                   <SceneReadyNotifier meshRef={modelGroupRef} onReady={onModelReady} />
                 )}
               </Stage>
+              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" height={2.062} scale={1.0} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
               )}

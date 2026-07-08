@@ -265,7 +265,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // Hide ground/shadow catcher plane when HDR is active to prevent z-fighting
     useEffect(() => {
         const allScenes = [base, baseMeshes, addons]
-        const isHdr = environment?.endsWith('.hdr')
+        const isHdr = environment?.endsWith('.hdr') || environment?.endsWith('.exr')
         allScenes.forEach((scene) => {
             scene.traverse((child) => {
                 if (child.isMesh) {
