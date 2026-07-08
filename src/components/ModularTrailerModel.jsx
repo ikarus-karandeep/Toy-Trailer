@@ -322,9 +322,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         const base = mat.clone()
                         base.map         = texture
                         base.normalMap   = simpleNoise
-                        base.normalScale = new THREE.Vector2(0.025, 0.025)
+                        base.normalScale = new THREE.Vector2(0.07, 0.07)
                         base.roughness   = 0.05
-                        const patched = patchTriplanarMaterial(base, 1)
+                        const patched = patchTriplanarMaterial(base, 0.06)
                         if (isArray) child.material[i] = patched
                         else child.material = patched
                     } else {

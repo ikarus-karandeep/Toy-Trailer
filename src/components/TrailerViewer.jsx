@@ -354,7 +354,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
   const [modelReport, setModelReport] = useState(null)
-  const [environment, setEnvironment] = useState('/auto_service_1k.exr')
+  const [environment, setEnvironment] = useState('/trailer_hdri.exr')
   const [showEnvironment, setShowEnvironment] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const nameTimerRef = useRef(null)
@@ -578,12 +578,12 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           </button>
           <button 
             aria-label="Scenic View" 
-            onClick={() => setEnvironment(prev => prev === 'city' ? '/auto_service_1k.exr' : '/auto_service_1k.exr')}
+            onClick={() => setEnvironment(prev => prev === 'city' ? '/trailer_hdri.exr' : '/trailer_hdri.exr')}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${isHdr ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/view.png" alt="" />
           </button>
-          {/* <button
+          <button
             aria-label="Toggle Environment"
             onClick={() => setShowEnvironment(prev => !prev)}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showEnvironment ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
@@ -591,7 +591,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2 20h20M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8M12 4a4 4 0 100 8 4 4 0 000-8z" />
             </svg>
-          </button> */}
+          </button>
           <button
             aria-label="Toggle Dimensions"
             onClick={() => setShowDimensions(prev => !prev)}
