@@ -256,16 +256,16 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
 
       if (isLongX) {
         targetPosition = new THREE.Vector3(center.x - size.x * 0.25, eyeY, center.z)
-        targetLookAt = new THREE.Vector3(targetPosition.x + 0.1, eyeY, center.z)
+        targetLookAt = new THREE.Vector3(center.x, eyeY, center.z)
       } else {
         targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.25)
-        targetLookAt = new THREE.Vector3(center.x, eyeY, targetPosition.z + 0.1)
+        targetLookAt = new THREE.Vector3(center.x, eyeY, center.z)
       }
       targetFov = 75
-      
-      // Lock distance so it rotates in-place like a first-person camera
-      cameraControlsRef.current.minDistance = 0.1;
-      cameraControlsRef.current.maxDistance = 0.1;
+
+      const interiorLength = isLongX ? size.x : size.z
+      cameraControlsRef.current.minDistance = interiorLength * 0.05
+      cameraControlsRef.current.maxDistance = interiorLength * 0.7
     } else {
       // Restore exterior materials
       modelGroupRef.current.traverse((node) => {
