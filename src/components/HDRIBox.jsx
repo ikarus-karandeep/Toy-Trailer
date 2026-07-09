@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
-import { useThree } from '@react-three/fiber'
+import { useThree, useLoader } from '@react-three/fiber'
 import { useEnvironment, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 
 const vertexShader = `
 varying vec3 vWorldPosition;
@@ -34,45 +35,76 @@ mat3 rotY(float angle) {
 
 void main() {
   vec3 direction = vWorldPosition - projectionCenter;
-  
+
   // Scale the X and Z components to pinch/stretch the projection
   direction.xz *= envScale;
-  
+
   direction = normalize(direction);
   direction = rotY(envRotation) * direction;
-  
+
   // Map Three.js Y-up to Blender Z-up
   float bX = direction.x;
   float bY = -direction.z;
   float bZ = direction.y;
-  
+
   // Exact Blender math from node setup
   float u = atan(bY, bX) / TWO_PI;
   float v = (asin(bZ) / PI) - 0.5;
-  
+
   vec2 uv = vec2(u, v);
-  
-  #ifdef GL_OES_standard_derivatives
+
   gl_FragColor = texture2D(envMap, uv);
-  #else
-  gl_FragColor = texture2D(envMap, uv);
-  #endif
-  
+
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }
 `
 
-export function HDRIBox({ environment, size = 150, height = 1.5, envRotation = 0, envOffset = [0, 0], scale = 1.0, modelPath = null, position = [0, 0, 0] }) {
+const uvVertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`
+
+const uvFragmentShader = `
+uniform sampler2D reprojectedMap;
+varying vec2 vUv;
+void main() {
+  gl_FragColor = texture2D(reprojectedMap, vUv);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}
+`
+
+export function HDRIBox({ environment, size = 150, height = 1.5, envRotation = 0, envOffset = [0, 0], scale = 1.0, modelPath = null, position = [0, 0, 0], reprojectedTexture = null }) {
+  if (reprojectedTexture && modelPath) {
+    return <UVTextureMesh url={modelPath} texturePath={reprojectedTexture} position={position} />
+  }
+  return (
+    <EnvironmentHDRIBox
+      environment={environment}
+      size={size}
+      height={height}
+      envRotation={envRotation}
+      envOffset={envOffset}
+      scale={scale}
+      modelPath={modelPath}
+      position={position}
+    />
+  )
+}
+
+function EnvironmentHDRIBox({ environment, size, height, envRotation, envOffset, scale, modelPath, position }) {
   const { gl } = useThree()
-  
+
   const isHdr = environment?.endsWith('.hdr') || environment?.endsWith('.exr')
   const texture = useEnvironment(isHdr ? { files: environment } : { preset: environment })
 
   const material = useMemo(() => {
     if (!texture) return null
 
-    // Ensure the texture wraps properly since U and V can go outside [0, 1] range
     texture.wrapS = THREE.RepeatWrapping
     texture.wrapT = THREE.RepeatWrapping
     texture.needsUpdate = true
@@ -87,13 +119,11 @@ export function HDRIBox({ environment, size = 150, height = 1.5, envRotation = 0
         envScale: { value: scale }
       },
       side: THREE.DoubleSide,
-      depthWrite: false, // Ensure it renders as a background
+      depthWrite: false,
     })
 
     return mat
   }, [texture, gl, height, envRotation, envOffset, scale])
-
-  if (!material) return null
 
   if (!material) return null
 
@@ -108,9 +138,42 @@ export function HDRIBox({ environment, size = 150, height = 1.5, envRotation = 0
   )
 }
 
+function UVTextureMesh({ url, texturePath, position }) {
+  const { scene } = useGLTF(url)
+  const texture = useLoader(EXRLoader, texturePath)
+
+  const material = useMemo(() => {
+    if (!texture) return null
+    texture.needsUpdate = true
+    return new THREE.ShaderMaterial({
+      vertexShader: uvVertexShader,
+      fragmentShader: uvFragmentShader,
+      uniforms: {
+        reprojectedMap: { value: texture }
+      },
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    })
+  }, [texture])
+
+  const clonedScene = useMemo(() => {
+    if (!material) return null
+    const clone = scene.clone()
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material = material
+      }
+    })
+    return clone
+  }, [scene, material])
+
+  if (!clonedScene) return null
+  return <primitive object={clonedScene} position={position} />
+}
+
 function CustomHDRIMesh({ url, material, position }) {
   const { scene } = useGLTF(url)
-  
+
   const clonedScene = useMemo(() => {
     const clone = scene.clone()
     clone.traverse((child) => {

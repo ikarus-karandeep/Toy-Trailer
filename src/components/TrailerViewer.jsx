@@ -554,7 +554,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                   <SceneReadyNotifier meshRef={modelGroupRef} onReady={onModelReady} />
                 )}
               </Stage>
-              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" height={2.062} scale={1.0} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
+              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" reprojectedTexture="/Reprojected Texture.exr" height={2.062} scale={1.0} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
               )}
