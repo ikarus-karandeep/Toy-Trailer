@@ -1,7 +1,7 @@
 import '@google/model-viewer'
 import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Stage } from '@react-three/drei'
+import { CameraControls, Stage } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
@@ -96,142 +96,128 @@ async function parseGLB(mesh) {
 
 // ── camera fit — model always stays in canvas on resize ───────────────────────
 
-function CameraFit({ modelGroupRef, orbitControlsRef, configKey }) {
+function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode }) {
   const { camera, size } = useThree()
-  const lastBboxRef = useRef(null)
   const cameraInitRef = useRef(false)
-  const bboxNeedsRescanRef = useRef(true)
-  const pendingRef = useRef(0)
-  const lerpTargetRef = useRef(null) // { camX, targetX }
-  const listenerAttachedRef = useRef(false)
+  const lastBboxRef = useRef(null)
+  // Tracks the model center from the previous frame during a size-change lerp
+  const lastCenterRef = useRef(new THREE.Vector3())
+  // True while the model is still lerping to a new size
+  const isTrackingRef = useRef(false)
+  // Mirror of viewMode prop so useFrame can read it without stale closure
+  const viewModeRef = useRef(viewMode)
+  useEffect(() => { viewModeRef.current = viewMode }, [viewMode])
 
-  // On model resize: rescan bbox and re-center camera on the new model
   useEffect(() => {
-    bboxNeedsRescanRef.current = true
-    pendingRef.current = 5
-  }, [configKey])
-
-  useFrame(() => {
-    // Attach once — cancel the lerp the instant the user grabs the model,
-    // otherwise CameraFit and OrbitControls fight and produce a zoom/snap.
-    if (!listenerAttachedRef.current && orbitControlsRef.current) {
-      listenerAttachedRef.current = true
-      orbitControlsRef.current.addEventListener('start', () => {
-        lerpTargetRef.current = null
-      })
-    }
-
-    // Smooth camera slide to new center after model resize
-    if (lerpTargetRef.current && orbitControlsRef.current) {
-      const { camX, targetX } = lerpTargetRef.current
-      const newCamX = camera.position.x + (camX - camera.position.x) * 0.08
-      const newTargX = orbitControlsRef.current.target.x + (targetX - orbitControlsRef.current.target.x) * 0.08
-      camera.position.x = newCamX
-      orbitControlsRef.current.target.x = newTargX
-      orbitControlsRef.current.update()
-      if (Math.abs(newCamX - camX) < 0.001 && Math.abs(newTargX - targetX) < 0.001) {
-        camera.position.x = camX
-        orbitControlsRef.current.target.x = targetX
-        orbitControlsRef.current.update()
-        lerpTargetRef.current = null
-      }
-      return
-    }
-
-    if (!bboxNeedsRescanRef.current) return
-    if (pendingRef.current > 0) { pendingRef.current--; return }
-    if (!modelGroupRef.current) return
-
+    // Don't touch the camera while inside the model — CameraController owns it
+    if (viewModeRef.current === 'INTERIOR') return
+    if (!modelGroupRef.current || !cameraControlsRef.current) return
     let hasMeshes = false
     modelGroupRef.current.traverse((o) => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
-    const bbox = new THREE.Box3().setFromObject(modelGroupRef.current)
-    const bboxSize = new THREE.Vector3()
-    bbox.getSize(bboxSize)
-    if (bboxSize.length() < 0.01) return
-
-    const isFirstLoad = !cameraInitRef.current
-    lastBboxRef.current = bbox.clone()
-    bboxNeedsRescanRef.current = false
-
-    const center = new THREE.Vector3()
-    bbox.getCenter(center)
-    const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
-
-    const aspect = size.width / size.height
-    const fovRad = (camera.fov * Math.PI) / 180
-    const halfFovH = Math.atan(aspect * Math.tan(fovRad / 2))
-    const halfFovV = fovRad / 2
-    const distForWidth = (bboxSize.x / 2) / Math.tan(halfFovH)
-    const distForHeight = (bboxSize.y / 2) / Math.tan(halfFovV)
-    const fitDist = Math.max(distForWidth, distForHeight) * 1.1
-
-    if (isFirstLoad) {
-      camera.position.set(center.x, center.y, center.z + fitDist)
-      if (orbitControlsRef.current) {
-        orbitControlsRef.current.target.copy(center)
-        orbitControlsRef.current.minDistance = maxDim * 0.1
-        orbitControlsRef.current.maxDistance = maxDim * 9999
-        orbitControlsRef.current.update()
-      }
-    } else if (orbitControlsRef.current) {
-      const deltaX = center.x - orbitControlsRef.current.target.x
-      orbitControlsRef.current.minDistance = maxDim * 0.1
-      orbitControlsRef.current.maxDistance = maxDim * 9999
-      lerpTargetRef.current = {
-        camX: camera.position.x + deltaX,
-        targetX: center.x,
-      }
+    if (!cameraInitRef.current) {
+      // First load: fit camera immediately — model geometry is already at rest
+      const bbox = new THREE.Box3().setFromObject(modelGroupRef.current)
+      const bboxSize = new THREE.Vector3()
+      bbox.getSize(bboxSize)
+      const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
+      cameraControlsRef.current.minDistance = maxDim * 0.1
+      cameraControlsRef.current.maxDistance = maxDim * 9999
+      cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
+      cameraInitRef.current = true
+      const initCenter = new THREE.Vector3()
+      bbox.getCenter(initCenter)
+      lastCenterRef.current.copy(initCenter)
+      lastBboxRef.current = bbox.clone()
+      return
     }
 
-    cameraInitRef.current = true
+    // Size changed: cancel any residual drag inertia immediately, then let
+    // useFrame smoothly track the model center as it lerps each frame.
+    const currentPos = new THREE.Vector3()
+    const currentTarget = new THREE.Vector3()
+    cameraControlsRef.current.getPosition(currentPos)
+    cameraControlsRef.current.getTarget(currentTarget)
+    cameraControlsRef.current.setLookAt(
+      currentPos.x, currentPos.y, currentPos.z,
+      currentTarget.x, currentTarget.y, currentTarget.z,
+      false  // synchronous snap — clears queued inertia
+    )
+
+    // Seed lastCenter with the current (pre-lerp) model center
+    const seedBbox = new THREE.Box3().setFromObject(modelGroupRef.current)
+    seedBbox.getCenter(lastCenterRef.current)
+
+    isTrackingRef.current = true
+  }, [configKey])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Every frame while isTrackingRef is true: measure how much the model
+  // center moved this frame and pan the camera by the same delta.
+  // No animation easing needed — running every frame IS the smooth movement.
+  useFrame(() => {
+    if (!isTrackingRef.current) return
+    // Stop tracking if user switched to INTERIOR while lerp was in progress
+    if (viewModeRef.current === 'INTERIOR') { isTrackingRef.current = false; return }
+    if (!modelGroupRef.current || !cameraControlsRef.current) return
+
+    const bbox = new THREE.Box3().setFromObject(modelGroupRef.current)
+    const newCenter = new THREE.Vector3()
+    bbox.getCenter(newCenter)
+
+    const dx = newCenter.x - lastCenterRef.current.x
+    const dy = newCenter.y - lastCenterRef.current.y
+    const dz = newCenter.z - lastCenterRef.current.z
+    const moved = Math.abs(dx) + Math.abs(dy) + Math.abs(dz)
+
+    if (moved > 0.0001) {
+      // Model is still lerping — pan camera by the same delta this frame
+      const currentTarget = new THREE.Vector3()
+      cameraControlsRef.current.getTarget(currentTarget)
+      const currentPos = new THREE.Vector3()
+      cameraControlsRef.current.getPosition(currentPos)
+
+      cameraControlsRef.current.setLookAt(
+        currentPos.x + dx, currentPos.y + dy, currentPos.z + dz,
+        currentTarget.x + dx, currentTarget.y + dy, currentTarget.z + dz,
+        false  // no easing — we apply it every frame, so it's already smooth
+      )
+    } else {
+      // Lerp complete — update distance limits and stop tracking
+      const bboxSize = new THREE.Vector3()
+      bbox.getSize(bboxSize)
+      const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
+      cameraControlsRef.current.minDistance = maxDim * 0.1
+      cameraControlsRef.current.maxDistance = maxDim * 9999
+      lastBboxRef.current = bbox.clone()
+      isTrackingRef.current = false
+    }
+
+    lastCenterRef.current.copy(newCenter)
   })
 
-  // On canvas resize, always refit to the new canvas dimensions (both grow and shrink)
   useEffect(() => {
-    if (!lastBboxRef.current || !camera.isPerspectiveCamera) return
-
-    const bbox = lastBboxRef.current
-    const bboxSize = new THREE.Vector3()
-    bbox.getSize(bboxSize)
-
-    const target = orbitControlsRef.current
-      ? orbitControlsRef.current.target.clone()
-      : (() => { const c = new THREE.Vector3(); bbox.getCenter(c); return c })()
-
-    const dir = camera.position.clone().sub(target)
-    if (dir.length() === 0) return
-
-    const aspect = size.width / size.height
-    const fovRad = (camera.fov * Math.PI) / 180
-    const halfFovH = Math.atan(aspect * Math.tan(fovRad / 2))
-    const halfFovV = fovRad / 2
-    const distForWidth = (bboxSize.x / 2) / Math.tan(halfFovH)
-    const distForHeight = (bboxSize.y / 2) / Math.tan(halfFovV)
-    const fitDist = Math.max(distForWidth, distForHeight) * 1.1
-
-    camera.position.copy(target.clone().add(dir.normalize().multiplyScalar(fitDist)))
-    orbitControlsRef.current?.update()
+    if (!lastBboxRef.current || !camera.isPerspectiveCamera || !cameraControlsRef.current) return
+    // CameraControls automatically adjusts aspect ratio.
   }, [size.width, size.height]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null
 }
 
+
 // ── interior / exterior camera controller ─────────────────────────────────────
 
-function CameraController({ viewMode, modelGroupRef, orbitControlsRef, setIsTransitioning }) {
+function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTransitioning }) {
   const { camera } = useThree()
-  const lerpTargetRef = useRef(null)
   const hasInitializedRef = useRef(false)
-  const savedExteriorRef = useRef(null) // snapshot taken just before entering interior
+  const savedExteriorRef = useRef(null)
 
   useEffect(() => {
     if (!hasInitializedRef.current) {
       hasInitializedRef.current = true
       return
     }
-    if (!orbitControlsRef.current || !modelGroupRef.current) return
+    if (!cameraControlsRef.current || !modelGroupRef.current) return
 
     let hasMeshes = false
     modelGroupRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
@@ -240,37 +226,67 @@ function CameraController({ viewMode, modelGroupRef, orbitControlsRef, setIsTran
     let targetPosition, targetLookAt, targetFov
 
     if (viewMode === 'INTERIOR') {
-      // Save wherever the user was so we can restore it exactly on exit
+      const currentPos = new THREE.Vector3()
+      const currentTarget = new THREE.Vector3()
+      cameraControlsRef.current.getPosition(currentPos)
+      cameraControlsRef.current.getTarget(currentTarget)
+
       savedExteriorRef.current = {
-        position: camera.position.clone(),
-        target: orbitControlsRef.current.target.clone(),
+        position: currentPos,
+        target: currentTarget,
         fov: camera.fov,
       }
+
+      // Material swapping
+      modelGroupRef.current.traverse((node) => {
+        if (node.isMesh && node.material) {
+          if (node.material.userData.originalSide === undefined) {
+            node.material.userData.originalSide = node.material.side;
+          }
+          node.material.side = THREE.DoubleSide;
+        }
+      });
 
       const box = new THREE.Box3().setFromObject(modelGroupRef.current)
       const center = box.getCenter(new THREE.Vector3())
       const size = box.getSize(new THREE.Vector3())
-
+      
       const isLongX = size.x >= size.z
       const eyeY = box.min.y + size.y * 0.55
 
       if (isLongX) {
-        targetPosition = new THREE.Vector3(center.x - size.x * 0.38, eyeY, center.z)
-        targetLookAt = new THREE.Vector3(center.x + size.x * 0.3, eyeY, center.z)
+        targetPosition = new THREE.Vector3(center.x - size.x * 0.25, eyeY, center.z)
+        targetLookAt = new THREE.Vector3(targetPosition.x + 0.1, eyeY, center.z)
       } else {
-        targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.38)
-        targetLookAt = new THREE.Vector3(center.x, eyeY, center.z + size.z * 0.3)
+        targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.25)
+        targetLookAt = new THREE.Vector3(center.x, eyeY, targetPosition.z + 0.1)
       }
       targetFov = 75
+      
+      // Lock distance so it rotates in-place like a first-person camera
+      cameraControlsRef.current.minDistance = 0.1;
+      cameraControlsRef.current.maxDistance = 0.1;
     } else {
-      // Restore the exact exterior position/target/fov that was saved
+      // Restore exterior materials
+      modelGroupRef.current.traverse((node) => {
+        if (node.isMesh && node.material && node.material.userData.originalSide !== undefined) {
+          node.material.side = node.material.userData.originalSide;
+        }
+      });
+
       if (savedExteriorRef.current) {
         const { position, target, fov } = savedExteriorRef.current
         targetPosition = position
         targetLookAt = target
         targetFov = fov
+        
+        // Restore zoom limits for exterior
+        const box = new THREE.Box3().setFromObject(modelGroupRef.current)
+        const size = box.getSize(new THREE.Vector3())
+        const maxDim = Math.max(size.x, size.y, size.z)
+        cameraControlsRef.current.minDistance = maxDim * 0.1
+        cameraControlsRef.current.maxDistance = maxDim * 9999
       } else {
-        // Fallback on very first exterior render before any snapshot exists
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const center = box.getCenter(new THREE.Vector3())
         const size = box.getSize(new THREE.Vector3())
@@ -279,44 +295,50 @@ function CameraController({ viewMode, modelGroupRef, orbitControlsRef, setIsTran
         targetPosition = new THREE.Vector3(center.x + distance * 0.5, center.y + distance * 0.6, center.z + distance)
         targetLookAt = center.clone()
         targetFov = 35
+        
+        // Restore zoom limits for exterior
+        cameraControlsRef.current.minDistance = maxDim * 0.1
+        cameraControlsRef.current.maxDistance = maxDim * 9999
       }
     }
 
     setIsTransitioning(true)
-    lerpTargetRef.current = { position: targetPosition, lookAt: targetLookAt, fov: targetFov }
+
+    // Cancel any in-progress drag inertia by snapping controls to their
+    // current position synchronously (no animation), then immediately
+    // animate to the new target. Without this step, accumulated rotation
+    // deltas from manual orbiting would replay during the transition.
+    const snapPos = new THREE.Vector3()
+    const snapTarget = new THREE.Vector3()
+    cameraControlsRef.current.getPosition(snapPos)
+    cameraControlsRef.current.getTarget(snapTarget)
+    cameraControlsRef.current.setLookAt(
+      snapPos.x, snapPos.y, snapPos.z,
+      snapTarget.x, snapTarget.y, snapTarget.z,
+      false  // no animation — cancels any queued inertia
+    )
+
+    cameraControlsRef.current.smoothTime = 0.4
+    cameraControlsRef.current.setLookAt(
+      targetPosition.x, targetPosition.y, targetPosition.z,
+      targetLookAt.x, targetLookAt.y, targetLookAt.z,
+      true
+    ).then(() => {
+      setIsTransitioning(false)
+    })
 
     const animateFov = () => {
-      if (!lerpTargetRef.current) return
-      const { fov } = lerpTargetRef.current
-      if (Math.abs(camera.fov - fov) > 0.3) {
-        camera.fov = THREE.MathUtils.lerp(camera.fov, fov, 0.08)
+      if (Math.abs(camera.fov - targetFov) > 0.3) {
+        camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 0.08)
         camera.updateProjectionMatrix()
         requestAnimationFrame(animateFov)
       } else {
-        camera.fov = fov
+        camera.fov = targetFov
         camera.updateProjectionMatrix()
       }
     }
     animateFov()
   }, [viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useFrame(() => {
-    if (!lerpTargetRef.current || !orbitControlsRef.current) return
-
-    const { position, lookAt } = lerpTargetRef.current
-
-    camera.position.lerp(position, 0.06)
-    orbitControlsRef.current.target.lerp(lookAt, 0.06)
-    orbitControlsRef.current.update()
-
-    if (camera.position.distanceTo(position) < 0.05 && orbitControlsRef.current.target.distanceTo(lookAt) < 0.05) {
-      camera.position.copy(position)
-      orbitControlsRef.current.target.copy(lookAt)
-      orbitControlsRef.current.update()
-      lerpTargetRef.current = null
-      setIsTransitioning(false)
-    }
-  })
 
   return null
 }
@@ -360,7 +382,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [isTransitioning, setIsTransitioning] = useState(false)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
-  const orbitControlsRef = useRef()
+  const cameraControlsRef = useRef()
   const arViewerRef = useRef()
   const modelReportRef = useRef(null)
 
@@ -538,23 +560,22 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               )}
               <CameraFit
                 modelGroupRef={modelGroupRef}
-                orbitControlsRef={orbitControlsRef}
+                cameraControlsRef={cameraControlsRef}
                 configKey={configKey}
+                viewMode={viewMode}
               />
               <CameraController
                 viewMode={viewMode}
                 modelGroupRef={modelGroupRef}
-                orbitControlsRef={orbitControlsRef}
+                cameraControlsRef={cameraControlsRef}
                 setIsTransitioning={setIsTransitioning}
               />
-              <OrbitControls
-                ref={orbitControlsRef}
-                enablePan={true}
+              <CameraControls
+                ref={cameraControlsRef}
                 enabled={!isTransitioning}
                 minPolarAngle={0.2}
                 maxPolarAngle={Math.PI * 0.52}
-                enableDamping
-                dampingFactor={0.1}
+                dollySpeed={1}
               />
             </Canvas>
           </Suspense>
