@@ -1,7 +1,7 @@
 import '@google/model-viewer'
 import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { CameraControls, Stage } from '@react-three/drei'
+import { CameraControls, Stage, ContactShadows } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
@@ -123,7 +123,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode }) {
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 9999
+      cameraControlsRef.current.maxDistance = maxDim * 3
       cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
       cameraInitRef.current = true
       const initCenter = new THREE.Vector3()
@@ -188,7 +188,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode }) {
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 9999
+      cameraControlsRef.current.maxDistance = maxDim * 3
       lastBboxRef.current = bbox.clone()
       isTrackingRef.current = false
     }
@@ -235,6 +235,13 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         position: currentPos,
         target: currentTarget,
         fov: camera.fov,
+        // Save existing angle/distance constraints so we can restore them on exit
+        minPolarAngle: cameraControlsRef.current.minPolarAngle,
+        maxPolarAngle: cameraControlsRef.current.maxPolarAngle,
+        minAzimuthAngle: cameraControlsRef.current.minAzimuthAngle,
+        maxAzimuthAngle: cameraControlsRef.current.maxAzimuthAngle,
+        minDistance: cameraControlsRef.current.minDistance,
+        maxDistance: cameraControlsRef.current.maxDistance,
       }
 
       // Material swapping
@@ -250,22 +257,45 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       const box = new THREE.Box3().setFromObject(modelGroupRef.current)
       const center = box.getCenter(new THREE.Vector3())
       const size = box.getSize(new THREE.Vector3())
-      
+
       const isLongX = size.x >= size.z
       const eyeY = box.min.y + size.y * 0.55
 
       if (isLongX) {
         targetPosition = new THREE.Vector3(center.x - size.x * 0.25, eyeY, center.z)
-        targetLookAt = new THREE.Vector3(center.x, eyeY, center.z)
       } else {
         targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.25)
-        targetLookAt = new THREE.Vector3(center.x, eyeY, center.z)
       }
+
+      // ── Near-first-person pivot ──────────────────────────────────────────────
+      // Place the orbit target just 0.05 units in front of the camera along the
+      // look direction. This keeps the swing radius tiny so rotating feels like
+      // a look-around rather than a wide orbit that exits the model.
+      const lookDir = new THREE.Vector3()
+        .subVectors(center, targetPosition)
+        .normalize()
+      targetLookAt = targetPosition.clone().addScaledVector(lookDir, 0.05)
+
       targetFov = 75
 
       const interiorLength = isLongX ? size.x : size.z
-      cameraControlsRef.current.minDistance = interiorLength * 0.05
-      cameraControlsRef.current.maxDistance = interiorLength * 0.7
+
+      // ── Distance limits ──────────────────────────────────────────────────────
+      // Very tight: user can zoom in/out within a small range around the pivot
+      cameraControlsRef.current.minDistance = 0.01
+      cameraControlsRef.current.maxDistance = interiorLength * 0.5
+
+      // ── Polar angle clamp ────────────────────────────────────────────────────
+      // Prevent the camera from tilting through the floor or ceiling.
+      // Math.PI * 0.15  ≈ 27° from zenith  (can't look straight up past ceiling)
+      // Math.PI * 0.85  ≈ 27° from nadir   (can't look straight down through floor)
+      cameraControlsRef.current.minPolarAngle = Math.PI * 0.15
+      cameraControlsRef.current.maxPolarAngle = Math.PI * 0.85
+
+      // ── Azimuth clamp — no restriction ──────────────────────────────────────
+      // Full 360° horizontal look-around is fine inside the model.
+      cameraControlsRef.current.minAzimuthAngle = -Infinity
+      cameraControlsRef.current.maxAzimuthAngle = Infinity
     } else {
       // Restore exterior materials
       modelGroupRef.current.traverse((node) => {
@@ -279,13 +309,19 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         targetPosition = position
         targetLookAt = target
         targetFov = fov
-        
+
+        // Restore all saved constraints
+        cameraControlsRef.current.minPolarAngle   = savedExteriorRef.current.minPolarAngle
+        cameraControlsRef.current.maxPolarAngle   = savedExteriorRef.current.maxPolarAngle
+        cameraControlsRef.current.minAzimuthAngle = savedExteriorRef.current.minAzimuthAngle
+        cameraControlsRef.current.maxAzimuthAngle = savedExteriorRef.current.maxAzimuthAngle
+
         // Restore zoom limits for exterior
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 9999
+        cameraControlsRef.current.maxDistance = maxDim * 3
       } else {
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const center = box.getCenter(new THREE.Vector3())
@@ -294,11 +330,17 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         const distance = maxDim * 1.8
         targetPosition = new THREE.Vector3(center.x + distance * 0.5, center.y + distance * 0.6, center.z + distance)
         targetLookAt = center.clone()
-        targetFov = 35
-        
+        targetFov = 75
+
         // Restore zoom limits for exterior
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 9999
+        cameraControlsRef.current.maxDistance = maxDim * 3
+
+        // Restore default angle constraints
+        cameraControlsRef.current.minPolarAngle   = 0
+        cameraControlsRef.current.maxPolarAngle   = Math.PI / 2
+        cameraControlsRef.current.minAzimuthAngle = -Infinity
+        cameraControlsRef.current.maxAzimuthAngle = Infinity
       }
     }
 
@@ -340,6 +382,133 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
     animateFov()
   }, [viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  return null
+}
+
+// ── shadow setup ───────────────────────────────────────────────────────────────
+
+// Marks every model mesh as a shadow caster/receiver every frame.
+// Must run unconditionally (no early-exit) because triplanar onBeforeCompile
+// patches reset the internal shadow program state on material recompile.
+function ShadowCasterSetup({ modelRef }) {
+  useFrame(() => {
+    if (!modelRef.current) return
+    modelRef.current.traverse((o) => {
+      if (o.isMesh) {
+        o.castShadow = true
+        o.receiveShadow = true
+      }
+    })
+  })
+  return null
+}
+
+// Positions a directional light above the model and dynamically fits its
+// ortho-frustum to the model's bounding box every frame, so the shadow map
+// always fully captures the trailer regardless of its current size.
+// Also manages a dedicated shadow-receiver plane placed at the model floor.
+function ShadowLightSetup({ modelRef }) {
+  const lightRef = useRef()
+  const floorRef = useRef()
+  const frameCount = useRef(0)
+  const lastMinY = useRef(null)
+
+  useFrame(({ gl }) => {
+    frameCount.current++
+    const light = lightRef.current
+    if (!light || !modelRef.current) return
+
+    // one-time diagnostic
+    if (frameCount.current === 1) {
+      console.log('[Shadow] gl.shadowMap.enabled:', gl.shadowMap.enabled)
+      console.log('[Shadow] Our light castShadow:', light.castShadow, '| mapSize:', light.shadow.mapSize)
+      console.log('[Shadow] floorRef mesh:', floorRef.current, '| receiveShadow:', floorRef.current?.receiveShadow)
+    }
+
+    let hasMeshes = false
+    modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
+    if (!hasMeshes) return
+
+    const bbox = new THREE.Box3().setFromObject(modelRef.current)
+    const center = new THREE.Vector3()
+    bbox.getCenter(center)
+    const size = new THREE.Vector3()
+    bbox.getSize(size)
+
+    if (frameCount.current === 1) {
+      console.log('[Shadow] bbox center:', center, '| size:', size)
+      console.log('[Shadow] bbox min.y:', bbox.min.y.toFixed(4))
+    }
+
+    // position floor plane at model bottom each time it changes
+    if (floorRef.current && lastMinY.current !== bbox.min.y) {
+      lastMinY.current = bbox.min.y
+      floorRef.current.position.set(center.x, bbox.min.y - 0.001, center.z)
+      if (frameCount.current <= 5) {
+        console.log('[Shadow] Floor plane y =', floorRef.current.position.y.toFixed(4),
+          '| receiveShadow:', floorRef.current.receiveShadow)
+      }
+    }
+
+    // position light above model center
+    const lightHeight = bbox.max.y + Math.max(size.x, size.z) * 1.5
+    light.position.set(center.x + size.x * 0.3, lightHeight, center.z + size.z * 0.3)
+    light.target.position.copy(center)
+    light.target.updateMatrixWorld()
+
+    // fit ortho frustum to model footprint + padding
+    const pad = Math.max(size.x, size.z) * 0.6
+    light.shadow.camera.left   = -(size.x / 2 + pad)
+    light.shadow.camera.right  =   size.x / 2 + pad
+    light.shadow.camera.top    =   size.z / 2 + pad
+    light.shadow.camera.bottom = -(size.z / 2 + pad)
+    light.shadow.camera.near   = 0.1
+    light.shadow.camera.far    = lightHeight + Math.abs(bbox.min.y) + 5
+    light.shadow.camera.updateProjectionMatrix()
+
+    if (frameCount.current === 1) {
+      console.log('[Shadow] light pos:', light.position, '| target:', center)
+      console.log('[Shadow] frustum L/R/T/B:',
+        light.shadow.camera.left.toFixed(2), light.shadow.camera.right.toFixed(2),
+        light.shadow.camera.top.toFixed(2), light.shadow.camera.bottom.toFixed(2)
+      )
+      console.log('[Shadow] far:', light.shadow.camera.far.toFixed(2))
+    }
+  })
+
+  return (
+    <>
+      <directionalLight
+        ref={lightRef}
+        castShadow
+        intensity={1.2}
+        position={[15, 25, 10]}
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0005}
+      />
+      {/* Dedicated shadow-receiver floor plane — ShadowMaterial is transparent
+          everywhere except where the directional light's shadow map projects.
+          Positioned at model floor level by the useFrame above. */}
+      <mesh
+        ref={floorRef}
+        receiveShadow
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -0.001, 0]}
+      >
+        <planeGeometry args={[80, 80]} />
+        <shadowMaterial transparent opacity={0.45} depthWrite={false} />
+      </mesh>
+    </>
+  )
+}
+
+
+
+function CameraLayerSetup() {
+  const { camera } = useThree()
+  useEffect(() => {
+    camera.layers.enable(1)
+  }, [camera])
   return null
 }
 
@@ -525,7 +694,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <Canvas
               shadows
-              camera={{ fov: 35 }}
+              camera={{ fov: 75 }}
               style={{ width: '100%', height: '100%' }}
               gl={{
                 antialias: true,
@@ -537,7 +706,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               <Stage
                 intensity={0.6}
                 environment={stageEnvironment}
-                shadows={isHdr ? false : { type: 'contact', opacity: 0.2, blur: 3 }}
+                shadows={false}
                 center={{ disable: isHdr }}
                 adjustCamera={false}
               >
@@ -554,6 +723,11 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                   <SceneReadyNotifier meshRef={modelGroupRef} onReady={onModelReady} />
                 )}
               </Stage>
+              
+              {/* ShadowLightSetup manages its own directional light with a dynamically-fitted frustum */}
+              <ShadowCasterSetup modelRef={modelGroupRef} />
+              <ShadowLightSetup modelRef={modelGroupRef} />
+
               {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" reprojectedTexture="/Reprojected Texture.exr" height={2.062} scale={1.0} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
@@ -577,6 +751,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 maxPolarAngle={Math.PI * 0.52}
                 dollySpeed={1}
               />
+              <CameraLayerSetup />
             </Canvas>
           </Suspense>
 
@@ -685,6 +860,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
         ar
         ar-modes={isAndroidDevice() ? 'webxr' : 'quick-look webxr'}
         reveal="auto"
+        shadow-intensity="1"
         className="fixed top-0 left-0 w-px h-px opacity-0 pointer-events-none"
       />
       {modelReport && (

@@ -132,9 +132,16 @@ function EnvironmentHDRIBox({ environment, size, height, envRotation, envOffset,
   }
 
   return (
-    <mesh material={material} position={[position[0], size / 2 + position[1], position[2]]}>
-      <boxGeometry args={[size, size, size]} />
-    </mesh>
+    <group position={[position[0], size / 2 + position[1], position[2]]}>
+      <mesh material={material} layers={1}>
+        <boxGeometry args={[size, size, size]} />
+      </mesh>
+      {/* Invisible shadow receiver */}
+      <mesh receiveShadow>
+        <shadowMaterial transparent opacity={0.65} depthWrite={false} side={THREE.DoubleSide} />
+        <boxGeometry args={[size, size, size]} />
+      </mesh>
+    </group>
   )
 }
 
@@ -162,13 +169,31 @@ function UVTextureMesh({ url, texturePath, position }) {
     clone.traverse((child) => {
       if (child.isMesh) {
         child.material = material
+        child.layers.enable(1)
       }
     })
     return clone
   }, [scene, material])
 
+  const shadowScene = useMemo(() => {
+    const clone = scene.clone()
+    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.65, depthWrite: false, side: THREE.DoubleSide })
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material = shadowMat
+        child.receiveShadow = true
+      }
+    })
+    return clone
+  }, [scene])
+
   if (!clonedScene) return null
-  return <primitive object={clonedScene} position={position} />
+  return (
+    <group position={position}>
+      <primitive object={clonedScene} />
+      <primitive object={shadowScene} />
+    </group>
+  )
 }
 
 function CustomHDRIMesh({ url, material, position }) {
@@ -179,10 +204,28 @@ function CustomHDRIMesh({ url, material, position }) {
     clone.traverse((child) => {
       if (child.isMesh) {
         child.material = material
+        child.layers.enable(1)
       }
     })
     return clone
   }, [scene, material])
 
-  return <primitive object={clonedScene} position={position} />
+  const shadowScene = useMemo(() => {
+    const clone = scene.clone()
+    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.65, depthWrite: false, side: THREE.DoubleSide })
+    clone.traverse((child) => {
+      if (child.isMesh) {
+        child.material = shadowMat
+        child.receiveShadow = true
+      }
+    })
+    return clone
+  }, [scene])
+
+  return (
+    <group position={position}>
+      <primitive object={clonedScene} />
+      <primitive object={shadowScene} />
+    </group>
+  )
 }
