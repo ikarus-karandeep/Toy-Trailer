@@ -72,8 +72,9 @@ uniform vec2 uScaleZ;`
             '#include <map_fragment>',
             `#ifdef USE_MAP
   vec3 _tp_blend = abs(vWorldNormal);
-  _tp_blend = pow(_tp_blend, vec3(4.0));
-  _tp_blend /= dot(_tp_blend, vec3(1.0));
+  float _tp_dom = max(_tp_blend.x, max(_tp_blend.y, _tp_blend.z));
+  _tp_blend = step(_tp_dom - 0.001, _tp_blend);
+  _tp_blend /= max(dot(_tp_blend, vec3(1.0)), 0.001);
 
   vec4 _tp_x = texture2D(map, vWorldPos.yz * uScaleX);
   vec4 _tp_y = texture2D(map, vWorldPos.xz * uScaleY);
@@ -103,12 +104,13 @@ uniform vec2 uScaleZ;`
             '#include <normal_fragment_maps>',
             `#ifdef USE_NORMALMAP
   vec3 _tn_blend = abs(vWorldNormal);
-  _tn_blend = pow(_tn_blend, vec3(4.0));
-  _tn_blend /= dot(_tn_blend, vec3(1.0));
+  float _tn_dom = max(_tn_blend.x, max(_tn_blend.y, _tn_blend.z));
+  _tn_blend = step(_tn_dom - 0.001, _tn_blend);
+  _tn_blend /= max(dot(_tn_blend, vec3(1.0)), 0.001);
 
   vec3 _ts_x = texture2D(normalMap, vWorldPos.yz * uScaleX).xyz * 2.0 - 1.0;
   vec3 _ts_y = texture2D(normalMap, vWorldPos.xz * uScaleY).xyz * 2.0 - 1.0;
-  vec3 _ts_z = texture2D(normalMap, vWorldPos.yx * uScaleZ).xyz * 2.0 - 1.0;
+  vec3 _ts_z = texture2D(normalMap, vWorldPos.xy * uScaleZ).xyz * 2.0 - 1.0;
 
   _ts_x.xy *= normalScale;
   _ts_y.xy *= normalScale;
@@ -124,8 +126,9 @@ uniform vec2 uScaleZ;`
 
 #ifdef USE_BUMPMAP
   vec3 _bp_blend = abs(vWorldNormal);
-  _bp_blend = pow(_bp_blend, vec3(4.0));
-  _bp_blend /= dot(_bp_blend, vec3(1.0));
+  float _bp_dom = max(_bp_blend.x, max(_bp_blend.y, _bp_blend.z));
+  _bp_blend = step(_bp_dom - 0.001, _bp_blend);
+  _bp_blend /= max(dot(_bp_blend, vec3(1.0)), 0.001);
 
   float _bp_eps = 0.001;
 

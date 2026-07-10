@@ -1,4 +1,4 @@
-import '@google/model-viewer'
+﻿import '@google/model-viewer'
 import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { CameraControls, Stage, ContactShadows } from '@react-three/drei'
@@ -330,7 +330,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         const distance = maxDim * 1.8
         targetPosition = new THREE.Vector3(center.x + distance * 0.5, center.y + distance * 0.6, center.z + distance)
         targetLookAt = center.clone()
-        targetFov = 75
+        targetFov = 35
 
         // Restore zoom limits for exterior
         cameraControlsRef.current.minDistance = maxDim * 0.1
@@ -694,7 +694,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <Canvas
               shadows
-              camera={{ fov: 75 }}
+              camera={{ fov: 35 }}
               style={{ width: '100%', height: '100%' }}
               gl={{
                 antialias: true,
