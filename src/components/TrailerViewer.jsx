@@ -96,7 +96,7 @@ async function parseGLB(mesh) {
 
 // ── camera fit — model always stays in canvas on resize ───────────────────────
 
-function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode }) {
+function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, groundYRef }) {
   const { camera, size } = useThree()
   const cameraInitRef = useRef(false)
   const lastBboxRef = useRef(null)
@@ -124,6 +124,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode }) {
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
       cameraControlsRef.current.maxDistance = maxDim * 3
+      if (groundYRef) groundYRef.current = bbox.min.y
       cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
       cameraInitRef.current = true
       const initCenter = new THREE.Vector3()
@@ -189,6 +190,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode }) {
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
       cameraControlsRef.current.maxDistance = maxDim * 3
+      if (groundYRef) groundYRef.current = bbox.min.y
       lastBboxRef.current = bbox.clone()
       isTrackingRef.current = false
     }
@@ -204,6 +206,36 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode }) {
   return null
 }
 
+
+// ── ground clamp — prevents panning camera or target below model floor ─────────
+// camera-controls' minY only clamps camera position; the pan target can still
+// move below ground. This runs after every frame and hard-corrects both.
+
+function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
+  const pos = useRef(new THREE.Vector3())
+  const target = useRef(new THREE.Vector3())
+
+  useFrame(() => {
+    if (viewMode === 'INTERIOR' || !cameraControlsRef.current) return
+
+    const cc = cameraControlsRef.current
+    cc.getPosition(pos.current)
+    cc.getTarget(target.current)
+
+    const floor = groundYRef.current
+    const minCamY = floor + 0.2
+
+    if (pos.current.y < minCamY || target.current.y < floor) {
+      cc.setLookAt(
+        pos.current.x, Math.max(pos.current.y, minCamY), pos.current.z,
+        target.current.x, Math.max(target.current.y, floor), target.current.z,
+        false
+      )
+    }
+  })
+
+  return null
+}
 
 // ── interior / exterior camera controller ─────────────────────────────────────
 
@@ -242,6 +274,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         maxAzimuthAngle: cameraControlsRef.current.maxAzimuthAngle,
         minDistance: cameraControlsRef.current.minDistance,
         maxDistance: cameraControlsRef.current.maxDistance,
+        minY: cameraControlsRef.current.minY,
       }
 
       // Material swapping
@@ -284,6 +317,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       // Very tight: user can zoom in/out within a small range around the pivot
       cameraControlsRef.current.minDistance = 0.01
       cameraControlsRef.current.maxDistance = interiorLength * 0.5
+      cameraControlsRef.current.minY = -Infinity
 
       // ── Polar angle clamp ────────────────────────────────────────────────────
       // Prevent the camera from tilting through the floor or ceiling.
@@ -315,6 +349,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         cameraControlsRef.current.maxPolarAngle   = savedExteriorRef.current.maxPolarAngle
         cameraControlsRef.current.minAzimuthAngle = savedExteriorRef.current.minAzimuthAngle
         cameraControlsRef.current.maxAzimuthAngle = savedExteriorRef.current.maxAzimuthAngle
+        cameraControlsRef.current.minY            = savedExteriorRef.current.minY
 
         // Restore zoom limits for exterior
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
@@ -341,6 +376,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         cameraControlsRef.current.maxPolarAngle   = Math.PI / 2
         cameraControlsRef.current.minAzimuthAngle = -Infinity
         cameraControlsRef.current.maxAzimuthAngle = Infinity
+        cameraControlsRef.current.minY            = box.min.y + 0.15
       }
     }
 
@@ -554,6 +590,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const cameraControlsRef = useRef()
   const arViewerRef = useRef()
   const modelReportRef = useRef(null)
+  const groundYRef = useRef(0)
 
   // const handleMeshClick = (e) => {
   //   e.stopPropagation()
@@ -737,6 +774,12 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 cameraControlsRef={cameraControlsRef}
                 configKey={configKey}
                 viewMode={viewMode}
+                groundYRef={groundYRef}
+              />
+              <GroundClamp
+                cameraControlsRef={cameraControlsRef}
+                viewMode={viewMode}
+                groundYRef={groundYRef}
               />
               <CameraController
                 viewMode={viewMode}
