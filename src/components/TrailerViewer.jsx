@@ -123,7 +123,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 3
+      cameraControlsRef.current.maxDistance = maxDim * 1.5
       if (groundYRef) groundYRef.current = bbox.min.y
       cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
       cameraInitRef.current = true
@@ -189,7 +189,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 3
+      cameraControlsRef.current.maxDistance = maxDim * 1.5
       if (groundYRef) groundYRef.current = bbox.min.y
       lastBboxRef.current = bbox.clone()
       isTrackingRef.current = false
@@ -356,7 +356,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 3
+        cameraControlsRef.current.maxDistance = maxDim * 1.5
       } else {
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const center = box.getCenter(new THREE.Vector3())
@@ -369,7 +369,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
 
         // Restore zoom limits for exterior
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 3
+        cameraControlsRef.current.maxDistance = maxDim * 1.5
 
         // Restore default angle constraints
         cameraControlsRef.current.minPolarAngle   = 0
