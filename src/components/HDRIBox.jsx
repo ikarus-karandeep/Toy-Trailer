@@ -118,7 +118,7 @@ function EnvironmentHDRIBox({ environment, size, height, envRotation, envOffset,
         envRotation: { value: envRotation },
         envScale: { value: scale }
       },
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide,
       depthWrite: false,
     })
 
@@ -158,7 +158,7 @@ function UVTextureMesh({ url, texturePath, position }) {
       uniforms: {
         reprojectedMap: { value: texture }
       },
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide,
       depthWrite: false,
     })
   }, [texture])
