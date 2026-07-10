@@ -147,10 +147,17 @@ function EnvironmentHDRIBox({ environment, size, height, envRotation, envOffset,
 
 function UVTextureMesh({ url, texturePath, position }) {
   const { scene } = useGLTF(url)
-  const texture = useLoader(EXRLoader, texturePath)
+  const isExr = texturePath ? texturePath.endsWith('.exr') : false;
+  const texture = useLoader(isExr ? EXRLoader : THREE.TextureLoader, texturePath)
 
   const material = useMemo(() => {
     if (!texture) return null
+    
+    if (!isExr) {
+      texture.flipY = false;
+      texture.colorSpace = THREE.SRGBColorSpace;
+    }
+    
     texture.needsUpdate = true
     return new THREE.ShaderMaterial({
       vertexShader: uvVertexShader,

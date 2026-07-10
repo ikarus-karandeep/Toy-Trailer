@@ -765,7 +765,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               <ShadowCasterSetup modelRef={modelGroupRef} />
               <ShadowLightSetup modelRef={modelGroupRef} />
 
-              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" reprojectedTexture="/Reprojected Texture.exr" height={2.062} scale={1.0} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
+              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" reprojectedTexture="/Reprojection Texture.jpg" height={2.062} scale={1.0} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
               )}
