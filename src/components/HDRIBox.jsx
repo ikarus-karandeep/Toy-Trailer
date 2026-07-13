@@ -18,6 +18,7 @@ uniform sampler2D envMap;
 uniform vec3 projectionCenter;
 uniform float envRotation;
 uniform float envScale;
+uniform float envScaleY;
 varying vec3 vWorldPosition;
 
 #define PI 3.14159265359
@@ -38,6 +39,7 @@ void main() {
 
   // Scale the X and Z components to pinch/stretch the projection
   direction.xz *= envScale;
+  direction.y *= envScaleY;
 
   direction = normalize(direction);
   direction = rotY(envRotation) * direction;
@@ -78,7 +80,7 @@ void main() {
 }
 `
 
-export function HDRIBox({ environment, size = 150, height = 1.5, envRotation = 0, envOffset = [0, 0], scale = 1.0, modelPath = null, position = [0, 0, 0], reprojectedTexture = null }) {
+export function HDRIBox({ environment, size = 150, height = 1.5, envRotation = 0, envOffset = [0, 0], scale = 1.0, scaleY = 1.0, modelPath = null, position = [0, 0, 0], reprojectedTexture = null }) {
   if (reprojectedTexture && modelPath) {
     return <UVTextureMesh url={modelPath} texturePath={reprojectedTexture} position={position} />
   }
@@ -90,13 +92,14 @@ export function HDRIBox({ environment, size = 150, height = 1.5, envRotation = 0
       envRotation={envRotation}
       envOffset={envOffset}
       scale={scale}
+      scaleY={scaleY}
       modelPath={modelPath}
       position={position}
     />
   )
 }
 
-function EnvironmentHDRIBox({ environment, size, height, envRotation, envOffset, scale, modelPath, position }) {
+function EnvironmentHDRIBox({ environment, size, height, envRotation, envOffset, scale, scaleY, modelPath, position }) {
   const { gl } = useThree()
 
   const isHdr = environment?.endsWith('.hdr') || environment?.endsWith('.exr')
@@ -116,14 +119,15 @@ function EnvironmentHDRIBox({ environment, size, height, envRotation, envOffset,
         envMap: { value: texture },
         projectionCenter: { value: new THREE.Vector3(envOffset[0] + position[0], height + position[1], envOffset[1] + position[2]) },
         envRotation: { value: envRotation },
-        envScale: { value: scale }
+        envScale: { value: scale },
+        envScaleY: { value: scaleY }
       },
       side: THREE.FrontSide,
       depthWrite: false,
     })
 
     return mat
-  }, [texture, gl, height, envRotation, envOffset, scale])
+  }, [texture, gl, height, envRotation, envOffset, scale, scaleY])
 
   if (!material) return null
 

@@ -1,0 +1,1856 @@
+{
+  "Door_Top_Light": {
+    "0": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "1": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#CA9A51",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Base": {
+    "0": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Door_Side_Piilers": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Iron_Base_Bar": {
+    "0": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Parts_For_All_Interior": {},
+  "Roof": {
+    "0": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Base_Interior": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Left_Wall": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "3": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#CA9A51",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Right_Wall": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "3": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#CA9A51",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "Flat Front": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Extended Triple Tongue V-Nose": {
+    "0": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Extended Triple Tongue Flat Front": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Generator Box Plate R": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Generator Box Plate L": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Door Panel L": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "Flat Door Panel R": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Single Door L": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Single Door R": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Double Door L": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "Double Door R": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Plate Generator Box R": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Plate Generator Box L": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Flat Door Panel L": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Flat Door Panel R": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For Single Door R": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For Single Door L": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For DoubleDoor L": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For DoubleDoor R": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Barn Door": {
+    "0": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "Heavy Duty Ramp": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "2 Tyres": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber_BaseColor.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber_Roughness.png",
+      "metalness": 0.0667,
+      "normal": "//..\\Textures\\Tyre_Rubber_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3 Tyres": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber_BaseColor.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber_Roughness.png",
+      "metalness": 0.0667,
+      "normal": "//..\\Textures\\Tyre_Rubber_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Axle Flat Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Axle Flat Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Axle Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Axle Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#FFFFFF",
+      "roughness": 0.0926,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Side Panel ATP": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Side Panel Bottom Strip": {
+    "0": {
+      "material_name": "Number_Plate",
+      "flip_y": false,
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "3X ATP Flat Side": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X ATP Flat Side": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X ATP Angled Side": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X ATP Angled Side": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X 10,000 lb Tandem": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X 5200 lb Leaf Spring": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X 5200 lb Torsion": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X 7000 lb Leaf Spring": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X 7000 lb Torsion": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X 8000 lb Torsion": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X 10,000 lb Tandem": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X 5200 lb Leaf Spring": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X 5200 lb Torsion": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X 7000 lb Leaf Spring": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X 7000 lb Torsion": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X 8000 lb Torsion": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Wall E-Track": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Floor E-Track": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Cabinet Toolbox": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose Cabinet Toolbox Slot": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Front Cabinet Toolbox Slot": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Front Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Front Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Racing Lights ": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Rear Spoiler Wing": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Bathroom": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Sink Area": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Electric Awning 18 ft": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Gullwing Escape Door": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Axle Angled Side For GED": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Axle Flat Side For GED": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Axle Flat Side For GED": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Axle Angled Side For GED": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Escape door": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Generator Box": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Top Supports": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Angled Lights": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Electric Jack": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "AC Unit": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Extended Triple Tongue": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Radio Package Speaker": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Winch System": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose E Track": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Interior Tire Mount": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Recessed Tire Box": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Aluminum Sidewall Vents": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Stair (Flat Front)": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Stair (V-Nose)": {
+    "0": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Battery storage (Flat Cabinet)": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Battery storage (V-Nose Cabinet)": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  }
+}

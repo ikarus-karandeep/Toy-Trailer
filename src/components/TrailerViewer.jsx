@@ -123,7 +123,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 1.5
+      cameraControlsRef.current.maxDistance = maxDim * 1.15
       if (groundYRef) groundYRef.current = bbox.min.y
       cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
       cameraInitRef.current = true
@@ -189,7 +189,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 1.5
+      cameraControlsRef.current.maxDistance = maxDim * 1.15
       if (groundYRef) groundYRef.current = bbox.min.y
       lastBboxRef.current = bbox.clone()
       isTrackingRef.current = false
@@ -209,29 +209,69 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
 
 // ── ground clamp — prevents panning camera or target below model floor ─────────
 // camera-controls' minY only clamps camera position; the pan target can still
-// move below ground. This runs after every frame and hard-corrects both.
+// move below ground. This runs after every frame and smoothly corrects both.
+//
+// WHY LERP instead of hard setLookAt:
+// A hard snap every frame creates a fighting loop — user pans down, clamp
+// teleports up, controls re-apply the pan delta, repeat → visible jitter.
+// Lerping toward the corrected position absorbs pan momentum gracefully.
 
 function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
   const pos = useRef(new THREE.Vector3())
   const target = useRef(new THREE.Vector3())
+  const boundary = useRef(new THREE.Box3())
+  const frameCount = useRef(0)
 
   useFrame(() => {
     if (viewMode === 'INTERIOR' || !cameraControlsRef.current) return
 
     const cc = cameraControlsRef.current
+    const floor = groundYRef.current
+
+    // ── Layer 1: native target boundary (handled inside camera-controls) ────────
+    // setBoundary clamps _targetEnd inside cc's own update loop before the frame
+    // renders. Zero fighting, zero oscillation — the target simply can't go below
+    // floor+0.3, so panning stops cleanly at that height.
+    boundary.current.min.set(-Infinity, floor + 0.3, -Infinity)
+    boundary.current.max.set(Infinity,  Infinity,     Infinity)
+    cc.setBoundary(boundary.current)
+
+    // ── Layer 2: safety-net for camera position (idle only) ──────────────────
+    // setBoundary constrains the orbit target, not the camera position itself.
+    // If a steep polar angle places the camera below floor, catch it here —
+    // but only during idle (no active panning) to avoid fighting.
     cc.getPosition(pos.current)
     cc.getTarget(target.current)
 
-    const floor = groundYRef.current
-    const minCamY = floor + 0.2
+    const minCamY = floor + 0.05
+    const EPSILON = 0.005
+    const camViolation = pos.current.y < minCamY - EPSILON
 
-    if (pos.current.y < minCamY || target.current.y < floor) {
-      cc.setLookAt(
-        pos.current.x, Math.max(pos.current.y, minCamY), pos.current.z,
-        target.current.x, Math.max(target.current.y, floor), target.current.z,
-        false
-      )
-    }
+    frameCount.current++
+    // if (frameCount.current % 30 === 0) {
+    //   console.log(
+    //     '[GroundClamp]',
+    //     `floor=${floor.toFixed(3)}  boundary.minY=${(floor + 0.3).toFixed(3)}`,
+    //     `| camY=${pos.current.y.toFixed(4)}  targY=${target.current.y.toFixed(4)}`,
+    //     `| camV=${camViolation}  cc.active=${cc.active}`
+    //   )
+    // }
+
+    // Only apply position safety-net when not actively panning
+    if (!camViolation || cc.active) return
+
+    const correctedCamY = THREE.MathUtils.lerp(pos.current.y, minCamY, 0.1)
+
+    console.log(
+      '[GroundClamp] safety-net',
+      `camY: ${pos.current.y.toFixed(4)} → ${correctedCamY.toFixed(4)}`
+    )
+
+    cc.setLookAt(
+      pos.current.x, correctedCamY, pos.current.z,
+      target.current.x, target.current.y, target.current.z,
+      false
+    )
   })
 
   return null
@@ -349,14 +389,15 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         cameraControlsRef.current.maxPolarAngle   = savedExteriorRef.current.maxPolarAngle
         cameraControlsRef.current.minAzimuthAngle = savedExteriorRef.current.minAzimuthAngle
         cameraControlsRef.current.maxAzimuthAngle = savedExteriorRef.current.maxAzimuthAngle
-        cameraControlsRef.current.minY            = savedExteriorRef.current.minY
+        // Always clear minY on return to exterior — GroundClamp owns floor logic
+        cameraControlsRef.current.minY            = -Infinity
 
         // Restore zoom limits for exterior
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.5
+        cameraControlsRef.current.maxDistance = maxDim * 1.15
       } else {
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const center = box.getCenter(new THREE.Vector3())
@@ -369,14 +410,17 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
 
         // Restore zoom limits for exterior
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.5
+        cameraControlsRef.current.maxDistance = maxDim * 1.15
 
         // Restore default angle constraints
         cameraControlsRef.current.minPolarAngle   = 0
         cameraControlsRef.current.maxPolarAngle   = Math.PI / 2
         cameraControlsRef.current.minAzimuthAngle = -Infinity
         cameraControlsRef.current.maxAzimuthAngle = Infinity
-        cameraControlsRef.current.minY            = box.min.y + 0.15
+        // minY intentionally NOT set — GroundClamp handles floor boundary
+        // smoothly via lerp. A hard minY here creates a snap "wall" that
+        // fights the lerp correction and causes jitter.
+        cameraControlsRef.current.minY            = -Infinity
       }
     }
 
@@ -431,7 +475,12 @@ function ShadowCasterSetup({ modelRef }) {
     if (!modelRef.current) return
     modelRef.current.traverse((o) => {
       if (o.isMesh) {
-        o.castShadow = true
+        // Prevent glass/transmissive objects from casting solid black shadows
+        if (o.material && o.material.transmission > 0) {
+          o.castShadow = false
+        } else {
+          o.castShadow = true
+        }
         o.receiveShadow = true
       }
     })
@@ -765,7 +814,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               <ShadowCasterSetup modelRef={modelGroupRef} />
               <ShadowLightSetup modelRef={modelGroupRef} />
 
-              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" reprojectedTexture="/Reprojection Texture.jpg" height={2.062} scale={1.0} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
+              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" reprojectedTexture="/Reprojection Texture.jpg" height={2.062} scale={1.0} scaleY={0.7} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
               )}
