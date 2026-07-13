@@ -85,46 +85,127 @@ export class BlenderNodes {
     // -----------------------------------------
 
     /**
+     * Internal helper: show/hide an object and its proxy sibling (if any).
+     *
+     * Proxy resolution — tries 3 strategies in order:
+     *   1. Exact:      scene.getObjectByName(target.name + ' proxy')
+     *   2. Parent:     scene.getObjectByName(target.parent.name + ' proxy')
+     *                  scene.getObjectByName(target.parent.name + '_Proxy')
+     *   3. Sibling:    any direct child of target.parent whose name contains 'proxy'
+     *
+     * This handles the common Blender pattern where the proxy is named after the
+     * parent group (e.g. "Gullwing Escape Door Proxy") rather than the active
+     * variant child (e.g. "Gullwing_Escape_Door_2").
+     *
+     * @param {THREE.Object3D} scene
+     * @param {THREE.Object3D} target - the object to show/hide
+     * @param {boolean} visible
+     */
+    static _applyWithProxy(scene, target, visible) {
+        target.traverse(child => { child.visible = visible })
+
+        let proxy = null
+        let resolvedBy = ''
+
+        // Strategy 1: exact name match → "<targetName> proxy" / "<targetName>_Proxy"
+        const exactSpace = target.name + ' proxy'
+        const exactUnder = target.name + '_Proxy'
+        proxy = scene.getObjectByName(exactSpace) || scene.getObjectByName(exactUnder)
+        if (proxy) resolvedBy = `exact ("${proxy.name}")`
+
+        // Strategy 2: parent-name-based → "<parentName> proxy" / "<parentName>_Proxy"
+        if (!proxy && target.parent) {
+            const parentBase = target.parent.name
+            const parentSpaceProxy = parentBase + ' proxy'
+            const parentUnderProxy = parentBase + '_Proxy'
+            proxy = scene.getObjectByName(parentSpaceProxy) || scene.getObjectByName(parentUnderProxy)
+            if (proxy) resolvedBy = `parent-name ("${proxy.name}")`
+        }
+
+        // Strategy 3: any sibling of target whose name contains 'proxy' (case-insensitive)
+        if (!proxy && target.parent) {
+            const sibling = target.parent.children.find(
+                c => c !== target && c.name.toLowerCase().includes('proxy')
+            )
+            if (sibling) {
+                proxy = sibling
+                resolvedBy = `sibling ("${sibling.name}")`
+            }
+        }
+
+        if (proxy) {
+            console.log(`[BlenderNodes] Proxy resolved via ${resolvedBy} for "${target.name}" → active=${visible} (render hidden)`)
+            proxy.traverse(child => {
+                child.userData.proxyActive = visible
+                child.visible = false
+            })
+        } else {
+            console.log(`[BlenderNodes] No proxy found for: "${target.name}" (tried exact, parent-name, sibling)`)
+        }
+    }
+
+    /**
      * Node: Switch (mesh visibility)
      * Traverses a scene and shows only the mesh whose name matches targetName.
      * All other meshes in the scene are hidden.
+     * If a proxy object named "<targetName> proxy" exists it is shown/hidden together
+     * with the original.
      * Returns true if a match was found.
      * @param {THREE.Object3D} scene
      * @param {string} targetName
      */
     static switchMesh(scene, targetName) {
-        // Hide all meshes first
+        // Hide all meshes (including any proxies) first
         scene.traverse(child => {
-            if (child.isMesh) child.visible = false
+            if (child.isMesh) {
+                child.visible = false
+                if (child.name.toLowerCase().includes('proxy')) child.userData.proxyActive = false
+            }
         })
-        if (!targetName) return false
+        console.log(`[BlenderNodes] switchMesh → target="${targetName}"`)
+        if (!targetName) {
+            console.log(`[BlenderNodes] switchMesh → no targetName, hiding all`)
+            return false
+        }
         // Target may be a Group (multi-primitive mesh) or a plain Mesh — find by name and show all descendants
         const target = scene.getObjectByName(targetName)
         if (target) {
-            target.traverse(child => { child.visible = true })
+            console.log(`[BlenderNodes] switchMesh → found "${targetName}", showing`)
+            BlenderNodes._applyWithProxy(scene, target, true)
             return true
         }
+        console.warn(`[BlenderNodes] switchMesh → "${targetName}" NOT FOUND in scene`)
         return false
     }
 
     /**
      * Node: Switch (multi-mesh visibility)
      * Shows all meshes whose names are included in targetNames array.
+     * For each matched mesh, if a proxy sibling named "<name> proxy" exists it is
+     * shown/hidden together with the original.
      */
     static switchMeshes(scene, targetNames) {
         if (!targetNames || !Array.isArray(targetNames)) return 0;
-        // Hide all meshes first
+        // Hide all meshes (including any proxies) first
         scene.traverse(child => {
-            if (child.isMesh) child.visible = false
+            if (child.isMesh) {
+                child.visible = false
+                if (child.name.toLowerCase().includes('proxy')) child.userData.proxyActive = false
+            }
         })
+        console.log(`[BlenderNodes] switchMeshes → active list: [${targetNames.join(', ')}]`)
         let matched = 0
         for (const name of targetNames) {
             const target = scene.getObjectByName(name)
             if (target) {
-                target.traverse(child => { child.visible = true })
+                console.log(`[BlenderNodes] switchMeshes → showing "${name}"`)
+                BlenderNodes._applyWithProxy(scene, target, true)
                 matched++
+            } else {
+                console.warn(`[BlenderNodes] switchMeshes → "${name}" NOT FOUND in scene`)
             }
         }
+        console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length}`)
         return matched
     }
 

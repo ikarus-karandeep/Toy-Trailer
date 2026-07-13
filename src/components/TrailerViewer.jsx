@@ -1,7 +1,7 @@
 ﻿import '@google/model-viewer'
 import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { CameraControls, Stage, ContactShadows } from '@react-three/drei'
+import { CameraControls, Stage, ContactShadows, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
@@ -597,6 +597,15 @@ function CameraLayerSetup() {
   return null
 }
 
+// ── ground model ───────────────────────────────────────────────────────────────
+
+// function GroundModel() {
+//   const { scene } = useGLTF('/models/Ground.glb')
+//   return <primitive object={scene} />
+// }
+
+// useGLTF.preload('/models/Ground.glb')
+
 // ── viewer ────────────────────────────────────────────────────────────────────
 
 function SceneReadyNotifier({ meshRef, onReady }) {
@@ -809,6 +818,9 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                   <SceneReadyNotifier meshRef={modelGroupRef} onReady={onModelReady} />
                 )}
               </Stage>
+
+              {/* Ground model loaded from public/models/Ground.glb */}
+              {/* <GroundModel /> */}
               
               {/* ShadowLightSetup manages its own directional light with a dynamically-fitted frustum */}
               <ShadowCasterSetup modelRef={modelGroupRef} />

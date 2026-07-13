@@ -285,6 +285,10 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const hasSel3 = !!rearSel3;
   const hasSel2 = !!rearSel2;
   const hasSel1 = !!rearSel1;
+  // Proxy cutouts (e.g. Gullwing_Escape_Door_Proxy) ship without selection attrs.
+  // The position-based width fallback spreads verts symmetrically about zCenter,
+  // which mirrors the proxy onto the opposite wall.
+  const isProxy = meshName.toLowerCase().includes('proxy');
 
   // ── DEBUG: log attribute discovery once per mesh ─────────────────────────────
   // if (!_loggedMeshAttrs.has(meshName)) {
@@ -362,6 +366,9 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
     if (leftSel || rightSel) {
       if (leftSel) oz += deltaWidth * leftSel.getX(i)   // +Z = left wall
       if (rightSel) oz -= deltaWidth * rightSel.getX(i)  // -Z = right wall
+    } else if (isProxy && deltaWidth !== 0) {
+      // Single-wall cutout marker — deform with the left wall only (+Z).
+      oz += deltaWidth
     } else if (deltaWidth !== 0 && zRange > 0) {
       const t = (oz - zCenter) / zRange    // –1…+1
       oz += t * deltaWidth

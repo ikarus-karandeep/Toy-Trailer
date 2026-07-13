@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
@@ -204,6 +204,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
     const wheelCoverOriginalMatsRef = useRef(new Map())
+    // Incremented by the visibility useEffect after every switchMesh/switchMeshes call.
+    // This triggers generatedETracks to recompute AFTER proxy visibility is set, so
+    // child.visible is accurate when the proxy scan runs.
+    const [visibilityVersion, setVisibilityVersion] = useState(0)
 
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
     useEffect(() => {
@@ -747,6 +751,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)
         BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
+
+        // Signal that mesh visibility has been updated. generatedETracks depends on
+        // visibilityVersion so it will recompute on the next render with correct .visible values.
+        setVisibilityVersion(v => v + 1)
     }, [
         config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
         config.wheel, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
@@ -759,18 +767,56 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount,
         config.bathroom,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
-        cabinetsGLB, cargo, spoiler, tongue, bathroom
+        cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor
     ])
+
+    // ── activeScenes must be computed BEFORE generatedETracks so the proxy scan
+    // uses the CURRENT render's scene list (not the stale ref from last render).
+    const activeScenes = useMemo(() => {
+        const scenes = [
+            base, baseMeshes,
+            frontStyle, rearDoors, sideDoors, extFinish,
+            tongue,
+            wheels,
+            axleConfig,
+            axle,
+            addons,
+            cargo,
+        ]
+        if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
+        if (config.awning?.length > 0 && lengthFt >= 29) scenes.push(awning)
+        if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
+        if (config.rearSpoiler) scenes.push(spoiler)
+        if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)
+        if (config.escapeDoor === '54x48') scenes.push(escapeDoorScene)
+        return scenes
+    }, [
+        config.cabinets, config.awning, config.bathroom, config.rearSpoiler, config.escapeDoor,
+        lengthFt,
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor, escapeDoorScene
+    ])
+
+    activeScenesRef.current = activeScenes
 
     // ── Emulate Blender "E-Track" Array Generation Node ────────────────────────
     const generatedETracks = useMemo(() => {
+        console.log('[E-Track] ── useMemo recomputing ──────────────────────')
+        console.log('[E-Track] config.escapeDoor:', config.escapeDoor)
+        console.log('[E-Track] config.tieDowns:', config.tieDowns)
+
         // Find the base template meshes (we assume they are the original single-piece objects)
         let floorTemplate = null
-        let wallTemplate = null
+        const wallTemplates = []   // collect ALL wall templates (one per side of trailer)
         cargo.traverse(child => {
-            if (child.isMesh && child.name.includes('Floor_E-Track')) floorTemplate = child
-            if (child.isMesh && child.name.includes('Wall_E-Track')) wallTemplate = child
+            if (!child.isMesh) return
+            const isProxy = child.name.toLowerCase().includes('proxy')
+            console.log(`[E-Track] cargo mesh: "${child.name}" | isProxy=${isProxy}`)
+            if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplate = child
+            if (child.name.includes('Wall_E-Track')  && !isProxy) wallTemplates.push(child)
         })
+        console.log('[E-Track] floorTemplate:', floorTemplate?.name ?? 'NOT FOUND')
+        console.log(`[E-Track] wallTemplates found: ${wallTemplates.length}`, wallTemplates.map(t => t.name))
 
         // The true rear X coordinate of the trailer uses the same clamped delta logic from GeometryUtils
         const BASE_LENGTH_FT = 32
@@ -793,10 +839,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         const stepSize = 0.076
         const count = Math.max(1, Math.ceil(Math.abs(targetLength) / stepSize))
+        console.log(`[E-Track] trueRearX=${trueRearX.toFixed(3)} targetLength=${targetLength.toFixed(3)} stepSize=${stepSize} count=${count}`)
 
         const points = new Float32Array(count * 3)
         // Assume trailer array generates along -X from the Switch offset
         const startX = switchNode
+        console.log(`[E-Track] Points range: X ${startX.toFixed(3)} → ${(startX - (count - 1) * stepSize).toFixed(3)}`)
         for (let i = 0; i < count; i++) {
             points[i * 3] = startX - (i * stepSize)
             points[i * 3 + 1] = 0
@@ -806,7 +854,83 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const pointsGeometry = new THREE.BufferGeometry()
         pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
 
+        // ── Compute proxy gaps: X range + Z range per active proxy ──────────────────
+        // We store each proxy's world-space {xMin, xMax, zMin, zMax} separately so
+        // that each wall template can independently test whether the proxy is on its
+        // side of the trailer (via Z overlap), and only clip that side.
+        const proxyGaps = []
+        let proxyCount = 0
+
+        // activeScenes is now a direct dep (not a ref) so this memo re-runs whenever
+        // the set of visible models changes — proxy gaps are always up to date.
+        const scenesToScan = activeScenes
+        console.log(`[E-Track] Scanning ${scenesToScan.length} active scene(s) for active proxy meshes...`)
+
+        // ── DEBUG: dump ALL proxy-named meshes regardless of active state ──────────
+        scenesToScan.forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh || !child.geometry) return
+                if (!child.name.toLowerCase().includes('proxy')) return
+                child.updateWorldMatrix(true, false)
+                child.geometry.computeBoundingBox()
+                const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld)
+                const wPos = new THREE.Vector3().setFromMatrixPosition(child.matrixWorld)
+                console.log(
+                    `[E-Track] 📦 ALL-PROXY-SCAN "${child.name}"`,
+                    `| proxyActive=${child.userData?.proxyActive}`,
+                    `| visible=${child.visible}`,
+                    `| worldPos=(${wPos.x.toFixed(3)}, ${wPos.y.toFixed(3)}, ${wPos.z.toFixed(3)})`,
+                    `| worldBBox X[${box.min.x.toFixed(3)}, ${box.max.x.toFixed(3)}]`,
+                    `| worldBBox Z[${box.min.z.toFixed(3)}, ${box.max.z.toFixed(3)}]`
+                )
+            })
+        })
+        console.log('[E-Track] ── END ALL-PROXY-SCAN ──────────────────────────────────')
+
+        scenesToScan.forEach(scene => {
+            scene.traverse(child => {
+                if (!child.isMesh || !child.geometry) return
+                if (!child.name.toLowerCase().includes('proxy')) return
+                // Proxies are render-hidden; use proxyActive flag set by BlenderNodes
+                if (!child.userData?.proxyActive) {
+                    console.log(`[E-Track] ⏭️  Skipping proxy "${child.name}" — proxyActive=${child.userData?.proxyActive}`)
+                    return
+                }
+
+                child.updateWorldMatrix(true, false)
+                child.geometry.computeBoundingBox()
+                const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld)
+                const wPos = new THREE.Vector3().setFromMatrixPosition(child.matrixWorld)
+
+                console.log(
+                    `[E-Track] ✅ ACTIVE-PROXY "${child.name}"`,
+                    `| worldPos=(${wPos.x.toFixed(3)}, ${wPos.y.toFixed(3)}, ${wPos.z.toFixed(3)})`,
+                    `| worldBBox X[${box.min.x.toFixed(3)}, ${box.max.x.toFixed(3)}]`,
+                    `| worldBBox Y[${box.min.y.toFixed(3)}, ${box.max.y.toFixed(3)}]`,
+                    `| worldBBox Z[${box.min.z.toFixed(3)}, ${box.max.z.toFixed(3)}]`
+                )
+
+                // Store each proxy gap with its full X AND Z world bounds.
+                // Z bounds are used to match the proxy to the correct wall side.
+                proxyGaps.push({
+                    xMin: box.min.x, xMax: box.max.x,
+                    zMin: box.min.z, zMax: box.max.z,
+                    name: child.name,
+                })
+                proxyCount++
+            })
+        })
+
+        if (proxyGaps.length > 0) {
+            console.log(`[E-Track] ✅ ${proxyGaps.length} active proxy gap(s) collected:`)
+            proxyGaps.forEach((g, i) => console.log(`[E-Track]   [${i}] "${g.name}" X[${g.xMin.toFixed(3)}, ${g.xMax.toFixed(3)}] Z[${g.zMin.toFixed(3)}, ${g.zMax.toFixed(3)}]`))
+        } else {
+            console.log('[E-Track] No active proxy meshes found — no E-Track clipping applied')
+        }
+
         const instances = []
+
+        // Floor E-Track: full run, unaffected by proxy
         if (floorTemplate && config.tieDowns?.includes('flooretrack')) {
             const floorInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, floorTemplate)
             floorInstanced.position.copy(floorTemplate.position)
@@ -814,16 +938,130 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             floorInstanced.scale.copy(floorTemplate.scale)
             instances.push(<primitive key="floor-etrack" object={floorInstanced} />)
         }
-        if (wallTemplate && config.tieDowns?.includes('walletrack')) {
-            const wallInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, wallTemplate)
-            wallInstanced.position.copy(wallTemplate.position)
-            wallInstanced.rotation.copy(wallTemplate.rotation)
-            wallInstanced.scale.copy(wallTemplate.scale)
-            instances.push(<primitive key="wall-etrack" object={wallInstanced} />)
+
+        // Wall E-Track: per-wall generation with Z-aware proxy side detection.
+        // If a wall has any active proxy on its side, hide that wall E-Track entirely.
+        // The opposite wall still renders normally.
+        if (wallTemplates.length > 0 && config.tieDowns?.includes('walletrack')) {
+            wallTemplates.forEach((wallTemplate, wallIdx) => {
+                wallTemplate.updateWorldMatrix(true, false)
+                const wm = wallTemplate.matrixWorld
+
+                // World position of this wall template
+                const templateWorldPos = new THREE.Vector3().setFromMatrixPosition(wm)
+
+                // World-space X scale and direction (local X → world X mapping)
+                const worldScaleX = Math.sqrt(
+                    wm.elements[0] * wm.elements[0] +
+                    wm.elements[1] * wm.elements[1] +
+                    wm.elements[2] * wm.elements[2]
+                )
+                const localXDirWorld = wm.elements[0] / (worldScaleX || 1)
+
+                console.log(`[E-Track] Wall[${wallIdx}] "${wallTemplate.name}" world pos: (${templateWorldPos.x.toFixed(3)}, ${templateWorldPos.y.toFixed(3)}, ${templateWorldPos.z.toFixed(3)})`)
+                console.log(`[E-Track] Wall[${wallIdx}] worldScaleX=${worldScaleX.toFixed(4)}, localXDirWorld=${localXDirWorld.toFixed(3)}`)
+
+                // ── Filter proxy gaps to only those on THIS wall's side (Z match) ──
+                // Strategy: compare the SIGN of the proxy's Z center against the
+                // wall template's world Z. Same sign → same side of trailer.
+                // Special case: if there is only ONE wall template in the GLB, we
+                // cannot discriminate sides, so we apply all gaps unconditionally
+                // (the template already covers just one side via its own geometry).
+                const wallWorldZ = templateWorldPos.z
+                const wallProxyGaps = proxyGaps.filter(gap => {
+                    // If only one wall template, always apply (can't discriminate sides)
+                    if (wallTemplates.length === 1) {
+                        console.log(`[E-Track] Wall[${wallIdx}] single-template mode — applying gap "${gap.name}" unconditionally`)
+                        return true
+                    }
+                    // Multi-template: use Z-center sign to identify which wall the proxy is on.
+                    const proxyCenterZ = (gap.zMin + gap.zMax) / 2
+                    // Same sign → same side. Also handle near-zero wall templates (abs < 0.05)
+                    // by falling back to a loose tolerance check.
+                    const wallIsNearZero = Math.abs(wallWorldZ) < 0.05
+                    let sameSide
+                    if (wallIsNearZero) {
+                        // Template at Z≈0: accept any proxy (center wall template)
+                        sameSide = true
+                    } else {
+                        // Positive wall Z → positive proxy center → same side
+                        sameSide = Math.sign(wallWorldZ) === Math.sign(proxyCenterZ)
+                    }
+                    console.log(
+                        `[E-Track] Wall[${wallIdx}] testing gap "${gap.name}"`,
+                        `proxyZCenter=${proxyCenterZ.toFixed(3)}, wallZ=${wallWorldZ.toFixed(3)}`,
+                        `→ ${sameSide ? '✅ SAME SIDE' : '❌ opposite side, skip'}`
+                    )
+                    return sameSide
+                })
+
+                console.log(`[E-Track] Wall[${wallIdx}] applicable proxy gaps: ${wallProxyGaps.length}`)
+
+                let wallGeom = pointsGeometry  // default: full run
+
+                if (wallProxyGaps.length > 0) {
+                    // All comparisons in WORLD SPACE.
+                    // The instanced object is placed at wallTemplate.position (LOCAL).
+                    // Each point px is a LOCAL offset along the template's parent X axis.
+                    // To get world X of each instance:
+                    //   worldX_of_instance = templateWorldPos.x + px * worldScaleX * localXDirWorld
+                    //
+                    // We compare that world X against the proxy world X bounds directly.
+
+                    // Log the conversion params once before the loop
+                    console.log(`[E-Track] Wall[${wallIdx}] Conversion: worldX = ${templateWorldPos.x.toFixed(3)} + px * ${(worldScaleX * localXDirWorld).toFixed(4)}`)
+                    wallProxyGaps.forEach((g, gi) => {
+                        console.log(`[E-Track] Wall[${wallIdx}] Gap[${gi}] "${g.name}" world X[${g.xMin.toFixed(3)}, ${g.xMax.toFixed(3)}]`)
+                    })
+                    console.log(`[E-Track] Wall[${wallIdx}] E-Track local X range: ${startX.toFixed(3)} ? ${(startX - (count-1)*stepSize).toFixed(3)}`)
+                    // Convert startX to world X to verify range
+                    const startWorldX = templateWorldPos.x + startX * worldScaleX * localXDirWorld
+                    const endWorldX = templateWorldPos.x + (startX - (count-1)*stepSize) * worldScaleX * localXDirWorld
+                    console.log(`[E-Track] Wall[${wallIdx}] E-Track WORLD X range: ${Math.min(startWorldX, endWorldX).toFixed(3)} ? ${Math.max(startWorldX, endWorldX).toFixed(3)}`)
+
+                    const xFactor = worldScaleX * localXDirWorld
+
+                    // Build filtered points: skip positions whose world X falls inside any proxy gap
+                    const filtered = []
+                    let skipped = 0
+                    for (let i = 0; i < count; i++) {
+                        const px = startX - (i * stepSize)
+                        const worldX = templateWorldPos.x + px * xFactor
+
+                        let inGap = false
+                        for (const gap of wallProxyGaps) {
+                            if (worldX >= gap.xMin && worldX <= gap.xMax) {
+                                inGap = true
+                                if (skipped < 5) console.log(`[E-Track] Wall[${wallIdx}] ?? Skipping px=${px.toFixed(3)} worldX=${worldX.toFixed(3)} (gap "${gap.name}" worldX[${gap.xMin.toFixed(3)}, ${gap.xMax.toFixed(3)}])`)
+                                break
+                            }
+                        }
+
+                        if (inGap) { skipped++; continue }
+                        filtered.push(px, 0, 0)
+                    }
+                    console.log(`[E-Track] Wall[${wallIdx}] points: ${count} total ? ${filtered.length / 3} kept, ${skipped} skipped`)
+
+                    const wallPts = new Float32Array(filtered)
+                    wallGeom = new THREE.BufferGeometry()
+                    wallGeom.setAttribute('position', new THREE.BufferAttribute(wallPts, 3))
+                } else {
+                    console.log(`[E-Track] Wall[${wallIdx}] no gaps applicable � full run`)
+                }
+                const wallInstanced = BlenderNodes.instanceOnPoints(wallGeom, wallTemplate)
+                wallInstanced.position.copy(wallTemplate.position)
+                wallInstanced.rotation.copy(wallTemplate.rotation)
+                wallInstanced.scale.copy(wallTemplate.scale)
+                console.log(`[E-Track] Wall[${wallIdx}] created wallInstanced with ${wallInstanced.count} instances, position=(${wallInstanced.position.x.toFixed(3)}, ${wallInstanced.position.y.toFixed(3)}, ${wallInstanced.position.z.toFixed(3)})`)
+                // Include visibilityVersion in the key to force full THREE.js remount when
+                // proxy visibility changes — this ensures the old instanced mesh is removed
+                // from the scene and the new filtered one is added (not just prop-swapped).
+                instances.push(<primitive key={`wall-etrack-${wallIdx}-v${visibilityVersion}`} object={wallInstanced} />)
+            })
         }
 
         return instances
-    }, [cargo, lengthFt, hasCabinet, config.tieDowns])
+    }, [cargo, activeScenes, visibilityVersion, lengthFt, hasCabinet, config.tieDowns])
 
     // ── Ladder Racks: Instance on Points (mirrors Blender Mesh Line → Instance on Points) ──
     // Top_Supports is a single cross-member instanced along the trailer length.
@@ -833,7 +1071,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         let rackTemplate = null
         addons.traverse(child => {
-            if (child.isMesh && child.name === 'Top_Supports') rackTemplate = child
+            if (child.isMesh && child.name === 'Top_Supports' && !child.name.toLowerCase().includes('proxy')) rackTemplate = child
         })
         if (!rackTemplate) return []
 
@@ -881,32 +1119,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         return [<primitive key="ladder-racks" object={instanced} />]
     }, [addons, lengthFt, config.ladderRacks])
 
-    const activeScenes = useMemo(() => {
-        const scenes = [
-            base, baseMeshes,
-            frontStyle, rearDoors, sideDoors, extFinish,
-            tongue,
-            wheels,
-            axleConfig,
-            axle,
-            addons,
-            cargo,
-        ]
-        if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
-        if (config.awning?.length > 0 && lengthFt >= 29) scenes.push(awning)
-        if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
-        if (config.rearSpoiler) scenes.push(spoiler)
-        if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)
-        if (config.escapeDoor === '54x48') scenes.push(escapeDoorScene)
-        return scenes
-    }, [
-        config.cabinets, config.awning, config.bathroom, config.rearSpoiler, config.escapeDoor,
-        lengthFt,
-        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
-        tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor, escapeDoorScene
-    ])
-
-    activeScenesRef.current = activeScenes
+    // activeScenes is now defined before generatedETracks (see above)
 
     useEffect(() => {
         dirtyRef.current = true
@@ -967,3 +1180,4 @@ Object.values(SHELL_TEXTURES).forEach(path => useTexture.preload(path))
 Object.values(STATIC_TEXTURE_PATHS).forEach(path => useTexture.preload(path))
 useTexture.preload('/Materials/Metallic_Grates_Normal.png')
 useTexture.preload('/Materials/Simple_Noise.png')
+
