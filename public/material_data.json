@@ -330,6 +330,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "4": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Extended Triple Tongue V-Nose": {
@@ -867,10 +879,10 @@
   "2 Tyres": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber_BaseColor.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber_Roughness.png",
+      "base_color": "//..\\Textures\\Tyres.png",
+      "roughness": 0.8267,
       "metalness": 0.0667,
-      "normal": "//..\\Textures\\Tyre_Rubber_Normal.png",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -893,10 +905,10 @@
   "3 Tyres": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber_BaseColor.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber_Roughness.png",
+      "base_color": "//..\\Textures\\Tyres.png",
+      "roughness": 0.8267,
       "metalness": 0.0667,
-      "normal": "//..\\Textures\\Tyre_Rubber_Normal.png",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1154,11 +1166,23 @@
   },
   "2X 10,000 lb Tandem": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1168,10 +1192,22 @@
   },
   "2X 5200 lb Leaf Spring": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1182,10 +1218,22 @@
   },
   "2X 5200 lb Torsion": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1196,10 +1244,22 @@
   },
   "2X 7000 lb Leaf Spring": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1210,10 +1270,22 @@
   },
   "2X 7000 lb Torsion": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1224,10 +1296,22 @@
   },
   "2X 8000 lb Torsion": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1238,10 +1322,22 @@
   },
   "3X 10,000 lb Tandem": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1252,10 +1348,22 @@
   },
   "3X 5200 lb Leaf Spring": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1266,10 +1374,22 @@
   },
   "3X 5200 lb Torsion": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1280,10 +1400,22 @@
   },
   "3X 7000 lb Leaf Spring": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1294,10 +1426,22 @@
   },
   "3X 7000 lb Torsion": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1308,10 +1452,22 @@
   },
   "3X 8000 lb Torsion": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
