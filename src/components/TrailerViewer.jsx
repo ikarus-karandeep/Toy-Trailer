@@ -10,7 +10,6 @@ import QRModal from './QRModal'
 import ModelReportPanel from './ModelReportPanel'
 import { isAndroidDevice } from '../utils/arPlatform'
 import { generateModelReport } from '../utils/modelReport'
-
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
 
 const WIDTH_FT = { '7ft': 7, '8.5ft': 8.5 }
@@ -650,8 +649,19 @@ function GroundModel({ modelRef }) {
     '/Ground Opacity.jpg'
   ])
   const groundRef = useRef()
+  const boundsRef = useRef(new THREE.Box3())
+  const centerRef = useRef(new THREE.Vector3())
+  const sizeRef = useRef(new THREE.Vector3())
+  const baseFootprintRef = useRef(null) // ground mesh's native XZ footprint, captured once
 
   useEffect(() => {
+    if (!baseFootprintRef.current) {
+      const baseBounds = new THREE.Box3().setFromObject(scene)
+      const baseSize = new THREE.Vector3()
+      baseBounds.getSize(baseSize)
+      baseFootprintRef.current = Math.max(baseSize.x, baseSize.z) || 1
+    }
+
     if (colorMap) {
       colorMap.colorSpace = THREE.SRGBColorSpace
       colorMap.flipY = false
@@ -664,8 +674,11 @@ function GroundModel({ modelRef }) {
     if (opacityMap) {
       opacityMap.colorSpace = THREE.NoColorSpace
       opacityMap.flipY = false
+      opacityMap.wrapS = THREE.RepeatWrapping
+      opacityMap.wrapT = THREE.RepeatWrapping
       opacityMap.needsUpdate = true
     }
+
     scene.traverse((child) => {
   if (child.isMesh) {
     child.material = new THREE.MeshBasicMaterial({
@@ -688,12 +701,25 @@ function GroundModel({ modelRef }) {
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
-    const bbox = new THREE.Box3().setFromObject(modelRef.current)
-    const center = new THREE.Vector3()
+    const bbox = boundsRef.current.setFromObject(modelRef.current)
+    const center = centerRef.current
+    const size = sizeRef.current
     bbox.getCenter(center)
+    bbox.getSize(size)
 
     // Position ground slightly below the shadow material plane (which is at bbox.min.y - 0.001)
     groundRef.current.position.set(center.x, bbox.min.y - 0.002, center.z)
+
+    // Scale the ground footprint so it always extends comfortably past the
+    // trailer's current XZ footprint, whatever configuration is active.
+    // Because the triplanar patch samples using world position, scaling the
+    // mesh changes tiling density correctly rather than stretching the UVs.
+    if (baseFootprintRef.current) {
+      const margin = 1.08 // keep ground just larger than the trailer footprint
+      const desired = Math.max(size.x, size.z) * margin
+      const scale = desired / baseFootprintRef.current
+      groundRef.current.scale.set(scale, 1, scale)
+    }
   })
 
   return <primitive ref={groundRef} object={scene} />
@@ -737,6 +763,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [modelReport, setModelReport] = useState(null)
   const [environment, setEnvironment] = useState('/trailer_hdri.exr')
   const [showEnvironment, setShowEnvironment] = useState(false)
+  const [showGround, setShowGround] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
@@ -922,7 +949,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               <ShadowLightSetup modelRef={modelGroupRef} />
 
               {/* Ground model loaded from public/models/Ground.glb */}
-              <GroundModel modelRef={modelGroupRef} />
+              {showGround && <GroundModel modelRef={modelGroupRef} />}
               
               {/* Soft drop shadow instead of harsh directional shadow */}
               <DynamicContactShadow modelRef={modelGroupRef} />
@@ -1000,6 +1027,26 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/Dimension.png" alt="" />
+          </button>
+          <button
+            aria-label="Toggle Ground"
+            onClick={() => setShowGround(prev => !prev)}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showGround ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+          >
+            <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.9" viewBox="0 0 24 24">
+              {showGround ? (
+                <>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 19h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 15l3-6 3 4 2-3 4 5" />
+                </>
+              ) : (
+                <>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 19h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 15l3-6 3 4 2-3 4 5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 5l14 14" />
+                </>
+              )}
+            </svg>
           </button>
           <button
             onClick={handleViewInDriveway}
