@@ -497,6 +497,9 @@ function ShadowLightSetup({ modelRef }) {
   const floorRef = useRef()
   const frameCount = useRef(0)
   const lastMinY = useRef(null)
+  const boundsRef = useRef(new THREE.Box3())
+  const centerRef = useRef(new THREE.Vector3())
+  const sizeRef = useRef(new THREE.Vector3())
 
   useFrame(({ gl }) => {
     frameCount.current++
@@ -514,10 +517,10 @@ function ShadowLightSetup({ modelRef }) {
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
-    const bbox = new THREE.Box3().setFromObject(modelRef.current)
-    const center = new THREE.Vector3()
+    const bbox = boundsRef.current.setFromObject(modelRef.current)
+    const center = centerRef.current
+    const size = sizeRef.current
     bbox.getCenter(center)
-    const size = new THREE.Vector3()
     bbox.getSize(size)
 
     if (frameCount.current === 1) {
@@ -535,9 +538,10 @@ function ShadowLightSetup({ modelRef }) {
       }
     }
 
-    // position light above model center
+    // Keep the shadow light centered so the front and rear halves of the
+    // trailer receive the same shadow coverage from every viewing angle.
     const lightHeight = bbox.max.y + Math.max(size.x, size.z) * 1.5
-    light.position.set(center.x + size.x * 0.3, lightHeight, center.z + size.z * 0.3)
+    light.position.set(center.x, lightHeight, center.z)
     light.target.position.copy(center)
     light.target.updateMatrixWorld()
 
@@ -550,6 +554,7 @@ function ShadowLightSetup({ modelRef }) {
     light.shadow.camera.near   = 0.1
     light.shadow.camera.far    = lightHeight + Math.abs(bbox.min.y) + 5
     light.shadow.camera.updateProjectionMatrix()
+    light.shadow.needsUpdate = true
 
     if (frameCount.current === 1) {
       console.log('[Shadow] light pos:', light.position, '| target:', center)
@@ -575,14 +580,15 @@ function ShadowLightSetup({ modelRef }) {
           everywhere except where the directional light's shadow map projects.
           Positioned at model floor level by the useFrame above. */}
       <mesh
-        ref={floorRef}
-        receiveShadow
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.001, 0]}
-      >
-        <planeGeometry args={[80, 80]} />
-        <shadowMaterial transparent opacity={0.45} depthWrite={false} />
-      </mesh>
+  ref={floorRef}
+  receiveShadow
+  renderOrder={2}
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -0.001, 0]}
+>
+  <planeGeometry args={[80, 80]} />
+  <shadowMaterial transparent opacity={0.45} depthWrite={false} />
+</mesh>
     </>
   )
 }
@@ -591,6 +597,9 @@ function ShadowLightSetup({ modelRef }) {
 
 function DynamicContactShadow({ modelRef }) {
   const shadowRef = useRef()
+  const boundsRef = useRef(new THREE.Box3())
+  const centerRef = useRef(new THREE.Vector3())
+  const sizeRef = useRef(new THREE.Vector3())
   
   useFrame(() => {
     if (!shadowRef.current || !modelRef?.current) return
@@ -598,21 +607,26 @@ function DynamicContactShadow({ modelRef }) {
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
-    const bbox = new THREE.Box3().setFromObject(modelRef.current)
-    const center = new THREE.Vector3()
+    const bbox = boundsRef.current.setFromObject(modelRef.current)
+    const center = centerRef.current
+    const size = sizeRef.current
     bbox.getCenter(center)
+    bbox.getSize(size)
+    const shadowSpan = Math.max(size.x, size.z)
     
     // Position contact shadow slightly above the ground plane
     shadowRef.current.position.set(center.x, bbox.min.y - 0.001, center.z)
+    shadowRef.current.scale.setScalar(Math.max(20, shadowSpan * 1.35))
   })
 
   return (
     <ContactShadows
       ref={shadowRef}
+      frames={Infinity}
       opacity={0.75}
       scale={40}
       blur={2}
-      far={10}
+      far={16}
       resolution={1024}
       color="#000000"
     />
@@ -653,17 +667,19 @@ function GroundModel({ modelRef }) {
       opacityMap.needsUpdate = true
     }
     scene.traverse((child) => {
-      if (child.isMesh) {
-        child.material = new THREE.MeshBasicMaterial({
-          map: colorMap,
-          alphaMap: opacityMap,
-          transparent: true,
-          side: THREE.DoubleSide,
-        })
-        child.material.needsUpdate = true
-        child.receiveShadow = false
-      }
+  if (child.isMesh) {
+    child.material = new THREE.MeshBasicMaterial({
+      map: colorMap,
+      alphaMap: opacityMap,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthWrite: false,
     })
+    child.material.needsUpdate = true
+    child.receiveShadow = false
+    child.renderOrder = 0   // draws first
+  }
+})
   }, [scene, colorMap, opacityMap])
 
   useFrame(() => {
@@ -901,6 +917,10 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               {/* Separate Environment with Y-scale to bring ceiling reflections into view */}
               <ScaledEnvironment environment={environment} scaleY={1.5} offsetZ={0.14} intensity={0.5} />
 
+              {/* Dynamic shadow system that follows the trailer's actual size */}
+              <ShadowCasterSetup modelRef={modelGroupRef} />
+              <ShadowLightSetup modelRef={modelGroupRef} />
+
               {/* Ground model loaded from public/models/Ground.glb */}
               <GroundModel modelRef={modelGroupRef} />
               
@@ -1121,3 +1141,4 @@ function ScaledEnvironment({ environment, scaleY = 1.5, offsetY = 0.14, intensit
 }
 
 export default TrailerViewer
+

@@ -21,7 +21,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? 'standard')
-  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'pink')
+  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'pewter')
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose')
   const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
   const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'fullscrewless')
