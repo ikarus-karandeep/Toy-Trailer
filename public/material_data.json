@@ -1,8 +1,7 @@
 {
   "Door_Top_Light": {
     "0": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
+      "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
@@ -15,7 +14,7 @@
     },
     "1": {
       "material_name": "Trailer Lights_Transmission",
-      "base_color": "#CA9A51",
+      "base_color": "#E7E7E7",
       "roughness": 0.0937,
       "metalness": 0.0,
       "normal": false,
@@ -135,8 +134,31 @@
       }
     },
     "2": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#E7E7E7",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
@@ -145,18 +167,6 @@
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
-      }
-    },
-    "3": {
-      "material_name": "Trailer Lights_Transmission",
-      "base_color": "#CA9A51",
-      "roughness": 0.0937,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
       }
     }
   },
@@ -186,8 +196,7 @@
       }
     },
     "2": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
+      "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
@@ -200,7 +209,7 @@
     },
     "3": {
       "material_name": "Trailer Lights_Transmission",
-      "base_color": "#CA9A51",
+      "base_color": "#E7E7E7",
       "roughness": 0.0937,
       "metalness": 0.0,
       "normal": false,
@@ -261,16 +270,15 @@
       }
     },
     "4": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     }
   },
@@ -406,16 +414,15 @@
       }
     },
     "2": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     }
   },
@@ -433,16 +440,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -472,16 +478,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -523,16 +528,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -598,16 +602,15 @@
       }
     },
     "3": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     }
   },
@@ -625,16 +628,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -812,8 +814,7 @@
       }
     },
     "3": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
+      "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
@@ -851,8 +852,7 @@
       }
     },
     "2": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
+      "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
@@ -930,16 +930,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -969,16 +968,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -1008,16 +1006,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -1047,16 +1044,15 @@
       }
     },
     "1": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -1088,16 +1084,15 @@
   },
   "Side Panel Bottom Strip": {
     "0": {
-      "material_name": "Number_Plate",
-      "flip_y": false,
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     }
   },
@@ -1325,7 +1320,7 @@
       }
     }
   },
-  "Wall E-Track": {
+  "Right Wall E-Track": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -1339,7 +1334,35 @@
       }
     }
   },
-  "Floor E-Track": {
+  "Right Floor E-Track": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Left Floor E-Track": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Left Wall E-Track": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -1535,6 +1558,7 @@
       }
     }
   },
+  "Gullwing Escape Door Proxy": {},
   "2X Axle Angled Side For GED": {
     "0": {
       "material_name": "Material",
@@ -1799,11 +1823,11 @@
   },
   "Stair (Flat Front)": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",

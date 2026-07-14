@@ -80,7 +80,7 @@ export function applyMaterialDef(mat, def, textures) {
         if (tex) {
             tex.colorSpace = THREE.SRGBColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-            if (def.flip_y === false) tex.flipY = false
+            tex.flipY = def.flip_y === true
             tex.needsUpdate = true
             next.map = tex
         }
@@ -93,6 +93,7 @@ export function applyMaterialDef(mat, def, textures) {
         if (tex) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+            tex.flipY = def.flip_y === true
             tex.needsUpdate = true
             next.roughnessMap = tex
             next.roughness = 1.0
@@ -106,6 +107,7 @@ export function applyMaterialDef(mat, def, textures) {
         if (tex) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+            tex.flipY = def.flip_y === true
             tex.needsUpdate = true
             next.metalnessMap = tex
             next.metalness = 1.0
@@ -119,6 +121,7 @@ export function applyMaterialDef(mat, def, textures) {
         if (tex) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+            tex.flipY = def.flip_y === true
             tex.needsUpdate = true
             next.normalMap = tex
         }
@@ -168,6 +171,7 @@ export function applyMaterialDef(mat, def, textures) {
              if (tex) {
                  tex.colorSpace = THREE.SRGBColorSpace
                  tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+                 tex.flipY = def.flip_y === true
                  tex.needsUpdate = true
                  next.emissiveMap = tex
                  next.emissive.set('#FFFFFF')
@@ -183,3 +187,4 @@ export function applyMaterialDef(mat, def, textures) {
 export function isSpecialMaterial(matName) {
     return isSpecialName(matName)
 }
+

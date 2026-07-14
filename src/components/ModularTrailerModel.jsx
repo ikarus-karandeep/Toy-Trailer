@@ -249,12 +249,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const texture = shellTextures[config.selectedColor]
         if (!texture) return
         texture.colorSpace = THREE.SRGBColorSpace
+        texture.flipY = false
         texture.wrapS = THREE.RepeatWrapping
         texture.wrapT = THREE.RepeatWrapping
         texture.needsUpdate = true
 
         // Configure Simple_Noise as a bump map (non-color, repeating)
         simpleNoise.colorSpace = THREE.NoColorSpace
+        simpleNoise.flipY = false
         simpleNoise.wrapS = THREE.RepeatWrapping
         simpleNoise.wrapT = THREE.RepeatWrapping
         simpleNoise.repeat.set(3.0, 3.0)
@@ -310,6 +312,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // ── Apply Metallic Grates normal map ─────────────────────────────────────
     useEffect(() => {
         normalMap.colorSpace = THREE.NoColorSpace
+        normalMap.flipY = false
         normalMap.wrapS = THREE.RepeatWrapping
         normalMap.wrapT = THREE.RepeatWrapping
         normalMap.needsUpdate = true  // reupload texture with new wrap/colorSpace to GPU
@@ -385,6 +388,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const original = wheelCoverOriginalMatsRef.current.get(key)
 
                     if (config.axleAtp) {
+                        normalMap.flipY = false
                         normalMap.repeat.set(20, 20)
                         const next = original.clone()
                         next.normalMap   = normalMap
@@ -423,6 +427,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         metallic.colorSpace  = THREE.NoColorSpace
         normal.colorSpace    = THREE.NoColorSpace
         roughness.colorSpace = THREE.NoColorSpace
+        ;[baseColor, metallic, normal, roughness].forEach(t => { t.flipY = false })
         ;[baseColor, metallic, normal, roughness].forEach(t => {
             t.wrapS = THREE.RepeatWrapping
             t.wrapT = THREE.RepeatWrapping
@@ -473,7 +478,43 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (!mat || isSpecialMaterial(mat.name)) return
                     const def = MATERIAL_DEFS_NORM.get(normMatName(mat.name))
                     if (!def) return
-                    const next = applyMaterialDef(mat, def, staticTextures)
+                    let next = applyMaterialDef(mat, def, staticTextures)
+                    
+                    if (normMatName(mat.name) === 'reflectivestripes') {
+                        // Custom patch for stripes: preserves vertical UV to fit the trim perfectly,
+                        // and uses world X/Z for horizontal wrap to prevent stretching on resize.
+                        next.onBeforeCompile = (shader) => {
+                            shader.uniforms.uScale = { value: 1.5 } // 1.5 is the sweet spot between 0.5 (too big) and 3.0 (too small)
+                            shader.vertexShader = shader.vertexShader.replace(
+                                '#include <common>',
+                                `#include <common>\nvarying vec3 vWorldPos;\nvarying vec3 vWorldNormal;`
+                            ).replace(
+                                '#include <beginnormal_vertex>',
+                                `#include <beginnormal_vertex>\nvWorldNormal = normalize(mat3(modelMatrix) * objectNormal);`
+                            ).replace(
+                                '#include <begin_vertex>',
+                                `#include <begin_vertex>\nvWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;`
+                            )
+                            shader.fragmentShader = shader.fragmentShader.replace(
+                                '#include <common>',
+                                `#include <common>\nvarying vec3 vWorldPos;\nvarying vec3 vWorldNormal;\nuniform float uScale;`
+                            ).replace(
+                                '#include <map_fragment>',
+                                `#ifdef USE_MAP
+                                vec3 an = abs(vWorldNormal);
+                                float worldU = (an.z > an.x) ? vWorldPos.x : vWorldPos.z;
+                                vec2 stripeUv = vec2(worldU * uScale, vMapUv.y);
+                                vec4 sampledDiffuseColor = texture2D(map, stripeUv);
+                                #ifdef DECODE_VIDEO_TEXTURE
+                                sampledDiffuseColor = vec4(mix(pow(sampledDiffuseColor.rgb * 0.9478672986 + vec3(0.0521327014), vec3(2.4)), sampledDiffuseColor.rgb * 0.0773993808, vec3(lessThanEqual(sampledDiffuseColor.rgb, vec3(0.04045)))), sampledDiffuseColor.w);
+                                #endif
+                                diffuseColor *= sampledDiffuseColor;
+                                #endif`
+                            )
+                        }
+                        next.needsUpdate = true
+                    }
+
                     if (isArray) child.material[i] = next
                     else child.material = next
                 })
@@ -947,8 +988,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 wallTemplate.updateWorldMatrix(true, false)
                 const wm = wallTemplate.matrixWorld
 
-                // World position of this wall template
+                // World position of this wall template's origin
                 const templateWorldPos = new THREE.Vector3().setFromMatrixPosition(wm)
+
+                // Compute bounding box to find the true center of the geometry in world space
+                wallTemplate.geometry.computeBoundingBox()
+                const wallBox = wallTemplate.geometry.boundingBox.clone().applyMatrix4(wm)
+                const trueWallWorldZ = (wallBox.min.z + wallBox.max.z) / 2
 
                 // World-space X scale and direction (local X → world X mapping)
                 const worldScaleX = Math.sqrt(
@@ -959,19 +1005,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const localXDirWorld = wm.elements[0] / (worldScaleX || 1)
 
                 console.log(`[E-Track] Wall[${wallIdx}] "${wallTemplate.name}" world pos: (${templateWorldPos.x.toFixed(3)}, ${templateWorldPos.y.toFixed(3)}, ${templateWorldPos.z.toFixed(3)})`)
+                console.log(`[E-Track] Wall[${wallIdx}] true world Z (bbox center): ${trueWallWorldZ.toFixed(3)}`)
                 console.log(`[E-Track] Wall[${wallIdx}] worldScaleX=${worldScaleX.toFixed(4)}, localXDirWorld=${localXDirWorld.toFixed(3)}`)
 
                 // ── Filter proxy gaps to only those on THIS wall's side (Z match) ──
-                // Strategy: compare the SIGN of the proxy's Z center against the
-                // wall template's world Z. Same sign → same side of trailer.
-                // Special case: if there is only ONE wall template in the GLB, we
-                // cannot discriminate sides, so we apply all gaps unconditionally
-                // (the template already covers just one side via its own geometry).
-                const wallWorldZ = templateWorldPos.z
+                const wallWorldZ = trueWallWorldZ
+                console.warn(`[E-Track-DEBUG] Total wallTemplates found: ${wallTemplates.length}`)
                 const wallProxyGaps = proxyGaps.filter(gap => {
                     // If only one wall template, always apply (can't discriminate sides)
                     if (wallTemplates.length === 1) {
-                        console.log(`[E-Track] Wall[${wallIdx}] single-template mode — applying gap "${gap.name}" unconditionally`)
+                        console.warn(`[E-Track-DEBUG] Wall[${wallIdx}] single-template mode — applying gap "${gap.name}" unconditionally! MESH ISSUE: The GLB has combined left/right walls into a single mesh. We cannot hide E-Track on one side without hiding it on the other unless the mesh is split into two separate templates.`)
                         return true
                     }
                     // Multi-template: use Z-center sign to identify which wall the proxy is on.
@@ -987,10 +1030,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         // Positive wall Z → positive proxy center → same side
                         sameSide = Math.sign(wallWorldZ) === Math.sign(proxyCenterZ)
                     }
-                    console.log(
-                        `[E-Track] Wall[${wallIdx}] testing gap "${gap.name}"`,
-                        `proxyZCenter=${proxyCenterZ.toFixed(3)}, wallZ=${wallWorldZ.toFixed(3)}`,
-                        `→ ${sameSide ? '✅ SAME SIDE' : '❌ opposite side, skip'}`
+                    console.warn(
+                        `[E-Track-DEBUG] Wall[${wallIdx}] testing gap "${gap.name}"\n` +
+                        `  proxyZCenter = ${proxyCenterZ.toFixed(3)}, wallZ = ${wallWorldZ.toFixed(3)}\n` +
+                        `  wallIsNearZero = ${wallIsNearZero}\n` +
+                        `  → ${sameSide ? '✅ SAME SIDE (Hiding E-Track here)' : '❌ OPPOSITE SIDE (Keeping E-Track here)'}`
                     )
                     return sameSide
                 })
@@ -1180,4 +1224,6 @@ Object.values(SHELL_TEXTURES).forEach(path => useTexture.preload(path))
 Object.values(STATIC_TEXTURE_PATHS).forEach(path => useTexture.preload(path))
 useTexture.preload('/Materials/Metallic_Grates_Normal.png')
 useTexture.preload('/Materials/Simple_Noise.png')
+
+
 

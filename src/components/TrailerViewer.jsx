@@ -1,7 +1,7 @@
 ﻿import '@google/model-viewer'
 import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { CameraControls, Stage, ContactShadows, useGLTF } from '@react-three/drei'
+import { CameraControls, Stage, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
@@ -10,7 +10,6 @@ import QRModal from './QRModal'
 import ModelReportPanel from './ModelReportPanel'
 import { isAndroidDevice } from '../utils/arPlatform'
 import { generateModelReport } from '../utils/modelReport'
-import { HDRIBox } from './HDRIBox'
 
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
 
@@ -123,7 +122,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 1.15
+      cameraControlsRef.current.maxDistance = maxDim * 9999
       if (groundYRef) groundYRef.current = bbox.min.y
       cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
       cameraInitRef.current = true
@@ -189,7 +188,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 1.15
+      cameraControlsRef.current.maxDistance = maxDim * 9999
       if (groundYRef) groundYRef.current = bbox.min.y
       lastBboxRef.current = bbox.clone()
       isTrackingRef.current = false
@@ -397,7 +396,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.15
+        cameraControlsRef.current.maxDistance = maxDim * 9999
       } else {
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const center = box.getCenter(new THREE.Vector3())
@@ -410,7 +409,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
 
         // Restore zoom limits for exterior
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.15
+        cameraControlsRef.current.maxDistance = maxDim * 9999
 
         // Restore default angle constraints
         cameraControlsRef.current.minPolarAngle   = 0
@@ -589,6 +588,36 @@ function ShadowLightSetup({ modelRef }) {
 
 
 
+function DynamicContactShadow({ modelRef }) {
+  const shadowRef = useRef()
+  
+  useFrame(() => {
+    if (!shadowRef.current || !modelRef?.current) return
+    let hasMeshes = false
+    modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
+    if (!hasMeshes) return
+
+    const bbox = new THREE.Box3().setFromObject(modelRef.current)
+    const center = new THREE.Vector3()
+    bbox.getCenter(center)
+    
+    // Position contact shadow slightly above the ground plane
+    shadowRef.current.position.set(center.x, bbox.min.y - 0.001, center.z)
+  })
+
+  return (
+    <ContactShadows
+      ref={shadowRef}
+      opacity={0.75}
+      scale={40}
+      blur={2}
+      far={10}
+      resolution={1024}
+      color="#000000"
+    />
+  )
+}
+
 function CameraLayerSetup() {
   const { camera } = useThree()
   useEffect(() => {
@@ -599,12 +628,61 @@ function CameraLayerSetup() {
 
 // ── ground model ───────────────────────────────────────────────────────────────
 
-// function GroundModel() {
-//   const { scene } = useGLTF('/models/Ground.glb')
-//   return <primitive object={scene} />
-// }
+function GroundModel({ modelRef }) {
+  const { scene } = useGLTF('/models/Ground.glb')
+  const [colorMap, opacityMap] = useTexture([
+    '/Ground Color.jpg',
+    '/Ground Opacity.jpg'
+  ])
+  const groundRef = useRef()
 
-// useGLTF.preload('/models/Ground.glb')
+  useEffect(() => {
+    if (colorMap) {
+      colorMap.colorSpace = THREE.SRGBColorSpace
+      colorMap.flipY = false
+      colorMap.wrapS = THREE.RepeatWrapping
+      colorMap.wrapT = THREE.RepeatWrapping
+      colorMap.repeat.set(10, 10)
+      colorMap.anisotropy = 16
+      colorMap.needsUpdate = true
+    }
+    if (opacityMap) {
+      opacityMap.colorSpace = THREE.NoColorSpace
+      opacityMap.flipY = false
+      opacityMap.needsUpdate = true
+    }
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.material = new THREE.MeshBasicMaterial({
+          map: colorMap,
+          alphaMap: opacityMap,
+          transparent: true,
+          side: THREE.DoubleSide,
+        })
+        child.material.needsUpdate = true
+        child.receiveShadow = false
+      }
+    })
+  }, [scene, colorMap, opacityMap])
+
+  useFrame(() => {
+    if (!groundRef.current || !modelRef?.current) return
+    let hasMeshes = false
+    modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
+    if (!hasMeshes) return
+
+    const bbox = new THREE.Box3().setFromObject(modelRef.current)
+    const center = new THREE.Vector3()
+    bbox.getCenter(center)
+
+    // Position ground slightly below the shadow material plane (which is at bbox.min.y - 0.001)
+    groundRef.current.position.set(center.x, bbox.min.y - 0.002, center.z)
+  })
+
+  return <primitive ref={groundRef} object={scene} />
+}
+
+useGLTF.preload('/models/Ground.glb')
 
 // ── viewer ────────────────────────────────────────────────────────────────────
 
@@ -805,7 +883,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 center={{ disable: isHdr }}
                 adjustCamera={false}
               >
-                {/* <ambientLight intensity={isHdr ? 0.4 : 0.1} /> */}
+                <ambientLight intensity={isHdr ? 0.6 : 0.3} />
                 <group ref={modelGroupRef}>
                   <ModularTrailerModel
                     widthFt={widthFt}
@@ -820,13 +898,11 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               </Stage>
 
               {/* Ground model loaded from public/models/Ground.glb */}
-              {/* <GroundModel /> */}
+              <GroundModel modelRef={modelGroupRef} />
               
-              {/* ShadowLightSetup manages its own directional light with a dynamically-fitted frustum */}
-              <ShadowCasterSetup modelRef={modelGroupRef} />
-              <ShadowLightSetup modelRef={modelGroupRef} />
+              {/* Soft drop shadow instead of harsh directional shadow */}
+              <DynamicContactShadow modelRef={modelGroupRef} />
 
-              {showEnvironment && <HDRIBox environment={environment} modelPath="/Projection Mesh.glb" reprojectedTexture="/Reprojection Texture.jpg" height={2.062} scale={1.0} scaleY={0.7} envRotation={0} envOffset={[0, 0]} position={[0, 0, 0]} />}
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
               )}
