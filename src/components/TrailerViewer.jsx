@@ -440,7 +440,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       false  // no animation — cancels any queued inertia
     )
 
-    cameraControlsRef.current.smoothTime = 0.4
+    cameraControlsRef.current.smoothTime = 0.2
     cameraControlsRef.current.setLookAt(
       targetPosition.x, targetPosition.y, targetPosition.z,
       targetLookAt.x, targetLookAt.y, targetLookAt.z,
@@ -954,6 +954,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 minPolarAngle={0.2}
                 maxPolarAngle={Math.PI / 2}
                 dollySpeed={1}
+                draggingSmoothTime={0.4}
               />
               <CameraLayerSetup />
             </Canvas>
