@@ -1,7 +1,7 @@
 ﻿import '@google/model-viewer'
-import { Suspense, useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { CameraControls, Stage, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
+import { CameraControls, Stage, useEnvironment, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
@@ -122,7 +122,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 9999
+      cameraControlsRef.current.maxDistance = maxDim * 1.15
       if (groundYRef) groundYRef.current = bbox.min.y
       cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
       cameraInitRef.current = true
@@ -188,7 +188,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 9999
+      cameraControlsRef.current.maxDistance = maxDim * 1.15
       if (groundYRef) groundYRef.current = bbox.min.y
       lastBboxRef.current = bbox.clone()
       isTrackingRef.current = false
@@ -226,6 +226,7 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
 
     const cc = cameraControlsRef.current
     const floor = groundYRef.current
+    const minCamY = floor + 0.05
 
     // ── Layer 1: native target boundary (handled inside camera-controls) ────────
     // setBoundary clamps _targetEnd inside cc's own update loop before the frame
@@ -234,6 +235,7 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
     boundary.current.min.set(-Infinity, floor + 0.3, -Infinity)
     boundary.current.max.set(Infinity,  Infinity,     Infinity)
     cc.setBoundary(boundary.current)
+    cc.minY = minCamY
 
     // ── Layer 2: safety-net for camera position (idle only) ──────────────────
     // setBoundary constrains the orbit target, not the camera position itself.
@@ -242,7 +244,6 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
     cc.getPosition(pos.current)
     cc.getTarget(target.current)
 
-    const minCamY = floor + 0.05
     const EPSILON = 0.005
     const camViolation = pos.current.y < minCamY - EPSILON
 
@@ -396,7 +397,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 9999
+        cameraControlsRef.current.maxDistance = maxDim * 1.15
       } else {
         const box = new THREE.Box3().setFromObject(modelGroupRef.current)
         const center = box.getCenter(new THREE.Vector3())
@@ -409,7 +410,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
 
         // Restore zoom limits for exterior
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 9999
+        cameraControlsRef.current.maxDistance = maxDim * 1.15
 
         // Restore default angle constraints
         cameraControlsRef.current.minPolarAngle   = 0
@@ -878,7 +879,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             >
               <Stage
                 intensity={0.6}
-                environment={stageEnvironment}
+                environment={null}
                 shadows={false}
                 center={{ disable: isHdr }}
                 adjustCamera={false}
@@ -896,6 +897,9 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                   <SceneReadyNotifier meshRef={modelGroupRef} onReady={onModelReady} />
                 )}
               </Stage>
+
+              {/* Separate Environment with Y-scale to bring ceiling reflections into view */}
+              <ScaledEnvironment environment={environment} scaleY={1.5} offsetZ={0.14} intensity={0.5} />
 
               {/* Ground model loaded from public/models/Ground.glb */}
               <GroundModel modelRef={modelGroupRef} />
@@ -928,7 +932,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 ref={cameraControlsRef}
                 enabled={!isTransitioning}
                 minPolarAngle={0.2}
-                maxPolarAngle={Math.PI * 0.52}
+                maxPolarAngle={Math.PI / 2}
                 dollySpeed={1}
               />
               <CameraLayerSetup />
@@ -960,7 +964,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <img src="/view.png" alt="" />
           </button>
-          <button
+          {/* <button
             aria-label="Toggle Environment"
             onClick={() => setShowEnvironment(prev => !prev)}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showEnvironment ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
@@ -968,7 +972,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2 20h20M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8M12 4a4 4 0 100 8 4 4 0 000-8z" />
             </svg>
-          </button>
+          </button> */}
           <button
             aria-label="Toggle Dimensions"
             onClick={() => setShowDimensions(prev => !prev)}
@@ -1049,5 +1053,71 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     </div>
   )
 })
+
+/**
+ * Renders the HDRI onto an inverted sphere with compressed Y-axis,
+ * then generates a PMREM environment map from the result.
+ * scaleY < 1 squishes vertically → ceiling becomes visible in reflections.
+ */
+function ScaledEnvironment({ environment, scaleY = 1.5, offsetY = 0.14, intensity = 1.0 }) {
+  const { gl, scene } = useThree()
+  const isHdr = environment?.endsWith('.hdr') || environment?.endsWith('.exr')
+  const texture = useEnvironment(isHdr ? { files: environment } : { preset: environment })
+
+  useEffect(() => {
+    if (!texture) return
+
+    const envScene = new THREE.Scene()
+    const geo = new THREE.SphereGeometry(100, 64, 64)
+    const mat = new THREE.ShaderMaterial({
+      uniforms: {
+        envMap: { value: texture },
+        scaleY: { value: scaleY },
+        offsetY: { value: offsetY },   // ← new
+      },
+      vertexShader: `
+        varying vec3 vWorldPos;
+        void main() {
+          vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D envMap;
+        uniform float scaleY;
+        uniform float offsetY;
+        varying vec3 vWorldPos;
+        #define PI 3.14159265359
+        void main() {
+          vec3 dir = normalize(vWorldPos);
+          // Match Blender Mapping node (Point): output = input*scale + location
+          dir.y = dir.y * scaleY + offsetY;
+          dir = normalize(dir);
+          float u = atan(dir.z, dir.x) / (2.0 * PI) + 0.5;
+          float v = asin(clamp(dir.y, -1.0, 1.0)) / PI + 0.5;
+          gl_FragColor = texture2D(envMap, vec2(u, v));
+        }
+      `,
+      side: THREE.BackSide,
+    })
+    envScene.add(new THREE.Mesh(geo, mat))
+
+    const pmrem = new THREE.PMREMGenerator(gl)
+    const envMap = pmrem.fromScene(envScene, 0, 0.1, 1000).texture
+    scene.environment = envMap
+    scene.environmentIntensity = intensity
+
+    geo.dispose()
+    mat.dispose()
+    pmrem.dispose()
+
+    return () => {
+      envMap.dispose()
+      scene.environment = null
+    }
+  }, [texture, scaleY, offsetY, gl, scene])   // ← add offsetY to deps
+
+  return null
+}
 
 export default TrailerViewer
