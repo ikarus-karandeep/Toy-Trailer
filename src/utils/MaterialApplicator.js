@@ -58,7 +58,7 @@ Object.values(materialData).forEach(componentSlots => {
 const texturePathSet = new Set()
 MATERIAL_DEFS.forEach((def, name) => {
     if (isSpecialName(name)) return
-    const fields = [def.base_color, def.roughness, def.metalness, def.normal]
+    const fields = [def.base_color, def.roughness, def.metalness, def.normal, def.alpha]
     fields.forEach(v => { if (isTexturePath(v)) texturePathSet.add(blenderPathToWeb(v)) })
 })
 
@@ -74,66 +74,97 @@ function getTexture(textures, blenderPath) {
 // Returns the updated clone (caller must assign it back to child.material).
 export function applyMaterialDef(mat, def, textures) {
     let next = mat.clone()
+    let originalDef = def;
 
-    if (isTexturePath(def.base_color)) {
-        const tex = getTexture(textures, def.base_color)
-        if (tex) {
-            tex.colorSpace = THREE.SRGBColorSpace
-            tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-            tex.flipY = def.flip_y === true
-            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
-            tex.needsUpdate = true
-            next.map = tex
+    let normalizedMatName = normMatName(def.material_name || "");
+    let isSpecialDecal = false;
+    
+    if (normalizedMatName.endsWith("decal")) {
+        let frontNameNorm = normalizedMatName.slice(0, -5);
+        if (MATERIAL_DEFS_NORM.has(frontNameNorm)) {
+            def = MATERIAL_DEFS_NORM.get(frontNameNorm);
         }
-    } else if (typeof def.base_color === 'string') {
-        next.color.set(def.base_color)
+        if (SPECIAL_MATERIALS.has(frontNameNorm)) {
+            isSpecialDecal = true;
+        }
     }
 
-    if (isTexturePath(def.roughness)) {
-        const tex = getTexture(textures, def.roughness)
+    if (!isSpecialDecal) {
+        if (isTexturePath(def.base_color)) {
+            const tex = getTexture(textures, def.base_color)
+            if (tex) {
+                tex.colorSpace = THREE.SRGBColorSpace
+                tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+                tex.flipY = def.flip_y === true
+                if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
+                tex.needsUpdate = true
+                next.map = tex
+                next.color.set('#FFFFFF')
+            }
+        } else if (typeof def.base_color === 'string') {
+            if (next.map) {
+                next.color.set('#FFFFFF')
+            } else {
+                next.color.set(def.base_color)
+            }
+        }
+
+        if (isTexturePath(def.roughness)) {
+            const tex = getTexture(textures, def.roughness)
+            if (tex) {
+                tex.colorSpace = THREE.NoColorSpace
+                tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+                tex.flipY = def.flip_y === true
+                if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
+                tex.needsUpdate = true
+                next.roughnessMap = tex
+                next.roughness = 1.0
+            }
+        } else if (typeof def.roughness === 'number') {
+            next.roughness = def.roughness
+        }
+
+        if (isTexturePath(def.metalness)) {
+            const tex = getTexture(textures, def.metalness)
+            if (tex) {
+                tex.colorSpace = THREE.NoColorSpace
+                tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+                tex.flipY = def.flip_y === true
+                if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
+                tex.needsUpdate = true
+                next.metalnessMap = tex
+                next.metalness = 1.0
+            }
+        } else if (typeof def.metalness === 'number') {
+            next.metalness = def.metalness
+        }
+    }
+
+    if (isTexturePath(originalDef.normal)) {
+        const tex = getTexture(textures, originalDef.normal)
         if (tex) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-            tex.flipY = def.flip_y === true
-            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
-            tex.needsUpdate = true
-            next.roughnessMap = tex
-            next.roughness = 1.0
-        }
-    } else if (typeof def.roughness === 'number') {
-        next.roughness = def.roughness
-    }
-
-    if (isTexturePath(def.metalness)) {
-        const tex = getTexture(textures, def.metalness)
-        if (tex) {
-            tex.colorSpace = THREE.NoColorSpace
-            tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-            tex.flipY = def.flip_y === true
-            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
-            tex.needsUpdate = true
-            next.metalnessMap = tex
-            next.metalness = 1.0
-        }
-    } else if (typeof def.metalness === 'number') {
-        next.metalness = def.metalness
-    }
-
-    if (isTexturePath(def.normal)) {
-        const tex = getTexture(textures, def.normal)
-        if (tex) {
-            tex.colorSpace = THREE.NoColorSpace
-            tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-            tex.flipY = def.flip_y === true
-            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
+            tex.flipY = originalDef.flip_y === true
+            if (normMatName(originalDef.material_name) === 'roof') tex.repeat.set(20, 20)
             tex.needsUpdate = true
             next.normalMap = tex
         }
     }
 
-    if (def.alpha !== undefined && def.alpha < 1.0) {
+    if (isTexturePath(originalDef.alpha)) {
+        const tex = getTexture(textures, originalDef.alpha)
+        if (tex) {
+            tex.colorSpace = THREE.NoColorSpace
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+            tex.flipY = originalDef.flip_y === true
+            tex.needsUpdate = true
+            next.alphaMap = tex
+            next.transparent = true
+        }
+    } else if (originalDef.alpha !== undefined && originalDef.alpha < 1.0) {
         next.transparent = true
-        next.opacity = def.alpha
+        next.opacity = originalDef.alpha
     }
 
     if (def.material_name && def.material_name.toLowerCase().includes('transmission')) {

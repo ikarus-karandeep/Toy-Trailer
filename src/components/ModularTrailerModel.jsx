@@ -7,6 +7,7 @@ import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import { patchTriplanarMaterial } from '../utils/TriplanarMaterial'
 import { MATERIAL_DEFS_NORM, STATIC_TEXTURE_PATHS, applyMaterialDef, isSpecialMaterial, normMatName } from '../utils/MaterialApplicator'
+import { COLOR_OPTIONS } from '../constants/configData'
 
 const LERP_SPEED = 0.18
 const LERP_THRESHOLD = 0.0005
@@ -262,6 +263,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         simpleNoise.repeat.set(3.0, 3.0)
         simpleNoise.needsUpdate = true
 
+        const shellHex = COLOR_OPTIONS.find(c => c.id === config.selectedColor)?.color || '#7B7D81'
+
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
@@ -274,13 +277,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const mats = isArray ? child.material : [child.material]
 
                 mats.forEach((mat, i) => {
-                    if (mat?.name !== 'MAT_Shell') return
+                    let normalized = normMatName(mat?.name)
+                    const isDecal = normalized.endsWith('decal')
+                    if (isDecal) normalized = normalized.slice(0, -5)
+                    if (normalized !== 'matshell') return
 
                     // undefined = not tagged in GLB → default to triplanar; only skip when explicitly false
                     const useTriplanar = child.userData?.useTriplanar !== false
                     
 
-                    if (useTriplanar) {
+                    if (useTriplanar && !isDecal) {
                         // Clone base material preserving GLB PBR properties, then patch shader
                         const base = mat.clone()
                         base.map         = texture
@@ -292,10 +298,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         else child.material = patched
                     } else {
                         const next = mat.clone()
-                        next.map         = texture
-                        next.normalMap   = simpleNoise
-                        next.normalScale = new THREE.Vector2(0.05, 0.05)
-                        next.roughness   = 0.1
+                        if (isDecal) {
+                            next.color.set(shellHex)
+                        } else {
+                            next.map         = texture
+                            next.normalMap   = simpleNoise
+                            next.normalScale = new THREE.Vector2(0.05, 0.05)
+                            next.roughness   = 0.1
+                        }
                         if (isArray) child.material[i] = next
                         else child.material = next
                     }
@@ -319,15 +329,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         
 
-        const applyGrates = (child, mat, i, isArray) => {
+        const applyGrates = (child, mat, i, isArray, isDecal) => {
             const base = mat.clone()
-            base.normalMap   = normalMap
-            base.normalScale = new THREE.Vector2(4.0, 4.0)
-            base.metalness   = 1
-            base.roughness   = 0.1
-            const patched = patchTriplanarMaterial(base, 10)
-            if (isArray) child.material[i] = patched
-            else child.material = patched
+            if (!isDecal) {
+                base.normalMap   = normalMap
+                base.normalScale = new THREE.Vector2(4.0, 4.0)
+                base.metalness   = 1
+                base.roughness   = 0.1
+                const patched = patchTriplanarMaterial(base, 10)
+                if (isArray) child.material[i] = patched
+                else child.material = patched
+            } else {
+                base.metalness   = 1
+                base.roughness   = 0.1
+                if (isArray) child.material[i] = base
+                else child.material = base
+            }
         }
 
         const allScenes = [
@@ -344,9 +361,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const mats = isArray ? child.material : [child.material]
                 mats.forEach((mat, i) => {
                     if (!mat) return
-                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    let normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    const isDecal = normalized.endsWith('decal')
+                    if (isDecal) normalized = normalized.slice(0, -5)
                     if (normalized === 'metallicgrates') {
-                        applyGrates(child, mat, i, isArray)
+                        applyGrates(child, mat, i, isArray, isDecal)
                     }
                 })
             })
