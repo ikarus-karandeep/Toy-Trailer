@@ -1,10 +1,11 @@
-﻿import '@google/model-viewer'
+import '@google/model-viewer'
 import { Suspense, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { CameraControls, Stage, useEnvironment, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import ModularTrailerModel from './ModularTrailerModel'
+import { patchTriplanarMaterial } from '../utils/TriplanarMaterial'
 import ModelDimensions from './ModelDimensions'
 import QRModal from './QRModal'
 import ModelReportPanel from './ModelReportPanel'
@@ -688,6 +689,7 @@ function GroundModel({ modelRef }) {
       side: THREE.DoubleSide,
       depthWrite: false,
     })
+    child.material = patchTriplanarMaterial(child.material, 10 / baseFootprintRef.current)
     child.material.needsUpdate = true
     child.receiveShadow = false
     child.renderOrder = 0   // draws first

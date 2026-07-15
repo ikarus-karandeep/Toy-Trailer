@@ -71,13 +71,17 @@ uniform vec2 uScaleZ;`
         shader.fragmentShader = shader.fragmentShader.replace(
             '#include <map_fragment>',
             `#ifdef USE_MAP
-  vec3 _tp_blend = abs(vWorldNormal);
+  vec3 _tp_normal = vWorldNormal;
+  if (length(_tp_normal) < 0.1) {
+    _tp_normal = normalize(cross(dFdx(vWorldPos), dFdy(vWorldPos)));
+  }
+  vec3 _tp_blend = abs(_tp_normal);
   float _tp_dom = max(_tp_blend.x, max(_tp_blend.y, _tp_blend.z));
   _tp_blend = step(_tp_dom - 0.001, _tp_blend);
   _tp_blend /= max(dot(_tp_blend, vec3(1.0)), 0.001);
 
-  vec4 _tp_x = texture2D(map, vWorldPos.yz * uScaleX);
-  vec4 _tp_y = texture2D(map, vWorldPos.xz * uScaleY);
+  vec4 _tp_x = texture2D(map, vWorldPos.zy * uScaleX);
+  vec4 _tp_y = texture2D(map, vec2(vWorldPos.x, -vWorldPos.z) * uScaleY);
   vec4 _tp_z = texture2D(map, vWorldPos.xy * uScaleZ);
   vec4 sampledDiffuseColor = _tp_x * _tp_blend.x + _tp_y * _tp_blend.y + _tp_z * _tp_blend.z;
 
@@ -93,10 +97,12 @@ uniform vec2 uScaleZ;`
 #endif`
         )
 
+
+
         // Replace UV-based normal/bump map sampling with triplanar world-space blend.
         // normalMap: each projection plane swizzles its tangent-space sample into world space:
-        //   X-face (UV=yz): tangent=+Y, bitangent=+Z  →  world(B·signX, R, G)
-        //   Y-face (UV=xz): tangent=+X, bitangent=+Z  →  world(R, B·signY, G)
+        //   X-face (UV=zy): tangent=+Z, bitangent=+Y  →  world(B·signX, G, R)
+        //   Y-face (UV=x,-z): tangent=+X, bitangent=-Z  →  world(R, B·signY, -G)
         //   Z-face (UV=xy): tangent=+X, bitangent=+Y  →  world(R, G, B·signZ)
         // bumpMap: samples height at 3 projection planes, blends finite-difference gradients,
         //   then calls perturbNormalArb (defined by Three.js's bumpmap_pars_fragment).
@@ -108,16 +114,16 @@ uniform vec2 uScaleZ;`
   _tn_blend = step(_tn_dom - 0.001, _tn_blend);
   _tn_blend /= max(dot(_tn_blend, vec3(1.0)), 0.001);
 
-  vec3 _ts_x = texture2D(normalMap, vWorldPos.yz * uScaleX).xyz * 2.0 - 1.0;
-  vec3 _ts_y = texture2D(normalMap, vWorldPos.xz * uScaleY).xyz * 2.0 - 1.0;
+  vec3 _ts_x = texture2D(normalMap, vWorldPos.zy * uScaleX).xyz * 2.0 - 1.0;
+  vec3 _ts_y = texture2D(normalMap, vec2(vWorldPos.x, -vWorldPos.z) * uScaleY).xyz * 2.0 - 1.0;
   vec3 _ts_z = texture2D(normalMap, vWorldPos.xy * uScaleZ).xyz * 2.0 - 1.0;
 
   _ts_x.xy *= normalScale;
   _ts_y.xy *= normalScale;
   _ts_z.xy *= normalScale;
 
-  vec3 _wn_x = normalize(vec3(_ts_x.b * sign(vWorldNormal.x), _ts_x.r, _ts_x.g));
-  vec3 _wn_y = normalize(vec3(_ts_y.r, _ts_y.b * sign(vWorldNormal.y), _ts_y.g));
+  vec3 _wn_x = normalize(vec3(_ts_x.b * sign(vWorldNormal.x), _ts_x.g, _ts_x.r));
+  vec3 _wn_y = normalize(vec3(_ts_y.r, _ts_y.b * sign(vWorldNormal.y), -_ts_y.g));
   vec3 _wn_z = normalize(vec3(_ts_z.r, _ts_z.g, _ts_z.b * sign(vWorldNormal.z)));
 
   vec3 _tp_worldN = normalize(_wn_x * _tn_blend.x + _wn_y * _tn_blend.y + _wn_z * _tn_blend.z);
@@ -132,13 +138,13 @@ uniform vec2 uScaleZ;`
 
   float _bp_eps = 0.001;
 
-  float _hx_c  = texture2D(bumpMap, vWorldPos.yz * uScaleX).r;
-  float _hx_du = texture2D(bumpMap, (vWorldPos.yz + vec2(_bp_eps, 0.0)) * uScaleX).r;
-  float _hx_dv = texture2D(bumpMap, (vWorldPos.yz + vec2(0.0, _bp_eps)) * uScaleX).r;
+  float _hx_c  = texture2D(bumpMap, vWorldPos.zy * uScaleX).r;
+  float _hx_du = texture2D(bumpMap, (vWorldPos.zy + vec2(_bp_eps, 0.0)) * uScaleX).r;
+  float _hx_dv = texture2D(bumpMap, (vWorldPos.zy + vec2(0.0, _bp_eps)) * uScaleX).r;
 
-  float _hy_c  = texture2D(bumpMap, vWorldPos.xz * uScaleY).r;
-  float _hy_du = texture2D(bumpMap, (vWorldPos.xz + vec2(_bp_eps, 0.0)) * uScaleY).r;
-  float _hy_dv = texture2D(bumpMap, (vWorldPos.xz + vec2(0.0, _bp_eps)) * uScaleY).r;
+  float _hy_c  = texture2D(bumpMap, vec2(vWorldPos.x, -vWorldPos.z) * uScaleY).r;
+  float _hy_du = texture2D(bumpMap, (vec2(vWorldPos.x, -vWorldPos.z) + vec2(_bp_eps, 0.0)) * uScaleY).r;
+  float _hy_dv = texture2D(bumpMap, (vec2(vWorldPos.x, -vWorldPos.z) + vec2(0.0, _bp_eps)) * uScaleY).r;
 
   float _hz_c  = texture2D(bumpMap, vWorldPos.xy * uScaleZ).r;
   float _hz_du = texture2D(bumpMap, (vWorldPos.xy + vec2(_bp_eps, 0.0)) * uScaleZ).r;

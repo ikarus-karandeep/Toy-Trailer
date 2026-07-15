@@ -105,7 +105,7 @@ export default function Configurator({ onModelReady }) {
           </div>
 
           {/* Desktop Bottom Nav */}
-          <div className="hidden lg:flex flex-shrink-0 justify-center items-center py-6">
+          <div className="hidden lg:flex flex-shrink-0 justify-center items-center mb-6">
             <BottomNav />
           </div>
         </div>
