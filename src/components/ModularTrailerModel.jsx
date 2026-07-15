@@ -902,7 +902,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // activeScenes is now a direct dep (not a ref) so this memo re-runs whenever
         // the set of visible models changes — proxy gaps are always up to date.
         const scenesToScan = activeScenes
-        console.log(`[E-Track] Scanning ${scenesToScan.length} active scene(s) for active proxy meshes...`)
+        // console.log(`[E-Track] Scanning ${scenesToScan.length} active scene(s) for active proxy meshes...`)
 
         // ── DEBUG: dump ALL proxy-named meshes regardless of active state ──────────
         scenesToScan.forEach(scene => {
