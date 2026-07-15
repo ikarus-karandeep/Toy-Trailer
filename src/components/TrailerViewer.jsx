@@ -1,4 +1,4 @@
-import '@google/model-viewer'
+﻿import '@google/model-viewer'
 import { Suspense, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { CameraControls, Stage, useEnvironment, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
@@ -77,12 +77,7 @@ async function parseGLB(mesh) {
     }
   })
 
-  console.group('[AR Export] parseGLB summary')
-  console.log('Total meshes included:', included.length)
-  console.log('Total meshes skipped:', skipped.length)
-  console.log('Included:', included.map(m => m.name))
-  console.log('Skipped (hidden):', skipped.map(m => `${m.name} — ${m.reason}`))
-  console.groupEnd()
+  
 
   if (included.length === 0) {
     console.error('[AR Export] exportGroup is EMPTY — no visible meshes found. Check modelGroupRef is populated.')
@@ -262,11 +257,7 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
 
     const correctedCamY = THREE.MathUtils.lerp(pos.current.y, minCamY, 0.1)
 
-    console.log(
-      '[GroundClamp] safety-net',
-      `camY: ${pos.current.y.toFixed(4)} → ${correctedCamY.toFixed(4)}`
-    )
-
+  
     cc.setLookAt(
       pos.current.x, correctedCamY, pos.current.z,
       target.current.x, target.current.y, target.current.z,
@@ -507,11 +498,7 @@ function ShadowLightSetup({ modelRef }) {
     if (!light || !modelRef.current) return
 
     // one-time diagnostic
-    if (frameCount.current === 1) {
-      console.log('[Shadow] gl.shadowMap.enabled:', gl.shadowMap.enabled)
-      console.log('[Shadow] Our light castShadow:', light.castShadow, '| mapSize:', light.shadow.mapSize)
-      console.log('[Shadow] floorRef mesh:', floorRef.current, '| receiveShadow:', floorRef.current?.receiveShadow)
-    }
+    
 
     let hasMeshes = false
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
@@ -523,19 +510,12 @@ function ShadowLightSetup({ modelRef }) {
     bbox.getCenter(center)
     bbox.getSize(size)
 
-    if (frameCount.current === 1) {
-      console.log('[Shadow] bbox center:', center, '| size:', size)
-      console.log('[Shadow] bbox min.y:', bbox.min.y.toFixed(4))
-    }
-
+   
     // position floor plane at model bottom each time it changes
     if (floorRef.current && lastMinY.current !== bbox.min.y) {
       lastMinY.current = bbox.min.y
       floorRef.current.position.set(center.x, bbox.min.y - 0.001, center.z)
-      if (frameCount.current <= 5) {
-        console.log('[Shadow] Floor plane y =', floorRef.current.position.y.toFixed(4),
-          '| receiveShadow:', floorRef.current.receiveShadow)
-      }
+      
     }
 
     // Keep the shadow light centered so the front and rear halves of the
@@ -562,7 +542,7 @@ function ShadowLightSetup({ modelRef }) {
         light.shadow.camera.left.toFixed(2), light.shadow.camera.right.toFixed(2),
         light.shadow.camera.top.toFixed(2), light.shadow.camera.bottom.toFixed(2)
       )
-      console.log('[Shadow] far:', light.shadow.camera.far.toFixed(2))
+      
     }
   })
 
@@ -680,21 +660,23 @@ function GroundModel({ modelRef }) {
       opacityMap.needsUpdate = true
     }
 
-    scene.traverse((child) => {
-  if (child.isMesh) {
-    child.material = new THREE.MeshBasicMaterial({
+    const baseMaterial = new THREE.MeshBasicMaterial({
       map: colorMap,
       alphaMap: opacityMap,
       transparent: true,
       side: THREE.DoubleSide,
       depthWrite: false,
     })
-    child.material = patchTriplanarMaterial(child.material, 10 / baseFootprintRef.current)
-    child.material.needsUpdate = true
-    child.receiveShadow = false
-    child.renderOrder = 0   // draws first
-  }
-})
+    const patchedMaterial = patchTriplanarMaterial(baseMaterial, 10 / baseFootprintRef.current)
+    patchedMaterial.needsUpdate = true
+
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.material = patchedMaterial   // shared instance across all ground meshes
+        child.receiveShadow = false
+        child.renderOrder = 0   // draws first
+      }
+    })
   }, [scene, colorMap, opacityMap])
 
   useFrame(() => {
@@ -794,17 +776,17 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     if (!modelGroupRef.current) { console.error('[AR Export] modelGroupRef.current is null — aborting'); return }
     if (arExporting) { console.warn('[AR Export] already exporting, skipping'); return }
     const childCount = modelGroupRef.current.children.length
-    console.log('[AR Export] modelGroupRef children count:', childCount)
+    
     modelGroupRef.current.traverse(o => {
       if (o.isMesh) console.log(`  mesh: ${o.name || '(unnamed)'}  visible=${o.visible}`)
     })
     setArExporting(true)
     try {
       const result = await parseGLB(modelGroupRef.current)
-      console.log('[AR Export] GLB result type:', typeof result, 'byteLength:', result?.byteLength)
+      
       const blob = new Blob([result], { type: 'model/gltf-binary' })
       const url = URL.createObjectURL(blob)
-      console.log('[AR Export] blob URL created:', url)
+      
       setArUrl(url)
       setShowQR(false)
     } catch (err) {
@@ -863,12 +845,12 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     window.gltfreport = async () => {
       if (modelReportRef.current) { setModelReport(null); return }
       if (!modelGroupRef.current) { console.warn('[gltfreport] Model not ready'); return }
-      console.log('[gltfreport] Generating report...')
+      // console.log('[gltfreport] Generating report...')
       try {
         const glbBuffer = await parseGLB(modelGroupRef.current)
         const report = await generateModelReport(glbBuffer, modelGroupRef.current, `trailer-${lengthFt}ft-${widthFt}ft.glb`)
         setModelReport(report)
-        console.log('[gltfreport] Done')
+        // console.log('[gltfreport] Done')
       } catch (err) {
         console.error('[gltfreport] Error:', err)
       }

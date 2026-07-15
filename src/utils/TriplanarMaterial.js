@@ -177,10 +177,10 @@ uniform vec2 uScaleZ;`
  */
 export function applyMaterial(mesh, material, scale = 1.0) {
     if (mesh.userData?.useTriplanar) {
-        console.log(`[Triplanar] ${mesh.name} → triplanar (scale: ${scale})`)
+        
         mesh.material = patchTriplanarMaterial(material, scale)
     } else {
-        console.log(`[Triplanar] ${mesh.name} → standard UV`)
+        
         mesh.material = material
     }
 }

@@ -134,13 +134,13 @@ export class BlenderNodes {
         }
 
         if (proxy) {
-            console.log(`[BlenderNodes] Proxy resolved via ${resolvedBy} for "${target.name}" → active=${visible} (render hidden)`)
+            // console.log(`[BlenderNodes] Proxy resolved via ${resolvedBy} for "${target.name}" → active=${visible} (render hidden)`)
             proxy.traverse(child => {
                 child.userData.proxyActive = visible
                 child.visible = false
             })
         } else {
-            console.log(`[BlenderNodes] No proxy found for: "${target.name}" (tried exact, parent-name, sibling)`)
+            // console.log(`[BlenderNodes] No proxy found for: "${target.name}" (tried exact, parent-name, sibling)`)
         }
     }
 
@@ -162,19 +162,19 @@ export class BlenderNodes {
                 if (child.name.toLowerCase().includes('proxy')) child.userData.proxyActive = false
             }
         })
-        console.log(`[BlenderNodes] switchMesh → target="${targetName}"`)
+        // console.log(`[BlenderNodes] switchMesh → target="${targetName}"`)
         if (!targetName) {
-            console.log(`[BlenderNodes] switchMesh → no targetName, hiding all`)
+            // console.log(`[BlenderNodes] switchMesh → no targetName, hiding all`)
             return false
         }
         // Target may be a Group (multi-primitive mesh) or a plain Mesh — find by name and show all descendants
         const target = scene.getObjectByName(targetName)
         if (target) {
-            console.log(`[BlenderNodes] switchMesh → found "${targetName}", showing`)
+            // console.log(`[BlenderNodes] switchMesh → found "${targetName}", showing`)
             BlenderNodes._applyWithProxy(scene, target, true)
             return true
         }
-        console.warn(`[BlenderNodes] switchMesh → "${targetName}" NOT FOUND in scene`)
+        // console.warn(`[BlenderNodes] switchMesh → "${targetName}" NOT FOUND in scene`)
         return false
     }
 
@@ -193,19 +193,19 @@ export class BlenderNodes {
                 if (child.name.toLowerCase().includes('proxy')) child.userData.proxyActive = false
             }
         })
-        console.log(`[BlenderNodes] switchMeshes → active list: [${targetNames.join(', ')}]`)
+        // console.log(`[BlenderNodes] switchMeshes → active list: [${targetNames.join(', ')}]`)
         let matched = 0
         for (const name of targetNames) {
             const target = scene.getObjectByName(name)
             if (target) {
-                console.log(`[BlenderNodes] switchMeshes → showing "${name}"`)
+                // console.log(`[BlenderNodes] switchMeshes → showing "${name}"`)
                 BlenderNodes._applyWithProxy(scene, target, true)
                 matched++
             } else {
                 console.warn(`[BlenderNodes] switchMeshes → "${name}" NOT FOUND in scene`)
             }
         }
-        console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length}`)
+        // console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length}`)
         return matched
     }
 

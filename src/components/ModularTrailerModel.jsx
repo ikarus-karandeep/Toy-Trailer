@@ -218,7 +218,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const mats = Array.isArray(child.material)
                     ? child.material.map(m => m.name || '(unnamed)')
                     : [child.material?.name || '(unnamed)']
-                console.log(`[${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
+                // console.log(`[${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
             })
         })
     }, [])
@@ -278,7 +278,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
                     // undefined = not tagged in GLB → default to triplanar; only skip when explicitly false
                     const useTriplanar = child.userData?.useTriplanar !== false
-                    console.log(`[Triplanar] ${child.name} → ${useTriplanar ? 'triplanar' : 'standard UV'}`)
+                    
 
                     if (useTriplanar) {
                         // Clone base material preserving GLB PBR properties, then patch shader
@@ -317,7 +317,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         normalMap.wrapT = THREE.RepeatWrapping
         normalMap.needsUpdate = true  // reupload texture with new wrap/colorSpace to GPU
 
-        console.log('[grates-debug] normalMap loaded:', normalMap, '| image:', normalMap?.image)
+        
 
         const applyGrates = (child, mat, i, isArray) => {
             const base = mat.clone()
@@ -842,9 +842,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     // ── Emulate Blender "E-Track" Array Generation Node ────────────────────────
     const generatedETracks = useMemo(() => {
-        console.log('[E-Track] ── useMemo recomputing ──────────────────────')
-        console.log('[E-Track] config.escapeDoor:', config.escapeDoor)
-        console.log('[E-Track] config.tieDowns:', config.tieDowns)
+        
 
         // Find the base template meshes (we assume they are the original single-piece objects)
         let floorTemplate = null
@@ -852,12 +850,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         cargo.traverse(child => {
             if (!child.isMesh) return
             const isProxy = child.name.toLowerCase().includes('proxy')
-            console.log(`[E-Track] cargo mesh: "${child.name}" | isProxy=${isProxy}`)
+           
             if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplate = child
             if (child.name.includes('Wall_E-Track')  && !isProxy) wallTemplates.push(child)
         })
-        console.log('[E-Track] floorTemplate:', floorTemplate?.name ?? 'NOT FOUND')
-        console.log(`[E-Track] wallTemplates found: ${wallTemplates.length}`, wallTemplates.map(t => t.name))
+        
 
         // The true rear X coordinate of the trailer uses the same clamped delta logic from GeometryUtils
         const BASE_LENGTH_FT = 32
@@ -880,12 +877,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         const stepSize = 0.076
         const count = Math.max(1, Math.ceil(Math.abs(targetLength) / stepSize))
-        console.log(`[E-Track] trueRearX=${trueRearX.toFixed(3)} targetLength=${targetLength.toFixed(3)} stepSize=${stepSize} count=${count}`)
+        
 
         const points = new Float32Array(count * 3)
         // Assume trailer array generates along -X from the Switch offset
         const startX = switchNode
-        console.log(`[E-Track] Points range: X ${startX.toFixed(3)} → ${(startX - (count - 1) * stepSize).toFixed(3)}`)
+        
         for (let i = 0; i < count; i++) {
             points[i * 3] = startX - (i * stepSize)
             points[i * 3 + 1] = 0
@@ -916,17 +913,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 child.geometry.computeBoundingBox()
                 const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld)
                 const wPos = new THREE.Vector3().setFromMatrixPosition(child.matrixWorld)
-                console.log(
-                    `[E-Track] 📦 ALL-PROXY-SCAN "${child.name}"`,
-                    `| proxyActive=${child.userData?.proxyActive}`,
-                    `| visible=${child.visible}`,
-                    `| worldPos=(${wPos.x.toFixed(3)}, ${wPos.y.toFixed(3)}, ${wPos.z.toFixed(3)})`,
-                    `| worldBBox X[${box.min.x.toFixed(3)}, ${box.max.x.toFixed(3)}]`,
-                    `| worldBBox Z[${box.min.z.toFixed(3)}, ${box.max.z.toFixed(3)}]`
-                )
+               
             })
         })
-        console.log('[E-Track] ── END ALL-PROXY-SCAN ──────────────────────────────────')
+        
 
         scenesToScan.forEach(scene => {
             scene.traverse(child => {
@@ -934,7 +924,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 if (!child.name.toLowerCase().includes('proxy')) return
                 // Proxies are render-hidden; use proxyActive flag set by BlenderNodes
                 if (!child.userData?.proxyActive) {
-                    console.log(`[E-Track] ⏭️  Skipping proxy "${child.name}" — proxyActive=${child.userData?.proxyActive}`)
+                    
                     return
                 }
 
@@ -943,13 +933,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld)
                 const wPos = new THREE.Vector3().setFromMatrixPosition(child.matrixWorld)
 
-                console.log(
-                    `[E-Track] ✅ ACTIVE-PROXY "${child.name}"`,
-                    `| worldPos=(${wPos.x.toFixed(3)}, ${wPos.y.toFixed(3)}, ${wPos.z.toFixed(3)})`,
-                    `| worldBBox X[${box.min.x.toFixed(3)}, ${box.max.x.toFixed(3)}]`,
-                    `| worldBBox Y[${box.min.y.toFixed(3)}, ${box.max.y.toFixed(3)}]`,
-                    `| worldBBox Z[${box.min.z.toFixed(3)}, ${box.max.z.toFixed(3)}]`
-                )
+                
 
                 // Store each proxy gap with its full X AND Z world bounds.
                 // Z bounds are used to match the proxy to the correct wall side.
@@ -962,12 +946,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
 
-        if (proxyGaps.length > 0) {
-            console.log(`[E-Track] ✅ ${proxyGaps.length} active proxy gap(s) collected:`)
-            proxyGaps.forEach((g, i) => console.log(`[E-Track]   [${i}] "${g.name}" X[${g.xMin.toFixed(3)}, ${g.xMax.toFixed(3)}] Z[${g.zMin.toFixed(3)}, ${g.zMax.toFixed(3)}]`))
-        } else {
-            console.log('[E-Track] No active proxy meshes found — no E-Track clipping applied')
-        }
+        // if (proxyGaps.length > 0) {
+        //     console.log(`[E-Track] ✅ ${proxyGaps.length} active proxy gap(s) collected:`)
+        //     proxyGaps.forEach((g, i) => console.log(`[E-Track]   [${i}] "${g.name}" X[${g.xMin.toFixed(3)}, ${g.xMax.toFixed(3)}] Z[${g.zMin.toFixed(3)}, ${g.zMax.toFixed(3)}]`))
+        // } else {
+        //     console.log('[E-Track] No active proxy meshes found — no E-Track clipping applied')
+        // }
 
         const instances = []
 
@@ -1004,9 +988,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 )
                 const localXDirWorld = wm.elements[0] / (worldScaleX || 1)
 
-                console.log(`[E-Track] Wall[${wallIdx}] "${wallTemplate.name}" world pos: (${templateWorldPos.x.toFixed(3)}, ${templateWorldPos.y.toFixed(3)}, ${templateWorldPos.z.toFixed(3)})`)
-                console.log(`[E-Track] Wall[${wallIdx}] true world Z (bbox center): ${trueWallWorldZ.toFixed(3)}`)
-                console.log(`[E-Track] Wall[${wallIdx}] worldScaleX=${worldScaleX.toFixed(4)}, localXDirWorld=${localXDirWorld.toFixed(3)}`)
+              
 
                 // ── Filter proxy gaps to only those on THIS wall's side (Z match) ──
                 const wallWorldZ = trueWallWorldZ
@@ -1039,7 +1021,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     return sameSide
                 })
 
-                console.log(`[E-Track] Wall[${wallIdx}] applicable proxy gaps: ${wallProxyGaps.length}`)
+                // console.log(`[E-Track] Wall[${wallIdx}] applicable proxy gaps: ${wallProxyGaps.length}`)
 
                 let wallGeom = pointsGeometry  // default: full run
 
@@ -1053,15 +1035,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     // We compare that world X against the proxy world X bounds directly.
 
                     // Log the conversion params once before the loop
-                    console.log(`[E-Track] Wall[${wallIdx}] Conversion: worldX = ${templateWorldPos.x.toFixed(3)} + px * ${(worldScaleX * localXDirWorld).toFixed(4)}`)
-                    wallProxyGaps.forEach((g, gi) => {
-                        console.log(`[E-Track] Wall[${wallIdx}] Gap[${gi}] "${g.name}" world X[${g.xMin.toFixed(3)}, ${g.xMax.toFixed(3)}]`)
-                    })
-                    console.log(`[E-Track] Wall[${wallIdx}] E-Track local X range: ${startX.toFixed(3)} ? ${(startX - (count-1)*stepSize).toFixed(3)}`)
+                    // console.log(`[E-Track] Wall[${wallIdx}] Conversion: worldX = ${templateWorldPos.x.toFixed(3)} + px * ${(worldScaleX * localXDirWorld).toFixed(4)}`)
+                    // wallProxyGaps.forEach((g, gi) => {
+                    //     // console.log(`[E-Track] Wall[${wallIdx}] Gap[${gi}] "${g.name}" world X[${g.xMin.toFixed(3)}, ${g.xMax.toFixed(3)}]`)
+                    // })
+                    // console.log(`[E-Track] Wall[${wallIdx}] E-Track local X range: ${startX.toFixed(3)} ? ${(startX - (count-1)*stepSize).toFixed(3)}`)
                     // Convert startX to world X to verify range
                     const startWorldX = templateWorldPos.x + startX * worldScaleX * localXDirWorld
                     const endWorldX = templateWorldPos.x + (startX - (count-1)*stepSize) * worldScaleX * localXDirWorld
-                    console.log(`[E-Track] Wall[${wallIdx}] E-Track WORLD X range: ${Math.min(startWorldX, endWorldX).toFixed(3)} ? ${Math.max(startWorldX, endWorldX).toFixed(3)}`)
+                    // console.log(`[E-Track] Wall[${wallIdx}] E-Track WORLD X range: ${Math.min(startWorldX, endWorldX).toFixed(3)} ? ${Math.max(startWorldX, endWorldX).toFixed(3)}`)
 
                     const xFactor = worldScaleX * localXDirWorld
 
@@ -1076,7 +1058,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         for (const gap of wallProxyGaps) {
                             if (worldX >= gap.xMin && worldX <= gap.xMax) {
                                 inGap = true
-                                if (skipped < 5) console.log(`[E-Track] Wall[${wallIdx}] ?? Skipping px=${px.toFixed(3)} worldX=${worldX.toFixed(3)} (gap "${gap.name}" worldX[${gap.xMin.toFixed(3)}, ${gap.xMax.toFixed(3)}])`)
+                                // if (skipped < 5) console.log(`[E-Track] Wall[${wallIdx}] ?? Skipping px=${px.toFixed(3)} worldX=${worldX.toFixed(3)} (gap "${gap.name}" worldX[${gap.xMin.toFixed(3)}, ${gap.xMax.toFixed(3)}])`)
                                 break
                             }
                         }
@@ -1084,19 +1066,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         if (inGap) { skipped++; continue }
                         filtered.push(px, 0, 0)
                     }
-                    console.log(`[E-Track] Wall[${wallIdx}] points: ${count} total ? ${filtered.length / 3} kept, ${skipped} skipped`)
+                    // console.log(`[E-Track] Wall[${wallIdx}] points: ${count} total ? ${filtered.length / 3} kept, ${skipped} skipped`)
 
                     const wallPts = new Float32Array(filtered)
                     wallGeom = new THREE.BufferGeometry()
                     wallGeom.setAttribute('position', new THREE.BufferAttribute(wallPts, 3))
                 } else {
-                    console.log(`[E-Track] Wall[${wallIdx}] no gaps applicable � full run`)
+                    // console.log(`[E-Track] Wall[${wallIdx}] no gaps applicable � full run`)
                 }
                 const wallInstanced = BlenderNodes.instanceOnPoints(wallGeom, wallTemplate)
                 wallInstanced.position.copy(wallTemplate.position)
                 wallInstanced.rotation.copy(wallTemplate.rotation)
                 wallInstanced.scale.copy(wallTemplate.scale)
-                console.log(`[E-Track] Wall[${wallIdx}] created wallInstanced with ${wallInstanced.count} instances, position=(${wallInstanced.position.x.toFixed(3)}, ${wallInstanced.position.y.toFixed(3)}, ${wallInstanced.position.z.toFixed(3)})`)
+                // console.log(`[E-Track] Wall[${wallIdx}] created wallInstanced with ${wallInstanced.count} instances, position=(${wallInstanced.position.x.toFixed(3)}, ${wallInstanced.position.y.toFixed(3)}, ${wallInstanced.position.z.toFixed(3)})`)
                 // Include visibilityVersion in the key to force full THREE.js remount when
                 // proxy visibility changes — this ensures the old instanced mesh is removed
                 // from the scene and the new filtered one is added (not just prop-swapped).
