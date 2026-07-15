@@ -81,6 +81,7 @@ export function applyMaterialDef(mat, def, textures) {
             tex.colorSpace = THREE.SRGBColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
             tex.flipY = def.flip_y === true
+            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
             tex.needsUpdate = true
             next.map = tex
         }
@@ -94,6 +95,7 @@ export function applyMaterialDef(mat, def, textures) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
             tex.flipY = def.flip_y === true
+            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
             tex.needsUpdate = true
             next.roughnessMap = tex
             next.roughness = 1.0
@@ -108,6 +110,7 @@ export function applyMaterialDef(mat, def, textures) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
             tex.flipY = def.flip_y === true
+            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
             tex.needsUpdate = true
             next.metalnessMap = tex
             next.metalness = 1.0
@@ -122,6 +125,7 @@ export function applyMaterialDef(mat, def, textures) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
             tex.flipY = def.flip_y === true
+            if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
             tex.needsUpdate = true
             next.normalMap = tex
         }
