@@ -252,8 +252,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             const sizeY = box.max.y - box.min.y
             const sizeZ = box.max.z - box.min.z
 
-            const distX = sizeZ
-            const distY = sizeY
+            // Dynamically pick the two largest dimensions to prevent extreme stretching 
+            // if the mesh is oriented along the X axis instead of the Z axis.
+            const sizes = [sizeX, sizeY, sizeZ].sort((a, b) => b - a)
+            const distX = sizes[0]
+            const distY = sizes[1]
             
             // This is the base scale from your Blender material's Mapping node
             // Tweak this number if the texture is globally too small or large
@@ -392,16 +395,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         
 
-        const applyGrates = (child, mat, i, isArray, isDecal) => {
+        const applyGrates = (child, mat, i, isArray, isDecal, isUvScale) => {
             const base = mat.clone()
             if (!isDecal) {
                 base.normalMap   = normalMap
                 base.normalScale = new THREE.Vector2(4.0, 4.0)
                 base.metalness   = 1
                 base.roughness   = 0.1
-                const patched = patchTriplanarMaterial(base, 10)
-                if (isArray) child.material[i] = patched
-                else child.material = patched
+                
+                let finalMat = base;
+                // Only apply triplanar if it's NOT the uvscale material
+                if (!isUvScale) {
+                    finalMat = patchTriplanarMaterial(base, 10)
+                }
+                
+                if (isArray) child.material[i] = finalMat
+                else child.material = finalMat
             } else {
                 base.metalness   = 1
                 base.roughness   = 0.1
@@ -416,7 +425,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
         ]
 
-        // Apply only to meshes whose material name normalises to 'metallicgrates'
+        // Apply to meshes whose material name normalises to 'metallicgrates' or 'metallicgratesuvscale'
         allScenes.forEach(scene => {
             scene.traverse(child => {
                 if (!child.isMesh) return
@@ -427,8 +436,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
                     const isDecal = normalized.endsWith('decal')
                     if (isDecal) normalized = normalized.slice(0, -5)
+                    
                     if (normalized === 'metallicgrates') {
-                        applyGrates(child, mat, i, isArray, isDecal)
+                        applyGrates(child, mat, i, isArray, isDecal, false)
+                    } else if (normalized === 'metallicgratesuvscale') {
+                        applyGrates(child, mat, i, isArray, isDecal, true)
                     }
                 })
             })
