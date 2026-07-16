@@ -1,4 +1,4 @@
-import '@google/model-viewer'
+﻿import '@google/model-viewer'
 import { Suspense, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { CameraControls, Stage, useEnvironment, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
@@ -761,7 +761,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [downloading, setDownloading] = useState(false)
   const [clickedName, setClickedName] = useState(null)
   const [modelReport, setModelReport] = useState(null)
-  const [environment, setEnvironment] = useState('/trailer_hdri_2.hdr')
+  const [environment, setEnvironment] = useState('/trailer_hdri.exr')
   const [showEnvironment, setShowEnvironment] = useState(false)
   const [showGround, setShowGround] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
