@@ -224,6 +224,69 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         })
     }, [])
 
+    const applyUvScalingForScene = (scene) => {
+        scene.traverse(child => {
+            if (!child.isMesh || !child.geometry?.attributes.uv) return
+
+            const mats = Array.isArray(child.material) ? child.material : [child.material]
+            const needsUvScale = mats.some(mat => {
+                const normalized = mat?.name?.replace(/[\s_]+/g, '').toLowerCase() || ''
+                return normalized.includes('uvscale')
+            })
+
+            if (!needsUvScale) return
+            console.log("hii")
+            const geo = child.geometry
+            const uv = geo.attributes.uv
+
+            if (!geo.userData.uvScaleOriginals) {
+                geo.userData.uvScaleOriginals = uv.array.slice()
+            }
+            const originalUvs = geo.userData.uvScaleOriginals
+
+            geo.computeBoundingBox()
+            const box = geo.boundingBox
+            if (!box) return
+
+            const sizeX = box.max.x - box.min.x
+            const sizeY = box.max.y - box.min.y
+            const sizeZ = box.max.z - box.min.z
+
+            const distX = sizeZ
+            const distY = sizeY
+            
+            // This is the base scale from your Blender material's Mapping node
+            // Tweak this number if the texture is globally too small or large
+            const baseScale = 10.0 
+            
+            const scaleX = distX / 2.02
+            const scaleY = distY / 1.92 
+
+            for (let i = 0; i < uv.count; i++) {
+                // X distance divided by 2.02
+                // Y distance divided by 1.92
+                uv.setXY(i, originalUvs[i * 2] * scaleX * baseScale, originalUvs[i * 2 + 1] * scaleY * baseScale)
+            }
+
+            uv.needsUpdate = true
+        })
+    }
+
+    // -- Apply UV Scaling for materials containing 'uvscale' ------------------
+    // Matches the Blender geometry node logic: (Bounding Box Diagonal Distance) / 2.203 -> Scale Y
+    useEffect(() => {
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+
+        allScenes.forEach(applyUvScalingForScene)
+    }, [
+        base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+        tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+    ])
     // Hide ground/shadow catcher plane when HDR is active to prevent z-fighting
     useEffect(() => {
         const allScenes = [base, baseMeshes, addons]
@@ -1203,7 +1266,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     we, ie,
                 })
             })
+
+            applyUvScalingForScene(scene)
         })
+
 
     })
 

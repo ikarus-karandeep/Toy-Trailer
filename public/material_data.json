@@ -369,7 +369,7 @@
       }
     },
     "2": {
-      "material_name": "Metallic Grates",
+      "material_name": "Metallic Grates_UV_Scale",
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,

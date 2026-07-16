@@ -27,6 +27,7 @@ export function normMatName(name) {
 const SPECIAL_MATERIALS = new Set([
     'matshell',
     'metallicgrates',
+    'Metallic Grates_UV_Scale',
     'matwheelcover',
     'matrim',
 ])

@@ -989,13 +989,13 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <img src="/eyes.png" alt="" />
           </button>
-          <button 
+          {/* <button 
             aria-label="Scenic View" 
             onClick={() => setEnvironment(prev => prev === 'city' ? '/trailer_hdri.exr' : '/trailer_hdri.exr')}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${isHdr ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/view.png" alt="" />
-          </button>
+          </button> */}
           {/* <button
             aria-label="Toggle Environment"
             onClick={() => setShowEnvironment(prev => !prev)}
@@ -1012,7 +1012,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             <img src="/Dimension.png" alt="" />
           </button>
-          <button
+          {/* <button
             aria-label="Toggle Ground"
             onClick={() => setShowGround(prev => !prev)}
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showGround ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
@@ -1031,7 +1031,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 </>
               )}
             </svg>
-          </button>
+          </button> */}
           <button
             onClick={handleViewInDriveway}
             className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
