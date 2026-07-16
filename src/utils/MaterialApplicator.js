@@ -91,6 +91,7 @@ export function applyMaterialDef(mat, def, textures) {
     }
 
     if (!isSpecialDecal) {
+        // --- base_color: texture path -> hex string -> fallback white ---
         if (isTexturePath(def.base_color)) {
             const tex = getTexture(textures, def.base_color)
             if (tex) {
@@ -101,6 +102,9 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.needsUpdate = true
                 next.map = tex
                 next.color.set('#FFFFFF')
+            } else {
+                // path was given but texture failed to load — fall back to white
+                next.color.set('#FFFFFF')
             }
         } else if (typeof def.base_color === 'string') {
             if (next.map) {
@@ -108,8 +112,12 @@ export function applyMaterialDef(mat, def, textures) {
             } else {
                 next.color.set(def.base_color)
             }
+        } else {
+            // neither a texture path nor a hex string was provided
+            next.color.set('#FFFFFF')
         }
 
+        // --- roughness: texture path -> number -> fallback 0.0 ---
         if (isTexturePath(def.roughness)) {
             const tex = getTexture(textures, def.roughness)
             if (tex) {
@@ -120,11 +128,16 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.needsUpdate = true
                 next.roughnessMap = tex
                 next.roughness = 1.0
+            } else {
+                next.roughness = 0.0
             }
         } else if (typeof def.roughness === 'number') {
             next.roughness = def.roughness
+        } else {
+            next.roughness = 0.0
         }
 
+        // --- metalness: texture path -> number -> fallback 0.0 ---
         if (isTexturePath(def.metalness)) {
             const tex = getTexture(textures, def.metalness)
             if (tex) {
@@ -135,12 +148,17 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.needsUpdate = true
                 next.metalnessMap = tex
                 next.metalness = 1.0
+            } else {
+                next.metalness = 0.0
             }
         } else if (typeof def.metalness === 'number') {
             next.metalness = def.metalness
+        } else {
+            next.metalness = 0.0
         }
     }
 
+    // --- normal: texture path -> boolean toggle -> fallback (no normal map) ---
     if (isTexturePath(originalDef.normal)) {
         const tex = getTexture(textures, originalDef.normal)
         if (tex) {
@@ -150,9 +168,21 @@ export function applyMaterialDef(mat, def, textures) {
             if (normMatName(originalDef.material_name) === 'roof') tex.repeat.set(20, 20)
             tex.needsUpdate = true
             next.normalMap = tex
+        } else {
+            next.normalMap = null
         }
+    } else if (typeof originalDef.normal === 'boolean') {
+        // explicit boolean flag: true = keep whatever normal map is already on
+        // the base material, false = strip it
+        if (originalDef.normal === false) {
+            next.normalMap = null
+        }
+    } else {
+        // neither a texture path nor a boolean was provided — no normal map
+        next.normalMap = null
     }
 
+    // --- alpha: texture path -> number -> fallback 0.0 ---
     if (isTexturePath(originalDef.alpha)) {
         const tex = getTexture(textures, originalDef.alpha)
         if (tex) {
@@ -162,10 +192,23 @@ export function applyMaterialDef(mat, def, textures) {
             tex.needsUpdate = true
             next.alphaMap = tex
             next.transparent = true
+        } else {
+            next.transparent = true
+            next.opacity = 0.0
         }
-    } else if (originalDef.alpha !== undefined && originalDef.alpha < 1.0) {
+    } else if (typeof originalDef.alpha === 'number') {
+        if (originalDef.alpha < 1.0) {
+            next.transparent = true
+            next.opacity = originalDef.alpha
+        } else {
+            next.opacity = originalDef.alpha
+        }
+    } else {
+        // neither a texture path nor a number was provided
+        // NOTE: this makes the material fully transparent (opacity 0) per spec.
+        // If you actually want "no alpha info = fully opaque", change this to 1.0.
         next.transparent = true
-        next.opacity = originalDef.alpha
+        next.opacity = 0.0
     }
 
     if (def.material_name && def.material_name.toLowerCase().includes('transmission')) {
@@ -213,7 +256,8 @@ export function applyMaterialDef(mat, def, textures) {
                  next.emissive.set('#FFFFFF')
              }
         }
-        next.emissiveIntensity = def.emission.strength !== undefined ? def.emission.strength : 0
+
+        next.emissiveIntensity = typeof def.emission.strength === 'number' ? def.emission.strength : 0.0
     }
 
     next.needsUpdate = true
@@ -223,4 +267,3 @@ export function applyMaterialDef(mat, def, textures) {
 export function isSpecialMaterial(matName) {
     return isSpecialName(matName)
 }
-
