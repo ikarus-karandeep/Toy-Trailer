@@ -1,4 +1,4 @@
-﻿import '@google/model-viewer'
+import '@google/model-viewer'
 import { Suspense, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { CameraControls, Stage, useEnvironment, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
@@ -326,19 +326,16 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       const eyeY = box.min.y + size.y * 0.55
 
       if (isLongX) {
-        targetPosition = new THREE.Vector3(center.x - size.x * 0.25, eyeY, center.z)
+        targetPosition = new THREE.Vector3(center.x - size.x * 0.15, eyeY, center.z)
       } else {
-        targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.25)
+        targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.15)
       }
 
-      // ── Near-first-person pivot ──────────────────────────────────────────────
-      // Place the orbit target just 0.05 units in front of the camera along the
-      // look direction. This keeps the swing radius tiny so rotating feels like
-      // a look-around rather than a wide orbit that exits the model.
-      const lookDir = new THREE.Vector3()
-        .subVectors(center, targetPosition)
-        .normalize()
-      targetLookAt = targetPosition.clone().addScaledVector(lookDir, 0.05)
+      // ── Orbit Pivot ──────────────────────────────────────────────
+      // Place the orbit target at the center of the trailer. This allows 
+      // you to zoom in (dolly) towards the center of the room, though it means 
+      // dragging will now orbit around the center rather than turning your head in place.
+      targetLookAt = center.clone()
 
       targetFov = 75
 
@@ -415,6 +412,8 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       }
     }
 
+    let cancelled = false
+
     setIsTransitioning(true)
 
     // Cancel any in-progress drag inertia by snapping controls to their
@@ -431,26 +430,43 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       false  // no animation — cancels any queued inertia
     )
 
-    cameraControlsRef.current.smoothTime = 0.2
-    cameraControlsRef.current.setLookAt(
-      targetPosition.x, targetPosition.y, targetPosition.z,
-      targetLookAt.x, targetLookAt.y, targetLookAt.z,
-      true
-    ).then(() => {
-      setIsTransitioning(false)
+    // Changing material sides (DoubleSide <-> FrontSide) forces Three.js to recompile shaders.
+    // This blocks the main thread for several hundred milliseconds on the first switch.
+    // If we start the time-based camera animation before the blocking render, the delta time
+    // will jump past the 0.2s duration, causing the camera to instantly snap to the target.
+    // We defer the animation by a couple of frames to let the heavy render complete first.
+    requestAnimationFrame(() => {
+      if (cancelled) return
+      requestAnimationFrame(() => {
+        if (cancelled || !cameraControlsRef.current) return
+
+        cameraControlsRef.current.smoothTime = 0.2
+        cameraControlsRef.current.setLookAt(
+          targetPosition.x, targetPosition.y, targetPosition.z,
+          targetLookAt.x, targetLookAt.y, targetLookAt.z,
+          true
+        ).then(() => {
+          if (!cancelled) setIsTransitioning(false)
+        })
+
+        const animateFov = () => {
+          if (cancelled) return
+          if (Math.abs(camera.fov - targetFov) > 0.3) {
+            camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 0.08)
+            camera.updateProjectionMatrix()
+            requestAnimationFrame(animateFov)
+          } else {
+            camera.fov = targetFov
+            camera.updateProjectionMatrix()
+          }
+        }
+        animateFov()
+      })
     })
 
-    const animateFov = () => {
-      if (Math.abs(camera.fov - targetFov) > 0.3) {
-        camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 0.08)
-        camera.updateProjectionMatrix()
-        requestAnimationFrame(animateFov)
-      } else {
-        camera.fov = targetFov
-        camera.updateProjectionMatrix()
-      }
+    return () => {
+      cancelled = true
     }
-    animateFov()
   }, [viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null

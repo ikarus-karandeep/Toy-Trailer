@@ -71,8 +71,9 @@ const CONE_ROTATIONS = {
   z: { start: [-Math.PI / 2, 0, 0], end: [Math.PI / 2, 0, 0] },
 }
 
-function ArrowCone({ position, axis, tip }) {
-  const meshRef = useRef()
+function ArrowCone({ position, axis, tip, innerRef }) {
+  const defaultRef = useRef()
+  const meshRef = innerRef || defaultRef
 
   useFrame(({ camera, size }) => {
     if (!meshRef.current) return
@@ -90,18 +91,23 @@ function ArrowCone({ position, axis, tip }) {
   )
 }
 
-function DimAxis({ start, end, ft, label, axis }) {
+function DimAxis({ dimKey, axis, dimsRef }) {
   const { size } = useThree()
   const progressRef = useRef(0)
   const labelRef = useRef(null)
+  const labelTextNodeRef = useRef(null)
+  const labelTypeRef = useRef(null)
   const geoRef = useRef(null)
   const matRef = useRef(null)
+  const startConeRef = useRef(null)
+  const endConeRef = useRef(null)
+  const htmlGroupRef = useRef(null)
 
   // Create Line2 once on mount — managed entirely imperatively to avoid
   // conflict between React prop updates and frame-by-frame animation.
   const lineObj = useMemo(() => {
     const geo = new LineGeometry()
-    geo.setPositions([start[0], start[1], start[2], start[0], start[1], start[2]])
+    geo.setPositions([0, 0, 0, 0, 0, 0])
     const mat = new LineMaterial({ color: 'white', linewidth: 2, worldUnits: false })
     const l = new Line2(geo, mat)
     l.computeLineDistances()
@@ -119,74 +125,114 @@ function DimAxis({ start, end, ft, label, axis }) {
     if (matRef.current) matRef.current.resolution.set(size.width, size.height)
   }, [size.width, size.height])
 
-  // When camera orbit flips the face and animation is already done, reposition instantly.
-  useEffect(() => {
-    if (progressRef.current < 1) return
-    geoRef.current.setPositions([...start, ...end])
-    lineObj.computeLineDistances()
-    if (labelRef.current) labelRef.current.textContent = formatFt(ft)
-  }, [start[0], start[1], start[2], end[0], end[1], end[2], ft]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const cx = (start[0] + end[0]) / 2
-  const cy = (start[1] + end[1]) / 2
-  const cz = (start[2] + end[2]) / 2
-
   useFrame((_, delta) => {
-    if (progressRef.current >= 1) return
-    progressRef.current = Math.min(1, progressRef.current + delta * ANIM_SPEED)
-    const p = easeOut(progressRef.current)
+    const d = dimsRef.current?.[dimKey]
+    if (!d) return
+    const { start, end, ft, label } = d
 
-    geoRef.current.setPositions([
-      start[0], start[1], start[2],
-      start[0] + (end[0] - start[0]) * p,
-      start[1] + (end[1] - start[1]) * p,
-      start[2] + (end[2] - start[2]) * p,
-    ])
-    lineObj.computeLineDistances()
+    if (labelTypeRef.current !== label) {
+      labelTypeRef.current = label
+      if (labelTextNodeRef.current) labelTextNodeRef.current.textContent = ' ' + label
+    }
 
-    if (labelRef.current) labelRef.current.textContent = formatFt(ft * p)
+    if (progressRef.current < 1) {
+      progressRef.current = Math.min(1, progressRef.current + delta * ANIM_SPEED)
+      const p = easeOut(progressRef.current)
+
+      const curEnd = [
+        start[0] + (end[0] - start[0]) * p,
+        start[1] + (end[1] - start[1]) * p,
+        start[2] + (end[2] - start[2]) * p,
+      ]
+
+      geoRef.current.setPositions([
+        start[0], start[1], start[2],
+        ...curEnd
+      ])
+      lineObj.computeLineDistances()
+
+      if (labelRef.current) labelRef.current.textContent = formatFt(ft * p)
+
+      if (startConeRef.current) startConeRef.current.position.set(...start)
+      if (endConeRef.current) endConeRef.current.position.set(...curEnd)
+      if (htmlGroupRef.current) {
+        htmlGroupRef.current.position.set(
+          (start[0] + curEnd[0]) / 2,
+          (start[1] + curEnd[1]) / 2,
+          (start[2] + curEnd[2]) / 2
+        )
+      }
+    } else {
+      geoRef.current.setPositions([
+        start[0], start[1], start[2],
+        ...end
+      ])
+      lineObj.computeLineDistances()
+
+      if (labelRef.current) labelRef.current.textContent = formatFt(ft)
+      
+      if (startConeRef.current) startConeRef.current.position.set(...start)
+      if (endConeRef.current) endConeRef.current.position.set(...end)
+      if (htmlGroupRef.current) {
+        htmlGroupRef.current.position.set(
+          (start[0] + end[0]) / 2,
+          (start[1] + end[1]) / 2,
+          (start[2] + end[2]) / 2
+        )
+      }
+    }
   })
 
   return (
     <>
       <primitive object={lineObj} />
-      <ArrowCone position={start} axis={axis} tip="start" />
-      <ArrowCone position={end}   axis={axis} tip="end"   />
-      <Html position={[cx, cy, cz]} zIndexRange={[100, 0]} center>
-        <div className="px-2 py-0.5 bg-white/90 rounded text-xs font-semibold text-gray-900 whitespace-nowrap pointer-events-none select-none">
-          <span ref={labelRef}>{formatFt(0)}</span>{' '}{label}
-        </div>
-      </Html>
+      <ArrowCone position={[0,0,0]} axis={axis} tip="start" innerRef={startConeRef} />
+      <ArrowCone position={[0,0,0]} axis={axis} tip="end" innerRef={endConeRef} />
+      <group ref={htmlGroupRef} position={[0,0,0]}>
+        <Html zIndexRange={[100, 0]} center>
+          <div className="px-2 py-0.5 bg-white/90 rounded text-xs font-semibold text-gray-900 whitespace-nowrap pointer-events-none select-none">
+            <span ref={labelRef}>{formatFt(0)}</span><span ref={labelTextNodeRef}></span>
+          </div>
+        </Html>
+      </group>
     </>
   )
 }
 
 export default function ModelDimensions({ groupRef }) {
-  const [dims, setDims] = useState(null)
+  const dimsRef = useRef(null)
+  const [hasDims, setHasDims] = useState(false)
   const lastCamRef = useRef(new THREE.Vector3(Infinity, 0, 0))
   const lastSizeRef = useRef(new THREE.Vector3())
 
   useFrame(({ camera }) => {
     if (!groupRef.current) return
     const d = computeDims(groupRef.current, camera)
-    if (!d) return
+    
+    if (!d) {
+        if (hasDims) setHasDims(false)
+        return
+    }
 
     const camMoved = camera.position.distanceTo(lastCamRef.current) >= CAM_THRESHOLD
     const modelResized = !lastSizeRef.current.equals(_size)
-    if (!camMoved && !modelResized) return
-
-    lastCamRef.current.copy(camera.position)
-    lastSizeRef.current.copy(_size)
-    setDims(d)
+    
+    if (camMoved || modelResized) {
+      lastCamRef.current.copy(camera.position)
+      lastSizeRef.current.copy(_size)
+      dimsRef.current = d
+    }
+    
+    if (!hasDims) setHasDims(true)
   })
 
-  if (!dims) return null
+  if (!hasDims) return null
 
   return (
     <>
-      <DimAxis key="length" {...dims.length} />
-      <DimAxis key="height" {...dims.height} />
-      <DimAxis key="width"  {...dims.width}  />
+      <DimAxis key="length" dimKey="length" axis="x" dimsRef={dimsRef} />
+      <DimAxis key="height" dimKey="height" axis="y" dimsRef={dimsRef} />
+      <DimAxis key="width"  dimKey="width"  axis="z" dimsRef={dimsRef} />
     </>
   )
 }
