@@ -13,22 +13,40 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Size & Capacity
   const [width, setWidth] = useState(ic.width ?? '7ft')
   const [length, setLength] = useState(ic.length ?? '32')
+  const [frameSize, setFrameSize] = useState(ic.frameSize ?? '6in')
+  const [axleCount, setAxleCount] = useState(ic.axleCount ?? 'tandem')
+  const [axleSuspension, setAxleSuspension] = useState(ic.axleSuspension ?? 'torsion')
+  const [axleCapacity, setAxleCapacity] = useState(ic.axleCapacity ?? '3500lb')
   const [interiorHeight, setInteriorHeight] = useState(ic.interiorHeight ?? '7ft0')
+  const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? true)
+  const [narrowTrackAxle, setNarrowTrackAxle] = useState(ic.narrowTrackAxle ?? false)
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
   const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)
-  const [axleRating, setAxleRating] = useState(ic.axleRating ?? '5200torsion')
-  const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? true)
+  // axleRating is DERIVED from axleCount + axleSuspension + axleCapacity
+  // so the 3-D model (which reads axleRating) stays in sync automatically.
+  const axleRating = useMemo(() => {
+    if (axleCount === 'triple') return '10000lbtandem'
+    if (axleCapacity === '7000lb') return 'torsion' === axleSuspension ? '8000torsion16k' : '8000torsion16k'
+    if (axleCapacity === '6000lb') return axleSuspension === 'dropspring' ? '7000dropspring' : '7000torsion'
+    // 3500lb
+    return axleSuspension === 'dropspring' ? '5200leafspring' : '5200torsion'
+  }, [axleCount, axleSuspension, axleCapacity])
 
   // Exterior
-  const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? 'standard')
+  const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? 'blackout')
   const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'pewter')
-  const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose')
-  const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
-  const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'fullscrewless')
-  const [protection, setProtection] = useState(ic.protection ?? 'onepieceroof')
-  const [wheel, setWheel] = useState(ic.wheel ?? 'aluminumradial')
-  const [spareTire, setSpareTire] = useState(ic.spareTire ?? true)
+  const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'rearwingspoiler')
+  const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
+  const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'semiscrewed')
+  const [roofBuild, setRoofBuild] = useState(ic.roofBuild ?? 'onepieceroof')
+  const [protectionType, setProtectionType] = useState(ic.protectionType ?? 'atp')
+  const [protectionSize, setProtectionSize] = useState(ic.protectionSize ?? '12')
+  const [frontProtection, setFrontProtection] = useState(ic.frontProtection ?? 'polishedcaps')
   const [lugType, setLugType] = useState(ic.lugType ?? '5lug')
+  const [tireSize, setTireSize] = useState(ic.tireSize ?? '15')
+  const [wheelType, setWheelType] = useState(ic.wheelType ?? 'standardsilver')
+  const [spareTire, setSpareTire] = useState(ic.spareTire ?? true)
+  const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
@@ -102,20 +120,30 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     summaryOpen, setSummaryOpen,
     width, setWidth,
     length, setLength,
+    frameSize, setFrameSize,
+    axleCount, setAxleCount,
+    axleSuspension, setAxleSuspension,
+    axleCapacity, setAxleCapacity,
     interiorHeight, setInteriorHeight,
+    spreadAxle, setSpreadAxle,
+    narrowTrackAxle, setNarrowTrackAxle,
     axleAngled, setAxleAngled,
     axleAtp, setAxleAtp,
-    axleRating, setAxleRating,
-    spreadAxle, setSpreadAxle,
+    axleRating,
     exteriorFinish, setExteriorFinish,
-    sideDoorsType, setSideDoorsType,
     selectedColor, setSelectedColor,
+    exteriorAccessories, setExteriorAccessories,
     frontStyle, setFrontStyle,
     exteriorBuild, setExteriorBuild,
-    protection, setProtection,
-    wheel, setWheel,
-    spareTire, setSpareTire,
+    roofBuild, setRoofBuild,
+    protectionType, setProtectionType,
+    protectionSize, setProtectionSize,
+    frontProtection, setFrontProtection,
     lugType, setLugType,
+    tireSize, setTireSize,
+    wheelType, setWheelType,
+    spareTire, setSpareTire,
+    sideDoorsType, setSideDoorsType,
     floor, setFloor,
     walls, setWalls,
     ceiling, setCeiling,
@@ -155,8 +183,9 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     completionPercent, markTabVisited,
   }), [
     activeTab, viewMode, summaryOpen,
-    width, length, interiorHeight, axleAngled, axleAtp, axleRating, spreadAxle,
-    exteriorFinish, selectedColor, frontStyle, sideDoorsType, exteriorBuild, protection, wheel, spareTire, lugType,
+    width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
+    spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
+    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
     electrical, battery, lights, ventilation, climateControl,
     rampType, atpRamp, rearDoor, tieDowns, jacks,

@@ -2,32 +2,47 @@ import { useConfigurator } from '../../context/ConfiguratorContext'
 import {
   WIDTH_OPTIONS,
   LENGTH_OPTIONS,
+  FRAME_SIZE_OPTIONS,
+  AXLE_COUNT_OPTIONS,
+  AXLE_SUSPENSION_OPTIONS,
+  AXLE_CAPACITY_OPTIONS,
   INTERIOR_HEIGHT_OPTIONS,
-  AXLE_RATING_OPTIONS,
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
-import AlertMessage from '../../components/AlertMessage'
+import ToggleSwitch from '../../components/ToggleSwitch'
+import DotSlider from '../../components/DotSlider'
 
 export default function SizeCapacityPanel({ activeSectionTitle }) {
   const {
     width, setWidth,
     length, setLength,
+    frameSize, setFrameSize,
+    axleCount, setAxleCount,
+    axleSuspension, setAxleSuspension,
+    axleCapacity, setAxleCapacity,
     interiorHeight, setInteriorHeight,
-    axleAngled, setAxleAngled,
-    axleAtp, setAxleAtp,
-    axleRating, setAxleRating,
     spreadAxle, setSpreadAxle,
+    narrowTrackAxle, setNarrowTrackAxle,
   } = useConfigurator()
 
-  const selectedWidthOption = WIDTH_OPTIONS.find((o) => o.id === width)
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
+
+  const lengthIndex = LENGTH_OPTIONS.findIndex((o) => o.id === length)
+  const selectedLength = LENGTH_OPTIONS[lengthIndex] ?? LENGTH_OPTIONS[0]
+  const heightIndex = INTERIOR_HEIGHT_OPTIONS.findIndex((o) => o.id === interiorHeight)
+  const selectedHeight = INTERIOR_HEIGHT_OPTIONS[heightIndex] ?? INTERIOR_HEIGHT_OPTIONS[0]
+
+  const lengthFt = parseInt(length, 10)
+  const needsSuperDutyRamp = heightIndex >= 2 // 8'0" or above
+
 
   return (
     <>
+      {/* WIDTH */}
       {show('WIDTH') && (
         <OptionSection title="WIDTH">
-          <div className="flex flex-wrap gap-2 py-2 lg:py-2">
+          <div className="flex flex-wrap gap-2">
             {WIDTH_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -38,202 +53,173 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
-          {selectedWidthOption && (
-            <div className="flex items-center gap-4 px-1 mt-1">
-              {WIDTH_OPTIONS.map((opt) => (
-                <div key={opt.id} className="flex items-center gap-1.5">
-                  <div
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      width === opt.id ? 'bg-[#DA634B]' : 'bg-[#3a3a3a]'
-                    }`}
+        </OptionSection>
+      )}
+
+      {/* LENGTH */}
+{show('LENGTH') && (
+  <OptionSection title="LENGTH">
+    <p className="text-gray-400 text-xs tracking-wider -mt-4">
+      6&quot; frame on 14–24ft, 8&quot; frame on 26–36ft
+    </p>
+
+    {/* Trailer SVG diagram */}
+    <div className="flex justify-center my-2">
+      <img src="/Length.png"/>
+    </div>
+
+    <DotSlider
+      options={LENGTH_OPTIONS}
+      value={length}
+      onChange={setLength}
+      badge={selectedLength.badge || null}
+    />
+  </OptionSection>
+)}
+
+      {/* FRAME SIZE (AUTO ASSIGNED) */}
+      {show('FRAME SIZE') && (
+        <OptionSection title="FRAME SIZE (AUTO ASSIGNED)">
+          <p className="text-gray-400 text-xs tracking-wider -mt-4">
+            8&quot; frame auto assigned (required for 8.5 x 26&apos;+ builds)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {FRAME_SIZE_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                isStandard={opt.isStandard}
+                isSelected={frameSize === opt.id}
+                onClick={() => setFrameSize(opt.id)}
+              />
+            ))}
+          </div>
+        </OptionSection>
+      )}
+
+      {/* AXLES COMBINED */}
+      {(show('AXLE COUNT') || show('AXLE SUSPENSION') || show('AXLE CAPACITY')) && (
+        <OptionSection>
+          {/* AXLE COUNT */}
+          {(show('AXLE COUNT') || !activeSectionTitle) && (
+            <div>
+              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE COUNT</h2>
+              <p className="text-gray-400 text-xs tracking-wider mb-6">
+                Tandem Axle default for builds under 34ft.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {AXLE_COUNT_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    isStandard={opt.isStandard}
+                    isSelected={axleCount === opt.id}
+                    onClick={() => setAxleCount(opt.id)}
                   />
-                  <span className="text-gray-400 text-xs tracking-wider">{opt.note}</span>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Axle diagram */}
+              <div className="flex justify-center mt-6">
+                <img src="/Axle count.png" alt="Axle Count"/>
+              </div>
+            </div>
+          )}
+
+          {/* DIVIDER */}
+          {(!activeSectionTitle || (show('AXLE COUNT') && show('AXLE SUSPENSION'))) && (
+            <div className="border-t border-[#5D5E60]"></div>
+          )}
+
+          {/* AXLE SUSPENSION */}
+          {(show('AXLE SUSPENSION') || !activeSectionTitle) && (
+            <div>
+              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE SUSPENSION</h2>
+              <p className="text-gray-400 text-xs tracking-wider mb-6">
+                Torsion Required For Spread Axle
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {AXLE_SUSPENSION_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    isStandard={opt.isStandard}
+                    isSelected={axleSuspension === opt.id}
+                    onClick={() => setAxleSuspension(opt.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* DIVIDER */}
+          {(!activeSectionTitle || (show('AXLE SUSPENSION') && show('AXLE CAPACITY'))) && (
+            <div className="border-t border-[#5D5E60]"></div>
+          )}
+
+          {/* AXLE CAPACITY */}
+          {(show('AXLE CAPACITY') || !activeSectionTitle) && (
+            <div>
+              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE CAPACITY</h2>
+              <p className="text-gray-400 text-xs tracking-wider mb-6">
+                6000lbs axle capacity for 26ft+.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {AXLE_CAPACITY_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    isStandard={opt.isStandard}
+                    isSelected={axleCapacity === opt.id}
+                    onClick={() => setAxleCapacity(opt.id)}
+                  />
+                ))}
+              </div>
             </div>
           )}
         </OptionSection>
       )}
 
-      {show('LENGTH') && (
-        <OptionSection title="LENGTH">
-          <div className="flex flex-wrap gap-2 py-2 gap-2">
-            {LENGTH_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isSelected={length === opt.id}
-                onClick={() => setLength(opt.id)}
-              />
-            ))}
-          </div>
-          <div className="flex items-center gap-4 px-1 mt-1">
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#DA634B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-gray-400 text-xs tracking-wider">5200 LBS BASE AXLE</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <svg className="w-3.5 h-3.5 text-[#DA634B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-gray-400 text-xs tracking-wider">HEAVY CLASS</span>
-            </div>
-          </div>
-        </OptionSection>
-      )}
-
+      {/* INTERIOR HEIGHT */}
       {show('INTERIOR HEIGHT') && (
         <OptionSection title="INTERIOR HEIGHT">
-          <div className="flex flex-wrap gap-2">
-            {INTERIOR_HEIGHT_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isStandard={opt.isStandard}
-                isSelected={interiorHeight === opt.id}
-                onClick={() => setInteriorHeight(opt.id)}
-              />
-            ))}
-          </div>
-          <AlertMessage message="8'+ HEIGHT AUTO UPGRADES RAMP & WINCH" />
-        </OptionSection>
-      )}
-
-      {show('AXLE') && (
-        <OptionSection title="AXLE">
-          <div className="flex flex-col gap-3 py-2 lg:py-3">
-
-            {/* Angled Toggle */}
-            <div className="flex items-center justify-between bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-3 gap-4">
-              <div>
-                <span className="text-white text-sm font-semibold tracking-widest uppercase">ANGLED</span>
-                <p className="text-gray-400 text-xs mt-0.5">Angled side panel vs flat side panel</p>
-              </div>
-              <button
-                role="switch"
-                aria-checked={axleAngled}
-                onClick={() => setAxleAngled(!axleAngled)}
-                className={`relative inline-flex flex-shrink-0 items-center w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
-                  axleAngled ? 'bg-[#DA634B]' : 'bg-[#3a3a3a]'
-                }`}
-              >
-                <span
-                  className={`inline-block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ${
-                    axleAngled ? 'translate-x-6' : 'translate-x-0.5'
-                  }`}
-                />
-                {axleAngled && (
-                  <svg className="absolute right-1.5 w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-              </button>
-            </div>
-
-            {/* ATP Toggle */}
-            <div className="flex items-center justify-between bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-3 gap-4">
-              <div>
-                <span className="text-white text-sm font-semibold tracking-widest uppercase">ATP</span>
-                <p className="text-gray-400 text-xs mt-0.5">Add ATP exterior trim finish</p>
-              </div>
-              <button
-                role="switch"
-                aria-checked={axleAtp}
-                onClick={() => setAxleAtp(!axleAtp)}
-                className={`relative inline-flex flex-shrink-0 items-center w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
-                  axleAtp ? 'bg-[#DA634B]' : 'bg-[#3a3a3a]'
-                }`}
-              >
-                <span
-                  className={`inline-block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ${
-                    axleAtp ? 'translate-x-6' : 'translate-x-0.5'
-                  }`}
-                />
-                {axleAtp && (
-                  <svg className="absolute right-1.5 w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-              </button>
-            </div>
-
-            {/* Live preview summary */}
-            <div className="flex gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 bg-[#1f1f1f] border border-[#3a3a3a] rounded px-3 py-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#DA634B] flex-shrink-0" />
-                BASE ATP — always included
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 bg-[#1f1f1f] border border-[#3a3a3a] rounded px-3 py-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#DA634B] flex-shrink-0" />
-                PANEL — {axleAngled ? 'ANGLED' : 'FLAT'}
-              </span>
-              {axleAtp && (
-                <span className="inline-flex items-center gap-1.5 text-xs text-[#DA634B] bg-[#1f1f1f] border border-[#DA634B]/30 rounded px-3 py-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#DA634B] flex-shrink-0" />
-                  ATP — {axleAngled ? 'ANGLED' : 'FLAT'}
-                </span>
-              )}
-            </div>
-
-          </div>
-          <img
-            src="/Axle.png"
-            alt="Axle preview"
-            className="w-3/4 mx-auto object-contain mt-1 rounded"
-            onError={(e) => { e.currentTarget.style.display = 'none' }}
+          {/* Slider */}
+          <DotSlider
+            options={INTERIOR_HEIGHT_OPTIONS}
+            value={interiorHeight}
+            onChange={setInteriorHeight}
+            badge={needsSuperDutyRamp ? '+$1,520 · Super Duty Ramp Required' : null}
           />
         </OptionSection>
       )}
 
-      {show('AXLE RATING & SUSPENSION') && (
-        <OptionSection title="AXLE RATING & SUSPENSION">
-          <div className="flex flex-col gap-2">
-            {AXLE_RATING_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isStandard={opt.isStandard}
-                isSelected={axleRating === opt.id}
-                onClick={() => setAxleRating(opt.id)}
-              />
-            ))}
-          </div>
-          <AlertMessage message="26' - 34' BUILDS START FROM 5200LB LEAF SPRING BASE" />
+      {/* SPREAD AXLE W/ CORVETTE FENDERS */}
+      {show('SPREAD AXLE W/ CORVETTE FENDERS') && (
+        <OptionSection title="SPREAD AXLE W/ CORVETTE FENDERS">
+          <p className="text-gray-400 text-xs tracking-wider -mt-4">
+            Auto Applies Torsion
+          </p>
+          <ToggleSwitch
+            label="Wider stance, Corvette-style fenders"
+            checked={spreadAxle}
+            onChange={setSpreadAxle}
+          />
         </OptionSection>
       )}
 
-      {show('SPREAD AXLE') && (
-        <OptionSection title="SPREAD AXLE">
-          <div className="flex items-center justify-between bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-3 gap-4">
-            <span className="text-gray-300 text-sm leading-snug">
-              Widens the wheelbase gap for a more planted, aggressive stance
-            </span>
-            <button
-              role="switch"
-              aria-checked={spreadAxle}
-              onClick={() => setSpreadAxle(!spreadAxle)}
-              className={`relative inline-flex flex-shrink-0 items-center w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${
-                spreadAxle ? 'bg-[#DA634B]' : 'bg-[#3a3a3a]'
-              }`}
-            >
-              <span
-                className={`inline-block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ${
-                  spreadAxle ? 'translate-x-6' : 'translate-x-0.5'
-                }`}
-              />
-              {spreadAxle && (
-                <svg className="absolute right-1.5 w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              )}
-            </button>
-          </div>
-          <AlertMessage message="REQUIRES TORSION SUSPENSION" />
+      {/* NARROW TRACK AXLE */}
+      {show('NARROW TRACK AXLE') && (
+        <OptionSection title="NARROW TRACK AXLE">
+          <p className="text-gray-400 text-xs tracking-wider -mt-4">
+            Applicable on 7ft wide trailer
+          </p>
+          <ToggleSwitch
+            label="Reduces track width."
+            checked={narrowTrackAxle}
+            onChange={setNarrowTrackAxle}
+          />
         </OptionSection>
       )}
     </>

@@ -1,23 +1,44 @@
+import { useState } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
-import {  BATHROOM_OPTIONS, AWNING_OPTIONS, ESCAPE_DOOR_OPTIONS } from '../../constants/configData'
+import {
+  WATER_PACKAGE_OPTIONS,
+  SINK_PACKAGE_OPTIONS,
+  BATHROOM_PACKAGE_OPTIONS,
+  WINCH_OPTIONS,
+  GENERATOR_BOX_OPTIONS
+} from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
-import AlertMessage from '../../components/AlertMessage'
 import ToggleSwitch from '../../components/ToggleSwitch'
+import AlertMessage from '../../components/AlertMessage'
+import DotSlider from '../../components/DotSlider'
+import DetailedOptionCard from '../../components/DetailedOptionCard'
 
 export default function AddOnsPanel({ activeSectionTitle }) {
-  const { waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
-    escapeDoor, setEscapeDoor,
-    generatorBox, setGeneratorBox, cabinets, length,
-    ladderRacks, setLadderRacks,
-    sidewallVents, setSidewallVents,
-    recessedTireBox, setRecessedTireBox,
-    interiorTireMount, setInteriorTireMount } =
-    useConfigurator()
+  const { 
+    bathroom, setBathroom, 
+    generatorBox, setGeneratorBox,
+  } = useConfigurator()
 
-  const hasCabinet = cabinets.includes('vnosebase') || cabinets.includes('flatfrontbase')
+  const [waterPackage, setWaterPackage] = useState(null)
+  const [largeWaterOpen, setLargeWaterOpen] = useState(true)
 
-  const lengthFt = parseInt(length, 10)
+  const [sinkPackage, setSinkPackage] = useState(null)
+  const [sinkPackageOpen, setSinkPackageOpen] = useState(true)
+
+  const [fullBathOpen, setFullBathOpen] = useState(true)
+
+  const [awningLength, setAwningLength] = useState('20ft')
+
+  const [winch, setWinch] = useState('winchsystem')
+  const [toolCabinet, setToolCabinet] = useState(false)
+
+  const [generatorBoxSelection, setGeneratorBoxSelection] = useState(null)
+  const [genSlides, setGenSlides] = useState(false)
+  const [genDoor, setGenDoor] = useState(false)
+  
+  const [batteryBoxTongue, setBatteryBoxTongue] = useState(false)
+  const [lShapeCounter, setLShapeCounter] = useState(false)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -25,43 +46,169 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     setBathroom(bathroom === id ? null : id)
   }
 
+  const awningLengthOptions = [
+    { id: '8ft', label: '8ft' },
+    { id: '10ft', label: '10ft' },
+    { id: '12ft', label: '12ft' },
+    { id: '14ft', label: '14ft' },
+    { id: '16ft', label: '16ft' },
+    { id: '18ft', label: '18ft' },
+    { id: '20ft', label: '20ft' },
+    { id: '22ft', label: '22ft' },
+  ]
+  const awningBadgeMap = {
+    '20ft': '+$203 - Added Battery'
+  }
+
   return (
     <>
-      {/* {show('WATER PACKAGE & SINK') && (
-        <OptionSection title="WATER PACKAGE & SINK">
+      {show('WATER PACKAGE') && (
+        <OptionSection title="WATER PACKAGE">
           <div className="flex flex-col gap-2">
-            {WATER_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isMulti
-                isSelected={waterPackage === opt.id}
-                onClick={() => setWaterPackage(waterPackage === opt.id ? null : opt.id)}
-              />
+            {WATER_PACKAGE_OPTIONS.map((opt) => (
+              <div key={opt.id} className="w-full">
+                <OptionPill
+                  label={opt.label}
+                  price={opt.price}
+                  isLocked={opt.locked}
+                  isSelected={waterPackage === opt.id}
+                  hasSettings={opt.id === 'large'}
+                  onClick={() => !opt.locked && setWaterPackage(waterPackage === opt.id ? null : opt.id)}
+                />
+                
+                {waterPackage === 'large' && opt.id === 'large' && (
+                  <div className="mt-4 bg-[#111111] rounded-2xl p-5 border border-[#DA634B]">
+                    <div 
+                      className="flex items-center justify-between mb-4 cursor-pointer"
+                      onClick={() => setLargeWaterOpen(!largeWaterOpen)}
+                    >
+                      <span className="text-gray-300 text-xs tracking-widest uppercase font-semibold">
+                        What's Included
+                      </span>
+                      <span className="w-5 h-5 rounded-full border border-gray-500 text-gray-400 text-[10px] flex items-center justify-center">
+                        <svg className={`w-3 h-3 transition-transform ${largeWaterOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </span>
+                    </div>
+                    {largeWaterOpen && (
+                      <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-white text-[12px] lg:text-sm">
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>42 gal fresh water</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>32 gal waste</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>6 gal heater</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>water pump</span>
+                        </div>
+                        <div className="flex items-start gap-2 col-span-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>City gravity Water center</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
-          <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
+          <AlertMessage message={'8" MF + ELECTRICAL REQUIRED'} />
         </OptionSection>
-      )} */}
+      )}
+
+      {show('SINK PACKAGE') && (
+        <OptionSection title="SINK PACKAGE">
+          <div className="flex flex-col gap-2">
+            {SINK_PACKAGE_OPTIONS.map((opt) => (
+              <div key={opt.id} className="w-full">
+                <OptionPill
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={sinkPackage === opt.id}
+                  hasSettings
+                  onClick={() => setSinkPackage(sinkPackage === opt.id ? null : opt.id)}
+                />
+                
+                {sinkPackage === opt.id && (
+                  <div className="mt-4 bg-[#111111] rounded-2xl p-5 border border-[#DA634B]">
+                    <div 
+                      className="flex items-center justify-between mb-4 cursor-pointer"
+                      onClick={() => setSinkPackageOpen(!sinkPackageOpen)}
+                    >
+                      <span className="text-gray-300 text-xs tracking-widest uppercase font-semibold">
+                        What's Included
+                      </span>
+                      <span className="w-5 h-5 rounded-full border border-gray-500 text-gray-400 text-[10px] flex items-center justify-center">
+                        <svg className={`w-3 h-3 transition-transform ${sinkPackageOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </span>
+                    </div>
+                    {sinkPackageOpen && (
+                      <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-white text-[12px] lg:text-sm">
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>Front Base Cabinet</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>3-bowl stainless sink</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>Hand wash sink</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
+                          <span>Large water package</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <AlertMessage message={'8" MF + ELECTRICAL REQUIRED'} />
+        </OptionSection>
+      )}
 
       {show('BATHROOM PACKAGES') && (
         <OptionSection title="BATHROOM PACKAGES">
           <div className="flex flex-col gap-2">
-            {BATHROOM_OPTIONS.map((opt) => (
-              <OptionPill
+            {BATHROOM_PACKAGE_OPTIONS.map((opt) => (
+              <DetailedOptionCard
                 key={opt.id}
                 label={opt.label}
                 price={opt.price}
                 isSelected={bathroom === opt.id}
                 onClick={() => handleBathroom(opt.id)}
+                includedItems={
+                  opt.id === 'half'
+                    ? ['Half Bath + 32" x 32" shower w/surround']
+                    : [
+                        'Water pkg',
+                        'Hand wash sink',
+                        'Partition wall w/door',
+                        'Coin Floor',
+                        'Powered vent',
+                        'Toilet',
+                        'Base cabinet',
+                        'White metal',
+                        'LED'
+                      ]
+                }
               />
             ))}
           </div>
-          <AlertMessage message="TRAILER SHOULD BE 8.5-WIDE + 110V" />
-          {hasCabinet && (
-            <AlertMessage message="SINK AREA IS HIDDEN WHEN CABINETS ARE INSTALLED" />
-          )}
         </OptionSection>
       )}
 
@@ -73,75 +220,102 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             className="w-full rounded-xl object-cover"
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
-          <div className="flex flex-col gap-2 mt-2">
-            {AWNING_OPTIONS.map((opt) => (
+          <div className="mt-6 px-4">
+            <DotSlider
+              options={awningLengthOptions}
+              value={awningLength}
+              onChange={setAwningLength}
+              badge={awningBadgeMap[awningLength]}
+            />
+          </div>
+        </OptionSection>
+      )}
+
+      {show('WINCH') && (
+        <OptionSection title="WINCH">
+          <div className="flex flex-col gap-2">
+            {WINCH_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
                 label={opt.label}
                 price={opt.price}
-                isMulti
-                isSelected={awning.includes(opt.id)}
-                onClick={() => toggleAwning(opt.id)}
+                isSelected={winch === opt.id}
+                onClick={() => setWinch(winch === opt.id ? null : opt.id)}
               />
             ))}
           </div>
-          {lengthFt < 29 && (
-            <AlertMessage message="AWNING REQUIRES A MINIMUM TRAILER LENGTH OF 29 FT" />
-          )}
         </OptionSection>
       )}
 
-      {show('BASE ADDONS') && (
-        <OptionSection title="BASE ADDONS">
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2 mb-4">
-              <div className="text-xs font-semibold text-gray-400 mb-1 tracking-wider">ESCAPE DOOR</div>
-              <div className="flex flex-wrap gap-2">
-                {ESCAPE_DOOR_OPTIONS.map((opt) => (
-                  <OptionPill
-                    key={opt.id}
-                    label={opt.label}
-                    price={opt.price}
-                    isSelected={escapeDoor === opt.id}
-                    onClick={() => setEscapeDoor(opt.id)}
-                  />
-                ))}
-              </div>
+      {show('BUILT - IN TOOL CABINET') && (
+        <OptionSection title="BUILT - IN TOOL CABINET">
+          <ToggleSwitch
+            label="INCLUDE TOOL CABINET"
+            checked={toolCabinet}
+            onChange={setToolCabinet}
+          />
+        </OptionSection>
+      )}
+
+      {show('TONGUE MOUNTED GENERATOR BOX') && (
+        <OptionSection title="TONGUE MOUNTED GENERATOR BOX">
+          <div className="mb-8">
+            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR BOX (34"H X 36"W X 26"D)</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Requires flat front + Extended Tongue</p>
+            <div className="flex flex-col gap-2">
+              {GENERATOR_BOX_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={generatorBoxSelection === opt.id}
+                  onClick={() => setGeneratorBoxSelection(opt.id)}
+                />
+              ))}
             </div>
+          </div>
+
+          <div className="mb-8">
+            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR SLIDES & TRAY ONLY</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Add door separately</p>
             <ToggleSwitch
-              label="GENERATOR BOX"
-              checked={generatorBox}
-              onChange={setGeneratorBox}
-            />
-            {hasCabinet && (
-              <p className="text-yellow-500 text-xs tracking-wider uppercase -mt-1">
-                Generator box is hidden when cabinets are applied
-              </p>
-            )}
-            <ToggleSwitch
-              label="LADDER RACKS"
-              checked={ladderRacks}
-              onChange={setLadderRacks}
-            />
-            <ToggleSwitch
-              label="ALUMINUM SIDEWALL VENTS"
-              checked={sidewallVents}
-              onChange={setSidewallVents}
-            />
-            <ToggleSwitch
-              label="RECESSED TIRE BOX"
-              checked={recessedTireBox}
-              onChange={setRecessedTireBox}
-            />
-            <ToggleSwitch
-              label="INTERIOR TIRE MOUNT"
-              checked={interiorTireMount}
-              onChange={setInteriorTireMount}
+              label="Add your own door separately"
+              checked={genSlides}
+              onChange={setGenSlides}
             />
           </div>
-          <p className="text-gray-400 text-xs tracking-wider uppercase mt-2">
-            Replaces the standard side egress with a gullwing-style escape door
-          </p>
+
+          <div>
+            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR DOOR 36"X36"</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">w/ Vent & Flush Lock</p>
+            <ToggleSwitch
+              label="Standard gen door"
+              checked={genDoor}
+              onChange={setGenDoor}
+            />
+          </div>
+        </OptionSection>
+      )}
+      
+      {show('ATP BATTERY BOX ON TONGUE') && (
+        <OptionSection title="ATP BATTERY BOX ON TONGUE">
+          <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Requires extended TTT</p>
+          <ToggleSwitch
+            label="Battery box on tongue"
+            checked={batteryBoxTongue}
+            onChange={setBatteryBoxTongue}
+          />
+        </OptionSection>
+      )}
+      
+      {show('L-SHAPE COUNTER/HIDDEN GENERATOR BOX') && (
+        <OptionSection title="L-SHAPE COUNTER/HIDDEN GENERATOR BOX">
+          <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Custom build</p>
+          <ToggleSwitch
+            label="Dimensions and placement quoted per order"
+            checked={lShapeCounter}
+            onChange={setLShapeCounter}
+          />
         </OptionSection>
       )}
     </>

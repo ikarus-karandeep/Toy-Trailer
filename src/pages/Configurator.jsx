@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react'
 import { useConfigurator } from '../context/ConfiguratorContext'
-import { PANEL_SECTIONS } from '../constants/configData'
+import { PANEL_SECTIONS, TABS } from '../constants/configData'
 import ViewToggle from '../components/ViewToggle'
 import TrailerViewer from '../components/TrailerViewer'
 import BottomNav from '../components/BottomNav'
 import PanelActions from '../components/PanelActions'
-import SummaryPanel from '../components/SummaryPanel'
+// import SummaryPanel from '../components/SummaryPanel'
 import SectionSubNav from '../components/SectionSubNav'
 import SizeCapacityPanel from './panels/SizeCapacityPanel'
 import ExteriorPanel from './panels/ExteriorPanel'
@@ -24,7 +24,7 @@ const PANELS = {
 }
 
 export default function Configurator({ onModelReady }) {
-  const { activeTab, viewMode, setViewMode, showDimensions, setShowDimensions } = useConfigurator()
+  const { activeTab, setActiveTab, viewMode, setViewMode, showDimensions, setShowDimensions } = useConfigurator()
   const [sectionIdx, setSectionIdx] = useState(0)
   const [fullscreen, setFullscreen] = useState(false)
   const viewerRef = useRef()
@@ -47,7 +47,22 @@ export default function Configurator({ onModelReady }) {
         <div className={`flex-1 min-h-0 flex flex-col relative lg:absolute lg:top-0 lg:left-0 lg:bottom-0 transition-all duration-300 ${fullscreen ? 'lg:right-0' : 'lg:right-[500px] xl:right-[551px]'}`}>
           
           {/* Logo & Top View Toggle */}
-          <div className="absolute top-0 left-0 right-0 z-20 flex items-center px-4 pt-3 pb-1 pointer-events-none lg:top-6 lg:left-6 lg:px-0 lg:pt-0 lg:pb-0">
+          <div className="absolute top-0 left-0 right-0 z-20 flex items-center gap-6 px-4 pt-4 pb-1 pointer-events-none lg:top-8 lg:left-8 lg:px-0 lg:pt-0 lg:pb-0">
+            <button
+              onClick={() => {
+                const currentIndex = TABS.indexOf(activeTab)
+                if (currentIndex > 0) {
+                  setActiveTab(TABS[currentIndex - 1])
+                }
+              }}
+              className={`pointer-events-auto flex items-center justify-center w-14 h-14 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white rounded-[20px] transition-colors shadow-lg ${TABS.indexOf(activeTab) === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+              aria-label="Previous Menu"
+              disabled={TABS.indexOf(activeTab) === 0}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 12H4M4 12L10 18M4 12L10 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
             <img src="/Logo Up.png" className="w-20 h-14 object-contain pointer-events-auto lg:w-30 lg:h-20" />
             
             {/* Mobile View Toggle */}
@@ -143,7 +158,7 @@ export default function Configurator({ onModelReady }) {
       </div>
 
       {/* Summary panel — works on both layouts */}
-      <SummaryPanel />
+      {/* <SummaryPanel /> */}
     </>
   )
 }

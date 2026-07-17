@@ -1,112 +1,219 @@
+import { useState } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
 import {
   ELECTRICAL_OPTIONS,
-  BATTERY_OPTIONS,
-  LIGHT_OPTIONS,
-  VENTILATION_OPTIONS,
+  RECEPTACLE_OPTIONS,
+  OFF_GRID_POWER_OPTIONS,
+  INTERIOR_LIGHTING_OPTIONS,
+  EXTERIOR_LIGHTING_OPTIONS,
   CLIMATE_CONTROL_OPTIONS,
+  PASSIVE_VENTILATION_OPTIONS,
+  ROOFTOP_AC_OPTIONS,
+  MINI_SPLIT_OPTIONS
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
-import AlertMessage from '../../components/AlertMessage'
+import DetailedOptionCard from '../../components/DetailedOptionCard'
 import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function SystemsPanel({ activeSectionTitle }) {
   const {
     electrical, setElectrical,
-    battery, setBattery,
-    lights, toggleLight,
-    ventilation, setVentilation,
     climateControl, setClimateControl,
-    radioPackageSpeaker, setRadioPackageSpeaker,
   } = useConfigurator()
 
+  // Local state for new UI components (until context is fully updated)
+  const [panel12Space, setPanel12Space] = useState(false)
+  const [receptacles, setReceptacles] = useState({
+    '110vinterior': 0,
+    '110vgfi': 0,
+  })
+  const [offGridPower, setOffGridPower] = useState([])
+  
+  const [interiorLights, setInteriorLights] = useState({
+    '12vleddome': 0,
+    '12vflatpanel': 0,
+  })
+  const [exteriorLights, setExteriorLights] = useState([])
+  const [ledRope, setLedRope] = useState(false)
+  
+  const [passiveVent, setPassiveVent] = useState(null)
+  const [acPrep, setAcPrep] = useState(false)
+  const [rooftopAc, setRooftopAc] = useState(null)
+  const [miniSplit, setMiniSplit] = useState(null)
+
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
+
+  const toggleArrayItem = (setter, item) => {
+    setter(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item])
+  }
+
+  const updateQuantity = (setter, key, val) => {
+    setter(prev => ({ ...prev, [key]: val }))
+  }
 
   return (
     <>
       {show('ELECTRICAL') && (
         <OptionSection title="ELECTRICAL">
           <div className="flex flex-col gap-2">
-            {ELECTRICAL_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isSelected={electrical === opt.id}
-                onClick={() => setElectrical(opt.id)}
-              />
-            ))}
+            {ELECTRICAL_OPTIONS.map((opt) => {
+              let includedItems = [];
+              if (opt.id === '30amp') {
+                includedItems = [
+                  '(2) Receptacles',
+                  '(1) Switch',
+                  '(2) 110V 24" Flat Panel LEDs',
+                  '125 AMP 8-Space panel box w/ 30 AMP motorbase plug & cord'
+                ];
+              } else if (opt.id === '50amp') {
+                includedItems = [
+                  '(2) Receptacles',
+                  '(1) Switch',
+                  '(2) 110V 24" Flat Panel LEDs',
+                  '125 AMP 8-Space panel box w/ 50 AMP motorbase plug & cord'
+                ];
+              }
+
+              return (
+                <DetailedOptionCard
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={electrical === opt.id}
+                  onClick={() => setElectrical(opt.id)}
+                  includedItems={includedItems}
+                />
+              );
+            })}
           </div>
-          <AlertMessage message="12-SPACE PANEL REQUIRED FOR AC/BATH UPGRADES" />
-          <div className="mt-4">
+          <p className='border-t border-[#5D5E60] mt-6'></p>
+          <div className="mt-6">
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">PANEL CAPACITY</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
+            <div className="flex justify-center mb-4">
+              <div className="rounded-xl p-4 inline-block">
+                <img src="/Panel capacity.png" />
+              </div>
+            </div>
             <ToggleSwitch
-              label="RADIO PACKAGE SPEAKER"
-              checked={radioPackageSpeaker}
-              onChange={setRadioPackageSpeaker}
+              label="12-Space Panel"
+              checked={panel12Space}
+              onChange={setPanel12Space}
             />
           </div>
-        </OptionSection>
-      )}
-
-      {show('12V BATTERY SYSTEM') && (
-        <OptionSection title="12V BATTERY SYSTEM">
-          <div className="flex flex-col gap-2">
-            {BATTERY_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isSelected={battery === opt.id}
-                onClick={() => setBattery(opt.id)}
-              />
-            ))}
+          <p className='border-t border-[#5D5E60]'></p>
+          <div className="mt-6">
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">RECEPTACLE</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
+            <div className="flex justify-center mb-4">
+              <div className="rounded-xl p-4 inline-block">
+                <img src="/Receptacle.png" />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              {RECEPTACLE_OPTIONS.map((opt) => {
+                const qty = receptacles[opt.id] || 0
+                return (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    isSelected={qty > 0}
+                    quantity={qty}
+                    onQuantityChange={(newQty) => updateQuantity(setReceptacles, opt.id, newQty)}
+                    onClick={() => updateQuantity(setReceptacles, opt.id, qty === 0 ? 1 : 0)}
+                  />
+                )
+              })}
+            </div>
+          </div>
+          <p className='border-t border-[#5D5E60]'></p>
+          <div className="mt-6">
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">OFF-GRID POWER</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">12V Battery requires 7-Way Plug. Solar Charger keeps battery maintained.</p>
+            <div className="flex justify-center mb-4">
+              <div className="border border-[#3a3a3a] rounded-xl p-4 inline-block">
+                <img src="/grid power.png" />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              {OFF_GRID_POWER_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={offGridPower.includes(opt.id)}
+                  hasSettings
+                  onClick={() => toggleArrayItem(setOffGridPower, opt.id)}
+                  isMulti={true}
+                />
+              ))}
+            </div>
           </div>
         </OptionSection>
       )}
 
       {show('LIGHTS') && (
         <OptionSection title="LIGHTS">
-          <div className="flex flex-col gap-2">
-            {LIGHT_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isMulti
-                isSelected={lights.includes(opt.id)}
-                onClick={() => toggleLight(opt.id)}
-              />
-            ))}
+          <div className="mb-6">
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">INTERIOR LIGHTING</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
+            <div className="flex justify-center mb-4">
+              <img src="/Light.png" />
+            </div>
+            <div className="flex flex-col gap-2">
+              {INTERIOR_LIGHTING_OPTIONS.map((opt) => {
+                if (opt.id === 'ledrope') {
+                  return (
+                    <OptionPill
+                      key={opt.id}
+                      label={opt.label}
+                      price={opt.price}
+                      isSelected={ledRope}
+                      onClick={() => setLedRope(!ledRope)}
+                    />
+                  )
+                }
+                const qty = interiorLights[opt.id] || 0
+                return (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    isSelected={qty > 0}
+                    quantity={qty}
+                    onQuantityChange={(newQty) => updateQuantity(setInteriorLights, opt.id, newQty)}
+                    onClick={() => updateQuantity(setInteriorLights, opt.id, qty === 0 ? 1 : 0)}
+                  />
+                )
+              })}
+            </div>
           </div>
-          <img
-            src="/Cabinets.png"
-            alt="Lights preview"
-            className="w-full rounded-xl object-cover mt-2"
-            onError={(e) => { e.currentTarget.style.display = 'none' }}
-          />
-        </OptionSection>
-      )}
-
-      {show('VENTILATION') && (
-        <OptionSection title="VENTILATION">
-          <div className="flex flex-col gap-2">
-            {VENTILATION_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isSelected={ventilation === opt.id}
-                onClick={() => setVentilation(opt.id)}
-              />
-            ))}
+          <p className='border-t border-[#5D5E60]'></p>
+          <div>
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">EXTERIOR LIGHTING</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Racing Style Exterior Light</p>
+            <div className="flex flex-col gap-2">
+              {EXTERIOR_LIGHTING_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={exteriorLights.includes(opt.id)}
+                  hasSettings
+                  onClick={() => toggleArrayItem(setExteriorLights, opt.id)}
+                  isMulti={true}
+                />
+              ))}
+            </div>
           </div>
         </OptionSection>
       )}
 
       {show('CLIMATE CONTROL') && (
         <OptionSection title="CLIMATE CONTROL">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 mb-8">
             {CLIMATE_CONTROL_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
@@ -116,6 +223,64 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 onClick={() => setClimateControl(opt.id)}
               />
             ))}
+          </div>
+
+          <div className="mb-8">
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">PASSIVE VENTILATION</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
+            <div className="flex flex-col gap-2">
+              {PASSIVE_VENTILATION_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={passiveVent === opt.id}
+                  onClick={() => setPassiveVent(opt.id === passiveVent ? null : opt.id)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">AC PREP</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Required for any AC build now or prepping for later.</p>
+            <ToggleSwitch
+              label="Wire & Brace for AC"
+              checked={acPrep}
+              onChange={setAcPrep}
+            />
+          </div>
+
+          <div className="mb-8">
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">ROOFTOP AC</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Interior insulation Required. 13.5K BTU best for 14-24ft build. 15K BTU best for 26-32ft build</p>
+            <div className="flex flex-col gap-2">
+              {ROOFTOP_AC_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={rooftopAc === opt.id}
+                  onClick={() => setRooftopAc(opt.id === rooftopAc ? null : opt.id)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">MINI SPLIT</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Requires Extended TTT<br/><br/>12K: Wall-Mount. Cool & comfortable<br/><br/>18K: Heat + Cool - Best choice for anyone spending real time in trailer<br/><br/>24K: High Capacity - Best for large builds</p>
+            <div className="flex flex-col gap-2">
+              {MINI_SPLIT_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={miniSplit === opt.id}
+                  onClick={() => setMiniSplit(opt.id === miniSplit ? null : opt.id)}
+                />
+              ))}
+            </div>
           </div>
         </OptionSection>
       )}

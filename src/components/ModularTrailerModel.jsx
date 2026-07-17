@@ -44,7 +44,7 @@ const WHEELS_VARIANT_MAP = {
 
 // Maps frontStyle config value → exact Blender mesh name inside Front Style.glb
 const FRONT_STYLE_MESH_MAP = {
-    vnose: 'V-Nose',
+    vnose24: 'V-Nose',
     flatfront: 'Flat_Front',
 }
 
