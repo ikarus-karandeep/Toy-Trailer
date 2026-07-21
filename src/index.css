@@ -84,7 +84,7 @@ html, body {
 .option-card-gradient {
   background-image: url('/card-background.png');
   background-size: 600px auto; 
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-position: top center;
 }
 

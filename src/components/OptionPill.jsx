@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export default function OptionPill({
   label,
   price,
@@ -11,16 +13,35 @@ export default function OptionPill({
   quantity,
   onQuantityChange,
   onClick,
+  packageBadge = null,
 }) {
+  const [tooltipPos, setTooltipPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
+
   const formatPrice = (p) => {
     if (p == null) return '';
     return p >= 0 ? `+$${p.toLocaleString()}` : `-$${Math.abs(p).toLocaleString()}`;
   };
 
+  const handleMouseEnter = (e) => {
+    if (!isSelected || !packageBadge || !packageBadge.badge) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const screenWidth = window.innerWidth;
+    
+    // Estimate tooltip width ~220px. Needs 110px on each side of center.
+    if (rect.left + rect.width / 2 < 110) {
+      setTooltipPos({ left: '0', right: 'auto', transform: 'translateX(0)', arrowLeft: '20px' });
+    } else if (screenWidth - (rect.left + rect.width / 2) < 110) {
+      setTooltipPos({ left: 'auto', right: '0', transform: 'translateX(0)', arrowLeft: 'calc(100% - 20px)' });
+    } else {
+      setTooltipPos({ left: '50%', right: 'auto', transform: 'translateX(-50%)', arrowLeft: '50%' });
+    }
+  };
+
   return (
     <button
       onClick={isLocked ? undefined : onClick}
-      className={`w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
+      onMouseEnter={handleMouseEnter}
+      className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
         isLocked
           ? 'border-[#3a3a3a] text-gray-500 bg-[#2a2a2a] cursor-not-allowed opacity-70'
           : isSelected
@@ -33,13 +54,27 @@ export default function OptionPill({
           : {}
       }
     >
+      {/* Dynamic Package Tooltip */}
+      {isSelected && packageBadge && packageBadge.badge && (
+        <div 
+          className="absolute bottom-full mb-2 hidden group-hover:flex items-center justify-center whitespace-nowrap bg-[#DA634B] text-white text-[11px] font-medium px-3 py-2 rounded-md shadow-lg z-50 uppercase pointer-events-none"
+          style={{ left: tooltipPos.left, right: tooltipPos.right, transform: tooltipPos.transform }}
+        >
+          {price == null ? `Included in ${packageBadge.name} (No charges)` : `Included in ${packageBadge.name}`}
+          <div 
+            className="absolute top-full border-[5px] border-transparent border-t-[#DA634B]" 
+            style={{ left: tooltipPos.arrowLeft, transform: 'translateX(-50%)' }}
+          />
+        </div>
+      )}
+
       <span className="flex items-center justify-center gap-2 min-w-0">
         <span className="leading-snug">{label}</span>
+        {isSelected && packageBadge && packageBadge.badge && (
+          <img src={packageBadge.badge} alt="package" className="h-5 w-5 object-contain flex-shrink-0 opacity-90" />
+        )}
         {isLocked && (
-          <svg className="w-3.5 h-3.5 flex-shrink-0 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="5" y="11" width="14" height="9" rx="2" />
-            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-          </svg>
+          <img src="/Lock Icon.png" alt="Locked" className="w-3.5 h-3.5 flex-shrink-0 opacity-70" />
         )}
         {/* {isStandard && !isLocked && (
           <span className="flex-shrink-0 bg-[#DA634B] text-white text-[10px] font-bold tracking-widest px-2 py-0.5 rounded-full">

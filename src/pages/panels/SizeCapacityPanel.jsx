@@ -1,4 +1,5 @@
 import { useConfigurator } from '../../context/ConfiguratorContext'
+import { usePackageBadge } from '../../hooks/usePackageBadge'
 import {
   WIDTH_OPTIONS,
   LENGTH_OPTIONS,
@@ -25,6 +26,8 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
     spreadAxle, setSpreadAxle,
     narrowTrackAxle, setNarrowTrackAxle,
   } = useConfigurator()
+
+  const getBadge = usePackageBadge()
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -90,6 +93,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                 label={opt.label}
                 isStandard={opt.isStandard}
                 isSelected={frameSize === opt.id}
+                isLocked={opt.locked}
                 onClick={() => setFrameSize(opt.id)}
               />
             ))}
@@ -122,7 +126,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
               {/* Axle diagram */}
               <div className="flex justify-center mt-6">
-                <img src="/Axle count.png" alt="Axle Count"/>
+                <img src={axleCount === 'triple' ? "/triple.png" : "/Axle count.png"} alt="Axle Count"/>
               </div>
             </div>
           )}
@@ -147,6 +151,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                     isStandard={opt.isStandard}
                     isSelected={axleSuspension === opt.id}
                     onClick={() => setAxleSuspension(opt.id)}
+                    packageBadge={getBadge(opt.id)}
                   />
                 ))}
               </div>
@@ -174,6 +179,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                     isStandard={opt.isStandard}
                     isSelected={axleCapacity === opt.id}
                     onClick={() => setAxleCapacity(opt.id)}
+                    packageBadge={getBadge(opt.id)}
                   />
                 ))}
               </div>

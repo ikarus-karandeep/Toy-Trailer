@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
+import { usePackageBadge } from '../../hooks/usePackageBadge'
 import {
   PIT_PACK_OPTIONS,
   FLOOR_MATERIAL_OPTIONS,
@@ -26,6 +27,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
     cabinets, toggleCabinet,
     toolBox, setToolBox,
   } = useConfigurator()
+
+  const getBadge = usePackageBadge()
 
   // Local state for new UI components (until context is fully updated)
   const [pitPack, setPitPack] = useState(false)
@@ -145,6 +148,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   price={opt.price}
                   isSelected={floorMaterial === opt.id}
                   onClick={() => setFloorMaterial(opt.id)}
+                  packageBadge={getBadge(opt.id)}
                 />
               ))}
             </div>
@@ -204,6 +208,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   price={opt.price}
                   isSelected={wallMaterial === opt.id}
                   onClick={() => setWallMaterial(opt.id)}
+                  packageBadge={getBadge(opt.id)}
                 />
               ))}
             </div>
@@ -239,6 +244,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   price={opt.price}
                   isSelected={ceilingMaterial === opt.id}
                   onClick={() => setCeilingMaterial(opt.id)}
+                  packageBadge={getBadge(opt.id)}
                 />
               ))}
             </div>
@@ -277,6 +283,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   hasSettings={opt.id === 'frontbase36'}
                   onClick={() => toggleArrayItem(setBaseCabinets, opt.id)}
                   isMulti={true}
+                  packageBadge={getBadge(opt.id)}
                 />
               ))}
             </div>

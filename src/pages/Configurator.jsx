@@ -5,7 +5,7 @@ import ViewToggle from '../components/ViewToggle'
 import TrailerViewer from '../components/TrailerViewer'
 import BottomNav from '../components/BottomNav'
 import PanelActions from '../components/PanelActions'
-// import SummaryPanel from '../components/SummaryPanel'
+import SummaryPanel from '../components/SummaryPanel'
 import SectionSubNav from '../components/SectionSubNav'
 import SizeCapacityPanel from './panels/SizeCapacityPanel'
 import ExteriorPanel from './panels/ExteriorPanel'
@@ -53,11 +53,13 @@ export default function Configurator({ onModelReady }) {
                 const currentIndex = TABS.indexOf(activeTab)
                 if (currentIndex > 0) {
                   setActiveTab(TABS[currentIndex - 1])
+                } else {
+                  // On first tab — go back to package selection
+                  window.location.hash = 'package'
                 }
               }}
-              className={`pointer-events-auto flex items-center justify-center w-14 h-14 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white rounded-[20px] transition-colors shadow-lg ${TABS.indexOf(activeTab) === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className="pointer-events-auto flex items-center justify-center w-14 h-14 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white rounded-[20px] transition-colors shadow-lg"
               aria-label="Previous Menu"
-              disabled={TABS.indexOf(activeTab) === 0}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 12H4M4 12L10 18M4 12L10 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -93,9 +95,9 @@ export default function Configurator({ onModelReady }) {
               >
                 <img src="/eyes.png" className="w-4 h-4 object-contain" />
               </button>
-              <button aria-label="Scenic View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
+              {/* <button aria-label="Scenic View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
                 <img src="/view.png" className="w-4 h-4 object-contain" />
-              </button>
+              </button> */}
               <button
                 aria-label="Toggle Dimensions"
                 onClick={() => setShowDimensions(prev => !prev)}
@@ -158,7 +160,7 @@ export default function Configurator({ onModelReady }) {
       </div>
 
       {/* Summary panel — works on both layouts */}
-      {/* <SummaryPanel /> */}
+      <SummaryPanel />
     </>
   )
 }

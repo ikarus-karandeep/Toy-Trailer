@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
+import { usePackageBadge } from '../../hooks/usePackageBadge'
 import {
   ELECTRICAL_OPTIONS,
   RECEPTACLE_OPTIONS,
@@ -21,6 +22,8 @@ export default function SystemsPanel({ activeSectionTitle }) {
     electrical, setElectrical,
     climateControl, setClimateControl,
   } = useConfigurator()
+
+  const getBadge = usePackageBadge()
 
   // Local state for new UI components (until context is fully updated)
   const [panel12Space, setPanel12Space] = useState(false)
@@ -83,6 +86,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   isSelected={electrical === opt.id}
                   onClick={() => setElectrical(opt.id)}
                   includedItems={includedItems}
+                  packageBadge={getBadge(opt.id)}
                 />
               );
             })}
@@ -221,6 +225,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 price={opt.price}
                 isSelected={climateControl === opt.id}
                 onClick={() => setClimateControl(opt.id)}
+                packageBadge={getBadge(opt.id)}
               />
             ))}
           </div>
@@ -262,6 +267,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   price={opt.price}
                   isSelected={rooftopAc === opt.id}
                   onClick={() => setRooftopAc(opt.id === rooftopAc ? null : opt.id)}
+                  packageBadge={getBadge(opt.id)}
                 />
               ))}
             </div>
@@ -278,6 +284,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   price={opt.price}
                   isSelected={miniSplit === opt.id}
                   onClick={() => setMiniSplit(opt.id === miniSplit ? null : opt.id)}
+                  packageBadge={getBadge(opt.id)}
                 />
               ))}
             </div>

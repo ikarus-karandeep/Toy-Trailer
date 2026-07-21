@@ -2,13 +2,30 @@ import { useState } from 'react'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import {
   WIDTH_OPTIONS, LENGTH_OPTIONS, INTERIOR_HEIGHT_OPTIONS, AXLE_RATING_OPTIONS,
-  ELECTRICAL_OPTIONS, BATTERY_OPTIONS, LIGHT_OPTIONS, VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS,
-  RAMP_OPTIONS, TIE_DOWN_OPTIONS, JACK_OPTIONS,
-   BATHROOM_OPTIONS, AWNING_OPTIONS,
+  ELECTRICAL_OPTIONS, OFF_GRID_POWER_OPTIONS, INTERIOR_LIGHTING_OPTIONS, EXTERIOR_LIGHTING_OPTIONS,
+  PASSIVE_VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
+  REAR_ENTRANCE_OPTIONS, D_RINGS_OPTIONS, ADDITIONAL_D_RINGS_OPTIONS, E_TRACKS_OPTIONS, JACKS_OPTIONS,
+  BATHROOM_PACKAGE_OPTIONS,
   EXTERIOR_FINISH_OPTIONS, COLOR_OPTIONS, FRONT_STYLE_OPTIONS, EXTERIOR_BUILD_OPTIONS,
-  PROTECTION_OPTIONS, WHEEL_OPTIONS, FLOOR_OPTIONS, WALL_OPTIONS, CEILING_OPTIONS,
-  CABINET_OPTIONS, TOOL_BOX_OPTIONS,
+  PROTECTION_TYPE_OPTIONS, PROTECTION_SIZE_OPTIONS, FRONT_PROTECTION_OPTIONS,
+  WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
+  WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
+  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
 } from '../constants/configData'
+
+const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
+const VENTILATION_OPTIONS = PASSIVE_VENTILATION_OPTIONS;
+const CLIMATE_OPTIONS = [...CLIMATE_CONTROL_OPTIONS, ...ROOFTOP_AC_OPTIONS, ...MINI_SPLIT_OPTIONS];
+const RAMP_OPTIONS = REAR_ENTRANCE_OPTIONS;
+const TIE_DOWN_OPTIONS = [...D_RINGS_OPTIONS, ...ADDITIONAL_D_RINGS_OPTIONS, ...E_TRACKS_OPTIONS];
+const PROTECTION_OPTIONS = [...PROTECTION_TYPE_OPTIONS, ...PROTECTION_SIZE_OPTIONS, ...FRONT_PROTECTION_OPTIONS];
+const WHEEL_OPTIONS = WHEEL_TYPE_OPTIONS;
+const FLOOR_OPTIONS = [...FLOOR_MATERIAL_OPTIONS, ...FLOOR_OVERLAY_OPTIONS, ...FLOOR_INSULATION_OPTIONS];
+const WALL_OPTIONS = [...WALL_MATERIAL_OPTIONS, ...WALL_INSULATION_OPTIONS];
+const CEILING_OPTIONS = [...CEILING_MATERIAL_OPTIONS, ...CEILING_INSULATION_OPTIONS];
+const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS];
+const BATTERY_OPTIONS = OFF_GRID_POWER_OPTIONS;
+const BATHROOM_OPTIONS = BATHROOM_PACKAGE_OPTIONS;
 
 const TABS = ['TRAILER BUILD', 'CONFIGURATIONS', 'ADD-ONS', 'APPEARANCE']
 const find = (opts, id) => opts.find(o => o.id === id)
@@ -46,7 +63,7 @@ export default function SummaryPanel() {
       electrical, battery, lights, toggleLight, ventilation, climateControl,
       rampType, tieDowns, toggleTieDown, jacks, toggleJack,
       waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
-      exteriorFinish, selectedColor, frontStyle, exteriorBuild, protection, wheel,
+      exteriorFinish, selectedColor, frontStyle, exteriorBuild, protectionType, wheelType,
       floor, walls, ceiling, cabinets, toggleCabinet, toolBox } = ctx
 
     if (activeTab === 'TRAILER BUILD') {
@@ -66,18 +83,16 @@ export default function SummaryPanel() {
       const e = find(ELECTRICAL_OPTIONS, electrical); if (e) items.push({ label: e.label, price: e.price })
       const b = find(BATTERY_OPTIONS, battery); if (b) items.push({ label: b.label, price: b.price })
       const v = find(VENTILATION_OPTIONS, ventilation); if (v) items.push({ label: v.label, price: v.price })
-      const cc = find(CLIMATE_CONTROL_OPTIONS, climateControl); if (cc && cc.id !== 'none') items.push({ label: cc.label, price: cc.price })
+      const cc = find(CLIMATE_OPTIONS, climateControl); if (cc && cc.id !== 'none') items.push({ label: cc.label, price: cc.price })
       const r = find(RAMP_OPTIONS, rampType); if (r) items.push({ label: r.label, price: r.price })
       lights.forEach(id => { const o = find(LIGHT_OPTIONS, id); if (o && o.price) items.push({ label: o.label, price: o.price, onRemove: () => toggleLight(id) }) })
       tieDowns.forEach(id => { const o = find(TIE_DOWN_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleTieDown(id) }) })
-      jacks.forEach(id => { const o = find(JACK_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleJack(id) }) })
+      jacks.forEach(id => { const o = find(JACKS_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleJack(id) }) })
       return items
     }
     if (activeTab === 'ADD-ONS') {
       const items = []
-      // if (waterPackage) { const o = find(WATER_OPTIONS, waterPackage); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setWaterPackage(null) }) }
       if (bathroom) { const o = find(BATHROOM_OPTIONS, bathroom); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setBathroom(null) }) }
-      awning.forEach(id => { const o = find(AWNING_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleAwning(id) }) })
       return items
     }
     if (activeTab === 'APPEARANCE') {
@@ -86,8 +101,8 @@ export default function SummaryPanel() {
       const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
       const fs = find(FRONT_STYLE_OPTIONS, frontStyle); if (fs && !fs.isStandard) items.push({ label: fs.label, price: fs.price })
       const eb = find(EXTERIOR_BUILD_OPTIONS, exteriorBuild); if (eb && !eb.isStandard) items.push({ label: eb.label, price: eb.price })
-      const pr = find(PROTECTION_OPTIONS, protection); if (pr && !pr.isStandard) items.push({ label: pr.label, price: pr.price })
-      const wh = find(WHEEL_OPTIONS, wheel); if (wh && !wh.isStandard) items.push({ label: wh.label, price: wh.price })
+      const pr = find(PROTECTION_OPTIONS, protectionType); if (pr && !pr.isStandard) items.push({ label: pr.label, price: pr.price })
+      const wh = find(WHEEL_OPTIONS, wheelType); if (wh && !wh.isStandard) items.push({ label: wh.label, price: wh.price })
       const fl = find(FLOOR_OPTIONS, floor); if (fl && !fl.isStandard) items.push({ label: fl.label, price: fl.price })
       const wa = find(WALL_OPTIONS, walls); if (wa && !wa.isStandard) items.push({ label: wa.label, price: wa.price })
       const ce = find(CEILING_OPTIONS, ceiling); if (ce && !ce.isStandard) items.push({ label: ce.label, price: ce.price })

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
+import { usePackageBadge } from '../../hooks/usePackageBadge'
 import {
   EXTERIOR_FINISH_OPTIONS,
   COLOR_OPTIONS,
@@ -39,6 +40,8 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     length,
   } = useConfigurator()
 
+  const getBadge = usePackageBadge()
+
   const isShortTrailer = parseFloat(length) < 23.5
 
   useEffect(() => {
@@ -62,6 +65,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             isStandard={opt.isStandard}
             isSelected={exteriorFinish === opt.id}
             onClick={() => setExteriorFinish(opt.id)}
+            packageBadge={getBadge(opt.id)}
           />
         ))}
       </div>
@@ -120,7 +124,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
           Standard Exterior Colors
         </span>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 gap-3 sm:gap-4">
         {COLOR_OPTIONS.map((opt) => (
           <ColorSwatch
             key={opt.id}

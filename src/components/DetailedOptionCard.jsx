@@ -7,7 +7,8 @@ export default function DetailedOptionCard({
   isSelected,
   onClick,
   includedItems = [],
-  children
+  children,
+  packageBadge = null,
 }) {
   const showDetails = isSelected && (includedItems.length > 0 || children);
 
@@ -19,6 +20,7 @@ export default function DetailedOptionCard({
           price={price}
           isSelected={isSelected}
           onClick={onClick}
+          packageBadge={packageBadge}
         />
         <div className="bg-[#111111] rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
@@ -52,6 +54,7 @@ export default function DetailedOptionCard({
       price={price}
       isSelected={isSelected}
       onClick={onClick}
+      packageBadge={packageBadge}
     />
   );
 }

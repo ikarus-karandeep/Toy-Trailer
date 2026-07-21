@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
+import { usePackageBadge } from '../../hooks/usePackageBadge'
 import {
   REAR_ENTRANCE_OPTIONS,
   SIDE_DOOR_PLACEMENT_OPTIONS,
@@ -29,6 +30,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
     tieDowns, toggleTieDown,
     jacks, toggleJack,
   } = useConfigurator()
+
+  const getBadge = usePackageBadge()
 
   const [atpRamp, setAtpRamp] = useState(false)
   
@@ -316,6 +319,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   label={opt.label}
                   isSelected={tieDowns.includes(opt.id)}
                   onClick={() => toggleTieDown(opt.id)}
+                  packageBadge={getBadge(opt.id)}
                 />
               ))}
             </div>
@@ -333,6 +337,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 price={opt.price}
                 isSelected={jacks.includes(opt.id)}
                 onClick={() => toggleJack(opt.id)}
+                packageBadge={getBadge(opt.id)}
               />
             ))}
           </div>

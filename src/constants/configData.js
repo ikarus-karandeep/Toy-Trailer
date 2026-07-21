@@ -39,7 +39,7 @@ export const LENGTH_OPTIONS = [
 ];
 
 export const FRAME_SIZE_OPTIONS = [
-  { id: '4in',  label: '4" - ✦',  isStandard: false, price: null },
+  { id: '4in',  label: '4"',  isStandard: false, price: null, locked: true },
   { id: '6in',  label: '6"',       isStandard: true },
   { id: '8in',  label: '8"',       isStandard: false, price: null },
 ];

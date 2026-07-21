@@ -9,6 +9,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [activeTab, setActiveTab] = useState('SIZE & CAPACITY')
   const [viewMode, setViewMode] = useState('EXTERIOR')
   const [summaryOpen, setSummaryOpen] = useState(false)
+  const [packageId] = useState(ic.packageId ?? null)
 
   // Size & Capacity
   const [width, setWidth] = useState(ic.width ?? '7ft')
@@ -115,6 +116,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const toggleAwning  = useCallback(makeToggle(setAwningRaw),   [])
 
   const value = useMemo(() => ({
+    packageId,
     activeTab, setActiveTab,
     viewMode, setViewMode,
     summaryOpen, setSummaryOpen,
@@ -182,7 +184,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     totalPrice,
     completionPercent, markTabVisited,
   }), [
-    activeTab, viewMode, summaryOpen,
+    packageId, activeTab, viewMode, summaryOpen,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
