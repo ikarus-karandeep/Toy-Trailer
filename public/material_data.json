@@ -311,8 +311,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -323,8 +323,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -335,8 +335,8 @@
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
       "metalness": 0.0,
-      "normal": "//textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -421,8 +421,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -433,8 +433,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -445,8 +445,8 @@
       "base_color": "#D8DAE2",
       "roughness": 0.09,
       "metalness": 1.0,
-      "normal": "//textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -1849,9 +1849,47 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "V-Nose Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Front Cabinet": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -1913,21 +1951,9 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
-    },
-    "2": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": 1.0,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
     }
   },
-  "Flat Front Cabinet": {
+  "Flat Front Overhead Cabinet": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -1965,20 +1991,6 @@
       }
     }
   },
-  "Flat Front Overhead Cabinet": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "Racing Lights ": {
     "0": {
       "material_name": "Material",
@@ -1995,6 +2007,128 @@
   },
   "Rear Spoiler Wing": {
     "0": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#E7E7E7",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "Rear Spoiler Wing w/ Angled Lights": {
+    "0": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#E7E7E7",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "5": {
       "material_name": "Material",
       "base_color": "#888888",
       "roughness": 0.5,
@@ -2051,11 +2185,11 @@
   },
   "Gullwing Escape Door": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
       "metalness": 0.0,
-      "normal": false,
+      "normal": "//..\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2066,11 +2200,11 @@
   "Gullwing Escape Door Proxy": {},
   "2X Axle Angled Side For GED": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
       "metalness": 0.0,
-      "normal": false,
+      "normal": "//..\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2080,11 +2214,11 @@
   },
   "2X Axle Flat Side For GED": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
       "metalness": 0.0,
-      "normal": false,
+      "normal": "//..\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2146,11 +2280,11 @@
   },
   "Escape door": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
       "metalness": 0.0,
-      "normal": false,
+      "normal": "//..\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2173,20 +2307,6 @@
     }
   },
   "Top Supports": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Angled Lights": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -2318,6 +2438,20 @@
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Angled Lights": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {

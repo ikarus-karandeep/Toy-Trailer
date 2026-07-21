@@ -140,6 +140,15 @@ const SHELL_TEXTURES = {
     orange:     '/Materials/Orange_Shell_BaseColor.jpg',
     purple:     '/Materials/Purple_Shell_BaseColor.jpg',
     yellow:     '/Materials/Yellow_Shell_BaseColor.jpg',
+    black:      '/Materials/Blackl_BaseColor.jpg',
+    white:      '/Materials/White_BaseColor.jpg',
+    electricblue:      '/Materials/Electric Blue_BaseColor.jpg',
+    charcolgrey:      '/Materials/Charcoal Grey_BaseColor.jpg',
+    silver:      '/Materials/Sillver_BaseColor.jpg',
+    red:      '/Materials/Red_BaseColor.jpg',
+    indigoblue:      '/Materials/Indigo Blue_BaseColor.jpg',
+   electricgreen:      '/Materials/Electric Green_BaseColor.jpg',
+
 }
 
 // ── Extended Triple Tongue: 2 mesh variants (one per front style) ───────────
