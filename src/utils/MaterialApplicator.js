@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import materialData from '../../public/material_data.json'
+import materialSwatches from '../../public/material-swatches.json'
 
 function isTexturePath(value) {
     return typeof value === 'string' && value.startsWith('//')
@@ -42,15 +43,48 @@ function isSpecialName(name) {
 //                    space vs underscore differences between JSON and GLB
 export const MATERIAL_DEFS = new Map()
 export const MATERIAL_DEFS_NORM = new Map()
+
+// Build a lookup map for swatches by normalized material name
+const swatchesByNormName = new Map()
+Object.values(materialSwatches).forEach(swatch => {
+    if (swatch && typeof swatch === 'object' && swatch.material_name) {
+        swatchesByNormName.set(normMatName(swatch.material_name), swatch)
+    }
+})
+
 Object.values(materialData).forEach(componentSlots => {
     if (!componentSlots || typeof componentSlots !== 'object') return
     Object.values(componentSlots).forEach(def => {
         if (!def?.material_name) return
-        if (!MATERIAL_DEFS.has(def.material_name)) {
-            MATERIAL_DEFS.set(def.material_name, def)
-            MATERIAL_DEFS_NORM.set(normMatName(def.material_name), def)
+        
+        let finalDef = { ...def }
+        const normName = normMatName(def.material_name)
+        
+        if (swatchesByNormName.has(normName)) {
+            const swatch = swatchesByNormName.get(normName)
+            if (swatch.base_color !== undefined) finalDef.base_color = swatch.base_color
+            if (swatch.roughness !== undefined) finalDef.roughness = swatch.roughness
+            if (swatch.metalness !== undefined) finalDef.metalness = swatch.metalness
+            if (swatch.normal !== undefined) finalDef.normal = swatch.normal
+            if (swatch.alpha !== undefined) finalDef.alpha = swatch.alpha
+            if (swatch.emission !== undefined) finalDef.emission = swatch.emission
+            if (swatch.normal_map !== undefined) finalDef.normal_map = swatch.normal_map
+            if (swatch.flip_y !== undefined) finalDef.flip_y = swatch.flip_y
+        }
+
+        if (!MATERIAL_DEFS.has(finalDef.material_name)) {
+            MATERIAL_DEFS.set(finalDef.material_name, finalDef)
+            MATERIAL_DEFS_NORM.set(normName, finalDef)
         }
     })
+})
+
+// Ensure any swatches that aren't mapped in materialData are still available
+swatchesByNormName.forEach((swatch, normName) => {
+    if (!MATERIAL_DEFS_NORM.has(normName)) {
+        MATERIAL_DEFS.set(swatch.material_name, swatch)
+        MATERIAL_DEFS_NORM.set(normName, swatch)
+    }
 })
 
 // Collect texture paths only from non-special materials so textures owned by
@@ -59,7 +93,7 @@ Object.values(materialData).forEach(componentSlots => {
 const texturePathSet = new Set()
 MATERIAL_DEFS.forEach((def, name) => {
     if (isSpecialName(name)) return
-    const fields = [def.base_color, def.roughness, def.metalness, def.normal, def.alpha]
+    const fields = [def.base_color, def.roughness, def.metalness, def.normal, def.normal_map, def.alpha]
     fields.forEach(v => { if (isTexturePath(v)) texturePathSet.add(blenderPathToWeb(v)) })
 })
 
@@ -99,6 +133,7 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.wrapS = tex.wrapT = THREE.RepeatWrapping
                 tex.flipY = def.flip_y === true
                 if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
+                if (normMatName(def.material_name).includes('rim')) tex.repeat.set(50, 50)
                 tex.needsUpdate = true
                 next.map = tex
                 next.color.set('#FFFFFF')
@@ -107,13 +142,11 @@ export function applyMaterialDef(mat, def, textures) {
                 next.color.set('#FFFFFF')
             }
         } else if (typeof def.base_color === 'string') {
-            if (next.map) {
-                next.color.set('#FFFFFF')
-            } else {
-                next.color.set(def.base_color)
-            }
+            next.map = null
+            next.color.set(def.base_color)
         } else {
             // neither a texture path nor a hex string was provided
+            next.map = null
             next.color.set('#FFFFFF')
         }
 
@@ -125,15 +158,19 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.wrapS = tex.wrapT = THREE.RepeatWrapping
                 tex.flipY = def.flip_y === true
                 if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
+                if (normMatName(def.material_name).includes('rim')) tex.repeat.set(50, 50)
                 tex.needsUpdate = true
                 next.roughnessMap = tex
                 next.roughness = 1.0
             } else {
+                next.roughnessMap = null
                 next.roughness = 0.0
             }
         } else if (typeof def.roughness === 'number') {
+            next.roughnessMap = null
             next.roughness = def.roughness
         } else {
+            next.roughnessMap = null
             next.roughness = 0.0
         }
 
@@ -145,27 +182,34 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.wrapS = tex.wrapT = THREE.RepeatWrapping
                 tex.flipY = def.flip_y === true
                 if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
+                if (normMatName(def.material_name).includes('rim')) tex.repeat.set(50, 50)
                 tex.needsUpdate = true
                 next.metalnessMap = tex
                 next.metalness = 1.0
             } else {
+                next.metalnessMap = null
                 next.metalness = 0.0
             }
         } else if (typeof def.metalness === 'number') {
+            next.metalnessMap = null
             next.metalness = def.metalness
         } else {
+            next.metalnessMap = null
             next.metalness = 0.0
         }
     }
 
     // --- normal: texture path -> boolean toggle -> fallback (no normal map) ---
-    if (isTexturePath(originalDef.normal)) {
-        const tex = getTexture(textures, originalDef.normal)
+    let normalPath = isTexturePath(originalDef.normal) ? originalDef.normal : (originalDef.normal === true && isTexturePath(originalDef.normal_map) ? originalDef.normal_map : null)
+
+    if (normalPath) {
+        const tex = getTexture(textures, normalPath)
         if (tex) {
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
             tex.flipY = originalDef.flip_y === true
             if (normMatName(originalDef.material_name) === 'roof') tex.repeat.set(20, 20)
+            if (normMatName(originalDef.material_name).includes('rim')) tex.repeat.set(50, 50)
             tex.needsUpdate = true
             next.normalMap = tex
         } else {

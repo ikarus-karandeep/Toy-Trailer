@@ -35,7 +35,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? 'blackout')
-  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'pewter')
+  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'brandywine')
   const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'rearwingspoiler')
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
   const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'semiscrewed')

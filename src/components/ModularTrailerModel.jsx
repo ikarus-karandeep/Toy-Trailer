@@ -194,20 +194,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const normalMap = useTexture('/Materials/Metallic_Grates_Normal.png')
     const staticTextures = useTexture(STATIC_TEXTURE_PATHS)
 
-    const aluminumRimTextures = useTexture({
-        baseColor: '/Materials/Aluminum_Rim_Base_color.jpg',
-        metallic:  '/Materials/Aluminum_Rim_Metallic.jpg',
-        normal:    '/Materials/Aluminum_Rim_Normal.jpg',
-        roughness: '/Materials/Aluminum_Rim_Roughness.jpg',
-    })
-
-    const blackSteelRimTextures = useTexture({
-        baseColor: '/Materials/Black Steel_Rim_Base_color.jpg',
-        metallic:  '/Materials/Black Steel_Rim_Metallic.jpg',
-        normal:    '/Materials/Black Steel_Rim_Normal.jpg',
-        roughness: '/Materials/Black Steel_Rim_Roughness.jpg',
-    })
-
     const store = useRef(new Map())
     const animRef = useRef({ widthFt, lengthFt, heightFt })
     const targetRef = useRef({ widthFt, lengthFt, heightFt })
@@ -523,21 +509,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     // ── Apply Rim material to MAT_Rim based on wheel selection ───────────────
     useEffect(() => {
-        const textures = config.wheel === 'aluminumradial' ? aluminumRimTextures : blackSteelRimTextures
-        const { baseColor, metallic, normal, roughness } = textures
-        baseColor.colorSpace = THREE.SRGBColorSpace
-        metallic.colorSpace  = THREE.NoColorSpace
-        normal.colorSpace    = THREE.NoColorSpace
-        roughness.colorSpace = THREE.NoColorSpace
-        ;[baseColor, metallic, normal, roughness].forEach(t => { t.flipY = false })
-        ;[baseColor, metallic, normal, roughness].forEach(t => {
-            t.wrapS = THREE.RepeatWrapping
-            t.wrapT = THREE.RepeatWrapping
-            t.repeat.set(50, 50)
-            t.needsUpdate = true
-        })
+        let rimMatName = 'blacksteelwheelrim'
+        if (config.wheelType === 'spideraluminum') rimMatName = 'aluminiumradialrim'
+        else if (config.wheelType === 'standardsilver') rimMatName = 'standardsilverrim'
 
-        ;[wheels, axleConfig].forEach(scene => {
+        const def = MATERIAL_DEFS_NORM.get(rimMatName)
+        console.log('[DEBUG RIMS] wheelType:', config.wheelType, '| rimMatName:', rimMatName)
+        console.log('[DEBUG RIMS] def found:', !!def, def)
+        
+        if (!def) return
+
+        let rimMeshesFound = 0;
+        ;[wheels, axleConfig].forEach((scene, sceneIdx) => {
             scene.traverse(child => {
                 if (!child.isMesh) return
                 const isArray = Array.isArray(child.material)
@@ -546,22 +529,23 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (!mat) return
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
                     if (!normalized?.includes('rim')) return
-                    const next = mat.clone()
-                    next.map          = baseColor
-                    next.metalnessMap = metallic
-                    next.metalness    = 1.0
-                    next.normalMap    = normal
-                    next.normalScale  = new THREE.Vector2(1.0, 1.0)
-                    next.roughnessMap = roughness
-                    next.roughness    = 1.0
-                    next.side         = THREE.DoubleSide
-                    next.needsUpdate  = true
+                    
+                    rimMeshesFound++;
+                    console.log(`[DEBUG RIMS] Mesh: ${child.name} | Original mat: ${mat.name}`);
+                    
+                    let next = applyMaterialDef(mat, def, staticTextures)
+                    next.side = THREE.DoubleSide
+                    next.needsUpdate = true
+
+                    console.log(`[DEBUG RIMS] New map applied?`, !!next.map, `| Color:`, next.color.getHexString());
+
                     if (isArray) child.material[i] = next
                     else child.material = next
                 })
             })
         })
-    }, [config.wheel, aluminumRimTextures, blackSteelRimTextures, wheels, axleConfig])
+        console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
+    }, [config.wheelType, wheels, axleConfig, staticTextures])
 
     // ── Apply all standard materials driven by material_data.json ────────────
     // Only MAT_Shell, Metallic Grates, MAT_WheelCover, MAT_Rim remain special.
@@ -1043,14 +1027,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         eTrackGroupRef.current.clear()
         
         // Find the base template meshes (we assume they are the original single-piece objects)
-        let floorTemplate = null
+        const floorTemplates = []
         const wallTemplates = []   // collect ALL wall templates (one per side of trailer)
         if (cargo) {
             cargo.traverse(child => {
                 if (!child.isMesh) return
                 const isProxy = child.name.toLowerCase().includes('proxy')
             
-                if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplate = child
+                if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplates.push(child)
                 if (child.name.includes('Wall_E-Track')  && !isProxy) wallTemplates.push(child)
             })
         }
@@ -1112,16 +1096,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         })
 
         // Floor E-Track: full run, unaffected by proxy
-        if (floorTemplate && config.tieDowns?.includes('flooretrack')) {
-            const floorInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, floorTemplate)
-            floorInstanced.position.copy(floorTemplate.position)
-            floorInstanced.rotation.copy(floorTemplate.rotation)
-            floorInstanced.scale.copy(floorTemplate.scale)
-            eTrackGroupRef.current.add(floorInstanced)
+        if (floorTemplates.length > 0 && config.tieDowns?.includes('floor')) {
+            floorTemplates.forEach(floorTemplate => {
+                const floorInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, floorTemplate)
+                floorInstanced.position.copy(floorTemplate.position)
+                floorInstanced.rotation.copy(floorTemplate.rotation)
+                floorInstanced.scale.copy(floorTemplate.scale)
+                eTrackGroupRef.current.add(floorInstanced)
+            })
         }
 
         // Wall E-Track: per-wall generation with Z-aware proxy side detection.
-        if (wallTemplates.length > 0 && config.tieDowns?.includes('walletrack')) {
+        if (wallTemplates.length > 0 && config.tieDowns?.includes('wall')) {
             wallTemplates.forEach((wallTemplate, wallIdx) => {
                 wallTemplate.updateWorldMatrix(true, false)
                 const wm = wallTemplate.matrixWorld
@@ -1208,6 +1194,7 @@ Object.values(SHELL_TEXTURES).forEach(path => useTexture.preload(path))
 Object.values(STATIC_TEXTURE_PATHS).forEach(path => useTexture.preload(path))
 useTexture.preload('/Materials/Metallic_Grates_Normal.png')
 useTexture.preload('/Materials/Simple_Noise.png')
+
 
 
 
