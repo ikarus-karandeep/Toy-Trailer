@@ -1,4 +1,4 @@
-﻿import '@google/model-viewer'
+import '@google/model-viewer'
 import { Suspense, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { CameraControls, Stage, useEnvironment, ContactShadows, useGLTF, useTexture } from '@react-three/drei'
@@ -752,6 +752,43 @@ function SceneReadyNotifier({ meshRef, onReady }) {
   return null
 }
 
+function ShaderPrecompiler({ modelGroupRef }) {
+  const { gl, scene, camera } = useThree()
+  const hasPrecompiled = useRef(false)
+
+  useFrame(() => {
+    if (hasPrecompiled.current || !modelGroupRef.current) return
+    let hasMeshes = false
+    modelGroupRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
+    if (!hasMeshes) return
+
+    hasPrecompiled.current = true
+
+    // Delay a bit to let the initial scene render
+    setTimeout(() => {
+      const originalSides = new Map()
+      modelGroupRef.current.traverse(node => {
+        if (node.isMesh && node.material) {
+          originalSides.set(node.uuid, node.material.side)
+          node.material.side = THREE.DoubleSide
+          node.material.needsUpdate = true
+        }
+      })
+
+      gl.compile(scene, camera)
+
+      modelGroupRef.current.traverse(node => {
+        if (node.isMesh && node.material && originalSides.has(node.uuid)) {
+          node.material.side = originalSides.get(node.uuid)
+          node.material.needsUpdate = true
+        }
+      })
+    }, 500)
+  })
+
+  return null
+}
+
 const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen }, ref) {
   const { width, length, interiorHeight, showDimensions, setShowDimensions, viewMode } = useConfigurator()
   const [arUrl, setArUrl] = useState(null)
@@ -984,6 +1021,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 draggingSmoothTime={0.4}
               />
               <CameraLayerSetup />
+              <ShaderPrecompiler modelGroupRef={modelGroupRef} />
             </Canvas>
           </Suspense>
 
