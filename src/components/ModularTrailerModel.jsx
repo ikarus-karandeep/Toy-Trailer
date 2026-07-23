@@ -743,7 +743,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (config.escapeDoor === 'gullwing') {
             activeGullwingMeshes.push('Gullwing_Escape_Door_2')
             
-            const variantPrefix = config.spreadAxle ? '2X' : '3X'
+            const variantPrefix = config.axleCount === 'triple' ? '3X' : '2X'
             const style = config.axleAngled ? 'Angled' : 'Flat'
             activeGullwingMeshes.push(`${variantPrefix}_Axle_${style}_Side_For_GED`)
         }
@@ -852,8 +852,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // We'll hide the static E-Tracks and generate them dynamically instead to multiply the mesh
         BlenderNodes.switchMeshes(cargo, activeCargoMeshes)
 
-        // Spread Axle ON = 2 tyres (tandem), OFF = 3 tyres (tri-axle)
-        const variant = config.spreadAxle ? '2x' : '3x'
+        // Axle Count determines the number of tyres (tandem vs triple)
+        const variant = config.axleCount === 'triple' ? '3x' : '2x'
 
         // Tyre count driven by variant — wheel style is material only
         BlenderNodes.switchMesh(wheels, WHEELS_VARIANT_MAP[variant])
@@ -881,7 +881,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
 
         // ── Spoiler ──────────────────────────────────────────────────────────
-        if (config.rearSpoiler) {
+        if (config.exteriorAccessories === 'rearwingspoiler' || config.exteriorAccessories === 'rearwings') {
             // First, hide all meshes
             spoiler.traverse(child => {
                 if (child.isMesh) child.visible = false;
@@ -889,18 +889,20 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
             // Then, only show the meshes that belong to the correct groups
             spoiler.traverse(child => {
+                if (!child.isMesh) return;
+
                 const nameLower = child.name.toLowerCase();
                 
-                if (nameLower.includes('angled')) {
-                    child.traverse(m => {
-                        if (m.isMesh) m.visible = true;
-                    });
+                if (config.exteriorAccessories === 'rearwingspoiler' && nameLower.includes('angled')) {
+                    child.visible = true;
+                }
+
+                if (config.exteriorAccessories === 'rearwings' && nameLower.includes('spoiler') && !nameLower.includes('.001') && !nameLower.includes('angled') && !nameLower.includes('racing')) {
+                    child.visible = true;
                 }
                 
                 if (config.lights?.includes('racing') && nameLower.includes('racing')) {
-                    child.traverse(m => {
-                        if (m.isMesh) m.visible = true;
-                    });
+                    child.visible = true;
                 }
             });
         }
@@ -915,7 +917,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.leftSide, config.rightSide,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
         config.escapeDoor, config.generatorBox, config.winchSystem, config.tieDowns,
-        config.extendedTripleTongue, config.radioPackageSpeaker, config.rearSpoiler,
+        config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights,
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount,
         config.bathroom,
@@ -939,12 +941,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
         if (config.awning?.length > 0 && lengthFt >= 29) scenes.push(awning)
         if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
-        if (config.rearSpoiler) scenes.push(spoiler)
+        if (config.exteriorAccessories === 'rearwingspoiler' || config.exteriorAccessories === 'rearwings') scenes.push(spoiler)
         if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)
         if (config.escapeDoor === '54x48') scenes.push(escapeDoorScene)
         return scenes
     }, [
-        config.cabinets, config.awning, config.bathroom, config.rearSpoiler, config.escapeDoor,
+        config.cabinets, config.awning, config.bathroom, config.exteriorAccessories, config.escapeDoor,
         lengthFt,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor, escapeDoorScene

@@ -93,6 +93,8 @@ export const EXTERIOR_FINISH_OPTIONS = [
 ];
 
 export const EXTERIOR_ACCESSORIES_OPTIONS = [
+  { id: 'none', label: 'NONE', isStandard: true },
+  { id: 'rearwings', label: 'REAR WINGS' },
   { id: 'rearwingspoiler', label: 'REAR WING SPOILER W/ 2 ANGLED LIGHTS', price: 473 },
 ];
 

@@ -18,6 +18,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   const { 
     bathroom, setBathroom, 
     generatorBox, setGeneratorBox,
+    toolBox, setToolBox
   } = useConfigurator()
 
   const [waterPackage, setWaterPackage] = useState(null)
@@ -31,7 +32,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   const [awningLength, setAwningLength] = useState('20ft')
 
   const [winch, setWinch] = useState('winchsystem')
-  const [toolCabinet, setToolCabinet] = useState(false)
 
   const [generatorBoxSelection, setGeneratorBoxSelection] = useState(null)
   const [genSlides, setGenSlides] = useState(false)
@@ -251,8 +251,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         <OptionSection title="BUILT - IN TOOL CABINET">
           <ToggleSwitch
             label="INCLUDE TOOL CABINET"
-            checked={toolCabinet}
-            onChange={setToolCabinet}
+            checked={toolBox === 'frontbox'}
+            onChange={(val) => setToolBox(val ? 'frontbox' : 'none')}
           />
         </OptionSection>
       )}

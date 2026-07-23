@@ -13,7 +13,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   const applyPackage = useCallback((pkgId, pkgConfig) => {
     setPackageId(pkgId);
-    setExteriorAccessories(pkgConfig.exteriorAccessories ?? null);
+    setExteriorAccessories(pkgConfig.exteriorAccessories ?? 'none');
     setRearSpoiler(pkgConfig.rearSpoiler ?? false);
     setWheelType(pkgConfig.wheelType ?? 'standardsilver');
     setAngledLights(pkgConfig.angledLights ?? false);
@@ -32,12 +32,12 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   }, []);
 
   // Size & Capacity
-  const [width, setWidth] = useState(ic.width ?? '7ft')
+  const [width, setWidth] = useState(ic.width ?? '8.5ft')
   const [length, setLength] = useState(ic.length ?? '32')
   const [frameSize, setFrameSize] = useState(ic.frameSize ?? '6in')
   const [axleCount, setAxleCount] = useState(ic.axleCount ?? 'tandem')
   const [axleSuspension, setAxleSuspension] = useState(ic.axleSuspension ?? 'torsion')
-  const [axleCapacity, setAxleCapacity] = useState(ic.axleCapacity ?? '3500lb')
+  const [axleCapacity, setAxleCapacity] = useState(ic.axleCapacity ?? '7000lb')
   const [interiorHeight, setInteriorHeight] = useState(ic.interiorHeight ?? '7ft0')
   const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? true)
   const [narrowTrackAxle, setNarrowTrackAxle] = useState(ic.narrowTrackAxle ?? false)
@@ -56,7 +56,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? 'blackout')
   const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'brandywine')
-  const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'rearwingspoiler')
+  const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'none')
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
   const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'semiscrewed')
   const [roofBuild, setRoofBuild] = useState(ic.roofBuild ?? 'onepieceroof')
