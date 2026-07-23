@@ -881,31 +881,33 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
 
         // ── Spoiler ──────────────────────────────────────────────────────────
-        if (config.exteriorAccessories === 'rearwingspoiler' || config.exteriorAccessories === 'rearwings') {
-            // First, hide all meshes
-            spoiler.traverse(child => {
-                if (child.isMesh) child.visible = false;
-            });
+        // First hide everything
+        spoiler.traverse(child => {
+            if (child.isMesh) child.visible = false
+        })
 
-            // Then, only show the meshes that belong to the correct groups
-            spoiler.traverse(child => {
-                if (!child.isMesh) return;
+        // Now dynamically show based on substring match
+        spoiler.traverse(child => {
+            if (!child.isMesh) return
+            const nameLower = child.name.toLowerCase()
 
-                const nameLower = child.name.toLowerCase();
-                
-                if (config.exteriorAccessories === 'rearwingspoiler' && nameLower.includes('angled')) {
-                    child.visible = true;
-                }
+            // Racing lights logic
+            const isRacing = nameLower.includes('racing')
+            if (config.lights?.includes('racing') && isRacing) {
+                child.visible = true
+            }
 
-                if (config.exteriorAccessories === 'rearwings' && nameLower.includes('spoiler') && !nameLower.includes('.001') && !nameLower.includes('angled') && !nameLower.includes('racing')) {
-                    child.visible = true;
-                }
-                
-                if (config.lights?.includes('racing') && nameLower.includes('racing')) {
-                    child.visible = true;
-                }
-            });
-        }
+            // Angled spoiler logic
+            const isAngled = nameLower.includes('angled')
+            if (config.exteriorAccessories === 'rearwingspoiler' && isAngled) {
+                child.visible = true
+            }
+
+            // Normal spoiler logic - if it's NOT racing and NOT angled, it MUST be the normal wing!
+            if (config.exteriorAccessories === 'rearwings' && !isRacing && !isAngled) {
+                child.visible = true
+            }
+        })
 
         // Signal that mesh visibility has been updated. generatedETracks depends on
         // visibilityVersion so it will recompute on the next render with correct .visible values.

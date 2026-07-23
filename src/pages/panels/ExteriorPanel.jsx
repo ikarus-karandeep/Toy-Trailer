@@ -25,6 +25,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
   const {
     exteriorFinish, setExteriorFinish,
     selectedColor, setSelectedColor,
+    preBlackoutColor, setPreBlackoutColor,
     exteriorAccessories, setExteriorAccessories,
     frontStyle, setFrontStyle,
     exteriorBuild, setExteriorBuild,
@@ -64,7 +65,21 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             price={opt.price}
             isStandard={opt.isStandard}
             isSelected={exteriorFinish === opt.id}
-            onClick={() => setExteriorFinish(opt.id)}
+            onClick={() => {
+              if (exteriorFinish === opt.id) {
+                setExteriorFinish(null)
+                if (opt.id === 'blackout') {
+                  setSelectedColor(preBlackoutColor || 'brandywine')
+                  setPreBlackoutColor(null)
+                }
+              } else {
+                setExteriorFinish(opt.id)
+                if (opt.id === 'blackout') {
+                  setPreBlackoutColor(selectedColor)
+                  setSelectedColor('black')
+                }
+              }
+            }}
             packageBadge={getBadge(opt.id)}
           />
         ))}
@@ -133,7 +148,11 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             color={opt.color}
             image={opt.image}
             isSelected={selectedColor === opt.id}
-            onClick={() => setSelectedColor(opt.id)}
+            disabled={exteriorFinish === 'blackout' && opt.id !== 'black'}
+            onClick={() => {
+              if (exteriorFinish === 'blackout') return;
+              setSelectedColor(opt.id);
+            }}
           />
         ))}
       </div>

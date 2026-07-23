@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo, useCallback } from 'react'
+import { createContext, useContext, useState, useMemo, useCallback,useEffect } from 'react'
 
 const makeToggle = (setter) => (id) =>
   setter(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
@@ -11,25 +11,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [summaryOpen, setSummaryOpen] = useState(false)
   const [packageId, setPackageId] = useState(ic.packageId ?? null)
 
-  const applyPackage = useCallback((pkgId, pkgConfig) => {
-    setPackageId(pkgId);
-    setExteriorAccessories(pkgConfig.exteriorAccessories ?? 'none');
-    setRearSpoiler(pkgConfig.rearSpoiler ?? false);
-    setWheelType(pkgConfig.wheelType ?? 'standardsilver');
-    setAngledLights(pkgConfig.angledLights ?? false);
-    setExteriorFinish(pkgConfig.exteriorFinish ?? 'blackout');
-    setTieDownsRaw(pkgConfig.tieDowns ?? ['drings']);
-    setSpreadAxle(pkgConfig.spreadAxle ?? true);
-    setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
-    setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
-    setCabinetsRaw(pkgConfig.cabinets ?? ['vnosebase']);
-    setJacksRaw(pkgConfig.jacks ?? ['folddownstabilizer']);
-    setElectrical(pkgConfig.electrical ?? '110v8space');
-    setRecessedTireBox(pkgConfig.recessedTireBox ?? false);
-    setClimateControl(pkgConfig.climateControl ?? 'wirebrace');
-    setWalls(pkgConfig.walls ?? '38plywood');
-    setCeiling(pkgConfig.ceiling ?? 'thermal');
-  }, []);
+
 
   // Size & Capacity
   const [width, setWidth] = useState(ic.width ?? '8.5ft')
@@ -54,8 +36,9 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   }, [axleCount, axleSuspension, axleCapacity])
 
   // Exterior
-  const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? 'blackout')
-  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'brandywine')
+  const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? null)
+  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? (ic.exteriorFinish === 'blackout' ? 'black' : 'brandywine'))
+  const [preBlackoutColor, setPreBlackoutColor] = useState(null)
   const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'none')
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
   const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'semiscrewed')
@@ -86,7 +69,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'wirebrace')
 
   // Loading
-  const [rampType, setRampType] = useState(ic.rampType ?? 'barndoors')
+  const [rampType, setRampType] = useState(ic.rampType ?? 'doublereardoors')
   const [atpRamp, setAtpRamp] = useState(ic.atpRamp ?? true)
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
   const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])
@@ -135,6 +118,39 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const toggleCabinet = useCallback(makeToggle(setCabinetsRaw), [])
   const toggleAwning  = useCallback(makeToggle(setAwningRaw),   [])
 
+  const applyPackage = useCallback((pkgId, pkgConfig) => {
+    setPackageId(pkgId);
+    setExteriorAccessories(pkgConfig.exteriorAccessories ?? 'none');
+    setRearSpoiler(pkgConfig.rearSpoiler ?? false);
+    setWheelType(pkgConfig.wheelType ?? 'standardsilver');
+    setAngledLights(pkgConfig.angledLights ?? false);
+    setExteriorFinish(pkgConfig.exteriorFinish ?? null);
+    
+    if (pkgConfig.exteriorFinish === 'blackout') {
+      setSelectedColor('black');
+    } else {
+      setSelectedColor('brandywine');
+    }
+
+    setTieDownsRaw(pkgConfig.tieDowns ?? ['drings']);
+    setSpreadAxle(pkgConfig.spreadAxle ?? true);
+    setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
+    setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
+    setCabinetsRaw(pkgConfig.cabinets ?? ['vnosebase']);
+    setJacksRaw(pkgConfig.jacks ?? ['folddownstabilizer']);
+    setElectrical(pkgConfig.electrical ?? '110v8space');
+    setRecessedTireBox(pkgConfig.recessedTireBox ?? false);
+    setClimateControl(pkgConfig.climateControl ?? 'wirebrace');
+    setWalls(pkgConfig.walls ?? '38plywood');
+    setCeiling(pkgConfig.ceiling ?? 'thermal');
+  }, []);
+
+  useEffect(() => {
+    if (exteriorFinish === 'blackout' && selectedColor !== 'black') {
+      setSelectedColor('black')
+    }
+  }, [exteriorFinish, selectedColor])
+
   const value = useMemo(() => ({
     packageId, setPackageId, applyPackage,
     activeTab, setActiveTab,
@@ -169,23 +185,23 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     floor, setFloor,
     walls, setWalls,
     ceiling, setCeiling,
-    cabinets, toggleCabinet,
+    cabinets, setCabinetsRaw, toggleCabinet,
     toolBox, setToolBox,
     leftSide, setLeftSide,
     rightSide, setRightSide,
     electrical, setElectrical,
     battery, setBattery,
-    lights, toggleLight,
+    lights, setLightsRaw, toggleLight,
     ventilation, setVentilation,
     climateControl, setClimateControl,
     rampType, setRampType,
     atpRamp, setAtpRamp,
     rearDoor, setRearDoor,
-    tieDowns, toggleTieDown,
-    jacks, toggleJack,
+    tieDowns, setTieDownsRaw, toggleTieDown,
+    jacks, setJacksRaw, toggleJack,
     waterPackage, setWaterPackage,
     bathroom, setBathroom,
-    awning, toggleAwning,
+    awning, setAwningRaw, toggleAwning,
     angledLights, setAngledLights,
     stairs, setStairs,
     vNoseETrack, setVNoseETrack,
@@ -207,7 +223,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     packageId, applyPackage, activeTab, viewMode, summaryOpen,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
-    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
+    exteriorFinish, selectedColor, preBlackoutColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
     electrical, battery, lights, ventilation, climateControl,
     rampType, atpRamp, rearDoor, tieDowns, jacks,

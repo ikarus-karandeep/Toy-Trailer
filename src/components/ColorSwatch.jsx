@@ -1,11 +1,12 @@
-export default function ColorSwatch({ id, label, color, image, isSelected, onClick }) {
+export default function ColorSwatch({ id, label, color, image, isSelected, onClick, disabled }) {
   const isLightLabel = /white|silver/i.test(label)
 
   return (
     <button
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       aria-label={label}
       aria-pressed={isSelected}
+      disabled={disabled}
       style={{
         position: 'relative',
         width: '100%',
@@ -16,9 +17,10 @@ export default function ColorSwatch({ id, label, color, image, isSelected, onCli
         WebkitAppearance: 'none',
         appearance: 'none',
         overflow: 'hidden',
-        cursor: 'pointer',
+        cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'transform 0.15s ease, box-shadow 0.15s ease',
         transform: isSelected ? 'scale(0.97)' : undefined,
+        opacity: disabled ? 0.3 : 1,
         boxShadow: isSelected
           ? '0 0 0 2.5px #DA634B, 0 0 0 5px rgba(218,99,75,0.35)'
           : undefined,

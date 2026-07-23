@@ -18,7 +18,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   const { 
     bathroom, setBathroom, 
     generatorBox, setGeneratorBox,
-    toolBox, setToolBox
+    toolBox, setToolBox,
+    ladderRacks, setLadderRacks
   } = useConfigurator()
 
   const [waterPackage, setWaterPackage] = useState(null)
@@ -315,6 +316,16 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             label="Dimensions and placement quoted per order"
             checked={lShapeCounter}
             onChange={setLShapeCounter}
+          />
+        </OptionSection>
+      )}
+
+      {show('LADDER RACKS') && (
+        <OptionSection title="LADDER RACKS">
+          <ToggleSwitch
+            label="INCLUDE LADDER RACKS"
+            checked={ladderRacks}
+            onChange={setLadderRacks}
           />
         </OptionSection>
       )}
