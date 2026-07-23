@@ -37,8 +37,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? null)
-  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? (ic.exteriorFinish === 'blackout' ? 'black' : 'brandywine'))
-  const [preBlackoutColor, setPreBlackoutColor] = useState(null)
+  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'brandywine')
   const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'none')
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
   const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'semiscrewed')
@@ -145,12 +144,6 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     setCeiling(pkgConfig.ceiling ?? 'thermal');
   }, []);
 
-  useEffect(() => {
-    if (exteriorFinish === 'blackout' && selectedColor !== 'black') {
-      setSelectedColor('black')
-    }
-  }, [exteriorFinish, selectedColor])
-
   const value = useMemo(() => ({
     packageId, setPackageId, applyPackage,
     activeTab, setActiveTab,
@@ -223,7 +216,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     packageId, applyPackage, activeTab, viewMode, summaryOpen,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
-    exteriorFinish, selectedColor, preBlackoutColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
+    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
     electrical, battery, lights, ventilation, climateControl,
     rampType, atpRamp, rearDoor, tieDowns, jacks,

@@ -19,7 +19,9 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     bathroom, setBathroom, 
     generatorBox, setGeneratorBox,
     toolBox, setToolBox,
-    ladderRacks, setLadderRacks
+    ladderRacks, setLadderRacks,
+    recessedTireBox, setRecessedTireBox,
+    radioPackageSpeaker, setRadioPackageSpeaker
   } = useConfigurator()
 
   const [waterPackage, setWaterPackage] = useState(null)
@@ -41,7 +43,25 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   const [batteryBoxTongue, setBatteryBoxTongue] = useState(false)
   const [lShapeCounter, setLShapeCounter] = useState(false)
 
-  const show = (title) => !activeSectionTitle || activeSectionTitle === title
+  const show = (title) => {
+    if (!activeSectionTitle) return true
+    if (activeSectionTitle === 'WATER PACKAGE & SINK') {
+      return title === 'WATER PACKAGE' || title === 'SINK PACKAGE'
+    }
+    if (activeSectionTitle === 'BASE ADDONS') {
+      return [
+        'WINCH', 
+        'BUILT - IN TOOL CABINET', 
+        'TONGUE MOUNTED GENERATOR BOX', 
+        'ATP BATTERY BOX ON TONGUE', 
+        'L-SHAPE COUNTER/HIDDEN GENERATOR BOX', 
+        'LADDER RACKS',
+        'RECESSED TIRE BOX',
+        'RADIO PACKAGE SPEAKER'
+      ].includes(title)
+    }
+    return activeSectionTitle === title
+  }
 
   const handleBathroom = (id) => {
     setBathroom(bathroom === id ? null : id)
@@ -326,6 +346,26 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             label="INCLUDE LADDER RACKS"
             checked={ladderRacks}
             onChange={setLadderRacks}
+          />
+        </OptionSection>
+      )}
+
+      {show('RECESSED TIRE BOX') && (
+        <OptionSection title="RECESSED TIRE BOX">
+          <ToggleSwitch
+            label="INCLUDE RECESSED TIRE BOX"
+            checked={recessedTireBox}
+            onChange={setRecessedTireBox}
+          />
+        </OptionSection>
+      )}
+
+      {show('RADIO PACKAGE SPEAKER') && (
+        <OptionSection title="RADIO PACKAGE SPEAKER">
+          <ToggleSwitch
+            label="INCLUDE RADIO PACKAGE SPEAKER"
+            checked={radioPackageSpeaker}
+            onChange={setRadioPackageSpeaker}
           />
         </OptionSection>
       )}

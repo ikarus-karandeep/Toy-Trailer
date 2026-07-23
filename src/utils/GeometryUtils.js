@@ -163,7 +163,7 @@ const _loggedMeshAttrs = new Set()
  * @param {number} params.heightFt  - target height in feet (e.g. 6.58–10.5)
  * @param {boolean} params.hasCabinet - whether the trailer has a cabinet
  */
-export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, hasCabinet, globalZCenter, globalXMin, globalXMax, we, ie }) {
+export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, hasCabinet, globalZCenter, globalXMin, globalXMax, we, ie, narrowTrackOffset = 0 }) {
   const position = geometry.attributes.position
   if (!position) {
     console.warn(`[deform] "${meshName}" — SKIP: no position attribute`)
@@ -369,6 +369,14 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
     } else if (deltaWidth !== 0 && zRange > 0) {
       const t = (oz - zCenter) / zRange    // –1…+1
       oz += t * deltaWidth
+    }
+
+    if (narrowTrackOffset !== 0) {
+      if (oz > zCenter) {
+        oz -= narrowTrackOffset
+      } else {
+        oz += narrowTrackOffset
+      }
     }
 
     // Length (X axis) — rear-only, applying partial chained deltas

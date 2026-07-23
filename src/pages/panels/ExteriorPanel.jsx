@@ -68,14 +68,9 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             onClick={() => {
               if (exteriorFinish === opt.id) {
                 setExteriorFinish(null)
-                if (opt.id === 'blackout') {
-                  setSelectedColor(preBlackoutColor || 'brandywine')
-                  setPreBlackoutColor(null)
-                }
               } else {
                 setExteriorFinish(opt.id)
                 if (opt.id === 'blackout') {
-                  setPreBlackoutColor(selectedColor)
                   setSelectedColor('black')
                 }
               }
@@ -148,9 +143,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             color={opt.color}
             image={opt.image}
             isSelected={selectedColor === opt.id}
-            disabled={exteriorFinish === 'blackout' && opt.id !== 'black'}
             onClick={() => {
-              if (exteriorFinish === 'blackout') return;
               setSelectedColor(opt.id);
             }}
           />

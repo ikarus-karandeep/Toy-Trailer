@@ -1011,7 +1011,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     useEffect(() => {
         dirtyRef.current = true
-    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion])
+    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.narrowTrackAxle])
 
     useFrame(() => {
         if (!store.current.has('_globalZCenter')) return
@@ -1041,12 +1041,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const we = child.matrixWorld.elements
                 const ie = child.matrixWorld.clone().invert().elements
 
+                let narrowTrackOffset = 0
+                if (config.narrowTrackAxle && (scene === wheels || scene === axleConfig)) {
+                    narrowTrackOffset = 0.1 // Shift inward by ~2.4 inches per side
+                }
+
                 applyDimensionDeformations({
                     geometry: child.geometry, store: store.current,
                     uuid: child.uuid, meshName: child.name || child.uuid,
                     widthFt: nw, lengthFt: nl, heightFt: nh,
                     globalZCenter, globalXMin, globalXMax,
-                    we, ie,
+                    we, ie, narrowTrackOffset
                 })
             })
 
