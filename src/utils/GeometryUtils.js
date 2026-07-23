@@ -7,24 +7,22 @@ import { BlenderNodes } from './BlenderNodes'
 
 /**
  * Caches original vertex positions for a mesh (call once on first run)
- * @param {Map} store - shared Map/ref object to store originals
- * @param {string} uuid - mesh uuid
+ * @param {THREE.BufferGeometry} geometry
  * @param {Float32Array} positionArray - geometry.attributes.position.array
  */
-export function cacheOriginalPositions(store, uuid, positionArray) {
-  if (!store.has(uuid)) {
-    store.set(uuid, positionArray.slice())
+export function cacheOriginalPositions(geometry, positionArray) {
+  if (!geometry.userData.originalPosition) {
+    geometry.userData.originalPosition = positionArray.slice()
   }
 }
 
 /**
  * Returns cached original positions for a mesh
- * @param {Map} store
- * @param {string} uuid
+ * @param {THREE.BufferGeometry} geometry
  * @returns {Float32Array|null}
  */
-export function getOriginalPositions(store, uuid) {
-  return store.get(uuid) ?? null
+export function getOriginalPositions(geometry) {
+  return geometry.userData.originalPosition ?? null
 }
 
 
@@ -101,8 +99,8 @@ export function applyMoveNodeChain({ geometry, store, uuid, nodes }) {
   if (!position) return
 
   // Cache originals from current position on first call
-  cacheOriginalPositions(store, uuid, position.array)
-  const original = getOriginalPositions(store, uuid)
+  cacheOriginalPositions(geometry, position.array)
+  const original = getOriginalPositions(geometry)
 
   // Reset to originals before applying chain
   position.array.set(original)
@@ -125,11 +123,10 @@ export function applyMoveNodeChain({ geometry, store, uuid, nodes }) {
   // computeVertexNormals() on non-indexed geometry produces flat shading.
   const normalAttr = geometry.attributes.normal
   if (normalAttr) {
-    const normalKey = uuid + '_normals'
-    if (!store.has(normalKey)) {
-      store.set(normalKey, normalAttr.array.slice())
+    if (!geometry.userData.originalNormal) {
+      geometry.userData.originalNormal = normalAttr.array.slice()
     }
-    normalAttr.array.set(store.get(normalKey))
+    normalAttr.array.set(geometry.userData.originalNormal)
     normalAttr.needsUpdate = true
   }
 }
@@ -233,8 +230,8 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const deltaHeight = (heightFt - BASE_HEIGHT_FT) * FEET_TO_M  // Factor=1.000
 
 
-  cacheOriginalPositions(store, uuid, position.array)
-  const original = getOriginalPositions(store, uuid)
+  cacheOriginalPositions(geometry, position.array)
+  const original = getOriginalPositions(geometry)
   const count = position.count
 
   // Bounding box computed in world space (we/ie = worldMatrix / invWorldMatrix elements)
@@ -419,11 +416,10 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   // the original normals remain correct after deformation.
   const normalAttr = geometry.attributes.normal
   if (normalAttr) {
-    const normalKey = uuid + '_normals'
-    if (!store.has(normalKey)) {
-      store.set(normalKey, normalAttr.array.slice())
+    if (!geometry.userData.originalNormal) {
+      geometry.userData.originalNormal = normalAttr.array.slice()
     }
-    normalAttr.array.set(store.get(normalKey))
+    normalAttr.array.set(geometry.userData.originalNormal)
     normalAttr.needsUpdate = true
   }
 
@@ -451,8 +447,8 @@ export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
 
   if (!position || !leftSel || !rightSel) return
 
-  cacheOriginalPositions(store, uuid, position.array)
-  const original = getOriginalPositions(store, uuid)
+  cacheOriginalPositions(geometry, position.array)
+  const original = getOriginalPositions(geometry)
 
   geometry.computeBoundingBox()
   const bbox = geometry.boundingBox
@@ -475,11 +471,10 @@ export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
   // Restore cached normals — same reasoning as applyDimensionDeformations.
   const normalAttr = geometry.attributes.normal
   if (normalAttr) {
-    const normalKey = uuid + '_normals'
-    if (!store.has(normalKey)) {
-      store.set(normalKey, normalAttr.array.slice())
+    if (!geometry.userData.originalNormal) {
+      geometry.userData.originalNormal = normalAttr.array.slice()
     }
-    normalAttr.array.set(store.get(normalKey))
+    normalAttr.array.set(geometry.userData.originalNormal)
     normalAttr.needsUpdate = true
   }
 }

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { WebIO } from '@gltf-transform/core'
 import { inspect } from '@gltf-transform/functions'
-import { KHRONOS_EXTENSIONS, KHRDracoMeshCompression } from '@gltf-transform/extensions'
+import { ALL_EXTENSIONS, KHRDracoMeshCompression } from '@gltf-transform/extensions'
 
 const MB = 1_000_000
 
@@ -42,13 +42,13 @@ async function makeThumb(imageData, mimeType) {
   } catch { return '' }
 }
 
-const extensionsNoDraco = KHRONOS_EXTENSIONS.filter(e => e !== KHRDracoMeshCompression)
+const extensionsNoDraco = ALL_EXTENSIONS.filter(e => e !== KHRDracoMeshCompression)
 
 export async function generateModelReport(glbBuffer, threeRoot, fileName = 'trailer.glb') {
   let gltfDoc
   try {
     gltfDoc = await new WebIO()
-      .registerExtensions(KHRONOS_EXTENSIONS)
+      .registerExtensions(ALL_EXTENSIONS)
       .readBinary(new Uint8Array(glbBuffer))
   } catch {
     gltfDoc = await new WebIO()

@@ -621,8 +621,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 scene.traverse(child => {
                     if (!child.isMesh || !child.geometry?.attributes.position) return
                     const pos = child.geometry.attributes.position
+                    const original = child.geometry.userData.originalPosition || pos.array
                     for (let i = 0; i < pos.count; i++) {
-                        const x = pos.getX(i), z = pos.getZ(i)
+                        const x = original[i * 3], z = original[i * 3 + 2]
                         if (z < gMinZ) gMinZ = z; if (z > gMaxZ) gMaxZ = z
                         if (x < gMinX) gMinX = x; if (x > gMaxX) gMaxX = x
                     }
@@ -879,6 +880,31 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)
         BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
 
+        // ── Spoiler ──────────────────────────────────────────────────────────
+        if (config.rearSpoiler) {
+            // First, hide all meshes
+            spoiler.traverse(child => {
+                if (child.isMesh) child.visible = false;
+            });
+
+            // Then, only show the meshes that belong to the correct groups
+            spoiler.traverse(child => {
+                const nameLower = child.name.toLowerCase();
+                
+                if (nameLower.includes('angled')) {
+                    child.traverse(m => {
+                        if (m.isMesh) m.visible = true;
+                    });
+                }
+                
+                if (config.lights?.includes('racing') && nameLower.includes('racing')) {
+                    child.traverse(m => {
+                        if (m.isMesh) m.visible = true;
+                    });
+                }
+            });
+        }
+
         // Signal that mesh visibility has been updated. generatedETracks depends on
         // visibilityVersion so it will recompute on the next render with correct .visible values.
         setVisibilityVersion(v => v + 1)
@@ -981,7 +1007,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     useEffect(() => {
         dirtyRef.current = true
-    }, [activeScenes, config.tieDowns, hasCabinet])
+    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion])
 
     useFrame(() => {
         if (!store.current.has('_globalZCenter')) return

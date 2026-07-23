@@ -9,7 +9,27 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [activeTab, setActiveTab] = useState('SIZE & CAPACITY')
   const [viewMode, setViewMode] = useState('EXTERIOR')
   const [summaryOpen, setSummaryOpen] = useState(false)
-  const [packageId] = useState(ic.packageId ?? null)
+  const [packageId, setPackageId] = useState(ic.packageId ?? null)
+
+  const applyPackage = useCallback((pkgId, pkgConfig) => {
+    setPackageId(pkgId);
+    setExteriorAccessories(pkgConfig.exteriorAccessories ?? null);
+    setRearSpoiler(pkgConfig.rearSpoiler ?? false);
+    setWheelType(pkgConfig.wheelType ?? 'standardsilver');
+    setAngledLights(pkgConfig.angledLights ?? false);
+    setExteriorFinish(pkgConfig.exteriorFinish ?? 'blackout');
+    setTieDownsRaw(pkgConfig.tieDowns ?? ['drings']);
+    setSpreadAxle(pkgConfig.spreadAxle ?? true);
+    setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
+    setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
+    setCabinetsRaw(pkgConfig.cabinets ?? ['vnosebase']);
+    setJacksRaw(pkgConfig.jacks ?? ['folddownstabilizer']);
+    setElectrical(pkgConfig.electrical ?? '110v8space');
+    setRecessedTireBox(pkgConfig.recessedTireBox ?? false);
+    setClimateControl(pkgConfig.climateControl ?? 'wirebrace');
+    setWalls(pkgConfig.walls ?? '38plywood');
+    setCeiling(pkgConfig.ceiling ?? 'thermal');
+  }, []);
 
   // Size & Capacity
   const [width, setWidth] = useState(ic.width ?? '7ft')
@@ -116,7 +136,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const toggleAwning  = useCallback(makeToggle(setAwningRaw),   [])
 
   const value = useMemo(() => ({
-    packageId,
+    packageId, setPackageId, applyPackage,
     activeTab, setActiveTab,
     viewMode, setViewMode,
     summaryOpen, setSummaryOpen,
@@ -184,7 +204,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     totalPrice,
     completionPercent, markTabVisited,
   }), [
-    packageId, activeTab, viewMode, summaryOpen,
+    packageId, applyPackage, activeTab, viewMode, summaryOpen,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
