@@ -677,7 +677,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         });
 
-        if (config.width === '8.5ftgn' && gnMeshes.length > 0) {
+        if (config.width === '8.5ftgn') {
             BlenderNodes.switchMeshes(frontStyle, gnMeshes);
             // console.log(`[DEBUG GOOSENECK] Switched to gooseneck meshes:`, gnMeshes);
         } else {
@@ -801,7 +801,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // ── tongue.glb: always visible, variant switches with front style
         // Extended_Triple_Tongue_V-Nose (default) ↔ Extended_Triple_Tongue_Flat_Front
-        BlenderNodes.switchMesh(tongue, TONGUE_MESH_MAP[config.frontStyle] ?? TONGUE_MESH_MAP.vnose)
+        if (config.width === '8.5ftgn') {
+            BlenderNodes.switchMesh(tongue, null)
+        } else {
+            BlenderNodes.switchMesh(tongue, TONGUE_MESH_MAP[config.frontStyle] ?? TONGUE_MESH_MAP.vnose)
+        }
 
         // ── addons.glb: Extended Triple Tongue addon — gated by toggle
         if (config.extendedTripleTongue) {

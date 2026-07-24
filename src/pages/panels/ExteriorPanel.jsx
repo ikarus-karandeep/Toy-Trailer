@@ -38,7 +38,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     wheelType, setWheelType,
     spareTire, setSpareTire,
     sideDoorsType, setSideDoorsType,
-    length,
+    width, length,
     stairs, setStairs,
   } = useConfigurator()
 
@@ -189,6 +189,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 price={opt.price}
                 isStandard={opt.isStandard}
                 isSelected={frontStyle === opt.id}
+                isLocked={width === '8.5ftgn'}
                 onClick={() => setFrontStyle(opt.id)}
               />
             ))}
