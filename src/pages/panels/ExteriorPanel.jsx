@@ -39,6 +39,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     spareTire, setSpareTire,
     sideDoorsType, setSideDoorsType,
     length,
+    stairs, setStairs,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -168,6 +169,12 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
+          <div className="border-t border-[#5D5E60] my-5" />
+          <ToggleSwitch
+            label="INCLUDE STAIRS"
+            checked={stairs}
+            onChange={setStairs}
+          />
         </OptionSection>
       )}
 

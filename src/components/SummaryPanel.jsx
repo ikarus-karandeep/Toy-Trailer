@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import {
   WIDTH_OPTIONS, LENGTH_OPTIONS, INTERIOR_HEIGHT_OPTIONS, AXLE_RATING_OPTIONS,
+  AXLE_SUSPENSION_OPTIONS, AXLE_CAPACITY_OPTIONS,
   ELECTRICAL_OPTIONS, OFF_GRID_POWER_OPTIONS, INTERIOR_LIGHTING_OPTIONS, EXTERIOR_LIGHTING_OPTIONS,
   PASSIVE_VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
   REAR_ENTRANCE_OPTIONS, D_RINGS_OPTIONS, ADDITIONAL_D_RINGS_OPTIONS, E_TRACKS_OPTIONS, JACKS_OPTIONS,
@@ -11,6 +12,7 @@ import {
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
   BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
+  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS
 } from '../constants/configData'
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
@@ -59,12 +61,18 @@ export default function SummaryPanel() {
   if (!summaryOpen) return null
 
   const getItems = () => {
-    const { width, length, interiorHeight, axleAngled, axleAtp, axleRating,
+    const {
+      width, length, interiorHeight, axleAngled, axleAtp, axleRating, axleSuspension, axleCapacity,
       electrical, battery, lights, toggleLight, ventilation, climateControl,
-      rampType, tieDowns, toggleTieDown, jacks, toggleJack,
+      rampType, atpRamp, rearDoor, tieDowns, toggleTieDown, jacks, toggleJack,
       waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
-      exteriorFinish, selectedColor, frontStyle, exteriorBuild, protectionType, wheelType,
-      floor, walls, ceiling, cabinets, toggleCabinet, toolBox } = ctx
+      exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire, setSpareTire,
+      floor, walls, ceiling, cabinets, toggleCabinet, toolBox, stairs, setStairs,
+      angledLights, setAngledLights, vNoseETrack, setVNoseETrack, batteryBox, setBatteryBox,
+      escapeDoor, setEscapeDoor, generatorBox, setGeneratorBox, winchSystem, setWinchSystem,
+      extendedTripleTongue, setExtendedTripleTongue, radioPackageSpeaker, setRadioPackageSpeaker, rearSpoiler, setRearSpoiler,
+      ladderRacks, setLadderRacks, sidewallVents, setSidewallVents, recessedTireBox, setRecessedTireBox, interiorTireMount, setInteriorTireMount
+    } = ctx
 
     if (activeTab === 'TRAILER BUILD') {
       const items = []
@@ -75,7 +83,8 @@ export default function SummaryPanel() {
         const axleLabel = [axleAngled ? 'ANGLED' : 'FLAT', axleAtp ? '+ ATP' : ''].filter(Boolean).join(' ')
         items.push({ label: `AXLE: ${axleLabel}`, price: axleAtp ? 9999 : 0 })
       }
-      const ar = find(AXLE_RATING_OPTIONS, axleRating); if (ar && !ar.isStandard) items.push({ label: ar.label, price: ar.price })
+      const susp = find(AXLE_SUSPENSION_OPTIONS, axleSuspension); if (susp && !susp.isStandard) items.push({ label: `SUSPENSION: ${susp.label}`, price: susp.price })
+      const cap = find(AXLE_CAPACITY_OPTIONS, axleCapacity); if (cap && !cap.isStandard) items.push({ label: `CAPACITY: ${cap.label}`, price: cap.price })
       return items
     }
     if (activeTab === 'CONFIGURATIONS') {
@@ -85,6 +94,9 @@ export default function SummaryPanel() {
       const v = find(VENTILATION_OPTIONS, ventilation); if (v) items.push({ label: v.label, price: v.price })
       const cc = find(CLIMATE_OPTIONS, climateControl); if (cc && cc.id !== 'none') items.push({ label: cc.label, price: cc.price })
       const r = find(RAMP_OPTIONS, rampType); if (r) items.push({ label: r.label, price: r.price })
+      if (atpRamp) { items.push({ label: 'ATP ON RAMP', price: 400 }) }
+      if (rearDoor) { items.push({ label: 'REAR DOOR', price: 0 }) }
+      const sd = find(SIDE_DOOR_OPTIONS, sideDoorsType); if (sd && !sd.isStandard) items.push({ label: sd.label, price: sd.price })
       lights.forEach(id => { const o = find(LIGHT_OPTIONS, id); if (o && o.price) items.push({ label: o.label, price: o.price, onRemove: () => toggleLight(id) }) })
       tieDowns.forEach(id => { const o = find(TIE_DOWN_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleTieDown(id) }) })
       jacks.forEach(id => { const o = find(JACKS_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleJack(id) }) })
@@ -92,17 +104,39 @@ export default function SummaryPanel() {
     }
     if (activeTab === 'ADD-ONS') {
       const items = []
+      const wp = find(WATER_PACKAGE_OPTIONS, waterPackage); if (wp && wp.id !== 'none') items.push({ label: wp.label, price: wp.price })
       if (bathroom) { const o = find(BATHROOM_OPTIONS, bathroom); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setBathroom(null) }) }
+      if (stairs) { items.push({ label: 'STAIRS', price: 150, onRemove: () => setStairs(false) }) }
+      if (angledLights) { items.push({ label: 'ANGLED LIGHTS', price: 200, onRemove: () => setAngledLights(false) }) }
+      if (vNoseETrack) { items.push({ label: 'V-NOSE E-TRACK', price: 100, onRemove: () => setVNoseETrack(false) }) }
+      if (batteryBox) { items.push({ label: 'BATTERY BOX', price: 120, onRemove: () => setBatteryBox(false) }) }
+      if (escapeDoor && escapeDoor !== 'none') { items.push({ label: 'ESCAPE DOOR', price: 800, onRemove: () => setEscapeDoor('none') }) }
+      if (generatorBox) { items.push({ label: 'GENERATOR BOX', price: 500, onRemove: () => setGeneratorBox(false) }) }
+      if (winchSystem) { items.push({ label: 'WINCH SYSTEM', price: 1000, onRemove: () => setWinchSystem(false) }) }
+      if (extendedTripleTongue) { items.push({ label: 'EXTENDED TRIPLE TONGUE', price: 400, onRemove: () => setExtendedTripleTongue(false) }) }
+      if (radioPackageSpeaker) { items.push({ label: 'RADIO PACKAGE SPEAKER', price: 600, onRemove: () => setRadioPackageSpeaker(false) }) }
+      if (rearSpoiler) { items.push({ label: 'REAR SPOILER', price: 300, onRemove: () => setRearSpoiler(false) }) }
+      if (ladderRacks) { items.push({ label: 'LADDER RACKS', price: 250, onRemove: () => setLadderRacks(false) }) }
+      if (sidewallVents) { items.push({ label: 'SIDEWALL VENTS', price: 150, onRemove: () => setSidewallVents(false) }) }
+      if (recessedTireBox) { items.push({ label: 'RECESSED TIRE BOX', price: 200, onRemove: () => setRecessedTireBox(false) }) }
+      if (interiorTireMount) { items.push({ label: 'INTERIOR TIRE MOUNT', price: 100, onRemove: () => setInteriorTireMount(false) }) }
       return items
     }
     if (activeTab === 'APPEARANCE') {
       const items = []
       const ef = find(EXTERIOR_FINISH_OPTIONS, exteriorFinish); if (ef && !ef.isStandard) items.push({ label: ef.label, price: ef.price })
       const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
+      const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && ea.id !== 'none') items.push({ label: ea.label, price: ea.price })
       const fs = find(FRONT_STYLE_OPTIONS, frontStyle); if (fs && !fs.isStandard) items.push({ label: fs.label, price: fs.price })
       const eb = find(EXTERIOR_BUILD_OPTIONS, exteriorBuild); if (eb && !eb.isStandard) items.push({ label: eb.label, price: eb.price })
-      const pr = find(PROTECTION_OPTIONS, protectionType); if (pr && !pr.isStandard) items.push({ label: pr.label, price: pr.price })
+      const rb = find(ROOF_BUILD_OPTIONS, roofBuild); if (rb && !rb.isStandard) items.push({ label: rb.label, price: rb.price })
+      const pt = find(PROTECTION_OPTIONS, protectionType); if (pt && !pt.isStandard) items.push({ label: pt.label, price: pt.price })
+      const ps = find(PROTECTION_OPTIONS, protectionSize); if (ps && !ps.isStandard) items.push({ label: ps.label, price: ps.price })
+      const fp = find(PROTECTION_OPTIONS, frontProtection); if (fp && !fp.isStandard) items.push({ label: fp.label, price: fp.price })
+      const lt = find(LUG_OPTIONS, lugType); if (lt && !lt.isStandard) items.push({ label: lt.label, price: lt.price })
+      const ts = find(TIRE_SIZE_OPTIONS, tireSize); if (ts && !ts.isStandard) items.push({ label: ts.label, price: ts.price })
       const wh = find(WHEEL_OPTIONS, wheelType); if (wh && !wh.isStandard) items.push({ label: wh.label, price: wh.price })
+      if (spareTire) { items.push({ label: 'SPARE TIRE', price: 250, onRemove: () => setSpareTire(false) }) }
       const fl = find(FLOOR_OPTIONS, floor); if (fl && !fl.isStandard) items.push({ label: fl.label, price: fl.price })
       const wa = find(WALL_OPTIONS, walls); if (wa && !wa.isStandard) items.push({ label: wa.label, price: wa.price })
       const ce = find(CEILING_OPTIONS, ceiling); if (ce && !ce.isStandard) items.push({ label: ce.label, price: ce.price })
