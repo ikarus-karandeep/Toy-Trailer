@@ -309,7 +309,9 @@ export const ESCAPE_DOOR_PLACEMENT_OPTIONS = [
 ];
 
 export const ESCAPE_DOOR_SIZE_OPTIONS = [
+  { id: 'none', label: 'NONE' },
   { id: '54x48', label: '54" X 48"' },
+  { id: 'gullwing', label: 'GULLWING DOOR' },
 ];
 
 export const CONCESSION_DOOR_PLACEMENT_OPTIONS = [

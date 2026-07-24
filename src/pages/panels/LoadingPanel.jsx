@@ -31,6 +31,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     jacks, toggleJack,
     driverSideDoor, setDriverSideDoor,
     passengerSideDoor, setPassengerSideDoor,
+    escapeDoor, setEscapeDoor,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -42,7 +43,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
   const setCurrentSideDoor = sideDoorPlacement === 'driver' ? setDriverSideDoor : setPassengerSideDoor
 
   const [escapeDoorPlacement, setEscapeDoorPlacement] = useState('driver')
-  const [escapeDoorSize, setEscapeDoorSize] = useState('54x48')
   const [blackoutFrame, setBlackoutFrame] = useState(false)
 
   const [concessionDoorPlacement, setConcessionDoorPlacement] = useState('driver')
@@ -167,8 +167,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                isSelected={escapeDoorSize === opt.id}
-                onClick={() => setEscapeDoorSize(opt.id)}
+                isSelected={escapeDoor === opt.id}
+                onClick={() => setEscapeDoor(opt.id)}
               />
             ))}
           </div>

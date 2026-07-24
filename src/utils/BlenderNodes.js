@@ -102,34 +102,56 @@ export class BlenderNodes {
      * @param {boolean} visible
      */
     static _applyWithProxy(scene, target, visible) {
-        target.traverse(child => { child.visible = visible })
+        target.traverse(child => { 
+            if (child.name.toLowerCase().includes('proxy')) {
+                child.userData.proxyActive = visible;
+                child.visible = false;
+            } else {
+                child.visible = visible;
+            }
+        })
 
         let proxy = null
         let resolvedBy = ''
 
-        // Strategy 1: exact name match → "<targetName> proxy" / "<targetName>_Proxy"
-        const exactSpace = target.name + ' proxy'
-        const exactUnder = target.name + '_Proxy'
-        proxy = scene.getObjectByName(exactSpace) || scene.getObjectByName(exactUnder)
-        if (proxy) resolvedBy = `exact ("${proxy.name}")`
+        // Normalize string for comparison: lowercase and remove all spaces, underscores, and hyphens
+        const normalize = (s) => s.toLowerCase().replace(/[\s_\-]/g, '')
+        const normTarget = normalize(target.name)
 
-        // Strategy 2: parent-name-based → "<parentName> proxy" / "<parentName>_Proxy"
-        if (!proxy && target.parent) {
-            const parentBase = target.parent.name
-            const parentSpaceProxy = parentBase + ' proxy'
-            const parentUnderProxy = parentBase + '_Proxy'
-            proxy = scene.getObjectByName(parentSpaceProxy) || scene.getObjectByName(parentUnderProxy)
-            if (proxy) resolvedBy = `parent-name ("${proxy.name}")`
+        // Find the BEST matching proxy by searching all meshes in the scene (or target's parent)
+        // that contain the normalized target name AND 'proxy'
+        const possibleProxies = []
+        
+        // Search siblings and children (and even the whole scene if necessary, but parent is safer)
+        const searchRoot = target.parent || scene
+        searchRoot.traverse(child => {
+            if (child === target) return
+            const normChild = normalize(child.name)
+            if (normChild.includes('proxy') && normChild.includes(normTarget)) {
+                possibleProxies.push(child)
+            }
+        })
+
+        if (possibleProxies.length > 0) {
+            // Prefer exact prefix matches, e.g., "36x78doorpanellproxy" starts with "36x78doorpanell"
+            proxy = possibleProxies.find(p => normalize(p.name).startsWith(normTarget)) || possibleProxies[0]
+            resolvedBy = `normalized match ("${proxy.name}")`
         }
 
-        // Strategy 3: any sibling of target whose name contains 'proxy' (case-insensitive)
+        // Fallback: parent-name-based → "<parentName> proxy"
         if (!proxy && target.parent) {
-            const sibling = target.parent.children.find(
-                c => c !== target && c.name.toLowerCase().includes('proxy')
-            )
-            if (sibling) {
-                proxy = sibling
-                resolvedBy = `sibling ("${sibling.name}")`
+            const normParent = normalize(target.parent.name)
+            const parentProxies = []
+            searchRoot.traverse(child => {
+                if (child === target || child === target.parent) return
+                const normChild = normalize(child.name)
+                if (normChild.includes('proxy') && normChild.includes(normParent)) {
+                    parentProxies.push(child)
+                }
+            })
+            if (parentProxies.length > 0) {
+                proxy = parentProxies[0]
+                resolvedBy = `normalized parent-match ("${proxy.name}")`
             }
         }
 
@@ -158,8 +180,10 @@ export class BlenderNodes {
         // Hide all meshes (including any proxies) first
         scene.traverse(child => {
             if (child.isMesh) {
+                if (child.name.toLowerCase().includes('proxy')) {
+                    child.userData.proxyActive = false
+                }
                 child.visible = false
-                if (child.name.toLowerCase().includes('proxy')) child.userData.proxyActive = false
             }
         })
         // console.log(`[BlenderNodes] switchMesh → target="${targetName}"`)
@@ -189,8 +213,10 @@ export class BlenderNodes {
         // Hide all meshes (including any proxies) first
         scene.traverse(child => {
             if (child.isMesh) {
+                if (child.name.toLowerCase().includes('proxy')) {
+                    child.userData.proxyActive = false
+                }
                 child.visible = false
-                if (child.name.toLowerCase().includes('proxy')) child.userData.proxyActive = false
             }
         })
         // console.log(`[BlenderNodes] switchMeshes → active list: [${targetNames.join(', ')}]`)

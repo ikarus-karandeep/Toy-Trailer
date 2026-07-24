@@ -163,7 +163,7 @@ const _loggedMeshAttrs = new Set()
  * @param {number} params.heightFt  - target height in feet (e.g. 6.58–10.5)
  * @param {boolean} params.hasCabinet - whether the trailer has a cabinet
  */
-export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, hasCabinet, globalZCenter, globalXMin, globalXMax, we, ie, narrowTrackOffset = 0 }) {
+export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, awningFt, hasCabinet, globalZCenter, globalXMin, globalXMax, we, ie, narrowTrackOffset = 0 }) {
   const position = geometry.attributes.position
   if (!position) {
     console.warn(`[deform] "${meshName}" — SKIP: no position attribute`)
@@ -287,6 +287,15 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   // which mirrors the proxy onto the opposite wall.
   const isProxy = meshName.toLowerCase().includes('proxy');
 
+  const frontendKey = attrKeys.find(k => normKey(k).includes('frontend'))
+  const rearendKey = attrKeys.find(k => normKey(k).includes('rearend'))
+  const frontEndSel = frontendKey ? geometry.attributes[frontendKey] : null
+  const rearEndSel = rearendKey ? geometry.attributes[rearendKey] : null
+  const hasFrontEnd = !!frontEndSel
+  const hasRearEnd = !!rearEndSel
+  const BASE_AWNING_FT = 18
+  const deltaAwning = awningFt !== undefined ? (awningFt - BASE_AWNING_FT) * FEET_TO_M : 0
+
   // ── DEBUG: log attribute discovery once per mesh ─────────────────────────────
   // if (!_loggedMeshAttrs.has(meshName)) {
   //   _loggedMeshAttrs.add(meshName)
@@ -342,12 +351,64 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   //   )
   // }
 
+  let proxyMoveX = 0, proxyMoveY = 0, proxyMoveZ = 0;
+  if (isProxy && count > 0) {
+      let totalDx = 0, totalDy = 0, totalDz = 0;
+      for (let i = 0; i < count; i++) {
+          let ox = original[i * 3]; let oy = original[i * 3 + 1]; let oz = original[i * 3 + 2];
+          if (we) {
+            const wx = we[0] * ox + we[4] * oy + we[8] * oz + we[12];
+            const wy = we[1] * ox + we[5] * oy + we[9] * oz + we[13];
+            const wz = we[2] * ox + we[6] * oy + we[10] * oz + we[14];
+            ox = wx; oy = wy; oz = wz;
+          }
+          let nox = ox, noy = oy, noz = oz;
+          
+          if (leftSel || rightSel) {
+            if (leftSel) noz += deltaWidth * leftSel.getX(i);
+            if (rightSel) noz -= deltaWidth * rightSel.getX(i);
+          } else if (deltaWidth !== 0) {
+            noz += deltaWidth;
+          }
+          
+          if (narrowTrackOffset !== 0) {
+            if (noz > zCenter) noz -= narrowTrackOffset;
+            else noz += narrowTrackOffset;
+          }
+          
+          if (hasSel1 || hasSel2 || hasSel3 || hasSel4) {
+            let move = 0;
+            if (hasSel4) move += applyDelta4 * rearSel4.getX(i);
+            if (hasSel3) move += applyDelta3 * rearSel3.getX(i);
+            if (hasSel2) move += applyDelta2 * rearSel2.getX(i);
+            if (hasSel1) move += applyDelta1 * rearSel1.getX(i);
+            nox += move;
+          } else if (!isProxy && deltaLength !== 0 && globalXMax !== undefined && globalXMin !== undefined) {
+            const globalXRange = globalXMin - globalXMax;
+            if (globalXRange !== 0) nox += ((nox - globalXMax) / globalXRange) * deltaLength;
+          }
+          
+          if (topSel) {
+            noy += deltaHeight * topSel.getX(i);
+          } else if (!isProxy && deltaHeight !== 0 && yRange > 0) {
+            noy += ((noy - minY) / yRange) * deltaHeight;
+          }
+          
+          totalDx += (nox - ox);
+          totalDy += (noy - oy);
+          totalDz += (noz - oz);
+      }
+      proxyMoveX = totalDx / count;
+      proxyMoveY = totalDy / count;
+      proxyMoveZ = totalDz / count;
+      // console.log(`[GEOMETRY DEBUG] Proxy "${meshName}" computed uniform move: X=${proxyMoveX.toFixed(3)}, Y=${proxyMoveY.toFixed(3)}, Z=${proxyMoveZ.toFixed(3)}`);
+  }
+
   for (let i = 0; i < count; i++) {
     let ox = original[i * 3]
     let oy = original[i * 3 + 1]
     let oz = original[i * 3 + 2]
 
-    // Transform local → world space so direction/deformation math is axis-aligned
     if (we) {
       const wx = we[0] * ox + we[4] * oy + we[8] * oz + we[12]
       const wy = we[1] * ox + we[5] * oy + we[9] * oz + we[13]
@@ -355,55 +416,59 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
       ox = wx; oy = wy; oz = wz
     }
 
-    // Width (Z axis) — each selection drives its own direction independently.
-    // In this model left = +Z, right = -Z (verified from outer-hull behavior).
-    // Combining both into one weighted term and using vertex position for direction
-    // was wrong for interior meshes (e.g. cabinets) whose inner faces can sit on
-    // the "wrong" side of zCenter and would be displaced backwards.
-    if (leftSel || rightSel) {
-      if (leftSel) oz += deltaWidth * leftSel.getX(i)   // +Z = left wall
-      if (rightSel) oz -= deltaWidth * rightSel.getX(i)  // -Z = right wall
-    } else if (isProxy && deltaWidth !== 0) {
-      // Single-wall cutout marker — deform with the left wall only (+Z).
-      oz += deltaWidth
-    } else if (deltaWidth !== 0 && zRange > 0) {
-      const t = (oz - zCenter) / zRange    // –1…+1
-      oz += t * deltaWidth
-    }
+    if (isProxy) {
+      ox += proxyMoveX;
+      oy += proxyMoveY;
+      oz += proxyMoveZ;
+    } else {
+      if (leftSel || rightSel) {
+        if (leftSel) oz += deltaWidth * leftSel.getX(i)
+        if (rightSel) oz -= deltaWidth * rightSel.getX(i)
+      } else if (deltaWidth !== 0 && zRange > 0) {
+        const t = (oz - zCenter) / zRange
+        oz += t * deltaWidth
+      }
 
-    if (narrowTrackOffset !== 0) {
-      if (oz > zCenter) {
-        oz -= narrowTrackOffset
-      } else {
-        oz += narrowTrackOffset
+      if (narrowTrackOffset !== 0) {
+        if (oz > zCenter) {
+          oz -= narrowTrackOffset
+        } else {
+          oz += narrowTrackOffset
+        }
+      }
+
+      if (hasSel1 || hasSel2 || hasSel3 || hasSel4) {
+        let move = 0;
+        if (hasSel4) move += applyDelta4 * rearSel4.getX(i);
+        if (hasSel3) move += applyDelta3 * rearSel3.getX(i);
+        if (hasSel2) move += applyDelta2 * rearSel2.getX(i);
+        if (hasSel1) move += applyDelta1 * rearSel1.getX(i);
+        ox += move;
+      } else if (deltaLength !== 0 && globalXMax !== undefined && globalXMin !== undefined) {
+        const globalXRange = globalXMin - globalXMax
+        if (globalXRange !== 0) {
+          const t = (ox - globalXMax) / globalXRange
+          ox += t * deltaLength
+        }
+      }
+
+      if (hasFrontEnd || hasRearEnd) {
+        if (hasFrontEnd) {
+          ox -= (deltaAwning / 2) * frontEndSel.getX(i);
+        }
+        if (hasRearEnd) {
+          ox += (deltaAwning / 2) * rearEndSel.getX(i);
+        }
+      }
+
+      if (topSel) {
+        oy += deltaHeight * topSel.getX(i)
+      } else if (deltaHeight !== 0 && yRange > 0) {
+        const t = (oy - minY) / yRange
+        oy += t * deltaHeight
       }
     }
 
-    // Length (X axis) — rear-only, applying partial chained deltas
-    if (hasSel1 || hasSel2 || hasSel3 || hasSel4) {
-      let move = 0;
-      if (hasSel4) move += applyDelta4 * rearSel4.getX(i);
-      if (hasSel3) move += applyDelta3 * rearSel3.getX(i);
-      if (hasSel2) move += applyDelta2 * rearSel2.getX(i);
-      if (hasSel1) move += applyDelta1 * rearSel1.getX(i);
-      ox += move;
-    } else if (deltaLength !== 0 && globalXMax !== undefined && globalXMin !== undefined) {
-      const globalXRange = globalXMin - globalXMax
-      if (globalXRange !== 0) {
-        const t = (ox - globalXMax) / globalXRange
-        ox += t * deltaLength
-      }
-    }
-
-    // Height (Y axis) — floor anchored, ceiling rises
-    if (topSel) {
-      oy += deltaHeight * topSel.getX(i)
-    } else if (deltaHeight !== 0 && yRange > 0) {
-      const t = (oy - minY) / yRange       // 0…1 (floor → ceiling)
-      oy += t * deltaHeight
-    }
-
-    // Transform world → local space before writing back
     if (ie) {
       const lx = ie[0] * ox + ie[4] * oy + ie[8] * oz + ie[12]
       const ly = ie[1] * ox + ie[5] * oy + ie[9] * oz + ie[13]

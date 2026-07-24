@@ -11,6 +11,38 @@ import QRModal from './QRModal'
 import ModelReportPanel from './ModelReportPanel'
 import { isAndroidDevice } from '../utils/arPlatform'
 import { generateModelReport } from '../utils/modelReport'
+// Helper to compute stable bounding box that ignores exterior accessories (like awnings)
+// and exceptionally low meshes (like gooseneck jacks) from ground-level calculations.
+function computeTrailerBounds(modelGroup) {
+  const box = new THREE.Box3();
+  const groundBox = new THREE.Box3();
+  
+  modelGroup.traverse((node) => {
+    if (node.isMesh && node.visible) {
+      const name = (node.name || '').toLowerCase();
+      
+      if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
+      const nodeBox = node.geometry.boundingBox.clone();
+      nodeBox.applyMatrix4(node.matrixWorld);
+      
+      if (!name.includes('awning')) {
+        if (box.isEmpty()) box.copy(nodeBox);
+        else box.union(nodeBox);
+      }
+      
+      if (!name.includes('awning') && !name.includes('gooseneck')) {
+        if (groundBox.isEmpty()) groundBox.copy(nodeBox);
+        else groundBox.union(nodeBox);
+      }
+    }
+  });
+  
+  if (box.isEmpty()) box.setFromObject(modelGroup);
+  if (!groundBox.isEmpty()) box.min.y = groundBox.min.y;
+  
+  return box;
+}
+
 // ── raw feet helpers (match Blender node Factor input) ────────────────────────
 
 const WIDTH_FT = { '7ft': 7, '8.5ft': 8.5 }
@@ -318,7 +350,10 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         }
       });
 
-      const box = new THREE.Box3().setFromObject(modelGroupRef.current)
+      // Calculate bounding box excluding exterior accessories (like awnings) 
+      // and gooseneck jacks that artificially expand the bounds.
+      const box = computeTrailerBounds(modelGroupRef.current);
+
       const center = box.getCenter(new THREE.Vector3())
       const size = box.getSize(new THREE.Vector3())
 
@@ -381,13 +416,13 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         cameraControlsRef.current.minY            = -Infinity
 
         // Restore zoom limits for exterior
-        const box = new THREE.Box3().setFromObject(modelGroupRef.current)
+        const box = computeTrailerBounds(modelGroupRef.current);
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
         cameraControlsRef.current.minDistance = maxDim * 0.1
         cameraControlsRef.current.maxDistance = maxDim * 1.15
       } else {
-        const box = new THREE.Box3().setFromObject(modelGroupRef.current)
+        const box = computeTrailerBounds(modelGroupRef.current);
         const center = box.getCenter(new THREE.Vector3())
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
@@ -520,7 +555,8 @@ function ShadowLightSetup({ modelRef }) {
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
-    const bbox = boundsRef.current.setFromObject(modelRef.current)
+    const bbox = computeTrailerBounds(modelRef.current)
+    boundsRef.current.copy(bbox)
     const center = centerRef.current
     const size = sizeRef.current
     bbox.getCenter(center)
@@ -603,7 +639,8 @@ function DynamicContactShadow({ modelRef }) {
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
-    const bbox = boundsRef.current.setFromObject(modelRef.current)
+    const bbox = computeTrailerBounds(modelRef.current)
+    boundsRef.current.copy(bbox)
     const center = centerRef.current
     const size = sizeRef.current
     bbox.getCenter(center)
@@ -701,7 +738,8 @@ function GroundModel({ modelRef }) {
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
-    const bbox = boundsRef.current.setFromObject(modelRef.current)
+    const bbox = computeTrailerBounds(modelRef.current)
+    boundsRef.current.copy(bbox)
     const center = centerRef.current
     const size = sizeRef.current
     bbox.getCenter(center)

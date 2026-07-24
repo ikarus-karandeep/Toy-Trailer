@@ -531,6 +531,130 @@
       }
     }
   },
+  "Flat Panel L": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Panel R": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "36x72 Door Panel L": {
     "0": {
       "material_name": "MAT_Shell",
@@ -755,6 +879,8 @@
       }
     }
   },
+  "36x78 Door Panel L Proxy": {},
+  "36x78 Door Panel R Proxy": {},
   "48x78 Door Panel L": {
     "0": {
       "material_name": "MAT_Shell",
@@ -855,6 +981,8 @@
       }
     }
   },
+  "48x78 Door Panel L Proxy": {},
+  "48x78 Door Panel R Proxy": {},
   "ATP Plate Generator Box R": {
     "0": {
       "material_name": "Metallic Grates",
@@ -1112,6 +1240,110 @@
       "emission": null
     }
   },
+  "16-3 Standard Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-3 Standard Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-2 Standard Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-2 Standard Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "16-2 Standard Wheels 6-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
@@ -1139,6 +1371,162 @@
     }
   },
   "16-3 Standard Wheels 6-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-3 Standard Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-3 Standard Wheels 6-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-3 Standard Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-2 Standard Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-2 Standard Wheels 6-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-2 Standard Wheels 5-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
       "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
@@ -1396,6 +1784,82 @@
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Corvette Fender Flat Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    }
+  },
+  "Corvette Fender Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     }
@@ -1660,28 +2124,28 @@
       }
     }
   },
-  "Right Wall E-Track": {
+  "Left Wall E-Track": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "ETrack Material",
+      "base_color": "#909090",
+      "roughness": 0.4215,
       "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
       }
     }
   },
-  "Right Floor E-Track": {
+  "Right Wall E-Track": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "ETrack Material",
+      "base_color": "#909090",
+      "roughness": 0.4215,
       "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -1690,26 +2154,26 @@
   },
   "Left Floor E-Track": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "ETrack Material",
+      "base_color": "#909090",
+      "roughness": 0.4215,
       "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
       }
     }
   },
-  "Left Wall E-Track": {
+  "Right Floor E-Track": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "ETrack Material",
+      "base_color": "#909090",
+      "roughness": 0.4215,
       "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -2136,7 +2600,7 @@
       }
     }
   },
-  "Electric Awning 18 ft": {
+  "Electric Awning": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -2144,6 +2608,18 @@
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Awning_DECAL",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "E:\\Vivek Singh Bisht\\Tupperwear\\For Screws\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "E:\\Vivek Singh Bisht\\Tupperwear\\For Screws\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -2414,6 +2890,20 @@
     }
   },
   "Angled Lights": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",

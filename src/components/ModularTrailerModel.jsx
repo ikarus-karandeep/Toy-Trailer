@@ -74,7 +74,7 @@ const AXLE_RATING_MESH_MAP = {
     '3500lb-torsion': { '2x': '2X_3500_lb_Torsion', '3x': '3X_3500_lb_Torsion' },
     '6000lb-dropspring': { '2x': '2X_6000_lb_Leaf_Spring', '3x': '3X_6000_lb_Leaf_Spring' },
     '6000lb-torsion': { '2x': '2X_6000_lb_Torsion', '3x': '3X_6000_lb_Torsion' },
-    '7000lb-dropspring': { '2x': '2X_7000_lb_Torsion', '3x': '3X_7000_lb_Torsion' }, // Fallback to torsion if selected in UI
+    '7000lb-dropspring': { '2x': '2x_7000_lb_Drop_Spring', '3x': '3x_7000_lb_Drop_Spring' },
     '7000lb-torsion': { '2x': '2X_7000_lb_Torsion', '3x': '3X_7000_lb_Torsion' },
 }
 
@@ -200,8 +200,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const staticTextures = useTexture(STATIC_TEXTURE_PATHS)
 
     const store = useRef(new Map())
-    const animRef = useRef({ widthFt, lengthFt, heightFt })
-    const targetRef = useRef({ widthFt, lengthFt, heightFt })
+    const animRef = useRef({
+        widthFt: 8.5,
+        lengthFt: parseInt(config.length || '32'),
+        heightFt: config.interiorHeight ? parseFloat(config.interiorHeight) : 8.5,
+        awningFt: config.awning && config.awning.length > 0 ? parseInt(config.awning[0].match(/\d+/)?.[0] || '18') : 18
+    })
+    const targetRef = useRef({ 
+        widthFt, 
+        lengthFt, 
+        heightFt, 
+        awningFt: config.awning && config.awning.length > 0 ? parseInt(config.awning[0].match(/\d+/)?.[0] || '18') : 18
+    })
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
     const wheelCoverOriginalMatsRef = useRef(new Map())
@@ -211,20 +221,28 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const eTrackGroupRef = useRef(new THREE.Group())
 
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
+    // and explicitly hide any proxy meshes so they don't render.
     useEffect(() => {
         const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo }
         Object.entries(allScenes).forEach(([sceneName, scene]) => {
+            if (!scene) return;
             scene.traverse(child => {
                 if (!child.isMesh) return
+                
+                // Hide proxy meshes globally so they don't render
+                if (child.name.toLowerCase().includes('proxy')) {
+                    child.visible = false;
+                }
+
                 const mats = Array.isArray(child.material)
                     ? child.material.map(m => m.name || '(unnamed)')
                     : [child.material?.name || '(unnamed)']
                 if (sceneName === 'wheels') {
-                    console.log(`[DEBUG ${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
+                    // console.log(`[DEBUG ${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
                 }
             })
         })
-    }, [])
+    }, [base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo])
 
     const applyUvScalingForScene = (scene) => {
         scene.traverse(child => {
@@ -349,14 +367,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (isDecal) normalized = normalized.slice(0, -5)
                     if (normalized !== 'matshell') return
 
-                    // undefined = not tagged in GLB → default to triplanar; only skip when explicitly false
-                    const useTriplanar = child.userData?.useTriplanar !== false
+                    // default to triplanar for all shell materials to ensure consistency
+                    const useTriplanar = true
                     
 
                     if (useTriplanar && !isDecal) {
                         // Clone base material preserving GLB PBR properties, then patch shader
                         const base = mat.clone()
                         base.map         = texture
+                        base.color       = new THREE.Color(0xffffff)
+                        base.metalness   = 0.0
                         base.normalMap   = simpleNoise
                         base.normalScale = new THREE.Vector2(0.07, 0.07)
                         base.roughness   = 0.05
@@ -369,9 +389,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                             next.color.set(shellHex)
                         } else {
                             next.map         = texture
+                            next.color       = new THREE.Color(0xffffff)
+                            next.metalness   = 0.0
                             next.normalMap   = simpleNoise
-                            next.normalScale = new THREE.Vector2(0.05, 0.05)
-                            next.roughness   = 0.1
+                            next.normalScale = new THREE.Vector2(0.07, 0.07)
+                            next.roughness   = 0.05
                         }
                         if (isArray) child.material[i] = next
                         else child.material = next
@@ -521,8 +543,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         else if (config.wheelType === 'standardsilver') rimMatName = 'standardsilverrim'
 
         const def = MATERIAL_DEFS_NORM.get(rimMatName)
-        console.log('[DEBUG RIMS] wheelType:', config.wheelType, '| rimMatName:', rimMatName)
-        console.log('[DEBUG RIMS] def found:', !!def, def)
+        // console.log('[DEBUG RIMS] wheelType:', config.wheelType, '| rimMatName:', rimMatName)
+        // console.log('[DEBUG RIMS] def found:', !!def, def)
         
         if (!def) return
 
@@ -538,20 +560,20 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (!normalized?.includes('rim')) return
                     
                     rimMeshesFound++;
-                    console.log(`[DEBUG RIMS] Mesh: ${child.name} | Original mat: ${mat.name}`);
+                    // console.log(`[DEBUG RIMS] Mesh: ${child.name} | Original mat: ${mat.name}`);
                     
                     let next = applyMaterialDef(mat, def, staticTextures)
                     next.side = THREE.DoubleSide
                     next.needsUpdate = true
 
-                    console.log(`[DEBUG RIMS] New map applied?`, !!next.map, `| Color:`, next.color.getHexString());
+                    // console.log(`[DEBUG RIMS] New map applied?`, !!next.map, `| Color:`, next.color.getHexString());
 
                     if (isArray) child.material[i] = next
                     else child.material = next
                 })
             })
         })
-        console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
+        // console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
     }, [config.wheelType, wheels, axleConfig, staticTextures])
 
     // ── Apply all standard materials driven by material_data.json ────────────
@@ -646,10 +668,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         targetRef.current = { widthFt, lengthFt, heightFt }
         dirtyRef.current = true
     }, [widthFt, lengthFt, heightFt])
-
     // All mesh-visibility switches in one effect — mirrors Blender's Switch node
     useEffect(() => {
-        BlenderNodes.switchMesh(frontStyle, FRONT_STYLE_MESH_MAP[config.frontStyle])
+        let gnMeshes = [];
+        frontStyle.traverse(c => {
+            if (c.isMesh && c.name.toLowerCase().includes('gooseneck')) {
+                gnMeshes.push(c.name);
+            }
+        });
+
+        if (config.width === '8.5ftgn' && gnMeshes.length > 0) {
+            BlenderNodes.switchMeshes(frontStyle, gnMeshes);
+            // console.log(`[DEBUG GOOSENECK] Switched to gooseneck meshes:`, gnMeshes);
+        } else {
+            let targetFrontMesh = FRONT_STYLE_MESH_MAP[config.frontStyle];
+            BlenderNodes.switchMesh(frontStyle, targetFrontMesh);
+        }
 
         // ── Rear Doors: mirrors the Blender node graph ───────────────────────
         // Menu Switch → selects the correct mesh from REAR_DOOR_MESH_MAP
@@ -854,12 +888,27 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         BlenderNodes.switchMeshes(cargo, activeCargoMeshes)
 
         // Axle Count determines the number of tyres (tandem vs triple)
-        const variant = config.axleCount === 'triple' ? '3x' : '2x'
+        const axleCountStr = config.axleCount === 'triple' ? '3' : '2';
+        const tireSizeStr = config.tireSize || '15';
+        const lugStr = (config.lugType || '5lug').replace('lug', '');
+        
+        // Target normalized name: e.g. "162standardwheels5lug"
+        const targetWheelNorm = `${tireSizeStr}${axleCountStr}standardwheels${lugStr}lug`;
+        
+        const activeWheelMeshes = [];
+        wheels.traverse(child => {
+            if (child.isMesh) {
+                const normName = child.name.toLowerCase().replace(/[\s_\-]/g, '');
+                if (normName.includes(targetWheelNorm)) {
+                    activeWheelMeshes.push(child.name);
+                }
+            }
+        });
 
-        // Tyre count driven by variant — wheel style is material only
-        console.log(`[DEBUG WHEELS] variant: ${variant}, target meshes:`, WHEELS_VARIANT_MAP[variant]);
-        BlenderNodes.switchMeshes(wheels, WHEELS_VARIANT_MAP[variant])
-        const prefix = variant === '3x' ? '3X_' : '2X_'
+        BlenderNodes.switchMeshes(wheels, activeWheelMeshes);
+
+        const variant = config.axleCount === 'triple' ? '3x' : '2x';
+        const prefix = variant === '3x' ? '3X_' : '2X_';
 
         // Emulate the Geometry Node graph for Wheels — Blender "Wheels" node group
         // ── Side Panels section (no ATP gate — structural, always shown) ──────────
@@ -868,8 +917,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Base structural skirt — always visible regardless of ATP or angle
         activeAxleMeshes.push('Side_Panel_Bottom_Strip')
 
-        // Cover panel — always shown, angled or flat based on toggle
-        activeAxleMeshes.push(`${prefix}Axle_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+        // Cover panel — always shown, angled or flat based on toggle, unless spread axle is on
+        if (!config.spreadAxle) {
+            activeAxleMeshes.push(`${prefix}Axle_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+        }
 
         // ── Finishes section (gated by ATP Super Toggle in Blender graph) ─────────
         if (config.axleAtp) {
@@ -879,13 +930,20 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAxleMeshes.push(`${prefix}ATP_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
         }
 
+        if (config.spreadAxle) {
+            activeAxleMeshes.push(`Corvette_Fender_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+        }
+
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)
         BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
 
         // ── Spoiler ──────────────────────────────────────────────────────────
         // First hide everything
         spoiler.traverse(child => {
-            if (child.isMesh) child.visible = false
+            if (child.isMesh) {
+                if (child.name.toLowerCase().includes('proxy')) child.visible = true
+                else child.visible = false
+            }
         })
 
         // Now dynamically show based on substring match
@@ -905,18 +963,32 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 child.visible = true
             }
 
-            // Normal spoiler logic - if it's NOT racing and NOT angled, it MUST be the normal wing!
-            if (config.exteriorAccessories === 'rearwings' && !isRacing && !isAngled) {
-                child.visible = true
-            }
-        })
+        // Normal spoiler logic - if it's NOT racing and NOT angled, it MUST be the normal wing!
+        if (config.exteriorAccessories === 'rearwings' && !isRacing && !isAngled) {
+            child.visible = true
+        }
+    })
 
-        // Signal that mesh visibility has been updated. generatedETracks depends on
+    // ── Awning ───────────────────────────────────────────────────────────
+    if (awning) {
+        const showAwning = config.awning?.length > 0;
+        awning.traverse(child => {
+            if (!child.isMesh) return;
+            if (child.name.toLowerCase().includes('proxy')) {
+                child.visible = true;
+                return;
+            }
+            child.visible = showAwning;
+        })
+    }
+
+    // Signal that mesh visibility has been updated. generatedETracks depends on
         // visibilityVersion so it will recompute on the next render with correct .visible values.
         setVisibilityVersion(v => v + 1)
     }, [
-        config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
+        config.width, config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
         config.wheel, config.axleCount, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
+        config.tireSize, config.lugType,
         config.cabinets, config.toolBox,
         config.driverSideDoor, config.passengerSideDoor,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
@@ -924,9 +996,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights,
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
-        config.bathroom,
+        config.bathroom, config.awning,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
-        cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor
+        cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning
     ])
 
     // ── activeScenes must be computed BEFORE generatedETracks so the proxy scan
@@ -943,7 +1015,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             cargo,
         ]
         if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
-        if (config.awning?.length > 0 && lengthFt >= 29) scenes.push(awning)
+        if (config.awning?.length > 0) scenes.push(awning)
         if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
         if (config.exteriorAccessories === 'rearwingspoiler' || config.exteriorAccessories === 'rearwings') scenes.push(spoiler)
         if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)
@@ -1021,16 +1093,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const nw = curr.widthFt + (tgt.widthFt - curr.widthFt) * LERP_SPEED
         const nl = curr.lengthFt + (tgt.lengthFt - curr.lengthFt) * LERP_SPEED
         const nh = curr.heightFt + (tgt.heightFt - curr.heightFt) * LERP_SPEED
+        
+        const awningMatch = config.awning?.[0]?.match(/\d+/)
+        const targetAwningFt = awningMatch ? parseInt(awningMatch[0]) : 18
+        const na = curr.awningFt + (targetAwningFt - curr.awningFt) * LERP_SPEED
+
         const moved =
             Math.abs(nw - curr.widthFt) > LERP_THRESHOLD ||
             Math.abs(nl - curr.lengthFt) > LERP_THRESHOLD ||
-            Math.abs(nh - curr.heightFt) > LERP_THRESHOLD
+            Math.abs(nh - curr.heightFt) > LERP_THRESHOLD ||
+            Math.abs(na - curr.awningFt) > LERP_THRESHOLD
             
         if (!moved && !dirtyRef.current) {
             return
         }
         dirtyRef.current = false
-        animRef.current = { widthFt: nw, lengthFt: nl, heightFt: nh }
+        animRef.current = { widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: na }
         const globalZCenter = store.current.get('_globalZCenter')
         const globalXMin = store.current.get('_globalXMin')
         const globalXMax = store.current.get('_globalXMax')
@@ -1051,7 +1129,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 applyDimensionDeformations({
                     geometry: child.geometry, store: store.current,
                     uuid: child.uuid, meshName: child.name || child.uuid,
-                    widthFt: nw, lengthFt: nl, heightFt: nh,
+                    widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: na,
                     globalZCenter, globalXMin, globalXMax,
                     we, ie, narrowTrackOffset
                 })
@@ -1124,6 +1202,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 child.geometry.computeBoundingBox()
                 const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld)
                 
+                // console.log(`[PROXY DEBUG] Proxy "${child.name}" - BoundingBox X: [${box.min.x.toFixed(2)}, ${box.max.x.toFixed(2)}], Z: [${box.min.z.toFixed(2)}, ${box.max.z.toFixed(2)}]`);
+
                 proxyGaps.push({
                     xMin: box.min.x, xMax: box.max.x,
                     zMin: box.min.z, zMax: box.max.z,
@@ -1162,8 +1242,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (wallTemplates.length === 1) return true
                     const proxyCenterZ = (gap.zMin + gap.zMax) / 2
                     const wallIsNearZero = Math.abs(wallWorldZ) < 0.05
-                    return wallIsNearZero ? true : (Math.sign(wallWorldZ) === Math.sign(proxyCenterZ))
+                    const match = wallIsNearZero ? true : (Math.sign(wallWorldZ) === Math.sign(proxyCenterZ))
+                    return match
                 })
+                
+                // console.log(`[DEBUG ETRACK] Wall ${wallIdx}: worldZ=${wallWorldZ.toFixed(2)}. Found ${wallProxyGaps.length} gaps for this wall (out of ${proxyGaps.length} total).`, proxyGaps.map(g => ({ name: g.name, z: ((g.zMin+g.zMax)/2).toFixed(2) })));
 
                 let wallGeom = pointsGeometry
 

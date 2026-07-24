@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
 import {
   WATER_PACKAGE_OPTIONS,
@@ -21,7 +21,9 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     toolBox, setToolBox,
     ladderRacks, setLadderRacks,
     recessedTireBox, setRecessedTireBox,
-    radioPackageSpeaker, setRadioPackageSpeaker
+    radioPackageSpeaker, setRadioPackageSpeaker,
+    awning, setAwningRaw,
+    length
   } = useConfigurator()
 
   const [waterPackage, setWaterPackage] = useState(null)
@@ -32,7 +34,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
 
   const [fullBathOpen, setFullBathOpen] = useState(true)
 
-  const [awningLength, setAwningLength] = useState('20ft')
+  const [awningLength, setAwningLength] = useState('18ft')
 
   const [winch, setWinch] = useState('winchsystem')
 
@@ -42,6 +44,22 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   
   const [batteryBoxTongue, setBatteryBoxTongue] = useState(false)
   const [lShapeCounter, setLShapeCounter] = useState(false)
+
+  useEffect(() => {
+    if (!length) return;
+    const maxAwning = parseInt(length);
+    const currentAwning = parseInt(awningLength);
+    if (currentAwning > maxAwning) {
+      const validOptions = [8, 10, 12, 14, 16, 18, 20, 22].filter(v => v <= maxAwning);
+      if (validOptions.length > 0) {
+        const newLen = `${validOptions[validOptions.length - 1]}ft`;
+        setAwningLength(newLen);
+        if (awning?.length > 0) {
+          setAwningRaw([newLen]);
+        }
+      }
+    }
+  }, [length, awningLength, awning, setAwningRaw]);
 
   const show = (title) => {
     if (!activeSectionTitle) return true
@@ -76,7 +94,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     { id: '18ft', label: '18ft' },
     { id: '20ft', label: '20ft' },
     { id: '22ft', label: '22ft' },
-  ]
+  ].filter(opt => parseInt(opt.id) <= parseInt(length || '22'))
   const awningBadgeMap = {
     '20ft': '+$203 - Added Battery'
   }
@@ -238,17 +256,35 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           <img
             src="/Awnings.png"
             alt="Awning preview"
-            className="w-full rounded-xl object-cover"
+            className="w-full rounded-xl object-cover mb-4"
             onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
-          <div className="mt-6 px-4">
-            <DotSlider
-              options={awningLengthOptions}
-              value={awningLength}
-              onChange={setAwningLength}
-              badge={awningBadgeMap[awningLength]}
+          <div className="flex flex-col gap-2">
+            <OptionPill
+              label="Electric Awning"
+              isSelected={awning?.length > 0}
+              onClick={() => {
+                if (awning?.length > 0) {
+                  setAwningRaw([])
+                } else {
+                  setAwningRaw([awningLength])
+                }
+              }}
             />
           </div>
+          {awning?.length > 0 && (
+            <div className="mt-6 px-4">
+              <DotSlider
+                options={awningLengthOptions}
+                value={awningLength}
+                onChange={(val) => {
+                  setAwningLength(val)
+                  setAwningRaw([val])
+                }}
+                badge={awningBadgeMap[awningLength]}
+              />
+            </div>
+          )}
         </OptionSection>
       )}
 
