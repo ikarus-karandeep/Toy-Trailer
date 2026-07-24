@@ -38,8 +38,8 @@ const PATHS = {
 // NOTE: wheel style (blacksteel vs aluminumradial) is a material difference only —
 //       both styles share the same mesh geometry in Wheels.glb.
 const WHEELS_VARIANT_MAP = {
-    '2x': '2_Tyres',
-    '3x': '3_Tyres',
+    '2x': ['16-2_Standard_Wheels_6-Lug_1', '16-2_Standard_Wheels_6-Lug_2'],
+    '3x': ['16-3_Standard_Wheels_6-Lug_1', '16-3_Standard_Wheels_6-Lug_2'],
 }
 
 // Maps frontStyle config value → exact Blender mesh name inside Front Style.glb
@@ -70,37 +70,40 @@ const CABINET_MESH_MAP = {
 
 // Maps axleRating + variant → mesh name inside Axle Configs.glb
 const AXLE_RATING_MESH_MAP = {
-    '5200leafspring': { '2x': '2X_5200_lb_Leaf_Spring', '3x': '3X_5200_lb_Leaf_Spring' },
-    '5200torsion': { '2x': '2X_5200_lb_Torsion', '3x': '3X_5200_lb_Torsion' },
-    '7000dropspring': { '2x': '2X_7000_lb_Leaf_Spring', '3x': '3X_7000_lb_Leaf_Spring' },
-    '7000torsion': { '2x': '2X_7000_lb_Torsion', '3x': '3X_7000_lb_Torsion' },
-    '8000torsion16k': { '2x': '2X_8000_lb_Torsion', '3x': '3X_8000_lb_Torsion' },
-    // Triple options always use the 3X mesh
-    '10000lbtandem': { '2x': '2X_10,000_lb_Tandem', '3x': '3X_10,000_lb_Tandem' },
-    // 'triple7000torsion': { '2x': '2X_7000_lb_Torsion', '3x': '3X_7000_lb_Torsion' },
+    '3500lb-dropspring': { '2x': '2X_3500_lb_Leaf_Spring', '3x': '3X_3500_lb_Leaf_Spring' },
+    '3500lb-torsion': { '2x': '2X_3500_lb_Torsion', '3x': '3X_3500_lb_Torsion' },
+    '6000lb-dropspring': { '2x': '2X_6000_lb_Leaf_Spring', '3x': '3X_6000_lb_Leaf_Spring' },
+    '6000lb-torsion': { '2x': '2X_6000_lb_Torsion', '3x': '3X_6000_lb_Torsion' },
+    '7000lb-dropspring': { '2x': '2X_7000_lb_Torsion', '3x': '3X_7000_lb_Torsion' }, // Fallback to torsion if selected in UI
+    '7000lb-torsion': { '2x': '2X_7000_lb_Torsion', '3x': '3X_7000_lb_Torsion' },
 }
 
 // "Generator Box Condition" node (see useEffect below).
 const DOOR_MESH_MAP = {
-    //  Door Style Switch output 0: No Door / Flat Panel (default)
-    flatpanel: {
-        doorsL: 'Flat_Door_Panel_L', doorsR: 'Flat_Door_Panel_R',
+    //  Door Style Switch output 0: No Door / Flat Panel (default) -> 36x72
+    '36x72': {
+        doorsL: '36x72_Door_Panel_L', doorsR: '36x72_Door_Panel_R',
         atpL: 'ATP_Flat_Door_Panel_L', atpR: 'ATP_Flat_Door_Panel_R',
     },
-    //  Door Style Switch output 1: Single Door
-    singledoor: {
-        doorsL: 'Single_Door_L', doorsR: 'Single_Door_R',
+    //  Door Style Switch output 1: Single Door -> 36x78
+    '36x78': {
+        doorsL: '36x78_Door_Panel_L', doorsR: '36x78_Door_Panel_R',
         atpL: 'ATP_For_Single_Door_L', atpR: 'ATP_For_Single_Door_R',
     },
-    //  Door Style Switch output 2: Double Door
-    doubledoor: {
-        doorsL: 'Double_Door_L', doorsR: 'Double_Door_R',
+    //  Door Style Switch output 2: Double Door -> 48x78
+    '48x78': {
+        doorsL: '48x78_Door_Panel_L', doorsR: '48x78_Door_Panel_R',
         atpL: 'ATP_For_DoubleDoor_L', atpR: 'ATP_For_DoubleDoor_R',
     },
     //  Door Style Switch output 3: Generator Box
     generatorbox: {
         doorsL: 'Generator_Box_Plate_L', doorsR: 'Generator_Box_Plate_R',
         atpL: 'ATP_Plate_Generator_Box_L', atpR: 'ATP_Plate_Generator_Box_R',
+    },
+    // Fallbacks
+    flatpanel: {
+        doorsL: 'Flat_Door_Panel_L', doorsR: 'Flat_Door_Panel_R',
+        atpL: 'ATP_Flat_Door_Panel_L', atpR: 'ATP_Flat_Door_Panel_R',
     },
 }
 
@@ -164,9 +167,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const config = useConfigurator()
     const hasCabinet = config.cabinets?.includes('frontbase36') 
 
-    const effectiveSideDoorsType = parseFloat(config.length) < 23.5 ? 'flatpanel' : config.sideDoorsType
-    if (parseFloat(config.length) < 23.5 && config.sideDoorsType !== 'flatpanel') {
-        console.warn('[ModularTrailerModel] Side door forced to flat panel — trailer length < 23.5 ft')
+    let effectiveDriverDoor = config.driverSideDoor || 'none'
+    let effectivePassengerDoor = config.passengerSideDoor || '36x78'
+
+    if (parseFloat(config.length) < 23.5) {
+        if (effectiveDriverDoor !== 'none' && effectiveDriverDoor !== '36x72') effectiveDriverDoor = '36x72'
+        if (effectivePassengerDoor !== 'none' && effectivePassengerDoor !== '36x72') effectivePassengerDoor = '36x72'
     }
 
     const { scene: base } = useGLTF(PATHS.base)
@@ -213,7 +219,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const mats = Array.isArray(child.material)
                     ? child.material.map(m => m.name || '(unnamed)')
                     : [child.material?.name || '(unnamed)']
-                // console.log(`[${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
+                if (sceneName === 'wheels') {
+                    console.log(`[DEBUG ${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
+                }
             })
         })
     }, [])
@@ -661,41 +669,35 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (rightWall) rightWall.visible = true
 
         // ── Side Doors & Generator Box: mirrors the Blender node graph ─────────
-        // Door Style Switch → selects the mesh row from DOOR_MESH_MAP
-        const doorVariant = DOOR_MESH_MAP[effectiveSideDoorsType] ?? DOOR_MESH_MAP.flatpanel
-
-        // Left Side / Right Side boolean gates (And/Not/Not pattern in graph).
-        const leftSide = config.leftSide   // Interior tab: DOOR SIDES → LEFT SIDE DOORS
-        const rightSide = config.rightSide  // Interior tab: DOOR SIDES → RIGHT SIDE DOORS
+        const driverVariant = DOOR_MESH_MAP[effectiveDriverDoor]
+        const passengerVariant = DOOR_MESH_MAP[effectivePassengerDoor]
 
         // Build active mesh lists per side → Join Geometry (sideDoors.glb)
-        const activeDoorMeshes = [
-            ...(leftSide ? [doorVariant.doorsL] : []),   // And(leftSide,  doorType)
-            ...(rightSide ? [doorVariant.doorsR] : []),   // And(rightSide, doorType)
-        ]
+        const activeDoorMeshes = []
+        if (driverVariant && effectiveDriverDoor !== 'none') activeDoorMeshes.push(driverVariant.doorsL)
+        if (passengerVariant && effectivePassengerDoor !== 'none') activeDoorMeshes.push(passengerVariant.doorsR)
 
-        // Single Door or Flat Panel: show Generator Box Plates per side (structural, not cabinet-dependent)
-        if (effectiveSideDoorsType === 'singledoor' || effectiveSideDoorsType === 'flatpanel') {
-            if (leftSide) activeDoorMeshes.push('Generator_Box_Plate_L')
-            if (rightSide) activeDoorMeshes.push('Generator_Box_Plate_R')
-        }
+        // Show Generator Box Plates per side (structural, not cabinet-dependent)
+        if (effectiveDriverDoor !== 'none') activeDoorMeshes.push('Generator_Box_Plate_L')
+        if (effectivePassengerDoor !== 'none') activeDoorMeshes.push('Generator_Box_Plate_R')
 
         // Generator Box add-on: show plates + ATP trim per side
         if (config.generatorBox) {
-            if (leftSide) activeDoorMeshes.push('Generator_Box_Plate_L')
-            if (rightSide) activeDoorMeshes.push('Generator_Box_Plate_R')
+            if (effectiveDriverDoor === 'none') activeDoorMeshes.push('Generator_Box_Plate_L') // only add if not already added
+            if (effectivePassengerDoor === 'none') activeDoorMeshes.push('Generator_Box_Plate_R')
         }
 
         // Build active ATP trim lists per side → Join Geometry (extFinish.glb)
-        const activeAtpMeshes = [
-            ...(leftSide ? [doorVariant.atpL] : []),
-            ...(rightSide ? [doorVariant.atpR] : []),
-        ]
+        const activeAtpMeshes = []
+        if (driverVariant && effectiveDriverDoor !== 'none') activeAtpMeshes.push(driverVariant.atpL)
+        if (passengerVariant && effectivePassengerDoor !== 'none') activeAtpMeshes.push(passengerVariant.atpR)
 
-        // Single Door or Flat Panel: ATP plates mirror the generator box plate visibility
-        if (effectiveSideDoorsType === 'singledoor' || effectiveSideDoorsType === 'flatpanel' || config.generatorBox) {
-            if (leftSide) activeAtpMeshes.push('ATP_Plate_Generator_Box_L')
-            if (rightSide) activeAtpMeshes.push('ATP_Plate_Generator_Box_R')
+        // ATP plates mirror the generator box plate visibility
+        if (effectiveDriverDoor !== 'none' || config.generatorBox) {
+            activeAtpMeshes.push('ATP_Plate_Generator_Box_L')
+        }
+        if (effectivePassengerDoor !== 'none' || config.generatorBox) {
+            activeAtpMeshes.push('ATP_Plate_Generator_Box_R')
         }
 
         BlenderNodes.switchMeshes(sideDoors, activeDoorMeshes)
@@ -790,7 +792,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAddonMeshes.push('Recessed_Tire_Box')
         }
 
-        if (config.interiorTireMount) {
+        if (config.interiorTireMount || config.spareTire) {
             activeAddonMeshes.push('Interior_Tire_Mount')
         }
 
@@ -855,7 +857,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const variant = config.axleCount === 'triple' ? '3x' : '2x'
 
         // Tyre count driven by variant — wheel style is material only
-        BlenderNodes.switchMesh(wheels, WHEELS_VARIANT_MAP[variant])
+        console.log(`[DEBUG WHEELS] variant: ${variant}, target meshes:`, WHEELS_VARIANT_MAP[variant]);
+        BlenderNodes.switchMeshes(wheels, WHEELS_VARIANT_MAP[variant])
         const prefix = variant === '3x' ? '3X_' : '2X_'
 
         // Emulate the Geometry Node graph for Wheels — Blender "Wheels" node group
@@ -913,14 +916,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         setVisibilityVersion(v => v + 1)
     }, [
         config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
-        config.wheel, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
+        config.wheel, config.axleCount, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
         config.cabinets, config.toolBox,
-        config.leftSide, config.rightSide,
+        config.driverSideDoor, config.passengerSideDoor,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
         config.escapeDoor, config.generatorBox, config.winchSystem, config.tieDowns,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights,
-        config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount,
+        config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
         config.bathroom,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
         cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor

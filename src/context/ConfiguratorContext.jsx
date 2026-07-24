@@ -28,12 +28,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // axleRating is DERIVED from axleCount + axleSuspension + axleCapacity
   // so the 3-D model (which reads axleRating) stays in sync automatically.
   const axleRating = useMemo(() => {
-    if (axleCount === 'triple') return '10000lbtandem'
-    if (axleCapacity === '7000lb') return 'torsion' === axleSuspension ? '8000torsion16k' : '8000torsion16k'
-    if (axleCapacity === '6000lb') return axleSuspension === 'dropspring' ? '7000dropspring' : '7000torsion'
-    // 3500lb
-    return axleSuspension === 'dropspring' ? '5200leafspring' : '5200torsion'
-  }, [axleCount, axleSuspension, axleCapacity])
+    return `${axleCapacity}-${axleSuspension}`;
+  }, [axleSuspension, axleCapacity])
 
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? null)
@@ -50,6 +46,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [wheelType, setWheelType] = useState(ic.wheelType ?? 'standardsilver')
   const [spareTire, setSpareTire] = useState(ic.spareTire ?? true)
   const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
+  const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? '36x78')
+  const [passengerSideDoor, setPassengerSideDoor] = useState(ic.passengerSideDoor ?? '36x78')
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
@@ -175,6 +173,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     wheelType, setWheelType,
     spareTire, setSpareTire,
     sideDoorsType, setSideDoorsType,
+    driverSideDoor, setDriverSideDoor,
+    passengerSideDoor, setPassengerSideDoor,
     floor, setFloor,
     walls, setWalls,
     ceiling, setCeiling,
@@ -216,7 +216,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     packageId, applyPackage, activeTab, viewMode, summaryOpen,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
-    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
+    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
     electrical, battery, lights, ventilation, climateControl,
     rampType, atpRamp, rearDoor, tieDowns, jacks,

@@ -38,15 +38,23 @@ export default function OptionPill({
   };
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={isLocked ? -1 : 0}
       onClick={isLocked ? undefined : onClick}
+      onKeyDown={(e) => {
+        if (!isLocked && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick && onClick(e);
+        }
+      }}
       onMouseEnter={handleMouseEnter}
       className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
         isLocked
           ? 'border-[#3a3a3a] text-gray-500 bg-[#2a2a2a] cursor-not-allowed opacity-70'
           : isSelected
-            ? 'border-[#DA634B] text-[#DA634B] bg-transparent'
-            : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white'
+            ? 'border-[#DA634B] text-[#DA634B] bg-transparent cursor-pointer'
+            : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white cursor-pointer'
       }`}
       style={
         isSelected && !isLocked
@@ -163,6 +171,6 @@ export default function OptionPill({
           )}
         </div>
       )}
-    </button>
+    </div>
   )
 }

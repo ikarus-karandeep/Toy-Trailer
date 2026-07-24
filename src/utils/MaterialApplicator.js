@@ -60,16 +60,27 @@ Object.values(materialData).forEach(componentSlots => {
         let finalDef = { ...def }
         const normName = normMatName(def.material_name)
         
-        if (swatchesByNormName.has(normName)) {
-            const swatch = swatchesByNormName.get(normName)
-            if (swatch.base_color !== undefined) finalDef.base_color = swatch.base_color
-            if (swatch.roughness !== undefined) finalDef.roughness = swatch.roughness
-            if (swatch.metalness !== undefined) finalDef.metalness = swatch.metalness
-            if (swatch.normal !== undefined) finalDef.normal = swatch.normal
-            if (swatch.alpha !== undefined) finalDef.alpha = swatch.alpha
-            if (swatch.emission !== undefined) finalDef.emission = swatch.emission
-            if (swatch.normal_map !== undefined) finalDef.normal_map = swatch.normal_map
-            if (swatch.flip_y !== undefined) finalDef.flip_y = swatch.flip_y
+        if (normName.startsWith('mat')) {
+            const baseName = normName.replace(/^mat_?/, '');
+            let matchingSwatch = swatchesByNormName.get(baseName);
+            if (!matchingSwatch) {
+                for (const [sNormName, swatch] of swatchesByNormName.entries()) {
+                    if (sNormName.includes(baseName)) {
+                        matchingSwatch = swatch;
+                        break;
+                    }
+                }
+            }
+            
+            if (matchingSwatch) {
+                if (matchingSwatch.base_color !== undefined) finalDef.base_color = matchingSwatch.base_color
+                if (matchingSwatch.roughness !== undefined) finalDef.roughness = matchingSwatch.roughness
+                if (matchingSwatch.metalness !== undefined) finalDef.metalness = matchingSwatch.metalness
+                if (matchingSwatch.alpha !== undefined) finalDef.alpha = matchingSwatch.alpha
+                if (matchingSwatch.emission !== undefined) finalDef.emission = matchingSwatch.emission
+                if (matchingSwatch.flip_y !== undefined) finalDef.flip_y = matchingSwatch.flip_y
+                // normal and normal_map intentionally omitted so they come from material_data.json
+            }
         }
 
         if (!MATERIAL_DEFS.has(finalDef.material_name)) {

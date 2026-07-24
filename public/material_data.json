@@ -97,11 +97,11 @@
   },
   "Base_Interior": {
     "0": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -295,11 +295,11 @@
       }
     },
     "5": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -405,11 +405,11 @@
       }
     },
     "5": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -453,34 +453,8 @@
       }
     }
   },
-  "Extended Triple Tongue V-Nose": {
-    "0": {
-      "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Extended Triple Tongue Flat Front": {
-    "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
+  "Extended Triple Tongue Flat Front": {},
+  "Extended Triple Tongue V-Nose": {},
   "Generator Box Plate R": {
     "0": {
       "material_name": "MAT_Shell",
@@ -495,11 +469,11 @@
       }
     },
     "1": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -533,11 +507,11 @@
       }
     },
     "1": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -557,7 +531,7 @@
       }
     }
   },
-  "Flat Door Panel L": {
+  "36x72 Door Panel L": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#7B7D81",
@@ -595,11 +569,11 @@
       }
     },
     "3": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -619,7 +593,7 @@
       }
     }
   },
-  "Flat Door Panel R": {
+  "36x72 Door Panel R": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#7B7D81",
@@ -657,11 +631,11 @@
       }
     },
     "3": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -681,7 +655,7 @@
       }
     }
   },
-  "Single Door L": {
+  "36x78 Door Panel L": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#7B7D81",
@@ -731,7 +705,7 @@
       }
     }
   },
-  "Single Door R": {
+  "36x78 Door Panel R": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#7B7D81",
@@ -781,7 +755,7 @@
       }
     }
   },
-  "Double Door L": {
+  "48x78 Door Panel L": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#7B7D81",
@@ -831,7 +805,7 @@
       }
     }
   },
-  "Double Door R": {
+  "48x78 Door Panel R": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#7B7D81",
@@ -1043,11 +1017,11 @@
       }
     },
     "4": {
-      "material_name": "OSB_Sheet",
-      "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
-      "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Osb_Sheet_Normal.jpg",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1091,9 +1065,54 @@
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
+    },
+    "3": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "5": {
+      "material_name": "MAT_Plywood",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "6": {
+      "material_name": null,
+      "base_color": null,
+      "roughness": null,
+      "metalness": null,
+      "normal": false,
+      "alpha": null,
+      "emission": null
     }
   },
-  "2 Tyres": {
+  "16-2 Standard Wheels 6-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
       "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
@@ -1119,7 +1138,7 @@
       }
     }
   },
-  "3 Tyres": {
+  "16-3 Standard Wheels 6-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
       "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
@@ -1381,33 +1400,7 @@
       }
     }
   },
-  "2X 10,000 lb Tandem": {
-    "0": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "2X 5200 lb Leaf Spring": {
+  "2X 3500 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -1433,7 +1426,7 @@
       }
     }
   },
-  "2X 5200 lb Torsion": {
+  "2X 3500 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -1459,7 +1452,33 @@
       }
     }
   },
-  "2X 7000 lb Leaf Spring": {
+  "2X 6000 lb Leaf Spring": {
+    "0": {
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X 6000 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -1511,7 +1530,7 @@
       }
     }
   },
-  "2X 8000 lb Torsion": {
+  "3X 3500 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -1537,7 +1556,7 @@
       }
     }
   },
-  "3X 10,000 lb Tandem": {
+  "3X 3500 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -1563,7 +1582,7 @@
       }
     }
   },
-  "3X 5200 lb Leaf Spring": {
+  "3X 6000 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -1589,33 +1608,7 @@
       }
     }
   },
-  "3X 5200 lb Torsion": {
-    "0": {
-      "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "3X 7000 lb Leaf Spring": {
+  "3X 6000 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -1642,32 +1635,6 @@
     }
   },
   "3X 7000 lb Torsion": {
-    "0": {
-      "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "3X 8000 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",

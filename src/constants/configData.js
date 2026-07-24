@@ -106,14 +106,14 @@ export const COLOR_OPTIONS = [
   { id: 'red',          label: 'RED',            color: '#cf1a1a',  image: '/red.png' },
   { id: 'indigoblue',   label: 'INDIGO BLUE',    color: '#3f4aad',  image: '/indigo blue.png' },
   { id: 'yellow',       label: 'YELLOW',         color: '#c8a800',  image: '/Yellow.png' },
-  { id: 'orange',       label: 'ORANGE',         color: '#e07820',  image: '/orange.png' },
+  { id: 'orange',       label: 'ORANGE',         color: '#e07820',  image: '/Orange.png' },
   { id: 'electricblue', label: 'ELECTRIC BLUE',  color: '#0080ff',  image: '/electric blue.png' },
   { id: 'electricgreen',label: 'ELECTRIC GREEN', color: '#1a8c2a',  image: '/electric green.png' },
   { id: 'sierra',       label: 'SAHARA DESERT',  color: '#c49a5a',  image: '/sahara desert.png' },
   { id: 'brandywine',   label: 'BRANDY WINE',    color: '#7a1f30',  image: '/Brandy Wine.png' },
-  { id: 'pink',         label: 'PINK',           color: '#d4357a',  image: '/pink.png' },
+  { id: 'pink',         label: 'PINK',           color: '#d4357a',  image: '/Pink.png' },
   { id: 'emerald',      label: 'EMERALD GREEN',  color: '#3a8c5c',  image: '/Emerald Green.png' },
-  { id: 'purple',       label: 'PURPLE',         color: '#6b2fa0',  image: '/purple.png' },
+  { id: 'purple',       label: 'PURPLE',         color: '#6b2fa0',  image: '/Purple.png' },
 ];
 
 
@@ -297,6 +297,7 @@ export const SIDE_DOOR_PLACEMENT_OPTIONS = [
 ];
 
 export const SIDE_DOOR_SIZE_OPTIONS = [
+  { id: 'none', label: 'NONE' },
   { id: '36x72', label: '36" X 72" - $412' },
   { id: '36x78', label: '36" X 78" - $412' },
   { id: '48x78', label: '48" X 78" - $500' },

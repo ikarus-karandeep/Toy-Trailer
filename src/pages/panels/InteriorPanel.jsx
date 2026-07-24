@@ -26,6 +26,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     ceiling, setCeiling,
     cabinets, toggleCabinet, setCabinetsRaw,
     toolBox, setToolBox,
+    length,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -48,6 +49,12 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(false)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
+
+  useEffect(() => {
+    if (parseFloat(length) < 24 && cabinets.includes('wallrun36')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'))
+    }
+  }, [length, cabinets, setCabinetsRaw])
 
   useEffect(() => {
     if (!cabinets.includes('wallrun36') && cabinets.includes('wallrun16')) {
@@ -276,18 +283,24 @@ export default function InteriorPanel({ activeSectionTitle }) {
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">BASE CABINETS</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">ATP Diamond Plate Finish. Countertop Included</p>
             <div className="flex flex-col gap-2">
-              {BASE_CABINET_OPTIONS.map((opt) => (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price}
-                  isSelected={cabinets.includes(opt.id)}
-                  hasSettings={opt.id === 'frontbase36'}
-                  onClick={() => toggleCabinet(opt.id)}
-                  isMulti={true}
-                  packageBadge={getBadge(opt.id)}
-                />
-              ))}
+              {BASE_CABINET_OPTIONS.map((opt) => {
+                let isLocked = false;
+                if (opt.id === 'wallrun36' && parseFloat(length) < 24) isLocked = true;
+                
+                return (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    isLocked={isLocked}
+                    isSelected={cabinets.includes(opt.id)}
+                    hasSettings={opt.id === 'frontbase36'}
+                    onClick={() => !isLocked && toggleCabinet(opt.id)}
+                    isMulti={true}
+                    packageBadge={getBadge(opt.id)}
+                  />
+                );
+              })}
             </div>
           </div>
           <p className='border-t border-[#5D5E60]'></p>
