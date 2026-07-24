@@ -24,7 +24,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     floor, setFloor,
     walls, setWalls,
     ceiling, setCeiling,
-    cabinets, toggleCabinet,
+    cabinets, toggleCabinet, setCabinetsRaw,
     toolBox, setToolBox,
   } = useConfigurator()
 
@@ -45,16 +45,18 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const [ceilingMaterial, setCeilingMaterial] = useState('thermaply')
   const [ceilingInsulation, setCeilingInsulation] = useState(null)
 
-  const [baseCabinets, setBaseCabinets] = useState([])
-  const [overheadCabinets, setOverheadCabinets] = useState([])
-  const [fullHeightCabinets, setFullHeightCabinets] = useState([])
   const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(false)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
-  const toggleArrayItem = (setter, item) => {
-    setter(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item])
-  }
+  useEffect(() => {
+    if (!cabinets.includes('wallrun36') && cabinets.includes('wallrun16')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun16'))
+    }
+    if (!cabinets.includes('frontbase36') && cabinets.includes('frontoverhead16')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'frontoverhead16'))
+    }
+  }, [cabinets])
 
   return (
     <>
@@ -279,9 +281,9 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={baseCabinets.includes(opt.id)}
+                  isSelected={cabinets.includes(opt.id)}
                   hasSettings={opt.id === 'frontbase36'}
-                  onClick={() => toggleArrayItem(setBaseCabinets, opt.id)}
+                  onClick={() => toggleCabinet(opt.id)}
                   isMulti={true}
                   packageBadge={getBadge(opt.id)}
                 />
@@ -293,17 +295,23 @@ export default function InteriorPanel({ activeSectionTitle }) {
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">OVERHEAD CABINETS</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">N/A with Slant/ Slant V-Nose</p>
             <div className="flex flex-col gap-2">
-              {OVERHEAD_CABINET_OPTIONS.map((opt) => (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price}
-                  isLocked={opt.locked}
-                  isSelected={overheadCabinets.includes(opt.id)}
-                  onClick={() => !opt.locked && toggleArrayItem(setOverheadCabinets, opt.id)}
-                  isMulti={true}
-                />
-              ))}
+              {OVERHEAD_CABINET_OPTIONS.map((opt) => {
+                let isLocked = true;
+                if (opt.id === 'wallrun16' && cabinets.includes('wallrun36')) isLocked = false;
+                if (opt.id === 'frontoverhead16' && cabinets.includes('frontbase36')) isLocked = false;
+                
+                return (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    isLocked={isLocked}
+                    isSelected={cabinets.includes(opt.id)}
+                    onClick={() => !isLocked && toggleCabinet(opt.id)}
+                    isMulti={true}
+                  />
+                );
+              })}
             </div>
           </div>
           <p className='border-t border-[#5D5E60]'></p>
@@ -316,8 +324,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={fullHeightCabinets.includes(opt.id)}
-                  onClick={() => toggleArrayItem(setFullHeightCabinets, opt.id)}
+                  isSelected={cabinets.includes(opt.id)}
+                  onClick={() => toggleCabinet(opt.id)}
                   isMulti={true}
                 />
               ))}

@@ -162,8 +162,7 @@ const TONGUE_MESH_MAP = {
 
 export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, environment }) {
     const config = useConfigurator()
-
-    const hasCabinet = config.cabinets?.includes('vnosebase') || config.cabinets?.includes('flatfrontbase')
+    const hasCabinet = config.cabinets?.includes('frontbase36') 
 
     const effectiveSideDoorsType = parseFloat(config.length) < 23.5 ? 'flatpanel' : config.sideDoorsType
     if (parseFloat(config.length) < 23.5 && config.sideDoorsType !== 'flatpanel') {
@@ -808,7 +807,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const activeCabinetMeshes = []
 
         // Boolean inputs (mapping the array states to the node graph booleans)
-        const hasOverhead = config.cabinets.includes('vnoseoverhead') || config.cabinets.includes('flatfrontoverhead')
+        const hasOverhead = config.cabinets?.includes('frontoverhead16') 
         const hasToolbox = config.toolBox && config.toolBox !== 'none'
         const hasWinch = config.winchSystem
 
