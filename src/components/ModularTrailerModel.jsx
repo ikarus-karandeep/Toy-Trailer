@@ -927,7 +927,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             // Base ATP strip
             activeAxleMeshes.push('Side_Panel_ATP')
             // ATP directional trim — follows same angled/flat toggle
-            activeAxleMeshes.push(`${prefix}ATP_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+            if (config.spreadAxle) {
+                activeAxleMeshes.push(`ATP_Corvette_Fender_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+            } else {
+                activeAxleMeshes.push(`${prefix}ATP_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+            }
         }
 
         if (config.spreadAxle) {
