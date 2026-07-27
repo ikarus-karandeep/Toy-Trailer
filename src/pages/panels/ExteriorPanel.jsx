@@ -170,10 +170,14 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             ))}
           </div>
           <div className="border-t border-[#5D5E60] my-5" />
+          {width === '8.5ftgn' && (
+            <p className="text-gray-400 text-xs"> Cannot add stairs on gooseneck model</p>
+          )}
           <ToggleSwitch
             label="INCLUDE STAIRS"
             checked={stairs}
             onChange={setStairs}
+            disabled={width === '8.5ftgn'}
           />
         </OptionSection>
       )}

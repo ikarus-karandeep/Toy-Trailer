@@ -217,7 +217,7 @@ export class BlenderNodes {
             BlenderNodes._applyWithProxy(scene, target, true)
             return true
         }
-        // console.warn(`[BlenderNodes] switchMesh → "${targetName}" NOT FOUND in scene`)
+        console.warn(`[BlenderNodes] switchMesh → "${targetName}" NOT FOUND in scene`)
         return false
     }
 

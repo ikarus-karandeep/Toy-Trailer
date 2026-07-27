@@ -771,18 +771,6 @@
       }
     },
     "6": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "7": {
       "material_name": "MAT_Shell_DECAL",
       "base_color": "#7B7D81",
       "roughness": 0.09,
@@ -794,7 +782,7 @@
         "strength": 0.0
       }
     },
-    "8": {
+    "7": {
       "material_name": "Roof_DECAL",
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
@@ -806,7 +794,7 @@
         "strength": 0.0
       }
     },
-    "9": {
+    "8": {
       "material_name": "Metallic Grates_DECAL",
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
@@ -1569,7 +1557,7 @@
       }
     }
   },
-  "Heavy Duty Ramp": {
+  "Heavy Duty Ramp w/ Flap": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -1650,6 +1638,117 @@
       "normal": false,
       "alpha": null,
       "emission": null
+    }
+  },
+  "Super Duty Ramp": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Heavy Duty Ramp": {
+    "0": {
+      "material_name": "Material.017",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Roof.005",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "New plate.001",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "3": {
+      "material_name": "Chrome.002",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Shell.003",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "5": {
+      "material_name": "MAT_Plywood.003",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "6": {
+      "material_name": null,
+      "base_color": null,
+      "roughness": null,
+      "metalness": null,
+      "normal": false,
+      "alpha": null,
+      "emission": null
+    }
+  },
+  "ATP Barn Door": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "16-3 Standard Wheels 8-Lug": {
@@ -2672,6 +2771,20 @@
       }
     }
   },
+  "Wall E-Track Small Section": {
+    "0": {
+      "material_name": "ETrack Material",
+      "base_color": "#909090",
+      "roughness": 0.4215,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "Cabinet Toolbox": {
     "0": {
       "material_name": "Material",
@@ -2905,6 +3018,20 @@
       "material_name": "BlackROUGH",
       "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
       "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "D Rings": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,

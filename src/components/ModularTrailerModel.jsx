@@ -46,6 +46,8 @@ const WHEELS_VARIANT_MAP = {
 const FRONT_STYLE_MESH_MAP = {
     vnose24: 'V-Nose',
     flatfront: 'Flat_Front',
+    slantvnose: 'Slant_V-Nose',
+    extendedvnose: 'Extended_V-Nose',
 }
 
 // Cabinet Super Switch: maps frontStyle → mesh names for each cabinet type.
@@ -113,7 +115,8 @@ const DOOR_MESH_MAP = {
 const REAR_DOOR_MESH_MAP = {
     barndoors: 'Barn_Door',
     heavyduty: 'Heavy_Duty_Ramp',
-    superduty: 'Super_Duty_Ramp',   // update name if mesh differs in GLB
+    superduty: 'Super_Duty_Ramp', 
+    rampdropjacks: 'Heavy_Duty_Ramp_w_Flap' // Guessing the exact name based on typical exporter behavior
 }
 
 // ── Front Style addons: Super Switch per addon type ────────────────────────
@@ -237,6 +240,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     : [child.material?.name || '(unnamed)']
                 if (sceneName === 'wheels') {
                     // console.log(`[DEBUG ${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
+                }
+                if (sceneName === 'rearDoors') {
+                    console.log(`[DEBUG rearDoors mesh available] "${child.name}"`);
                 }
             })
         })
@@ -691,6 +697,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Menu Switch → selects the correct mesh from REAR_DOOR_MESH_MAP
         // Rear Door boolean (Group Input) → gates the entire output on/off
         const rearDoorMesh = REAR_DOOR_MESH_MAP[config.rampType] ?? REAR_DOOR_MESH_MAP.barndoors
+        console.log(`[DEBUG RearDoor] rampType: ${config.rampType}, rearDoor: ${config.rearDoor}, rearDoorMesh: ${rearDoorMesh}`);
         BlenderNodes.switchMesh(rearDoors, config.rearDoor ? rearDoorMesh : null)
 
         // ── Base Meshes: Escape Door condition ────────────────────────
@@ -752,7 +759,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             ?? FRONT_STYLE_ADDON_MESH_MAP.vnose
 
         // Stairs: Super Switch (V-Nose Stair vs Flat Front Stair) gated by stairs boolean
-        if (config.stairs) {
+        const isGooseneckStairs = config.width === '8.5ftgn' || (config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck'));
+        if (config.stairs && !isGooseneckStairs) {
             activeAddonMeshes.push(frontStyleAddon.stairs)
         }
 
@@ -762,7 +770,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         // V-Nose E Track: Super Toggle — only relevant when frontStyle is vnose
-        if (config.vNoseETrack && config.frontStyle === 'vnose') {
+        if (config.vNoseETrack && config.frontStyle !== 'flatfront') {
             activeAddonMeshes.push('V-Nose_E_Track')
         }
 
