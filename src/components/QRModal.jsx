@@ -76,17 +76,17 @@ export default function QRModal({ onClose, onOpenAR, exporting }) {
           Scan with your phone to view the trailer in AR
         </p>
 
-        <button
+        {/* <button
           onClick={onOpenAR}
           disabled={exporting}
           className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#DA634B] rounded-lg text-sm font-semibold tracking-widest uppercase text-white hover:bg-[#c5573f] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {exporting ? 'PREPARING AR...' : 'OPEN IN AR ON THIS DEVICE'}
-        </button>
+        </button> */}
 
         <button
           onClick={onClose}
-          className="text-gray-500 text-sm hover:text-gray-300 transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#DA634B] rounded-lg text-sm font-semibold tracking-widest uppercase text-white hover:bg-[#c5573f] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>

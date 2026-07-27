@@ -83,27 +83,27 @@ const DOOR_MESH_MAP = {
     //  Door Style Switch output 0: No Door / Flat Panel (default) -> 36x72
     '36x72': {
         doorsL: '36x72_Door_Panel_L', doorsR: '36x72_Door_Panel_R',
-        atpL: 'ATP_Flat_Door_Panel_L', atpR: 'ATP_Flat_Door_Panel_R',
+        atp: 'Flat_Door_Panel_ATP',
     },
     //  Door Style Switch output 1: Single Door -> 36x78
     '36x78': {
         doorsL: '36x78_Door_Panel_L', doorsR: '36x78_Door_Panel_R',
-        atpL: 'ATP_For_Single_Door_L', atpR: 'ATP_For_Single_Door_R',
+        atp: 'Single_Door_ATP',
     },
     //  Door Style Switch output 2: Double Door -> 48x78
     '48x78': {
         doorsL: '48x78_Door_Panel_L', doorsR: '48x78_Door_Panel_R',
-        atpL: 'ATP_For_DoubleDoor_L', atpR: 'ATP_For_DoubleDoor_R',
+        atp: 'Double_Door_ATP',
     },
     //  Door Style Switch output 3: Generator Box
     generatorbox: {
         doorsL: 'Generator_Box_Plate_L', doorsR: 'Generator_Box_Plate_R',
-        atpL: 'ATP_Plate_Generator_Box_L', atpR: 'ATP_Plate_Generator_Box_R',
+        atp: 'ATP_Plate_Generator_Box', // assuming there's a unified one or we don't know, we'll keep it as-is in logic below if undefined
     },
     // Fallbacks
     flatpanel: {
         doorsL: 'Flat_Door_Panel_L', doorsR: 'Flat_Door_Panel_R',
-        atpL: 'ATP_Flat_Door_Panel_L', atpR: 'ATP_Flat_Door_Panel_R',
+        atp: 'Flat_Door_Panel_ATP',
     },
 }
 
@@ -723,20 +723,26 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // Build active ATP trim lists per side → Join Geometry (extFinish.glb)
         const activeAtpMeshes = []
-        if (driverVariant && effectiveDriverDoor !== 'none') activeAtpMeshes.push(driverVariant.atpL)
-        if (passengerVariant && effectivePassengerDoor !== 'none') activeAtpMeshes.push(passengerVariant.atpR)
+        if (driverVariant && effectiveDriverDoor !== 'none' && driverVariant.atp) activeAtpMeshes.push(driverVariant.atp)
+        if (passengerVariant && effectivePassengerDoor !== 'none' && passengerVariant.atp) activeAtpMeshes.push(passengerVariant.atp)
+        
+        const uniqueAtpMeshes = [...new Set(activeAtpMeshes)]
 
         // ATP plates mirror the generator box plate visibility
         if (effectiveDriverDoor !== 'none' || config.generatorBox) {
-            activeAtpMeshes.push('ATP_Plate_Generator_Box_L')
+            uniqueAtpMeshes.push('ATP_Plate_Generator_Box_L')
         }
         if (effectivePassengerDoor !== 'none' || config.generatorBox) {
-            activeAtpMeshes.push('ATP_Plate_Generator_Box_R')
+            uniqueAtpMeshes.push('ATP_Plate_Generator_Box_R')
+        }
+
+        if (config.width === '8.5ftgn') {
+            uniqueAtpMeshes.push('ATP_Gooseneck')
         }
 
         BlenderNodes.switchMeshes(sideDoors, activeDoorMeshes)
         // When ATP is OFF, suppress all extFinish ATP trim meshes globally
-        BlenderNodes.switchMeshes(extFinish, config.axleAtp ? activeAtpMeshes : [])
+        BlenderNodes.switchMeshes(extFinish, config.axleAtp ? uniqueAtpMeshes : [])
 
         // ── Addons.glb: unified mesh list ──────────────────────────────────────────
         // All addon meshes are collected into ONE array and applied in a single
