@@ -585,6 +585,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
         ]
         allScenes.forEach(scene => {
+            const isGooseneckScene = (scene === frontStyle) && config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck');
+            
             scene.traverse(child => {
                 if (!child.isMesh) return
                 const isArray = Array.isArray(child.material)
@@ -595,7 +597,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (!def) return
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
-                    if (normMatName(mat.name) === 'reflectivestripes') {
+                    const isGooseneckMesh = isGooseneckScene || child.name.toLowerCase().includes('gooseneck');
+                    
+                    if (normMatName(mat.name) === 'reflectivestripes' && !isGooseneckMesh) {
                         // Custom patch for stripes: preserves vertical UV to fit the trim perfectly,
                         // and uses world X/Z for horizontal wrap to prevent stretching on resize.
                         next.onBeforeCompile = (shader) => {
@@ -636,7 +640,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
     }, [
-        staticTextures,
+        config.frontStyle, staticTextures,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
