@@ -30,7 +30,9 @@ export default function VerticalDotSlider({ options, value, onChange, badge }) {
     const onMove = (ev) => setDragRatio(getRatio(ev.clientY))
     const onUp = (ev) => {
       const idx = ratioToIndex(getRatio(ev.clientY))
-      onChange(options[idx].id)
+      if (!options[idx].locked) {
+        onChange(options[idx].id)
+      }
       setDragRatio(null)
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup', onUp)
@@ -46,7 +48,9 @@ export default function VerticalDotSlider({ options, value, onChange, badge }) {
     const onEnd = (ev) => {
       const touch = ev.changedTouches[0]
       const idx = ratioToIndex(getRatio(touch.clientY))
-      onChange(options[idx].id)
+      if (!options[idx].locked) {
+        onChange(options[idx].id)
+      }
       setDragRatio(null)
       window.removeEventListener('touchmove', onMove)
       window.removeEventListener('touchend', onEnd)
@@ -126,7 +130,7 @@ export default function VerticalDotSlider({ options, value, onChange, badge }) {
               >
                 <span
                   className={`block rounded-full transition-all duration-150 ${
-                    isActive ? 'bg-white shadow-md' : 'bg-white'
+                    isActive ? 'bg-white shadow-md' : opt.locked ? 'bg-gray-700' : 'bg-white'
                   }`}
                   style={{ width: '100%', height: '100%' }}
                 />

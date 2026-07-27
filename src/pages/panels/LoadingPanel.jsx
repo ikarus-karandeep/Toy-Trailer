@@ -5,7 +5,6 @@ import {
   REAR_ENTRANCE_OPTIONS,
   SIDE_DOOR_PLACEMENT_OPTIONS,
   SIDE_DOOR_SIZE_OPTIONS,
-  ESCAPE_DOOR_PLACEMENT_OPTIONS,
   ESCAPE_DOOR_SIZE_OPTIONS,
   CONCESSION_DOOR_PLACEMENT_OPTIONS,
   WINDOWS_OPTIONS,
@@ -42,11 +41,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
   const currentSideDoor = sideDoorPlacement === 'driver' ? driverSideDoor : passengerSideDoor
   const setCurrentSideDoor = sideDoorPlacement === 'driver' ? setDriverSideDoor : setPassengerSideDoor
 
-  const [escapeDoorPlacement, setEscapeDoorPlacement] = useState('driver')
   const [blackoutFrame, setBlackoutFrame] = useState(false)
 
   const [concessionDoorPlacement, setConcessionDoorPlacement] = useState('driver')
-  const [concessionWidth, setConcessionWidth] = useState('60in')
+  const [concessionWidth, setConcessionWidth] = useState('72in')
   const [concessionHeight, setConcessionHeight] = useState('36in')
   const [glassScreen, setGlassScreen] = useState(false)
 
@@ -70,13 +68,13 @@ export default function LoadingPanel({ activeSectionTitle }) {
   }
 
   const concessionWidthOptions = [
-    { id: '48in', label: '48in' },
-    { id: '60in', label: '60in' },
+    { id: '48in', label: '48in', locked: true },
+    { id: '60in', label: '60in', locked: true },
     { id: '72in', label: '72in' },
-    { id: '96in', label: '96in' },
+    { id: '96in', label: '96in', locked: true },
   ]
   const concessionHeightOptions = [
-    { id: '48in', label: '48in' },
+    { id: '48in', label: '48in', locked: true },
     { id: '36in', label: '36in' },
   ]
 
@@ -150,17 +148,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('ESCAPE DOOR') && (
         <OptionSection title="ESCAPE DOOR">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Secondary Access/Emergency Egress</p>
-          
-          <div className="mb-4">
-            <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Escape door placement</p>
-            <div className="w-full">
-              <SegmentedControl
-                options={ESCAPE_DOOR_PLACEMENT_OPTIONS}
-                value={escapeDoorPlacement}
-                onChange={setEscapeDoorPlacement}
-              />
-            </div>
-          </div>
 
           <div className="flex flex-wrap gap-2">
             {ESCAPE_DOOR_SIZE_OPTIONS.map((opt) => (
