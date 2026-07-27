@@ -161,6 +161,7 @@ const SHELL_TEXTURES = {
 const TONGUE_MESH_MAP = {
     vnose: 'Extended_Triple_Tongue_V-Nose',
     flatfront: 'Extended_Triple_Tongue_Flat_Front',
+    extendedvnose: 'Extended_Triple_Tongue(Extended_V-Nose)',
 }
 
 
@@ -227,6 +228,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo }
         Object.entries(allScenes).forEach(([sceneName, scene]) => {
             if (!scene) return;
+            
+            // Fix Blender hierarchy for Addons (AC unit parenting vents)
+            if (sceneName === 'addons') {
+                const meshesToUnparent = ['Non-Powered_Roof_Vent', 'AC_Unit', 'Mini_Split_AC', 'Aluminum_Sidewall_Vents']
+                meshesToUnparent.forEach(name => {
+                    const mesh = scene.getObjectByName(name)
+                    if (mesh && mesh.parent && mesh.parent !== scene) {
+                        scene.attach(mesh)
+                    }
+                })
+            }
+
             scene.traverse(child => {
                 if (!child.isMesh) return
                 
@@ -823,13 +836,24 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         // ── Assorted Addons (from Addons node graph) ───────────────────────
-        if (config.jacks?.includes('5kelectrictongue')) {
-            activeAddonMeshes.push('Electric_Jack')
+        if (config.jacks?.includes('5000relectric')) {
+            if (config.frontStyle === 'extendedvnose') {
+                activeAddonMeshes.push('Electric_Jack(Extended_V-Nose)')
+            } else {
+                activeAddonMeshes.push('Electric_Jack')
+            }
+        } else {
+            // Default manual jack for Extended V-Nose (since it's not built into the extended tongue mesh)
+            if (config.frontStyle === 'extendedvnose') {
+                activeAddonMeshes.push('Sidewind(Extended_V-Nose)')
+            }
         }
 
-        // AC Unit (Climate Control)
-        if (config.climateControl && config.climateControl !== 'none' && config.climateControl !== 'wirebrace') {
+        // AC Unit / Mini Split AC (Climate Control)
+        if (config.climateControl === '135kbtu' || config.climateControl === '15kbtu') {
             activeAddonMeshes.push('AC_Unit')
+        } else if (config.climateControl === '12kminisplit' || config.climateControl === '18kminisplit' || config.climateControl === '24kminisplit') {
+            activeAddonMeshes.push('Mini_Split_AC')
         }
 
         // ── tongue.glb: always visible, variant switches with front style
@@ -855,8 +879,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // Ladder Racks: instanced via useMemo (Top_Supports mesh is the template, never shown directly)
 
-        if (config.sidewallVents) {
+        console.log(`[DEBUG Ventilation] Current config.ventilation:`, config.ventilation)
+        if (config.sidewallVents || config.ventilation === '2waysidewall') {
+            console.log(`[DEBUG Ventilation] Adding Aluminum_Sidewall_Vents`)
             activeAddonMeshes.push('Aluminum_Sidewall_Vents')
+        }
+
+        if (
+            config.ventilation === 'nonpoweredvent' || 
+            config.ventilation === 'smokenonpowered' ||
+            (config.ventilation && config.ventilation.includes('nonpowered'))
+        ) {
+            activeAddonMeshes.push('Non-Powered_Roof_Vent') // Legacy fallback
+            activeAddonMeshes.push('Non-Powered Roof Vent') // The exact name in the GLB
         }
 
         if (config.recessedTireBox) {
@@ -867,6 +902,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAddonMeshes.push('Interior_Tire_Mount')
         }
 
+        if (addons) {
+            const vent = addons.getObjectByName('Non-Powered Roof Vent')
+            if (vent) {
+                console.log("[DEBUG] Non-Powered Roof Vent parent is:", vent.parent?.name)
+            }
+        }
+        
+        console.warn(`[DEBUG 3D] Final active addons meshes being sent to switchMeshes:`, activeAddonMeshes)
         BlenderNodes.switchMeshes(addons, activeAddonMeshes)
 
         // ── Cabinets: node graph logic ───────────────────────────────────────────

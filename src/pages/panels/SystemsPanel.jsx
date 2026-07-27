@@ -21,6 +21,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
   const {
     electrical, setElectrical,
     climateControl, setClimateControl,
+    ventilation, setVentilation,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -40,10 +41,8 @@ export default function SystemsPanel({ activeSectionTitle }) {
   const [exteriorLights, setExteriorLights] = useState([])
   const [ledRope, setLedRope] = useState(false)
   
-  const [passiveVent, setPassiveVent] = useState(null)
+
   const [acPrep, setAcPrep] = useState(false)
-  const [rooftopAc, setRooftopAc] = useState(null)
-  const [miniSplit, setMiniSplit] = useState(null)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -239,8 +238,12 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={passiveVent === opt.id}
-                  onClick={() => setPassiveVent(opt.id === passiveVent ? null : opt.id)}
+                  isSelected={ventilation === opt.id}
+                  onClick={() => {
+                    const newValue = opt.id === ventilation ? null : opt.id;
+                    console.warn(`[DEBUG UI] User clicked vent option: ${opt.label} | Setting ventilation state to:`, newValue);
+                    setVentilation(newValue);
+                  }}
                 />
               ))}
             </div>
@@ -265,8 +268,8 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={rooftopAc === opt.id}
-                  onClick={() => setRooftopAc(opt.id === rooftopAc ? null : opt.id)}
+                  isSelected={climateControl === opt.id}
+                  onClick={() => setClimateControl(opt.id === climateControl ? 'none' : opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}
@@ -282,8 +285,8 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={miniSplit === opt.id}
-                  onClick={() => setMiniSplit(opt.id === miniSplit ? null : opt.id)}
+                  isSelected={climateControl === opt.id}
+                  onClick={() => setClimateControl(opt.id === climateControl ? 'none' : opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}
