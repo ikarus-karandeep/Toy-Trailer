@@ -56,7 +56,8 @@ const HEIGHT_FEET_MAP = {
   '9ft0': 9, '9ft6': 9.5, '10ft0': 10,
 }
 function getHeightFt(id) {
-  return HEIGHT_FEET_MAP[id] ?? 7
+  // Add 15 inches (1.25 ft) offset to interior height to account for trailer structure
+  return (HEIGHT_FEET_MAP[id] ?? 7) + 1.25
 }
 
 async function parseGLB(mesh) {

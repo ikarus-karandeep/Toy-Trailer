@@ -63,8 +63,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [wheelType, setWheelType] = useState(ic.wheelType ?? 'standardsilver')
   const [spareTire, setSpareTire] = useState(ic.spareTire ?? true)
   const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
-  const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? '36x78')
-  const [passengerSideDoor, setPassengerSideDoor] = useState(ic.passengerSideDoor ?? '36x78')
+  const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? 'none')
+  const [passengerSideDoor, setPassengerSideDoor] = useState(ic.passengerSideDoor ?? 'none')
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')

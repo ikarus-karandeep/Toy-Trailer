@@ -80,30 +80,28 @@ const AXLE_RATING_MESH_MAP = {
 
 // "Generator Box Condition" node (see useEffect below).
 const DOOR_MESH_MAP = {
-    //  Door Style Switch output 0: No Door / Flat Panel (default) -> 36x72
+    'none': {
+        doorsL: 'Flat_Panel_L', doorsR: 'Flat_Panel_R',
+        atpL: 'ATP_Flat_Panel_L', atpR: 'ATP_Flat_Panel_R',
+    },
     '36x72': {
         doorsL: '36x72_Door_Panel_L', doorsR: '36x72_Door_Panel_R',
-        atp: 'Flat_Door_Panel_ATP',
+        atpL: 'ATP_36x72_Door_Panel_L', atpR: 'ATP_36x72_Door_Panel_R',
     },
-    //  Door Style Switch output 1: Single Door -> 36x78
     '36x78': {
         doorsL: '36x78_Door_Panel_L', doorsR: '36x78_Door_Panel_R',
-        atp: 'Single_Door_ATP',
+        atpL: 'ATP_36x78_Door_Panel_L', atpR: 'ATP_36x78_Door_Panel_R',
     },
-    //  Door Style Switch output 2: Double Door -> 48x78
     '48x78': {
         doorsL: '48x78_Door_Panel_L', doorsR: '48x78_Door_Panel_R',
-        atp: 'Double_Door_ATP',
+        atpL: 'ATP_48x78_Door_Panel_L', atpR: 'ATP_48x78_Door_Panel_R',
     },
-    //  Door Style Switch output 3: Generator Box
     generatorbox: {
         doorsL: 'Generator_Box_Plate_L', doorsR: 'Generator_Box_Plate_R',
-        atp: 'ATP_Plate_Generator_Box', // assuming there's a unified one or we don't know, we'll keep it as-is in logic below if undefined
     },
-    // Fallbacks
     flatpanel: {
-        doorsL: 'Flat_Door_Panel_L', doorsR: 'Flat_Door_Panel_R',
-        atp: 'Flat_Door_Panel_ATP',
+        doorsL: 'Flat_Panel_L', doorsR: 'Flat_Panel_R',
+        atpL: 'ATP_Flat_Panel_L', atpR: 'ATP_Flat_Panel_R',
     },
 }
 
@@ -168,7 +166,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const hasCabinet = config.cabinets?.includes('frontbase36') 
 
     let effectiveDriverDoor = config.driverSideDoor || 'none'
-    let effectivePassengerDoor = config.passengerSideDoor || '36x78'
+    let effectivePassengerDoor = config.passengerSideDoor || 'none'
 
     if (parseFloat(config.length) < 23.5) {
         if (effectiveDriverDoor !== 'none' && effectiveDriverDoor !== '36x72') effectiveDriverDoor = '36x72'
@@ -203,7 +201,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const animRef = useRef({
         widthFt: 8.5,
         lengthFt: parseInt(config.length || '32'),
-        heightFt: config.interiorHeight ? parseFloat(config.interiorHeight) : 8.5,
+        heightFt: heightFt,
         awningFt: config.awning && config.awning.length > 0 ? parseInt(config.awning[0].match(/\d+/)?.[0] || '18') : 18
     })
     const targetRef = useRef({ 
@@ -712,33 +710,23 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // Build active mesh lists per side → Join Geometry (sideDoors.glb)
         const activeDoorMeshes = []
-        if (driverVariant && effectiveDriverDoor !== 'none') activeDoorMeshes.push(driverVariant.doorsL)
-        if (passengerVariant && effectivePassengerDoor !== 'none') activeDoorMeshes.push(passengerVariant.doorsR)
+        if (driverVariant) activeDoorMeshes.push(driverVariant.doorsL)
+        if (passengerVariant) activeDoorMeshes.push(passengerVariant.doorsR)
 
         // Show Generator Box Plates per side (structural, not cabinet-dependent)
-        if (effectiveDriverDoor !== 'none') activeDoorMeshes.push('Generator_Box_Plate_L')
-        if (effectivePassengerDoor !== 'none') activeDoorMeshes.push('Generator_Box_Plate_R')
-
-        // Generator Box add-on: show plates + ATP trim per side
-        if (config.generatorBox) {
-            if (effectiveDriverDoor === 'none') activeDoorMeshes.push('Generator_Box_Plate_L') // only add if not already added
-            if (effectivePassengerDoor === 'none') activeDoorMeshes.push('Generator_Box_Plate_R')
-        }
+        activeDoorMeshes.push('Generator_Box_Plate_L')
+        activeDoorMeshes.push('Generator_Box_Plate_R')
 
         // Build active ATP trim lists per side → Join Geometry (extFinish.glb)
         const activeAtpMeshes = []
-        if (driverVariant && effectiveDriverDoor !== 'none' && driverVariant.atp) activeAtpMeshes.push(driverVariant.atp)
-        if (passengerVariant && effectivePassengerDoor !== 'none' && passengerVariant.atp) activeAtpMeshes.push(passengerVariant.atp)
+        if (driverVariant && driverVariant.atpL) activeAtpMeshes.push(driverVariant.atpL)
+        if (passengerVariant && passengerVariant.atpR) activeAtpMeshes.push(passengerVariant.atpR)
         
         const uniqueAtpMeshes = [...new Set(activeAtpMeshes)]
 
         // ATP plates mirror the generator box plate visibility
-        if (effectiveDriverDoor !== 'none' || config.generatorBox) {
-            uniqueAtpMeshes.push('ATP_Plate_Generator_Box_L')
-        }
-        if (effectivePassengerDoor !== 'none' || config.generatorBox) {
-            uniqueAtpMeshes.push('ATP_Plate_Generator_Box_R')
-        }
+        uniqueAtpMeshes.push('ATP_Plate_Generator_Box_L')
+        uniqueAtpMeshes.push('ATP_Plate_Generator_Box_R')
 
         if (config.width === '8.5ftgn') {
             uniqueAtpMeshes.push('ATP_Gooseneck')
