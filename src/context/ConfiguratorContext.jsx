@@ -20,7 +20,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [axleCount, setAxleCount] = useState(ic.axleCount ?? 'tandem')
   const [axleSuspension, setAxleSuspension] = useState(ic.axleSuspension ?? 'torsion')
   const [axleCapacity, setAxleCapacity] = useState(ic.axleCapacity ?? '7000lb')
-  const [interiorHeight, setInteriorHeight] = useState(ic.interiorHeight ?? '7ft0')
+  const [interiorHeight, setInteriorHeight] = useState(ic.interiorHeight ?? '8ft6')
   const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? false)
   const [narrowTrackAxle, setNarrowTrackAxle] = useState(ic.narrowTrackAxle ?? false)
 

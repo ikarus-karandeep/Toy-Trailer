@@ -893,7 +893,36 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // ── Cargo & Tie-Downs: Node Graph ──────────────────────────────────────
         // The E-Track and other tie downs are generated instances in Blender.
         // We select the baked GLB meshes directly (D-Rings / Airline tracking missing in GLB currently)
+        // ── DEBUG LOGS FOR DRINGS ──
+        console.log('====== DRING DEBUG ======');
+        console.log('1. Current tieDowns array:', config.tieDowns);
+        console.log('2. Is drings selected in config?', config.tieDowns?.includes('drings'));
+        
+        const allCargoNames = [];
+        cargo.traverse(child => {
+            if (child.isMesh) allCargoNames.push(child.name);
+        });
+        console.log('3. ALL meshes inside cargo:', allCargoNames);
+        console.log('=========================');
+
         const activeCargoMeshes = []
+        if (config.tieDowns?.includes('small')) {
+            cargo.traverse(child => {
+                if (child.isMesh && child.name.includes('Small')) {
+                    activeCargoMeshes.push(child.name)
+                }
+            })
+        }
+        if (config.tieDowns?.includes('drings')) {
+            cargo.traverse(child => {
+                if (child.isMesh) {
+                    const nameLower = child.name.toLowerCase();
+                    if (nameLower.includes('d-ring') || nameLower.includes('d_ring') || nameLower.includes('d ring') || nameLower.includes('dring')) {
+                        activeCargoMeshes.push(child.name)
+                    }
+                }
+            })
+        }
         // We'll hide the static E-Tracks and generate them dynamically instead to multiply the mesh
         BlenderNodes.switchMeshes(cargo, activeCargoMeshes)
 
@@ -1163,7 +1192,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const isProxy = child.name.toLowerCase().includes('proxy')
             
                 if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplates.push(child)
-                if (child.name.includes('Wall_E-Track')  && !isProxy) {
+                if (child.name.includes('Wall_E-Track') && !child.name.includes('Small') && !isProxy) {
                     child.geometry.computeBoundingBox();
                     const box = child.geometry.boundingBox;
                     if (box.min.z < -1 && box.max.z > 1) {
@@ -1227,6 +1256,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         const pointsGeometry = new THREE.BufferGeometry()
         pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
+
+        // ── Globally enforce D-Rings visibility across all scenes ──
+        const showDRings = config.tieDowns?.includes('drings')
+        activeScenesRef.current.forEach(scene => {
+            scene.traverse(child => {
+                if (child.isMesh) {
+                    const nameLower = child.name.toLowerCase();
+                    if (nameLower.includes('d-ring') || nameLower.includes('d_ring') || nameLower.includes('d ring') || nameLower.includes('dring')) {
+                        child.visible = showDRings
+                    }
+                }
+            })
+        })
 
         // ── Compute proxy gaps ──────────────────
         const proxyGaps = []

@@ -52,6 +52,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                 label={opt.label}
                 price={opt.price}
                 isSelected={width === opt.id}
+                isLocked={opt.locked}
                 onClick={() => setWidth(opt.id)}
               />
             ))}

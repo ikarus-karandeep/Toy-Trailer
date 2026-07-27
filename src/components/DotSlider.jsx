@@ -30,7 +30,9 @@ export default function DotSlider({ options, value, onChange, badge }) {
     const onMove = (ev) => setDragRatio(getRatio(ev.clientX))
     const onUp = (ev) => {
       const idx = ratioToIndex(getRatio(ev.clientX))
-      onChange(options[idx].id)
+      if (!options[idx].locked) {
+        onChange(options[idx].id)
+      }
       setDragRatio(null)
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup', onUp)
@@ -46,7 +48,9 @@ export default function DotSlider({ options, value, onChange, badge }) {
     const onEnd = (ev) => {
       const touch = ev.changedTouches[0]
       const idx = ratioToIndex(getRatio(touch.clientX))
-      onChange(options[idx].id)
+      if (!options[idx].locked) {
+        onChange(options[idx].id)
+      }
       setDragRatio(null)
       window.removeEventListener('touchmove', onMove)
       window.removeEventListener('touchend', onEnd)
@@ -135,7 +139,7 @@ export default function DotSlider({ options, value, onChange, badge }) {
               >
                 <span
                   className={`block rounded-full transition-all duration-150 ${
-                    isActive ? 'bg-white shadow-md' : 'bg-white'
+                    isActive ? 'bg-white shadow-md' : opt.locked ? 'bg-gray-700' : 'bg-white'
                   }`}
                   style={{ width: '100%', height: '100%' }}
                 />
@@ -171,13 +175,17 @@ export default function DotSlider({ options, value, onChange, badge }) {
         {options.map((opt, i) => (
           <button
             key={opt.id}
+            disabled={opt.locked}
             onMouseDown={(e) => e.preventDefault()}
-            onClick={() => onChange(opt.id)}
-            className={`text-[9px] font-semibold tracking-wider transition-colors ${
-              i === nearestIndex ? 'text-[#DA634B]' : 'text-gray-500 hover:text-gray-300'
+            onClick={() => {
+              if (!opt.locked) onChange(opt.id)
+            }}
+            className={`text-[9px] flex items-center justify-center font-semibold tracking-wider transition-colors ${
+              opt.locked ? 'text-gray-600 cursor-not-allowed' : i === nearestIndex ? 'text-[#DA634B]' : 'text-gray-500 hover:text-gray-300'
             }`}
           >
             {opt.label}
+            {opt.locked && <img src="/Lock Icon.png" alt="Locked" className="w-2.5 h-2.5 ml-0.5 opacity-60" />}
           </button>
         ))}
       </div>

@@ -58,7 +58,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
   const [windowSize, setWindowSize] = useState('30x15')
   
   const [dRings, setDRings] = useState({
-    drings4: 1, // Standard D-rings default
+    drings: 1, // Standard D-rings default
     walldrings: 0,
     floordrings: 0,
   })
@@ -291,8 +291,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  isSelected={dRings[opt.id] > 0}
-                  onClick={() => updateQuantity(setDRings, opt.id, dRings[opt.id] ? 0 : 1)}
+                  isSelected={tieDowns.includes(opt.id)}
+                  onClick={() => toggleTieDown(opt.id)}
                 />
               ))}
               
@@ -303,10 +303,17 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     key={opt.id}
                     label={opt.label}
                     price={opt.price}
-                    isSelected={qty > 0}
+                    isSelected={tieDowns.includes(opt.id) || qty > 0}
                     quantity={qty}
-                    onQuantityChange={(val) => updateQuantity(setDRings, opt.id, val)}
-                    onClick={() => updateQuantity(setDRings, opt.id, qty === 0 ? 1 : 0)}
+                    onQuantityChange={(val) => {
+                      updateQuantity(setDRings, opt.id, val)
+                      if (val === 0 && tieDowns.includes(opt.id)) toggleTieDown(opt.id)
+                      if (val > 0 && !tieDowns.includes(opt.id)) toggleTieDown(opt.id)
+                    }}
+                    onClick={() => {
+                      updateQuantity(setDRings, opt.id, qty === 0 ? 1 : 0)
+                      toggleTieDown(opt.id)
+                    }}
                   />
                 )
               })}

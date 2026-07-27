@@ -2785,6 +2785,20 @@
       }
     }
   },
+  "D Rings": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "Cabinet Toolbox": {
     "0": {
       "material_name": "Material",
@@ -3018,20 +3032,6 @@
       "material_name": "BlackROUGH",
       "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
       "roughness": 1.0,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "D Rings": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
