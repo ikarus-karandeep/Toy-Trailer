@@ -38,7 +38,7 @@ export const PACKAGE_INITIAL_CONFIGS = {
     // E-Track IDs: 'wall' and 'floor' (from E_TRACKS_OPTIONS in configData)
     tieDowns: ['drings', 'wall', 'floor'],
     // SPREAD AXLES W/CORVETTE FENDERS
-    spreadAxle: true,
+    spreadAxle: false,
     // 7000LB DROP SPRING / TORSION
     axleCapacity: '7000lb',
     axleSuspension: 'dropspring',

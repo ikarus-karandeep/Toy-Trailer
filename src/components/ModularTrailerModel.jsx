@@ -229,7 +229,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             scene.traverse(child => {
                 if (!child.isMesh) return
                 
-                // Hide proxy meshes globally so they don't render
+                // Hide proxy meshes
                 if (child.name.toLowerCase().includes('proxy')) {
                     child.visible = false;
                 }
@@ -959,8 +959,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // First hide everything
         spoiler.traverse(child => {
             if (child.isMesh) {
-                if (child.name.toLowerCase().includes('proxy')) child.visible = true
-                else child.visible = false
+                child.visible = false
             }
         })
 
@@ -1168,7 +1167,32 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const isProxy = child.name.toLowerCase().includes('proxy')
             
                 if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplates.push(child)
-                if (child.name.includes('Wall_E-Track')  && !isProxy) wallTemplates.push(child)
+                if (child.name.includes('Wall_E-Track')  && !isProxy) {
+                    child.geometry.computeBoundingBox();
+                    const box = child.geometry.boundingBox;
+                    if (box.min.z < -1 && box.max.z > 1) {
+                        // The template spans both walls. Split it into independent left and right templates.
+                        const rightChild = child.clone();
+                        rightChild.geometry = child.geometry.clone();
+                        const rightPos = rightChild.geometry.attributes.position;
+                        for (let i = 0; i < rightPos.count; i++) {
+                            if (rightPos.getZ(i) < 0) rightPos.setXYZ(i, NaN, NaN, NaN);
+                        }
+                        rightChild.geometry.computeBoundingBox();
+                        
+                        const leftChild = child.clone();
+                        leftChild.geometry = child.geometry.clone();
+                        const leftPos = leftChild.geometry.attributes.position;
+                        for (let i = 0; i < leftPos.count; i++) {
+                            if (leftPos.getZ(i) > 0) leftPos.setXYZ(i, NaN, NaN, NaN);
+                        }
+                        leftChild.geometry.computeBoundingBox();
+                        
+                        wallTemplates.push(leftChild, rightChild);
+                    } else {
+                        wallTemplates.push(child);
+                    }
+                }
             })
         }
 
@@ -1217,23 +1241,97 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 if (!child.userData?.proxyActive) return
 
                 child.updateWorldMatrix(true, false)
-                child.geometry.computeBoundingBox()
-                const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld)
                 
+                // Compute bounding box manually to ignore stray vertices at local (0,0,0)
+                const pos = child.geometry.attributes.position;
+                const box = new THREE.Box3();
+                const v = new THREE.Vector3();
+                let validVertices = 0;
+                
+                for (let i = 0; i < pos.count; i++) {
+                    v.set(pos.getX(i), pos.getY(i), pos.getZ(i));
+                    v.applyMatrix4(child.matrixWorld);
+                    
+                    // Ignore stray vertices that sit exactly at world (0,0,0) - the front bottom center
+                    // which stretch the proxy box and cut out unintended sections of E-Track
+                    if (Math.abs(v.x) < 0.05 && Math.abs(v.y) < 0.05 && Math.abs(v.z) < 0.05) {
+                        continue;
+                    }
+                    
+                    box.expandByPoint(v);
+                    validVertices++;
+                }
+                
+                // Fallback to standard bounding box if all vertices were at origin (unlikely)
+                if (validVertices === 0) {
+                    child.geometry.computeBoundingBox();
+                    box.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld);
+                }
+
                 // console.log(`[PROXY DEBUG] Proxy "${child.name}" - BoundingBox X: [${box.min.x.toFixed(2)}, ${box.max.x.toFixed(2)}], Z: [${box.min.z.toFixed(2)}, ${box.max.z.toFixed(2)}]`);
 
                 proxyGaps.push({
                     xMin: box.min.x, xMax: box.max.x,
+                    yMin: box.min.y, yMax: box.max.y,
                     zMin: box.min.z, zMax: box.max.z,
                     name: child.name,
+                    mesh: child,
                 })
             })
         })
 
-        // Floor E-Track: full run, unaffected by proxy
+        // Floor E-Track: per-floor generation with proxy cutouts (so E-track doesn't go across door thresholds)
         if (floorTemplates.length > 0 && config.tieDowns?.includes('floor')) {
             floorTemplates.forEach(floorTemplate => {
-                const floorInstanced = BlenderNodes.instanceOnPoints(pointsGeometry, floorTemplate)
+                floorTemplate.updateWorldMatrix(true, false)
+                const wm = floorTemplate.matrixWorld
+                
+                const templateWorldPos = new THREE.Vector3().setFromMatrixPosition(wm)
+                const worldScaleX = Math.sqrt(wm.elements[0]*wm.elements[0] + wm.elements[1]*wm.elements[1] + wm.elements[2]*wm.elements[2])
+                const localXDirWorld = wm.elements[0] / (worldScaleX || 1)
+
+                let floorGeom = pointsGeometry
+                floorTemplate.geometry.computeBoundingBox()
+                const tb = floorTemplate.geometry.boundingBox
+                const floorBox = tb.clone().applyMatrix4(wm)
+                
+                // Floor doesn't need Z-filtering because the proxy is usually just above it, 
+                // but we DO need to make sure we don't cut floor E-track if the proxy is high up on the wall.
+                if (proxyGaps.length > 0) {
+                    const xFactor = worldScaleX * localXDirWorld
+
+                    const filtered = []
+                    for (let i = 0; i < count; i++) {
+                        const px = startX - (i * stepSize)
+                        const worldX = templateWorldPos.x + px * xFactor
+
+                        const extentA = worldX + tb.min.x * xFactor
+                        const extentB = worldX + tb.max.x * xFactor
+                        const instMin = Math.min(extentA, extentB)
+                        const instMax = Math.max(extentA, extentB)
+
+                        let inGap = false
+                        for (const gap of proxyGaps) {
+                            const xOverlap = instMax >= gap.xMin && instMin <= gap.xMax;
+                            const yOverlap = floorBox.max.y >= gap.yMin && floorBox.min.y <= gap.yMax;
+                            const zOverlap = floorBox.max.z >= gap.zMin && floorBox.min.z <= gap.zMax;
+                            
+                            if (xOverlap && yOverlap && zOverlap) {
+                                inGap = true;
+                                break;
+                            }
+                        }
+
+                        if (inGap) continue
+                        filtered.push(px, 0, 0)
+                    }
+
+                    const floorPts = new Float32Array(filtered)
+                    floorGeom = new THREE.BufferGeometry()
+                    floorGeom.setAttribute('position', new THREE.BufferAttribute(floorPts, 3))
+                }
+
+                const floorInstanced = BlenderNodes.instanceOnPoints(floorGeom, floorTemplate)
                 floorInstanced.position.copy(floorTemplate.position)
                 floorInstanced.rotation.copy(floorTemplate.rotation)
                 floorInstanced.scale.copy(floorTemplate.scale)
@@ -1286,9 +1384,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
                         let inGap = false
                         for (const gap of wallProxyGaps) {
-                            if (instMax >= gap.xMin && instMin <= gap.xMax) {
-                                inGap = true
-                                break
+                            const xOverlap = instMax >= gap.xMin && instMin <= gap.xMax;
+                            const yOverlap = wallBox.max.y >= gap.yMin && wallBox.min.y <= gap.yMax;
+                            const zOverlap = wallBox.max.z >= gap.zMin && wallBox.min.z <= gap.zMax;
+                            
+                            if (xOverlap && yOverlap && zOverlap) {
+                                inGap = true;
+                                break;
                             }
                         }
 

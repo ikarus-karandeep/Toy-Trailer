@@ -6,7 +6,7 @@ import { useConfigurator } from '../context/ConfiguratorContext'
 // so the QR payload stays small and the QR code stays scannable.
 const DEFAULTS = {
   width: '7ft', length: '32', interiorHeight: '7ft0',
-  axleAngled: false, axleAtp: true, axleRating: '3500lb-torsion', spreadAxle: true,
+  axleAngled: false, axleAtp: true, axleRating: '3500lb-torsion', spreadAxle: false,
   frontStyle: 'vnose', sideDoorsType: 'flatpanel', wheel: 'aluminumradial',
   rampType: 'barndoors', rearDoor: true, leftSide: true, rightSide: true,
   cabinets: ['vnosebase'], toolBox: 'frontbox',

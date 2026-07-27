@@ -21,8 +21,25 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [axleSuspension, setAxleSuspension] = useState(ic.axleSuspension ?? 'torsion')
   const [axleCapacity, setAxleCapacity] = useState(ic.axleCapacity ?? '7000lb')
   const [interiorHeight, setInteriorHeight] = useState(ic.interiorHeight ?? '7ft0')
-  const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? true)
+  const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? false)
   const [narrowTrackAxle, setNarrowTrackAxle] = useState(ic.narrowTrackAxle ?? false)
+
+  // Automatically select 'torsion' suspension and 'tandem' axle count when spread axle is turned on
+  useEffect(() => {
+    if (spreadAxle) {
+      setAxleSuspension('torsion');
+      setAxleCount('tandem');
+    }
+  }, [spreadAxle])
+
+
+
+  // Automatically turn off spread axle when 'triple' axle count is selected
+  useEffect(() => {
+    if (axleCount === 'triple') {
+      setSpreadAxle(false);
+    }
+  }, [axleCount])
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
   const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)
   // axleRating is DERIVED from axleCount + axleSuspension + axleCapacity
@@ -130,7 +147,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
 
     setTieDownsRaw(pkgConfig.tieDowns ?? ['drings']);
-    setSpreadAxle(pkgConfig.spreadAxle ?? true);
+    setSpreadAxle(pkgConfig.spreadAxle ?? false);
     setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
     setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
     setCabinetsRaw(pkgConfig.cabinets ?? ['vnosebase']);

@@ -138,6 +138,25 @@ export class BlenderNodes {
             resolvedBy = `normalized match ("${proxy.name}")`
         }
 
+        // Fallback: stripped trailing numbers (Three.js GLTFLoader adds _2, _3 etc for duplicate names)
+        if (!proxy) {
+            const strippedTarget = normTarget.replace(/\d+$/, '')
+            if (strippedTarget !== normTarget) {
+                const strippedProxies = []
+                searchRoot.traverse(child => {
+                    if (child === target) return
+                    const normChild = normalize(child.name)
+                    if (normChild.includes('proxy') && normChild.includes(strippedTarget)) {
+                        strippedProxies.push(child)
+                    }
+                })
+                if (strippedProxies.length > 0) {
+                    proxy = strippedProxies.find(p => normalize(p.name).startsWith(strippedTarget)) || strippedProxies[0]
+                    resolvedBy = `stripped target match ("${proxy.name}")`
+                }
+            }
+        }
+
         // Fallback: parent-name-based → "<parentName> proxy"
         if (!proxy && target.parent) {
             const normParent = normalize(target.parent.name)
