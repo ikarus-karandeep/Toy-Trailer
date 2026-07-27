@@ -31,11 +31,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
     driverSideDoor, setDriverSideDoor,
     passengerSideDoor, setPassengerSideDoor,
     escapeDoor, setEscapeDoor,
+    atpRamp, setAtpRamp,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
 
-  const [atpRamp, setAtpRamp] = useState(false)
   const [sideDoorPlacement, setSideDoorPlacement] = useState('passenger')
   
   const currentSideDoor = sideDoorPlacement === 'driver' ? driverSideDoor : passengerSideDoor
@@ -108,6 +108,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               label="ATP / RTP RAMP & FLAP"
               checked={atpRamp}
               onChange={setAtpRamp}
+              disabled={rampType !== 'doublereardoors'}
             />
           </div>
         </OptionSection>

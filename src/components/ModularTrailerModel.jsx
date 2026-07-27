@@ -697,8 +697,35 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Menu Switch → selects the correct mesh from REAR_DOOR_MESH_MAP
         // Rear Door boolean (Group Input) → gates the entire output on/off
         const rearDoorMesh = REAR_DOOR_MESH_MAP[config.rampType] ?? REAR_DOOR_MESH_MAP.barndoors
-        console.log(`[DEBUG RearDoor] rampType: ${config.rampType}, rearDoor: ${config.rearDoor}, rearDoorMesh: ${rearDoorMesh}`);
-        BlenderNodes.switchMesh(rearDoors, config.rearDoor ? rearDoorMesh : null)
+        
+        const activeRearDoorMeshes = []
+        if (config.rearDoor && rearDoorMesh) {
+            activeRearDoorMeshes.push(rearDoorMesh)
+        }
+        
+        // Add ATP Barn Door if atpRamp is true and double rear doors is selected
+        if (config.atpRamp && config.rampType === 'doublereardoors') {
+            activeRearDoorMeshes.push('ATP_Barn_Door')
+        }
+        
+        BlenderNodes.switchMeshes(rearDoors, activeRearDoorMeshes)
+        
+        // Explicitly hide ATP_Barn_Door if atpRamp is false (in case it is a child of the main door mesh)
+        if (!config.atpRamp && rearDoors) {
+            console.log(`[DEBUG ATP] Hiding ATP_Barn_Door. atpRamp is false.`);
+            let hiddenCount = 0;
+            rearDoors.traverse(child => {
+                if (child.name && child.name.toLowerCase().includes('atp_barn_door')) {
+                    child.visible = false
+                    // Also disable proxy if one exists
+                    if (child.userData) child.userData.proxyActive = false
+                    hiddenCount++;
+                }
+            })
+            console.log(`[DEBUG ATP] Hidden ${hiddenCount} ATP_Barn_Door meshes.`);
+        } else if (config.atpRamp && rearDoors && config.rampType === 'doublereardoors') {
+            console.log(`[DEBUG ATP] atpRamp is TRUE. ATP_Barn_Door should be visible.`);
+        }
 
         // ── Base Meshes: Escape Door condition ────────────────────────
         // Mirrors the Blender "Base" node group.
@@ -894,9 +921,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // The E-Track and other tie downs are generated instances in Blender.
         // We select the baked GLB meshes directly (D-Rings / Airline tracking missing in GLB currently)
         // ── DEBUG LOGS FOR DRINGS ──
-        console.log('====== DRING DEBUG ======');
-        console.log('1. Current tieDowns array:', config.tieDowns);
-        console.log('2. Is drings selected in config?', config.tieDowns?.includes('drings'));
+  
         
         const allCargoNames = [];
         cargo.traverse(child => {
@@ -1038,7 +1063,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights,
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
-        config.bathroom, config.awning,
+        config.bathroom, config.awning, config.rampType, config.rearDoor, config.atpRamp,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
         cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning
     ])

@@ -38,8 +38,24 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   useEffect(() => {
     if (axleCount === 'triple') {
       setSpreadAxle(false);
+      setAxleSuspension('dropspring');
+    }
+    // Automatically select 'torsion' suspension when 'tandem' axle count is selected
+    if (axleCount === 'tandem') {
+      setAxleSuspension('torsion');
     }
   }, [axleCount])
+
+  // Automatically turn off spread axle when 'dropspring' suspension is selected,
+  // and turn it on when 'torsion' is selected.
+  useEffect(() => {
+    if (axleSuspension === 'dropspring') {
+      setSpreadAxle(false);
+    } else if (axleSuspension === 'torsion') {
+      setSpreadAxle(true);
+    }
+  }, [axleSuspension])
+
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
   const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)
   // axleRating is DERIVED from axleCount + axleSuspension + axleCapacity
@@ -56,7 +72,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'semiscrewed')
   const [roofBuild, setRoofBuild] = useState(ic.roofBuild ?? 'onepieceroof')
   const [protectionType, setProtectionType] = useState(ic.protectionType ?? 'atp')
-  const [protectionSize, setProtectionSize] = useState(ic.protectionSize ?? '12')
+  const [protectionSize, setProtectionSize] = useState(ic.protectionSize ?? '24')
   const [frontProtection, setFrontProtection] = useState(ic.frontProtection ?? 'polishedcaps')
   const [lugType, setLugType] = useState(ic.lugType ?? '5lug')
   const [tireSize, setTireSize] = useState(ic.tireSize ?? '15')
@@ -76,15 +92,24 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [rightSide, setRightSide] = useState(ic.rightSide ?? true)
 
   // Systems
-  const [electrical, setElectrical] = useState(ic.electrical ?? '110v8space')
+  const [electrical, setElectrical] = useState(ic.electrical ?? 'none')
   const [battery, setBattery] = useState(ic.battery ?? '12vbatterybox')
   const [lights, setLightsRaw] = useState(ic.lights ?? ['dome', 'racing'])
   const [ventilation, setVentilation] = useState(ic.ventilation ?? 'sidewallvents')
-  const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'wirebrace')
+  const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'none')
 
   // Loading
   const [rampType, setRampType] = useState(ic.rampType ?? 'doublereardoors')
   const [atpRamp, setAtpRamp] = useState(ic.atpRamp ?? true)
+
+  useEffect(() => {
+    if (rampType === 'doublereardoors') {
+      setAtpRamp(true);
+    } else {
+      setAtpRamp(false);
+    }
+  }, [rampType])
+
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
   const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])
   const [jacks, setJacksRaw] = useState(ic.jacks ?? ['folddownstabilizer'])
