@@ -367,7 +367,8 @@ export const SINK_PACKAGE_OPTIONS = [
 
 export const BATHROOM_PACKAGE_OPTIONS = [
   { id: 'half', label: 'HALF BATHROOM PACKAGE', price: 4224 },
-  { id: 'full', label: 'FULL BATHROOM PACKAGE', price: 5410 },
+  { id: '34x34', label: '34X34 FULL BATHROOM PACKAGE', price: 5410 },
+  { id: '36x36', label: '36X36 FULL BATHROOM PACKAGE', price: 5410 },
 ];
 
 export const WINCH_OPTIONS = [

@@ -22,16 +22,13 @@ export default function SystemsPanel({ activeSectionTitle }) {
     electrical, setElectrical,
     climateControl, setClimateControl,
     ventilation, setVentilation,
+    receptacles, setReceptacles,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
 
   // Local state for new UI components (until context is fully updated)
   const [panel12Space, setPanel12Space] = useState(false)
-  const [receptacles, setReceptacles] = useState({
-    '110vinterior': 0,
-    '110vgfi': 0,
-  })
   const [offGridPower, setOffGridPower] = useState([])
   
   const [interiorLights, setInteriorLights] = useState({

@@ -24,7 +24,7 @@ const PATHS = {
     cabinets: '/models/Interior/Cabinets & Storage.glb',
     cargo: '/models/Interior/Cargo & Tie-Downs.glb',
     awning: '/models/Packaging/Electric Awning.glb',
-    bathroom: '/models/Packaging/Full Bathroom.glb',
+    bathroom: '/models/Packaging/Bathroom.glb',
     spoiler: '/models/Packaging/Rear Spoiler.glb',
     gullwingDoor: '/models/Packaging/Gullwing Door.glb',
     escapeDoor: '/models/Packaging/Escape Door.glb',
@@ -231,7 +231,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             
             // Fix Blender hierarchy for Addons (AC unit parenting vents)
             if (sceneName === 'addons') {
-                const meshesToUnparent = ['Non-Powered_Roof_Vent', 'AC_Unit', 'Mini_Split_AC', 'Aluminum_Sidewall_Vents']
+                const meshesToUnparent = [
+                    'Non-Powered_Roof_Vent', 
+                    'AC_Unit', 
+                    'Mini_Split_AC', 
+                    'Aluminum_Sidewall_Vents',
+                    '110V_GFI_Receptacle_(20_AMP)',
+                    '110V GFI Receptacle (20 AMP)',
+                    '110V_Interior_Receptacle_(15_AMP)',
+                    '110V Interior Receptacle (15 AMP)'
+                ]
                 meshesToUnparent.forEach(name => {
                     const mesh = scene.getObjectByName(name)
                     if (mesh && mesh.parent && mesh.parent !== scene) {
@@ -902,6 +911,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAddonMeshes.push('Interior_Tire_Mount')
         }
 
+        // Receptacles
+        if (config.receptacles) {
+            if (config.receptacles['110vgfi'] > 0) {
+                activeAddonMeshes.push('110V_GFI_Receptacle_(20_AMP)')
+                activeAddonMeshes.push('110V GFI Receptacle (20 AMP)')
+            }
+            if (config.receptacles['110vinterior'] > 0) {
+                activeAddonMeshes.push('110V_Interior_Receptacle_(15_AMP)')
+                activeAddonMeshes.push('110V Interior Receptacle (15 AMP)')
+            }
+        }
+
         if (addons) {
             const vent = addons.getObjectByName('Non-Powered Roof Vent')
             if (vent) {
@@ -956,8 +977,27 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             && config.frontStyle !== 'flatfront'
             && !hasCabinet
 
-        const activeBathroomMeshes = ['Bathroom']
-        if (showSink) activeBathroomMeshes.push('Sink_Area')
+        const activeBathroomMeshes = []
+        let targetSubstring = '';
+        if (config.bathroom === 'half') targetSubstring = 'half';
+        else if (config.bathroom === '34x34') targetSubstring = '34x34';
+        else if (config.bathroom === '36x36') targetSubstring = '36x36';
+        else if (config.bathroom === 'full') targetSubstring = '34x34'; // legacy fallback
+
+        if (bathroom && targetSubstring) {
+            bathroom.traverse(child => {
+                if (child.isMesh && child.name.toLowerCase().includes(targetSubstring)) {
+                    activeBathroomMeshes.push(child.name);
+                }
+            });
+        }
+        
+        if (activeBathroomMeshes.length === 0 && config.bathroom && config.bathroom !== 'none') {
+            activeBathroomMeshes.push('Bathroom'); // Last resort fallback
+        }
+
+        if (showSink) activeBathroomMeshes.push('Sink_Area', 'Sink Area')
+        
         BlenderNodes.switchMeshes(bathroom, activeBathroomMeshes)
 
         // ── Cargo & Tie-Downs: Node Graph ──────────────────────────────────────
@@ -999,8 +1039,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const tireSizeStr = config.tireSize || '15';
         const lugStr = (config.lugType || '5lug').replace('lug', '');
         
-        // Target normalized name: e.g. "162standardwheels5lug"
-        const targetWheelNorm = `${tireSizeStr}${axleCountStr}standardwheels${lugStr}lug`;
+        let wheelStyleName = 'standardwheels';
+        if (config.wheelType === 'spideraluminum') {
+            wheelStyleName = 'spiderwheels';
+        }
+        
+        // Target normalized name: e.g. "162standardwheels5lug" or "162spiderwheels5lug"
+        const targetWheelNorm = `${tireSizeStr}${axleCountStr}${wheelStyleName}${lugStr}lug`;
         
         const activeWheelMeshes = [];
         wheels.traverse(child => {
@@ -1097,14 +1142,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         setVisibilityVersion(v => v + 1)
     }, [
         config.width, config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
-        config.wheel, config.axleCount, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
+        config.wheelType, config.axleCount, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
         config.tireSize, config.lugType,
         config.cabinets, config.toolBox,
         config.driverSideDoor, config.passengerSideDoor,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
         config.escapeDoor, config.generatorBox, config.winchSystem, config.tieDowns,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
-        config.climateControl, config.jacks, config.lights,
+        config.climateControl, config.jacks, config.lights, config.ventilation, config.receptacles,
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
         config.bathroom, config.awning, config.rampType, config.rearDoor, config.atpRamp,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,

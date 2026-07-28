@@ -2,13 +2,13 @@
   "Door_Top_Light": {
     "0": {
       "material_name": "New plate",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     },
@@ -28,10 +28,10 @@
   "Base": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -45,7 +45,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -56,10 +56,10 @@
   "Iron_Base_Bar": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -70,9 +70,9 @@
   "Parts_For_All_Interior": {
     "0": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -84,10 +84,10 @@
   "Roof": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -110,9 +110,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -127,7 +127,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -136,10 +136,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -148,13 +148,13 @@
     },
     "2": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -172,13 +172,13 @@
     },
     "4": {
       "material_name": "New plate",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     }
@@ -189,7 +189,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -198,10 +198,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -210,13 +210,13 @@
     },
     "2": {
       "material_name": "New plate",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     },
@@ -251,7 +251,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -260,10 +260,10 @@
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -275,7 +275,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -284,13 +284,13 @@
     },
     "4": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -311,8 +311,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -323,8 +323,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -335,8 +335,8 @@
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -349,7 +349,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -358,10 +358,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -373,7 +373,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -382,9 +382,9 @@
     },
     "3": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -394,13 +394,13 @@
     },
     "4": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -421,8 +421,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -433,8 +433,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -445,8 +445,8 @@
       "base_color": "#D8DAE2",
       "roughness": 0.09,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -459,8 +459,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -468,22 +468,22 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -495,7 +495,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -507,7 +507,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -516,9 +516,9 @@
     },
     "5": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -543,8 +543,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -555,8 +555,8 @@
       "base_color": "#D8DAE2",
       "roughness": 0.09,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -564,10 +564,10 @@
     },
     "9": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -605,7 +605,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -614,10 +614,10 @@
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -629,7 +629,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -638,13 +638,13 @@
     },
     "4": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -665,8 +665,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -677,8 +677,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -689,8 +689,8 @@
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -715,7 +715,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -724,10 +724,10 @@
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -739,7 +739,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -748,13 +748,13 @@
     },
     "4": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -775,8 +775,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -787,8 +787,8 @@
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -799,8 +799,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -810,10 +810,10 @@
   "Extended Triple Tongue Flat Front": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -836,10 +836,10 @@
   "Extended Triple Tongue V-Nose": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -862,10 +862,10 @@
   "Extended Triple Tongue(Extended V-Nose)": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -891,7 +891,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -912,9 +912,9 @@
     },
     "2": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -929,7 +929,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -950,9 +950,9 @@
     },
     "2": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -967,7 +967,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -976,10 +976,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -988,13 +988,13 @@
     },
     "2": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -1012,9 +1012,9 @@
     },
     "4": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1029,7 +1029,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1038,22 +1038,22 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1074,9 +1074,9 @@
     },
     "4": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1093,7 +1093,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1102,13 +1102,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -1126,10 +1126,10 @@
     },
     "3": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1143,7 +1143,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1152,13 +1152,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -1176,10 +1176,10 @@
     },
     "3": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1193,7 +1193,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1202,13 +1202,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -1226,10 +1226,10 @@
     },
     "3": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1243,7 +1243,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1252,13 +1252,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -1276,10 +1276,10 @@
     },
     "3": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1295,7 +1295,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1304,10 +1304,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1328,13 +1328,13 @@
     },
     "3": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     }
@@ -1347,7 +1347,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1356,10 +1356,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1380,13 +1380,13 @@
     },
     "3": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     }
@@ -1397,7 +1397,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1411,7 +1411,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1425,7 +1425,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1439,7 +1439,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1453,7 +1453,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1467,7 +1467,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1481,7 +1481,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1495,7 +1495,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1509,7 +1509,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1523,7 +1523,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1537,7 +1537,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1548,9 +1548,9 @@
   "Barn Door": {
     "0": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1563,7 +1563,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1572,10 +1572,10 @@
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1584,13 +1584,13 @@
     },
     "3": {
       "material_name": "New plate",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     },
@@ -1622,10 +1622,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1634,21 +1634,21 @@
     },
     "2": {
       "material_name": "New plate",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     },
     "3": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1661,7 +1661,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1719,10 +1719,10 @@
     },
     "1": {
       "material_name": "Roof.005",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1731,21 +1731,21 @@
     },
     "2": {
       "material_name": "New plate.001",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     },
     "3": {
       "material_name": "Chrome.002",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1758,7 +1758,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1793,7 +1793,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1804,10 +1804,10 @@
   "16-3 Standard Wheels 8-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1830,10 +1830,10 @@
   "16-3 Standard Wheels 5-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1856,10 +1856,10 @@
   "16-2 Standard Wheels 8-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1882,10 +1882,10 @@
   "16-2 Standard Wheels 5-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1908,10 +1908,10 @@
   "16-2 Standard Wheels 6-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1934,10 +1934,10 @@
   "16-3 Standard Wheels 6-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1960,10 +1960,10 @@
   "15-3 Standard Wheels 8-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1986,10 +1986,10 @@
   "15-3 Standard Wheels 6-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2012,10 +2012,10 @@
   "15-3 Standard Wheels 5-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2038,10 +2038,10 @@
   "15-2 Standard Wheels 8-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2064,10 +2064,10 @@
   "15-2 Standard Wheels 6-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2090,10 +2090,322 @@
   "15-2 Standard Wheels 5-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-2 Spider Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-2 Spider Wheels 6-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-2 Spider Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-3 Spider Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-3 Spider Wheels 6-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16-3 Spider Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-3 Spider Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-3 Spider Wheels 6-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-3 Spider Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-2 Spider Wheels 8-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-2 Spider Wheels 6-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15-2 Spider Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Tyre_Rubber__Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2119,7 +2431,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2128,13 +2440,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -2143,7 +2455,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2157,7 +2469,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2166,13 +2478,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -2181,7 +2493,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2195,7 +2507,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2204,13 +2516,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -2219,7 +2531,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2233,7 +2545,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2242,13 +2554,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -2257,7 +2569,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2271,7 +2583,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2282,13 +2594,13 @@
   "Side Panel Bottom Strip": {
     "0": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     }
@@ -2299,7 +2611,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2313,7 +2625,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2327,7 +2639,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2341,7 +2653,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2355,7 +2667,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2367,7 +2679,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2376,13 +2688,13 @@
     },
     "2": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     }
@@ -2393,7 +2705,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2405,7 +2717,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2414,13 +2726,13 @@
     },
     "2": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     }
@@ -2431,7 +2743,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2445,7 +2757,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2456,10 +2768,10 @@
   "2X 3500 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2468,9 +2780,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2482,10 +2794,10 @@
   "2X 3500 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2494,9 +2806,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2508,10 +2820,10 @@
   "2X 6000 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2520,9 +2832,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2534,10 +2846,10 @@
   "2X 6000 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2546,9 +2858,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2560,10 +2872,10 @@
   "2X 7000 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2572,9 +2884,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2586,10 +2898,10 @@
   "2x 7000 lb Drop Spring": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2598,9 +2910,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2612,10 +2924,10 @@
   "3X 3500 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2624,9 +2936,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2638,10 +2950,10 @@
   "3X 3500 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2650,9 +2962,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2664,10 +2976,10 @@
   "3X 6000 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2676,9 +2988,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2690,10 +3002,10 @@
   "3X 6000 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2702,9 +3014,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2716,10 +3028,10 @@
   "3X 7000 lb Torsion": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2728,9 +3040,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2742,10 +3054,10 @@
   "3x 7000 lb Drop Spring": {
     "0": {
       "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2754,9 +3066,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2864,9 +3176,9 @@
     },
     "1": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2876,9 +3188,9 @@
     },
     "2": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2888,9 +3200,9 @@
     },
     "3": {
       "material_name": "Red_Chrome",
-      "base_color": "//..\\Textures\\Red_Base_color.jpg",
-      "roughness": "//..\\Textures\\Red_Roughness.jpg",
-      "metalness": "//..\\Textures\\Red_Metallic.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Red_Base_color.jpg",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Red_Roughness.jpg",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Red_Metallic.jpg",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2900,7 +3212,7 @@
     },
     "4": {
       "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_ROUGH_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
@@ -2926,9 +3238,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2952,9 +3264,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2978,9 +3290,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3004,9 +3316,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3016,7 +3328,7 @@
     },
     "2": {
       "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_ROUGH_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
@@ -3042,9 +3354,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3068,9 +3380,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3080,7 +3392,7 @@
     },
     "2": {
       "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_ROUGH_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
@@ -3108,10 +3420,10 @@
   "Rear Spoiler Wing": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3123,7 +3435,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3132,13 +3444,13 @@
     },
     "2": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -3156,13 +3468,13 @@
     },
     "4": {
       "material_name": "New plate",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     }
@@ -3170,10 +3482,10 @@
   "Rear Spoiler Wing w/ Angled Lights": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3185,7 +3497,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3194,13 +3506,13 @@
     },
     "2": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -3218,13 +3530,13 @@
     },
     "4": {
       "material_name": "New plate",
-      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
     },
@@ -3385,7 +3697,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3400,7 +3712,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3414,7 +3726,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3428,7 +3740,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3437,10 +3749,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3454,7 +3766,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3463,10 +3775,10 @@
     },
     "1": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3480,7 +3792,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3489,13 +3801,13 @@
     },
     "1": {
       "material_name": "Reflective_Stripes.003",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -3513,10 +3825,10 @@
     },
     "3": {
       "material_name": "Roof.006",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3556,7 +3868,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3591,9 +3903,9 @@
     },
     "1": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3603,10 +3915,10 @@
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3615,7 +3927,7 @@
     },
     "3": {
       "material_name": "Trailer_Lights",
-      "base_color": "//..\\Textures\\Trailer_Lights_BaseColor.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Lights_BaseColor.jpg",
       "roughness": 0.3746,
       "metalness": 0.0,
       "normal": false,
@@ -3685,9 +3997,9 @@
   "Radio Package Speaker": {
     "0": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3755,9 +4067,9 @@
   "Aluminum Sidewall Vents": {
     "0": {
       "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3798,7 +4110,7 @@
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3807,10 +4119,10 @@
     },
     "2": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3822,7 +4134,7 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3831,13 +4143,13 @@
     },
     "4": {
       "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "color": "Y:\\Tupperware\\Texturing\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
     },
@@ -3858,8 +4170,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -3870,8 +4182,8 @@
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -3882,8 +4194,8 @@
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
       "metalness": 1.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -3976,8 +4288,8 @@
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
+      "alpha": "Y:\\Tupperware\\Texturing\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -3987,10 +4299,10 @@
   "Stair (Flat Front)": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -4001,10 +4313,10 @@
   "Stair (V-Nose)": {
     "0": {
       "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Roof_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Metallic.png",
+      "normal": "Y:\\Tupperware\\Texturing\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -4071,9 +4383,9 @@
   "Flat Panel Light": {
     "0": {
       "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "base_color": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_BaseColor.png",
+      "roughness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Roughness.png",
+      "metalness": "Y:\\Tupperware\\Texturing\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {

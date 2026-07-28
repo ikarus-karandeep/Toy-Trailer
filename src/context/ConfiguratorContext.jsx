@@ -97,6 +97,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [lights, setLightsRaw] = useState(ic.lights ?? ['dome', 'racing'])
   const [ventilation, setVentilation] = useState(ic.ventilation ?? 'sidewallvents')
   const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'none')
+  const [receptacles, setReceptacles] = useState(ic.receptacles ?? { '110vinterior': 0, '110vgfi': 0 })
 
   // Loading
   const [rampType, setRampType] = useState(ic.rampType ?? 'doublereardoors')
@@ -229,6 +230,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     lights, setLightsRaw, toggleLight,
     ventilation, setVentilation,
     climateControl, setClimateControl,
+    receptacles, setReceptacles,
     rampType, setRampType,
     atpRamp, setAtpRamp,
     rearDoor, setRearDoor,
@@ -260,7 +262,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
-    electrical, battery, lights, ventilation, climateControl,
+    electrical, battery, lights, ventilation, climateControl, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, jacks,
     waterPackage, bathroom, awning,
     angledLights, stairs, vNoseETrack, batteryBox,
