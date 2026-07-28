@@ -144,11 +144,27 @@ const REAR_DOOR_MESH_MAP = {
 const FRONT_STYLE_ADDON_MESH_MAP = {
     vnose: {
         stairs: 'Stair_(V-Nose)',
-        battery: 'Battery_storage_(V-Nose_Cabinet)',
+        battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+    },
+    vnose24: {
+        stairs: 'Stair_(V-Nose)',
+        battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
     },
     flatfront: {
         stairs: 'Stair_(Flat_Front)',
-        battery: 'Battery_storage_(Flat_Cabinet)',
+        battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+    },
+    slantvnose: {
+        stairs: 'Stair_(V-Nose)',
+        battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+    },
+    extendedvnose: {
+        stairs: 'Stair_(V-Nose)',
+        battery: 'ATP_Battery_Box(Extended_V-Nose)',
+    },
+    gooseneck: {
+        stairs: 'Stair_(V-Nose)',
+        battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
     },
 }
 
@@ -893,7 +909,26 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // Battery Box: Super Switch (V-Nose vs Flat Front cabinet variant)
         if (config.batteryBox) {
-            activeAddonMeshes.push(frontStyleAddon.battery)
+            const batMesh = frontStyleAddon.battery
+            console.log('[DEBUG BATTERY] config.batteryBox is ON. Front style:', config.frontStyle);
+            console.log('[DEBUG BATTERY] Mapped batMesh name:', batMesh);
+            if (batMesh) {
+                const name1 = batMesh;
+                const name2 = batMesh.replace(/_/g, ' ');
+                const name3 = batMesh.replace(/ /g, '_');
+                console.log('[DEBUG BATTERY] Pushing names to activeAddonMeshes:', name1, name2, name3);
+                activeAddonMeshes.push(name1)
+                activeAddonMeshes.push(name2)
+                activeAddonMeshes.push(name3)
+            }
+            // Dump all battery related meshes in addons to see exact strings
+            const allBatteryMeshes = []
+            addons.traverse(c => {
+                if (c.isMesh && c.name.toLowerCase().includes('battery')) {
+                    allBatteryMeshes.push(c.name)
+                }
+            })
+            console.log('[DEBUG BATTERY] All battery meshes in addons.glb:', allBatteryMeshes)
         }
 
         // V-Nose E Track: Super Toggle — only relevant when frontStyle is vnose
@@ -1290,8 +1325,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Base structural skirt — always visible regardless of ATP or angle
         activeAxleMeshes.push('Side_Panel_Bottom_Strip')
 
+        const hideStandardAxleTrim = config.escapeDoor === 'gullwing';
+
         // Cover panel — always shown, angled or flat based on toggle, unless spread axle is on
-        if (!config.spreadAxle) {
+        if (!config.spreadAxle && !hideStandardAxleTrim) {
             activeAxleMeshes.push(`${prefix}Axle_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
         }
 
@@ -1302,16 +1339,20 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAxleMeshes.push(`Side Panel ATP ${atpSize}in`)
             activeAxleMeshes.push(`Side_Panel_ATP_${atpSize}in`)
             // ATP directional trim — follows same angled/flat toggle
-            if (config.spreadAxle) {
-                const sideName = config.axleAngled ? 'Angled' : 'Flat'
-                activeAxleMeshes.push(`ATP_Corvette_Fender_${sideName}_Side_${atpSize}in`)
-                activeAxleMeshes.push(`ATP Corvette Fender ${sideName} Side ${atpSize}in`)
-            } else {
-                activeAxleMeshes.push(`${prefix}ATP_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+            if (!hideStandardAxleTrim) {
+                if (config.spreadAxle) {
+                    const sideName = config.axleAngled ? 'Angled' : 'Flat'
+                    activeAxleMeshes.push(`ATP_Corvette_Fender_${sideName}_Side_${atpSize}in`)
+                    activeAxleMeshes.push(`ATP Corvette Fender ${sideName} Side ${atpSize}in`)
+                } else {
+                    const sideName = config.axleAngled ? 'Angled' : 'Flat'
+                    activeAxleMeshes.push(`${prefix}ATP_${sideName}_Side_${atpSize}in`)
+                    activeAxleMeshes.push(`${prefix}ATP ${sideName} Side ${atpSize}in`)
+                }
             }
         }
 
-        if (config.spreadAxle) {
+        if (config.spreadAxle && !hideStandardAxleTrim) {
             const sideName = config.axleAngled ? 'Angled' : 'Flat'
             activeAxleMeshes.push(`Corvette_Fender_${sideName}_Side`)
             activeAxleMeshes.push(`Corvette Fender ${sideName} Side`)

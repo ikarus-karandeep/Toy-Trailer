@@ -3282,6 +3282,34 @@
       }
     }
   },
+  "ATP Corvette Fender Flat Side 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Corvette Fender Angled Side 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "2X 3500 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
@@ -4715,6 +4743,34 @@
       }
     }
   },
+  "ATP Corvette Fender Flat Side GED 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Corvette Fender Angled Side GED 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "ATP For 2X Axle Angled Side For GED 12in": {
     "0": {
       "material_name": "Metallic Grates",
@@ -4758,6 +4814,34 @@
     }
   },
   "ATP For 3X Axle Flat Side For GED 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Corvette Fender Flat Side GED  12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Corvette Fender Angled Side GED 12in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -5162,44 +5246,6 @@
   },
   "Concession Door R Proxy": {},
   "Concession Door L Proxy": {},
-  "Generator Box": {
-    "0": {
-      "material_name": "Steel_Painted",
-      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
-      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "Top Supports": {
     "0": {
       "material_name": "Steel_Painted",
@@ -5752,85 +5798,13 @@
       }
     }
   },
-  "Battery storage (Flat Cabinet)": {
+  "ATP Battery Box(Flat Front, V-Nose, Slant V-Nose)": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Grainy_Plastic",
-      "base_color": "//..\\Textures\\Grainy_Plastic_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Grainy_Plastic_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Grainy_Plastic_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "Wire_Covers",
-      "base_color": "//..\\Textures\\Wire_Covers_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Wire_Covers_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "5": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "6": {
-      "material_name": "Fabric_Strap",
-      "base_color": "//..\\Textures\\Fabric Strap_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Fabric Strap_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Fabric Strap_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5838,85 +5812,13 @@
       }
     }
   },
-  "Battery storage (V-Nose Cabinet)": {
+  "ATP Battery Box(Extended V-Nose)": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Grainy_Plastic",
-      "base_color": "//..\\Textures\\Grainy_Plastic_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Grainy_Plastic_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Grainy_Plastic_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Fabric_Strap",
-      "base_color": "//..\\Textures\\Fabric Strap_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Fabric Strap_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Fabric Strap_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "5": {
-      "material_name": "Wire_Covers",
-      "base_color": "//..\\Textures\\Wire_Covers_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Wire_Covers_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "6": {
-      "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6117,6 +6019,59 @@
     }
   },
   "5K Scissor Jacks w/ Handle(Pair)": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Standard Generator Box": {
+    "0": {
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Standard Generator Box Proxy": {},
+  "L Shape Counter Hidden Generator Box": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",

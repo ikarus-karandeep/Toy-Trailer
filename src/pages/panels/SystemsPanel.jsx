@@ -77,7 +77,34 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={opt.price}
                   isSelected={electrical === opt.id}
-                  onClick={() => setElectrical(opt.id)}
+                  onClick={() => {
+                    const prevElectrical = electrical;
+                    setElectrical(opt.id);
+                    
+                    if (opt.id === '30amp' || opt.id === '50amp') {
+                      if (prevElectrical !== '30amp' && prevElectrical !== '50amp') {
+                        setReceptacles(prev => ({ 
+                          ...prev, 
+                          '110vinterior': (prev['110vinterior'] || 0) + 2 
+                        }));
+                        setInteriorLights(prev => ({ 
+                          ...prev, 
+                          '12vflatpanel': (prev['12vflatpanel'] || 0) + 1 
+                        }));
+                      }
+                    } else if (opt.id === 'none') {
+                      if (prevElectrical === '30amp' || prevElectrical === '50amp') {
+                        setReceptacles(prev => ({ 
+                          ...prev, 
+                          '110vinterior': Math.max((prev['110vinterior'] || 0) - 2, 0) 
+                        }));
+                        setInteriorLights(prev => ({ 
+                          ...prev, 
+                          '12vflatpanel': Math.max((prev['12vflatpanel'] || 0) - 1, 0) 
+                        }));
+                      }
+                    }
+                  }}
                   includedItems={includedItems}
                   packageBadge={getBadge(opt.id)}
                 />

@@ -24,6 +24,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     radioPackageSpeaker, setRadioPackageSpeaker,
     awning, setAwningRaw,
     sinkPackage, setSinkPackage,
+    batteryBox, setBatteryBox,
     length
   } = useConfigurator()
 
@@ -42,7 +43,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   const [genSlides, setGenSlides] = useState(false)
   const [genDoor, setGenDoor] = useState(false)
   
-  const [batteryBoxTongue, setBatteryBoxTongue] = useState(false)
   const [lShapeCounter, setLShapeCounter] = useState(false)
 
   useEffect(() => {
@@ -359,8 +359,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Requires extended TTT</p>
           <ToggleSwitch
             label="Battery box on tongue"
-            checked={batteryBoxTongue}
-            onChange={setBatteryBoxTongue}
+            checked={batteryBox}
+            onChange={setBatteryBox}
           />
         </OptionSection>
       )}
