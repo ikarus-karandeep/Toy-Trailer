@@ -962,6 +962,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 // 1. Main door meshes (could be split by material, e.g. _2, _3)
                 if (name.startsWith('Gullwing_Escape_Door') && !name.toLowerCase().includes('proxy')) {
                     activeGullwingMeshes.push(name);
+                } else if (name.toLowerCase().includes('proxy')) {
+                    // Always include the proxy so that BlenderNodes.switchMeshes will 
+                    // process it and set child.userData.proxyActive = true
+                    activeGullwingMeshes.push(name);
+                    // console.log('[DEBUG GULLWING PROXY] Pushed proxy to active list:', name);
                 }
                 
                 // 2. Side Panel (handles suffixes like _1, _2)
@@ -1220,9 +1225,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // 6. Floor to Ceiling Cabinet
         const hasFullHeight = config.cabinets?.includes('fullheight');
-        if (hasFullHeight) {
+        const hasBathroom = config.bathroom && config.bathroom !== 'none';
+        
+        // Hide Floor to Ceiling Cabinet if bathroom is present
+        if (hasFullHeight && !hasBathroom) {
             activeCabinetMeshes.push('Floor_to_Ceiling_Cabinet');
         }
+        
+        const allCabinetNames = [];
+        cabinetsGLB.traverse(c => { if (c.isMesh) allCabinetNames.push(c.name) });
+        console.log('[DEBUG CABINETS] All cabinet meshes in GLB:', allCabinetNames);
+        console.log('[DEBUG CABINETS] activeCabinetMeshes:', activeCabinetMeshes);
 
         BlenderNodes.switchMeshes(cabinetsGLB, activeCabinetMeshes)
 

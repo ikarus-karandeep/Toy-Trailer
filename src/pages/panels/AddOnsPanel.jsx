@@ -304,15 +304,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
-      {show('BUILT - IN TOOL CABINET') && (
-        <OptionSection title="BUILT - IN TOOL CABINET">
-          <ToggleSwitch
-            label="INCLUDE TOOL CABINET"
-            checked={toolBox === 'frontbox'}
-            onChange={(val) => setToolBox(val ? 'frontbox' : 'none')}
-          />
-        </OptionSection>
-      )}
+      
 
       {show('TONGUE MOUNTED GENERATOR BOX') && (
         <OptionSection title="TONGUE MOUNTED GENERATOR BOX">

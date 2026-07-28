@@ -179,6 +179,21 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [passengerSideDoor, escapeDoor, concessionDoor, length, cabinets, setCabinetsRaw]);
 
+  // Windows & Doors conflict resolution
+  useEffect(() => {
+    if (concessionDoor === 'driver' && escapeDoor !== 'none') {
+      setEscapeDoor('none');
+    }
+    if (escapeDoor !== 'none' && concessionDoor === 'driver') {
+      setConcessionDoor('none');
+    }
+    if (concessionDoor === 'passenger') {
+      if (windows.vertical > 0 || windows.horizontal > 0 || windows.egress > 0) {
+        setWindows({ vertical: 0, horizontal: 0, egress: 0 });
+      }
+    }
+  }, [concessionDoor, escapeDoor, windows, setEscapeDoor, setConcessionDoor, setWindows]);
+
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = useCallback((tab) => setVisitedTabs(prev => new Set([...prev, tab])), [])
   const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
