@@ -368,14 +368,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
         ]
 
         allScenes.forEach(applyUvScalingForScene)
     }, [
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
     ])
     // Hide ground/shadow catcher plane when HDR is active to prevent z-fighting
     useEffect(() => {
@@ -421,7 +421,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
         ]
         allScenes.forEach((scene, sceneIdx) => {
             scene.traverse(child => {
@@ -473,7 +473,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.selectedColor, shellTextures, simpleNoise,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
     ])
 
     // ── Apply Metallic Grates normal map ─────────────────────────────────────
@@ -518,7 +518,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
         ]
 
         // Apply to meshes whose material name normalises to 'metallicgrates' or 'metallicgratesuvscale'
@@ -545,7 +545,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         normalMap,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
     ])
 
     // ── Apply Metallic Guard to MAT_WheelCover (ATP on) or MAT_Shell look (ATP off) ──
@@ -555,7 +555,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-            escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
         ]
 
         allScenes.forEach(scene => {
@@ -606,7 +606,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.axleAtp, config.selectedColor, shellTextures, simpleNoise, normalMap,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
+        escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
     ])
 
     // ── Apply Rim material to MAT_Rim based on wheel selection ───────────────
@@ -655,7 +655,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-            escapeDoorScene, concessionDoorScene, axleConfig, axle, wheels, addons, cargo,
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
         ]
         allScenes.forEach(scene => {
             const isGooseneckScene = (scene === frontStyle) && config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck');
@@ -716,7 +716,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.frontStyle, staticTextures,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, concessionDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
+        escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
     ])
 
     // Compute global bounds from base scenes
@@ -911,8 +911,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             ?? FRONT_STYLE_ADDON_MESH_MAP.vnose
 
         // Stairs: Super Switch (V-Nose Stair vs Flat Front Stair) gated by stairs boolean
+        // Hidden for gooseneck and extended v-nose (no compatible stair variant)
         const isGooseneckStairs = config.width === '8.5ftgn' || (config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck'));
-        if (config.stairs && !isGooseneckStairs) {
+        const isExtendedVNose = config.frontStyle === 'extendedvnose';
+        if (config.stairs && !isGooseneckStairs && !isExtendedVNose) {
             activeAddonMeshes.push(frontStyleAddon.stairs)
         }
 
