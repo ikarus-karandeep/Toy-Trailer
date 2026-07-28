@@ -923,6 +923,37 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAddonMeshes.push('Racing_Lights')
         }
 
+        // ── Interior Lighting (LIGHTS section) ──────────────────────────────
+        // Debug: dump all mesh names in addons GLB so we can verify exact names
+        const allAddonMeshNames = []
+        addons.traverse(c => { if (c.isMesh) allAddonMeshNames.push(c.name) })
+        const lightRelatedMeshes = allAddonMeshNames.filter(n => 
+            /dome|panel|rope|light/i.test(n)
+        )
+        console.log('[DEBUG LIGHTS] All mesh names in Addons.glb:', allAddonMeshNames)
+        console.log('[DEBUG LIGHTS] Light-related meshes:', lightRelatedMeshes)
+        console.log('[DEBUG LIGHTS] config.interiorLights:', config.interiorLights)
+        console.log('[DEBUG LIGHTS] config.ledRope:', config.ledRope)
+
+        // 12V LED Dome Light
+        if (config.interiorLights?.['12vleddome'] > 0) {
+            activeAddonMeshes.push('Dome_Light')
+            activeAddonMeshes.push('Dome Light')
+            console.log('[DEBUG LIGHTS] Adding Dome Light to activeAddonMeshes')
+        }
+        // 12V 24" Flat Panel LED
+        if (config.interiorLights?.['12vflatpanel'] > 0) {
+            activeAddonMeshes.push('Flat_Panel_Light')
+            activeAddonMeshes.push('Flat Panel Light')
+            console.log('[DEBUG LIGHTS] Adding Flat Panel Light to activeAddonMeshes')
+        }
+        // LED Rope Lighting
+        if (config.ledRope) {
+            activeAddonMeshes.push('LED_Rope_Light')
+            activeAddonMeshes.push('LED Rope Light')
+            console.log('[DEBUG LIGHTS] Adding LED Rope Light to activeAddonMeshes')
+        }
+
         // Ladder Racks: instanced via useMemo (Top_Supports mesh is the template, never shown directly)
 
         console.log(`[DEBUG Ventilation] Current config.ventilation:`, config.ventilation)
@@ -1224,6 +1255,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
         config.bathroom, config.awning, config.rampType, config.rearDoor, config.atpRamp, config.sinkPackage,
         config.protectionSize,
+        config.interiorLights, config.ledRope,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
         cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning, sinkScene
     ])

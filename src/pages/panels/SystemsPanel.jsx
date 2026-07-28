@@ -23,6 +23,8 @@ export default function SystemsPanel({ activeSectionTitle }) {
     climateControl, setClimateControl,
     ventilation, setVentilation,
     receptacles, setReceptacles,
+    interiorLights, setInteriorLights,
+    ledRope, setLedRope,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -31,12 +33,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
   const [panel12Space, setPanel12Space] = useState(false)
   const [offGridPower, setOffGridPower] = useState([])
   
-  const [interiorLights, setInteriorLights] = useState({
-    '12vleddome': 0,
-    '12vflatpanel': 0,
-  })
   const [exteriorLights, setExteriorLights] = useState([])
-  const [ledRope, setLedRope] = useState(false)
   
 
   const [acPrep, setAcPrep] = useState(false)

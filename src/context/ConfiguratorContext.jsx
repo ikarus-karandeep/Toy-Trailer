@@ -95,6 +95,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [electrical, setElectrical] = useState(ic.electrical ?? 'none')
   const [battery, setBattery] = useState(ic.battery ?? '12vbatterybox')
   const [lights, setLightsRaw] = useState(ic.lights ?? ['dome', 'racing'])
+  const [interiorLights, setInteriorLights] = useState(ic.interiorLights ?? { '12vleddome': 0, '12vflatpanel': 0 })
+  const [ledRope, setLedRope] = useState(ic.ledRope ?? false)
   const [ventilation, setVentilation] = useState(ic.ventilation ?? 'sidewallvents')
   const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'none')
   const [receptacles, setReceptacles] = useState(ic.receptacles ?? { '110vinterior': 0, '110vgfi': 0 })
@@ -229,6 +231,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     electrical, setElectrical,
     battery, setBattery,
     lights, setLightsRaw, toggleLight,
+    interiorLights, setInteriorLights,
+    ledRope, setLedRope,
     ventilation, setVentilation,
     climateControl, setClimateControl,
     receptacles, setReceptacles,
@@ -264,7 +268,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
-    electrical, battery, lights, ventilation, climateControl, receptacles,
+    electrical, battery, lights, interiorLights, ledRope, ventilation, climateControl, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,

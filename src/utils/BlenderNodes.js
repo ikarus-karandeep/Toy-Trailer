@@ -250,7 +250,7 @@ export class BlenderNodes {
                 console.warn(`[BlenderNodes] switchMeshes → "${name}" NOT FOUND in scene`)
             }
         }
-        // console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length}`)
+        console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length} | list: [${targetNames.join(', ')}]`)
         return matched
     }
 
