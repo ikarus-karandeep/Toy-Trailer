@@ -782,7 +782,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     
                     const nameLower = child.name.toLowerCase()
                     if (nameLower.includes('barn_door') || nameLower.includes('gullwing') || nameLower.includes('ramp')) {
-                        next = patchTriplanarMaterial(next, 10)
+                        next = patchTriplanarMaterial(next, 2)
                     } else {
                         if (next.map) {
                             next.map.repeat.set(2,2)
