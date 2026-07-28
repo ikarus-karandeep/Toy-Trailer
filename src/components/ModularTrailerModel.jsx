@@ -679,14 +679,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
-                    // Specific scale adjustments for floor materials if needed
-                    if (next.map) {
-                        next.map.repeat.set(20, 20)
-                        if (floorMatName === 'coininteriorflooring') next.map.repeat.set(50, 50)
-                    }
-                    if (next.normalMap) {
-                        next.normalMap.repeat.set(20, 20)
-                        if (floorMatName === 'coininteriorflooring') next.normalMap.repeat.set(50, 50)
+                    const nameLower = child.name.toLowerCase()
+                    if (nameLower.includes('barn_door') || nameLower.includes('gullwing') || nameLower.includes('ramp')) {
+                        next = patchTriplanarMaterial(next, 10)
+                    } else {
+                        // Specific scale adjustments for floor materials if needed
+                        if (next.map) {
+                            next.map.repeat.set(5,5)
+                            if (floorMatName === 'coininteriorflooring') next.map.repeat.set(50, 50)
+                        }
+                        if (next.normalMap) {
+                            next.normalMap.repeat.set(5,5)
+                            if (floorMatName === 'coininteriorflooring') next.normalMap.repeat.set(50, 50)
+                        }
                     }
                     
                     next.needsUpdate = true
@@ -726,11 +731,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
-                    if (next.map) {
-                        next.map.repeat.set(20, 20)
-                    }
-                    if (next.normalMap) {
-                        next.normalMap.repeat.set(20, 20)
+                    const nameLower = child.name.toLowerCase()
+                    if (nameLower.includes('barn_door') || nameLower.includes('gullwing') || nameLower.includes('ramp')) {
+                        next = patchTriplanarMaterial(next, 10)
+                    } else {
+                        if (next.map) {
+                            next.map.repeat.set(5,5)
+                        }
+                        if (next.normalMap) {
+                            next.normalMap.repeat.set(5,5)
+                        }
                     }
                     
                     next.needsUpdate = true
@@ -770,11 +780,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
-                    if (next.map) {
-                        next.map.repeat.set(20, 20)
-                    }
-                    if (next.normalMap) {
-                        next.normalMap.repeat.set(20, 20)
+                    const nameLower = child.name.toLowerCase()
+                    if (nameLower.includes('barn_door') || nameLower.includes('gullwing') || nameLower.includes('ramp')) {
+                        next = patchTriplanarMaterial(next, 10)
+                    } else {
+                        if (next.map) {
+                            next.map.repeat.set(2,2)
+                        }
+                        if (next.normalMap) {
+                            next.normalMap.repeat.set(2,2)
+                        }
                     }
                     
                     next.needsUpdate = true

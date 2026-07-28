@@ -5135,6 +5135,18 @@
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
       }
+    },
+    "9": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
     }
   },
   "Corvette Fender Flat Side For GED": {
