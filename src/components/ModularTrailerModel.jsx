@@ -957,15 +957,50 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (config.escapeDoor === 'gullwing') {
             const sideType = config.axleAngled ? 'Angled_Side' : 'Flat_Side'
             let panelPrefix = config.axleCount === 'triple' ? '3X_Axle' : '2X_Axle'
-            
+
             if (config.spreadAxle) {
                 panelPrefix = 'Corvette_Fender'
             }
-            
+
             const expectedPanel = `${panelPrefix}_${sideType}_For_GED`
+
+            // ATP names use underscores (matching actual GLB mesh names):
+            //   Corvette → "ATP_Corvette_Fender_Angled_Side_GED_24in"  (no "For_" prefix, no "For_" before GED)
+            //   Axle     → "ATP_For_2X_Axle_Angled_Side_For_GED_24in"
+            // NOTE: Some GLB meshes have spaces instead of underscores (e.g. "Corvette Fender").
+            // Use normGlb() to collapse both to '_' before comparing.
+            const normGlb = s => s.replace(/[\s_]+/g, '_')
             const atpSize = config.protectionSize || '24'
-            const expectedATP = `ATP_For_${panelPrefix}_${sideType}_For_GED_${atpSize}in`
-            
+            let expectedATP
+            if (config.spreadAxle) {
+                expectedATP = `ATP_Corvette_Fender_${sideType}_GED_${atpSize}in`
+            } else {
+                expectedATP = `ATP_For_${panelPrefix}_${sideType}_For_GED_${atpSize}in`
+            }
+
+            console.log('[GULLWING ATP DEBUG] Config:', {
+                escapeDoor: config.escapeDoor,
+                protectionType: config.protectionType,
+                protectionSize: config.protectionSize,
+                protectionSizeType: typeof config.protectionSize,
+                axleAngled: config.axleAngled,
+                axleCount: config.axleCount,
+                spreadAxle: config.spreadAxle,
+            })
+            console.log('[GULLWING ATP DEBUG] atpSize value:', atpSize, '| type:', typeof atpSize)
+            console.log('[GULLWING ATP DEBUG] Expected panel prefix:', expectedPanel)
+            console.log('[GULLWING ATP DEBUG] Expected ATP name:', JSON.stringify(expectedATP))
+            // Quick sanity check: does the expected name match the known 12in mesh name?
+            const knownName12 = `ATP_For_2X_Axle_${config.axleAngled ? 'Angled_Side' : 'Flat_Side'}_For_GED_12in`
+            console.log('[GULLWING ATP DEBUG] Hardcoded 12in name:', JSON.stringify(knownName12))
+            console.log('[GULLWING ATP DEBUG] expectedATP startsWith knownName12?', expectedATP === knownName12)
+
+
+            // Dump all mesh names in the GLB for comparison
+            const allGullwingNames = []
+            gullwingDoor.traverse(c => { if (c.isMesh) allGullwingNames.push(c.name) })
+            console.log('[GULLWING ATP DEBUG] All mesh names in GLB:', allGullwingNames)
+
             gullwingDoor.traverse(child => {
                 if (!child.isMesh) return;
                 const name = child.name;
@@ -977,19 +1012,26 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     // Always include the proxy so that BlenderNodes.switchMeshes will 
                     // process it and set child.userData.proxyActive = true
                     activeGullwingMeshes.push(name);
-                    // console.log('[DEBUG GULLWING PROXY] Pushed proxy to active list:', name);
                 }
                 
                 // 2. Side Panel (handles suffixes like _1, _2)
-                if (name.startsWith(expectedPanel)) {
+                if (normGlb(name).startsWith(normGlb(expectedPanel))) {
+                    console.log('[GULLWING ATP DEBUG] ✅ Panel matched:', name)
                     activeGullwingMeshes.push(name);
                 }
                 
-                // 3. ATP (if enabled)
-                if (config.protectionType === 'atp' && name.startsWith(expectedATP)) {
-                    activeGullwingMeshes.push(name);
+                // 3. ATP (if enabled) — normalize spaces/underscores to handle GLB inconsistencies
+                if (config.protectionType === 'atp') {
+                    if (normGlb(name).startsWith(normGlb(expectedATP))) {
+                        console.log('[GULLWING ATP DEBUG] ✅ ATP matched:', name)
+                        activeGullwingMeshes.push(name);
+                    } else if (name.toLowerCase().includes('atp')) {
+                        console.log('[GULLWING ATP DEBUG] ⚠️ ATP mesh in GLB (not matched):', name)
+                    }
                 }
             });
+
+            console.log('[GULLWING ATP DEBUG] Final activeGullwingMeshes:', activeGullwingMeshes)
         }
         BlenderNodes.switchMeshes(gullwingDoor, activeGullwingMeshes)
 

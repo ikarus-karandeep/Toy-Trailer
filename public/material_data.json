@@ -771,7 +771,7 @@
       }
     }
   },
-  "Gooseneck 8.5\u00d728": {
+  "Gooseneck 8_5\u00d728": {
     "0": {
       "material_name": "Metallic Grates_DECAL",
       "base_color": "#B4B6BC",
@@ -3854,6 +3854,76 @@
       }
     }
   },
+  "Left Floor E-Track": {
+    "0": {
+      "material_name": "ETrack Material",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": 0.4215,
+      "metalness": 0.8761,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Left Wall E-Track": {
+    "0": {
+      "material_name": "ETrack Material",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": 0.4215,
+      "metalness": 0.8761,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Right Floor E-Track": {
+    "0": {
+      "material_name": "ETrack Material",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": 0.4215,
+      "metalness": 0.8761,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Right Wall E-Track": {
+    "0": {
+      "material_name": "ETrack Material",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": 0.4215,
+      "metalness": 0.8761,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Wall E-Track Small Section": {
+    "0": {
+      "material_name": "ETrack Material",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": 0.4215,
+      "metalness": 0.8761,
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "Wheel Wall Cabinet": {
     "0": {
       "material_name": "Charcoal Grey_Shell",
@@ -4442,7 +4512,7 @@
       }
     }
   },
-  "Rear Spoiler Wing w/ Angled Lights": {
+  "Rear Spoiler Wing w_ Angled Lights": {
     "0": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
@@ -4872,6 +4942,7 @@
       }
     }
   },
+  "Gullwing Escape Door Proxy": {},
   "Gullwing Escape Door": {
     "0": {
       "material_name": "MAT_Shell",
@@ -4970,159 +5041,6 @@
       }
     }
   },
-  "Gullwing Escape Door Proxy": {},
-  "2X Axle Angled Side For GED": {
-    "0": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "MAT_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    }
-  },
-  "2X Axle Flat Side For GED": {
-    "0": {
-      "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "MAT_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "3X Axle Angled Side For GED": {
-    "0": {
-      "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "MAT_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "3X Axle Flat Side For GED": {
-    "0": {
-      "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "MAT_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "Corvette Fender Flat Side For GED": {
     "0": {
       "material_name": "Metallic Grates",
@@ -5195,6 +5113,158 @@
       "alpha": 1.0,
       "emission": {
         "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Axle Angled Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Axle Flat Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Axle Angled Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Axle Flat Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
         "strength": 0.0
       }
     }
@@ -5361,76 +5431,6 @@
       "metalness": 0.8533,
       "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Left Floor E-Track": {
-    "0": {
-      "material_name": "ETrack Material",
-      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
-      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Left Wall E-Track": {
-    "0": {
-      "material_name": "ETrack Material",
-      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
-      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Right Floor E-Track": {
-    "0": {
-      "material_name": "ETrack Material",
-      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
-      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Right Wall E-Track": {
-    "0": {
-      "material_name": "ETrack Material",
-      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
-      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Wall E-Track Small Section": {
-    "0": {
-      "material_name": "ETrack Material",
-      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
-      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -6854,6 +6854,48 @@
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Vented Door Only": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Slides+Tray": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Lid Only": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
