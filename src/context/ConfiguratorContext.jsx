@@ -128,12 +128,15 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [stairs, setStairs] = useState(ic.stairs ?? false)
   const [vNoseETrack, setVNoseETrack] = useState(ic.vNoseETrack ?? false)
   const [batteryBox, setBatteryBox] = useState(ic.batteryBox ?? false)
+  const [lShapeCounter, setLShapeCounter] = useState(ic.lShapeCounter ?? false)
+  const [genSlides, setGenSlides] = useState(ic.genSlides ?? false)
+  const [genDoor, setGenDoor] = useState(ic.genDoor ?? false)
 
   // Base addons (Base node graph)
   const [escapeDoor, setEscapeDoor] = useState(ic.escapeDoor ?? 'none')
   const [concessionDoor, setConcessionDoor] = useState(ic.concessionDoor ?? 'none')
   const [glassScreen, setGlassScreen] = useState(ic.glassScreen ?? false)
-  const [generatorBox, setGeneratorBox] = useState(ic.generatorBox ?? false)
+  const [generatorBox, setGeneratorBox] = useState(ic.generatorBox || 'lidonly')
   const [windows, setWindows] = useState(ic.windows ?? {
     vertical: 0,
     horizontal: 0,
@@ -298,6 +301,9 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     concessionDoor, setConcessionDoor,
     glassScreen, setGlassScreen,
     generatorBox, setGeneratorBox,
+    lShapeCounter, setLShapeCounter,
+    genSlides, setGenSlides,
+    genDoor, setGenDoor,
     windows, setWindows,
     windowSizes, setWindowSizes,
     winchSystem, setWinchSystem,
@@ -321,7 +327,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     rampType, atpRamp, rearDoor, tieDowns, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,
-    escapeDoor, concessionDoor, glassScreen, generatorBox, winchSystem,
+    escapeDoor, concessionDoor, glassScreen, generatorBox, lShapeCounter, genSlides, genDoor, winchSystem,
     windows, windowSizes,
     extendedTripleTongue, radioPackageSpeaker, rearSpoiler,
     ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,

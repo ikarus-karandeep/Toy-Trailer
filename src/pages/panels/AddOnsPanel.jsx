@@ -25,6 +25,10 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     awning, setAwningRaw,
     sinkPackage, setSinkPackage,
     batteryBox, setBatteryBox,
+    lShapeCounter, setLShapeCounter,
+    genSlides, setGenSlides,
+    genDoor, setGenDoor,
+    frontStyle,
     length
   } = useConfigurator()
 
@@ -39,11 +43,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
 
   const [winch, setWinch] = useState('winchsystem')
 
-  const [generatorBoxSelection, setGeneratorBoxSelection] = useState(null)
-  const [genSlides, setGenSlides] = useState(false)
-  const [genDoor, setGenDoor] = useState(false)
+
   
-  const [lShapeCounter, setLShapeCounter] = useState(false)
 
   useEffect(() => {
     if (!length) return;
@@ -317,8 +318,13 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={generatorBoxSelection === opt.id}
-                  onClick={() => setGeneratorBoxSelection(opt.id)}
+                  isSelected={generatorBox === opt.id}
+                  isLocked={frontStyle !== 'flatfront'}
+                  onClick={() => {
+                    if (frontStyle === 'flatfront') {
+                      setGeneratorBox(opt.id)
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -331,6 +337,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               label="Add your own door separately"
               checked={genSlides}
               onChange={setGenSlides}
+              disabled={frontStyle !== 'flatfront'}
             />
           </div>
 
@@ -341,6 +348,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               label="Standard gen door"
               checked={genDoor}
               onChange={setGenDoor}
+              disabled={frontStyle !== 'flatfront'}
             />
           </div>
         </OptionSection>

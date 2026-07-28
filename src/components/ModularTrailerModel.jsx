@@ -204,7 +204,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // console.log('[DEBUG RENDER] ModularTrailerModel rendering. sinkPackage is:', config.sinkPackage);
 
     let hasCabinet = config.cabinets?.includes('frontbase36') 
-    if (config.sinkPackage === 'sink') {
+    if (config.sinkPackage === 'sink' || config.lShapeCounter || config.genDoor) {
         hasCabinet = false;
     }
 
@@ -901,9 +901,30 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // each call hides everything not in its list, overwriting the previous.
         const activeAddonMeshes = []
 
-        // Generator Box — hidden when cabinet is present (cabinet occupies the same space)
-        if (config.generatorBox && !hasCabinet) {
-            activeAddonMeshes.push('Generator_Box')
+        const allAddonMeshNames = []
+        if (addons) {
+            addons.traverse(c => { if (c.isMesh) allAddonMeshNames.push(c.name) })
+        }
+
+        // Generator Box options mapped to Tongue Mounted Generator Box
+        console.log('[DEBUG GENERATOR] config.generatorBox:', config.generatorBox);
+        if (config.generatorBox && config.frontStyle === 'flatfront') {
+            allAddonMeshNames.forEach(n => {
+                const lower = n.toLowerCase();
+                
+                // "tounge mounted mesh will always come" for all 4 options
+                if (lower.includes('tongue_mounted_generator')) activeAddonMeshes.push(n);
+                
+                if (config.generatorBox === 'lidonly' && lower.includes('lid_only')) {
+                    activeAddonMeshes.push(n);
+                } else if (config.generatorBox === 'venteddoor' && lower.includes('vented_door_only')) {
+                    activeAddonMeshes.push(n);
+                } else if (config.generatorBox === 'venteddoorslides' && (lower.includes('vented_door_only') || lower.includes('slides+tray'))) {
+                    activeAddonMeshes.push(n);
+                } else if (config.generatorBox === 'insulated' && lower.includes('slides+tray')) {
+                    activeAddonMeshes.push(n);
+                }
+            });
         }
 
         // ── Front Style node graph ────────────────────────────────────────
@@ -1099,18 +1120,32 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAddonMeshes.push('Radio_Package_Speaker')
         }
 
+        // L-Shape Counter / Hidden Generator Box
+        if (config.lShapeCounter) {
+            activeAddonMeshes.push('L Shape Counter Hidden Generator Box')
+            activeAddonMeshes.push('L_Shape_Counter_Hidden_Generator_Box')
+        }
+
+        // Generator Door 36"x36" (Standard Generator Box mesh)
+        // Only shown when L-Shape Counter/Hidden Generator Box is NOT active and front style is flat front
+        if (config.genDoor && !config.lShapeCounter && config.frontStyle === 'flatfront') {
+            activeAddonMeshes.push('Standard Generator Box')
+            activeAddonMeshes.push('Standard_Generator_Box')
+        }
+
         if (config.lights?.includes('racing')) {
             activeAddonMeshes.push('Racing_Lights')
         }
 
         // ── Interior Lighting (LIGHTS section) ──────────────────────────────
         // Debug: dump all mesh names in addons GLB so we can verify exact names
-        const allAddonMeshNames = []
-        addons.traverse(c => { if (c.isMesh) allAddonMeshNames.push(c.name) })
         const lightRelatedMeshes = allAddonMeshNames.filter(n => 
             /dome|panel|rope|light/i.test(n)
         )
-        // console.log('[DEBUG LIGHTS] All mesh names in Addons.glb:', allAddonMeshNames)
+        const genRelatedMeshes = allAddonMeshNames.filter(n =>
+            /generator|lid|vented|slides|tray/i.test(n)
+        )
+        console.log('[DEBUG GENERATOR MESHES] Found in Addons.glb:', genRelatedMeshes)
         // console.log('[DEBUG LIGHTS] Light-related meshes:', lightRelatedMeshes)
         // console.log('[DEBUG LIGHTS] config.interiorLights:', config.interiorLights)
         // console.log('[DEBUG LIGHTS] config.ledRope:', config.ledRope)
@@ -1247,7 +1282,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         const hasWallRun = config.cabinets?.includes('wallrun36')
 
-        // 1. Main Cabinet
+        // 1. Main Cabinet (front base) — hidden when lShapeCounter or genDoor is on
         if (hasCabinet) {
             activeCabinetMeshes.push(cabinetVariant.cabinet)
         }
@@ -1257,7 +1292,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeCabinetMeshes.push(cabinetVariant.overhead)
         }
 
-        // 3. Cabinet Toolbox Slot vs Toolbox insert
+        // 3. Cabinet Toolbox Slot vs Toolbox insert (requires front base cabinet)
         if (hasCabinet) {
             if (hasToolbox) {
                 activeCabinetMeshes.push('Toolbox')
@@ -1270,7 +1305,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         }
 
-        // 5. Wheel Wall Cabinet (Wall Run 36"H)
         // 5. Wheel Wall Cabinet (Wall Run 36"H)
         if (hasWallRun) {
             activeCabinetMeshes.push('Wheel_Wall_Cabinet');
@@ -1481,7 +1515,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.cabinets, config.toolBox,
         config.driverSideDoor, config.passengerSideDoor,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
-        config.escapeDoor, config.concessionDoor, config.glassScreen, config.generatorBox, config.winchSystem, config.tieDowns,
+        config.escapeDoor, config.concessionDoor, config.glassScreen, config.generatorBox, config.lShapeCounter, config.genSlides, config.genDoor, config.winchSystem, config.tieDowns,
         config.windows, config.windowSizes,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights, config.ventilation, config.receptacles,

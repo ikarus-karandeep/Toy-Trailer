@@ -439,6 +439,30 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "9": {
+      "material_name": "MAT_Interior_Cealing",
+      "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "10": {
+      "material_name": "MAT_Interior_Flooring",
+      "base_color": "#D4BD67",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Flat Front": {
@@ -655,6 +679,30 @@
       "metalness": 0.0,
       "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
       "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "9": {
+      "material_name": "MAT_Interior_Flooring",
+      "base_color": "#D4BD67",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "10": {
+      "material_name": "MAT_Interior_Cealing",
+      "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -898,6 +946,18 @@
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "11": {
+      "material_name": "Wire_Covers",
+      "base_color": "//..\\Textures\\Wire_Covers_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Wire_Covers_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5605,10 +5665,10 @@
   },
   "Concession Door R": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -5951,6 +6011,244 @@
   },
   "Concession Door R Proxy": {},
   "Concession Door L Proxy": {},
+  "V-Nose Sink": {
+    "0": {
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Slant V-Nose Sink": {
+    "0": {
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Gooseneck Sink ": {
+    "0": {
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Front Sink": {
+    "0": {
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Extended V-Nose Sink ": {
+    "0": {
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "lambert2.003",
+      "base_color": "#BCBCBC",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#000000",
+        "strength": 1.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "Top Supports": {
     "0": {
       "material_name": "Steel_Painted",
@@ -6864,11 +7162,23 @@
   },
   "Vented Door Only": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
       "metalness": 0.0,
-      "normal": false,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#C1C1C1",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6878,11 +7188,37 @@
   },
   "Slides+Tray": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#C1C1C1",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Tongue Mounted Generator Box": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Metallic_Silver Stripes",
+      "base_color": "#C1C1C1",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6892,11 +7228,23 @@
   },
   "Lid Only": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#C1C1C1",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
