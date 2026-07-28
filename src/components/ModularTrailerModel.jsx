@@ -71,6 +71,21 @@ const CABINET_MESH_MAP = {
         overhead: 'Flat_Front_Overhead_Cabinet',
         toolboxSlot: 'Flat_Front_Cabinet_Toolbox_Slot',
     },
+    slantvnose: {
+        cabinet: 'Slant_V-Nose_Cabinet',
+        overhead: 'Slant_V-Nose_Overhead_Cabinet',
+        toolboxSlot: 'Slant_V-Nose_Cabinet_Toolbox_Slot',
+    },
+    extendedvnose: {
+        cabinet: 'Extended_V-Nose_Cabinet',
+        overhead: 'Extended_V-Nose_Overhead_Cabinet',
+        toolboxSlot: 'Extended_V-Nose_Cabinet_Toolbox_Slot',
+    },
+    gooseneck: {
+        cabinet: 'Gooseneck_Cabinet',
+        overhead: 'Gooseneck_Overhead_Cabinet',
+        toolboxSlot: 'Gooseneck_Cabinet_Toolbox_Slot',
+    }
 }
 
 // Maps axleRating + variant → mesh name inside Axle Configs.glb
@@ -894,26 +909,36 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Gullwing Escape Door lives in its own Packaging GLB (added to activeScenes below)
         const activeGullwingMeshes = []
         if (config.escapeDoor === 'gullwing') {
-            let foundDoorName = null;
-            let foundAtpName = null;
+            const sideType = config.axleAngled ? 'Angled_Side' : 'Flat_Side'
+            let panelPrefix = config.axleCount === 'triple' ? '3X_Axle' : '2X_Axle'
+            
+            if (config.spreadAxle) {
+                panelPrefix = 'Corvette_Fender'
+            }
+            
+            const expectedPanel = `${panelPrefix}_${sideType}_For_GED`
+            const atpSize = config.protectionSize || '24'
+            const expectedATP = `ATP_For_${panelPrefix}_${sideType}_For_GED_${atpSize}in`
             
             gullwingDoor.traverse(child => {
                 if (!child.isMesh) return;
                 const name = child.name;
                 
-                // Find the main door mesh
-                if (name.includes('Gullwing') && !name.includes('ATP') && !name.includes('Proxy')) {
-                    foundDoorName = name;
+                // 1. Main door meshes (could be split by material, e.g. _2, _3)
+                if (name.startsWith('Gullwing_Escape_Door') && !name.toLowerCase().includes('proxy')) {
+                    activeGullwingMeshes.push(name);
                 }
                 
-                // Find the ATP mesh if ATP protection is enabled
-                if (config.protectionType === 'atp' && name.includes('ATP') && name.includes(config.protectionSize || '24')) {
-                    foundAtpName = name;
+                // 2. Side Panel (handles suffixes like _1, _2)
+                if (name.startsWith(expectedPanel)) {
+                    activeGullwingMeshes.push(name);
+                }
+                
+                // 3. ATP (if enabled)
+                if (config.protectionType === 'atp' && name.startsWith(expectedATP)) {
+                    activeGullwingMeshes.push(name);
                 }
             });
-            
-            if (foundDoorName) activeGullwingMeshes.push(foundDoorName);
-            if (foundAtpName) activeGullwingMeshes.push(foundAtpName);
         }
         BlenderNodes.switchMeshes(gullwingDoor, activeGullwingMeshes)
 
@@ -1012,8 +1037,25 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // LED Rope Lighting
         if (config.ledRope) {
             activeAddonMeshes.push('LED_Rope_Light')
-            activeAddonMeshes.push('LED Rope Light')
-            // console.log('[DEBUG LIGHTS] Adding LED Rope Light to activeAddonMeshes')
+            
+            const LED_ROPE_EXTENSION_MAP = {
+                vnose24: 'LED_Rope_Light_Extension(V-Nose)',
+                flatfront: 'LED_Rope_Light_Extension(Flat_Front)',
+                slantvnose: 'LED_Rope_Light_Extension(Slant_V-Nose)',
+                extendedvnose: 'LED_Rope_Light_Extension(Extended_V-Nose)',
+                gooseneck: 'LED_Rope_Light_Extension(Gooseneck)',
+            }
+            
+            let extMesh = LED_ROPE_EXTENSION_MAP[config.frontStyle]
+            if (config.width === '8.5ftgn') {
+                extMesh = LED_ROPE_EXTENSION_MAP.gooseneck
+            } else if (!extMesh) {
+                extMesh = LED_ROPE_EXTENSION_MAP.vnose24
+            }
+            
+            if (extMesh) {
+                activeAddonMeshes.push(extMesh)
+            }
         }
 
         // Ladder Racks: instanced via useMemo (Top_Supports mesh is the template, never shown directly)
@@ -1122,14 +1164,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeCabinetMeshes.push(cabinetVariant.overhead)
         }
 
-        // 3. Cabinet Toolbox Slot — always visible when cabinet is active (empty slot)
+        // 3. Cabinet Toolbox Slot vs Toolbox insert
         if (hasCabinet) {
-            activeCabinetMeshes.push(cabinetVariant.toolboxSlot)
-        }
-
-        // 4. Cabinet Toolbox insert — only when a toolbox option is selected
-        if (hasCabinet && hasToolbox) {
-            activeCabinetMeshes.push('Cabinet_Toolbox')
+            if (hasToolbox) {
+                activeCabinetMeshes.push('Toolbox')
+                // Legacy fallback for old GLBs
+                activeCabinetMeshes.push('Cabinet_Toolbox')
+            } else {
+                activeCabinetMeshes.push('Slot')
+                // Legacy fallback for old GLBs
+                activeCabinetMeshes.push(cabinetVariant.toolboxSlot)
+            }
         }
 
         // 5. Wheel Wall Cabinet (Wall Run 36"H)
@@ -1258,14 +1303,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAxleMeshes.push(`Side_Panel_ATP_${atpSize}in`)
             // ATP directional trim — follows same angled/flat toggle
             if (config.spreadAxle) {
-                activeAxleMeshes.push(`ATP_Corvette_Fender_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+                const sideName = config.axleAngled ? 'Angled' : 'Flat'
+                activeAxleMeshes.push(`ATP_Corvette_Fender_${sideName}_Side_${atpSize}in`)
+                activeAxleMeshes.push(`ATP Corvette Fender ${sideName} Side ${atpSize}in`)
             } else {
                 activeAxleMeshes.push(`${prefix}ATP_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
             }
         }
 
         if (config.spreadAxle) {
-            activeAxleMeshes.push(`Corvette_Fender_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+            const sideName = config.axleAngled ? 'Angled' : 'Flat'
+            activeAxleMeshes.push(`Corvette_Fender_${sideName}_Side`)
+            activeAxleMeshes.push(`Corvette Fender ${sideName} Side`)
         }
 
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)

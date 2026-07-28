@@ -27,6 +27,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     cabinets, toggleCabinet, setCabinetsRaw,
     toolBox, setToolBox,
     length,
+    driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -50,11 +51,10 @@ export default function InteriorPanel({ activeSectionTitle }) {
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
-  useEffect(() => {
-    if (parseFloat(length) < 24 && cabinets.includes('wallrun36')) {
-      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'))
-    }
-  }, [length, cabinets, setCabinetsRaw])
+  const hasPassengerDoor = (passengerSideDoor && passengerSideDoor !== 'none');
+  const hasDriverSideConflict = (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
+
+
 
   useEffect(() => {
     if (!cabinets.includes('wallrun36') && cabinets.includes('wallrun16')) {
@@ -282,10 +282,18 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">BASE CABINETS</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">ATP Diamond Plate Finish. Countertop Included</p>
+            {hasDriverSideConflict && (
+              <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
+                * Wall Run 36"H cabinet is disabled because a driver side escape or concession door is currently applied.
+              </p>
+            )}
             <div className="flex flex-col gap-2">
               {BASE_CABINET_OPTIONS.map((opt) => {
                 let isLocked = false;
-                if (opt.id === 'wallrun36' && parseFloat(length) < 24) isLocked = true;
+                if (opt.id === 'wallrun36') {
+                  if (parseFloat(length) < 24) isLocked = true;
+                  if (hasDriverSideConflict) isLocked = true;
+                }
                 
                 return (
                   <OptionPill
@@ -345,6 +353,11 @@ export default function InteriorPanel({ activeSectionTitle }) {
 
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">FLOOR TO CEILING CABINETS</h4>
+            {hasPassengerDoor && (
+              <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
+                * Floor to ceiling cabinets are disabled because a passenger side door is currently applied. They will only be available if no passenger side door is applied.
+              </p>
+            )}
             <div className="flex flex-col gap-2">
               {FULL_HEIGHT_CABINET_OPTIONS.map((opt) => (
                 <OptionPill
@@ -354,6 +367,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   isSelected={cabinets.includes(opt.id)}
                   onClick={() => toggleCabinet(opt.id)}
                   isMulti={true}
+                  isLocked={hasPassengerDoor}
                 />
               ))}
             </div>
@@ -369,21 +383,15 @@ export default function InteriorPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
-      {/* {show('TOOL BOX') && (
-        <OptionSection title="TOOL BOX">
-          <div className="grid grid-cols-[max-content_max-content] gap-x-2 gap-y-2">
-            {TOOL_BOX_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isSelected={toolBox === opt.id}
-                onClick={() => setToolBox(opt.id)}
-              />
-            ))}
-          </div>
+      {show('CABINETS') && (
+        <OptionSection title="BUILT - IN TOOL CABINET">
+          <ToggleSwitch
+            label="INCLUDE TOOL CABINET"
+            checked={toolBox !== 'none' && toolBox !== false}
+            onChange={(checked) => setToolBox(checked ? 'included' : 'none')}
+          />
         </OptionSection>
-      )} */}
+      )}
     </>
   )
 }

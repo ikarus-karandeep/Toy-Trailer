@@ -87,7 +87,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [walls, setWalls] = useState(ic.walls ?? '38plywood')
   const [ceiling, setCeiling] = useState(ic.ceiling ?? 'thermal')
   const [cabinets, setCabinetsRaw] = useState(ic.cabinets ?? ['frontbase36'])
-  const [toolBox, setToolBox] = useState(ic.toolBox ?? 'frontbox')
+  const [toolBox, setToolBox] = useState(ic.toolBox ?? 'none')
   const [leftSide, setLeftSide] = useState(ic.leftSide ?? true)
   const [rightSide, setRightSide] = useState(ic.rightSide ?? true)
 
@@ -160,6 +160,24 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [interiorTireMount, setInteriorTireMount] = useState(ic.interiorTireMount ?? false)
 
   const [showDimensions, setShowDimensions] = useState(false)
+
+  // Door vs Cabinet conflict resolution (Always active across all panels)
+  useEffect(() => {
+    const hasPassengerDoor = (passengerSideDoor && passengerSideDoor !== 'none');
+    const hasDriverSideConflict = (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
+    
+    if (hasPassengerDoor && cabinets.includes('fullheight')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'fullheight'));
+    }
+
+    if (hasDriverSideConflict && cabinets.includes('wallrun36')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'));
+    }
+
+    if (parseFloat(length) < 24 && cabinets.includes('wallrun36')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'));
+    }
+  }, [passengerSideDoor, escapeDoor, concessionDoor, length, cabinets, setCabinetsRaw]);
 
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = useCallback((tab) => setVisitedTabs(prev => new Set([...prev, tab])), [])
