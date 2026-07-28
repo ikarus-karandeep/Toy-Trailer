@@ -119,6 +119,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [waterPackage, setWaterPackage] = useState(ic.waterPackage ?? 'largewater')
   const [bathroom, setBathroom] = useState(ic.bathroom ?? null)
   const [awning, setAwningRaw] = useState(ic.awning ?? [])
+  const [sinkPackage, setSinkPackage] = useState(ic.sinkPackage ?? null)
 
   // Front Style addons (Front Style node graph)
   const [angledLights, setAngledLights] = useState(ic.angledLights ?? false)
@@ -239,6 +240,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     waterPackage, setWaterPackage,
     bathroom, setBathroom,
     awning, setAwningRaw, toggleAwning,
+    sinkPackage, setSinkPackage,
     angledLights, setAngledLights,
     stairs, setStairs,
     vNoseETrack, setVNoseETrack,
@@ -264,7 +266,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     floor, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
     electrical, battery, lights, ventilation, climateControl, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, jacks,
-    waterPackage, bathroom, awning,
+    waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,
     escapeDoor, generatorBox, winchSystem,
     extendedTripleTongue, radioPackageSpeaker, rearSpoiler,

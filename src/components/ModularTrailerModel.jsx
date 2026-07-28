@@ -32,6 +32,7 @@ const PATHS = {
     axle: '/models/Structure/Axle.glb',
     wheels: '/models/Structure/Wheels.glb',
     addons: '/models/Addons.glb',
+    sink: '/models/Packaging/Sink.glb',
 }
 
 // Tyre count is driven by the axle variant (2x = 2 Tyres, 3x = 3 Tyres)
@@ -167,7 +168,12 @@ const TONGUE_MESH_MAP = {
 
 export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, environment }) {
     const config = useConfigurator()
-    const hasCabinet = config.cabinets?.includes('frontbase36') 
+    console.log('[DEBUG RENDER] ModularTrailerModel rendering. sinkPackage is:', config.sinkPackage);
+
+    let hasCabinet = config.cabinets?.includes('frontbase36') 
+    if (config.sinkPackage === 'sink') {
+        hasCabinet = false;
+    }
 
     let effectiveDriverDoor = config.driverSideDoor || 'none'
     let effectivePassengerDoor = config.passengerSideDoor || 'none'
@@ -195,6 +201,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const { scene: wheels } = useGLTF(PATHS.wheels)
     const { scene: addons } = useGLTF(PATHS.addons)
     const { scene: cargo } = useGLTF(PATHS.cargo)
+    const { scene: sinkScene } = useGLTF(PATHS.sink)
 
     const shellTextures = useTexture(SHELL_TEXTURES)
     const simpleNoise   = useTexture('/Materials/Simple_Noise.png')
@@ -225,7 +232,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
     // and explicitly hide any proxy meshes so they don't render.
     useEffect(() => {
-        const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo }
+        const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene }
         Object.entries(allScenes).forEach(([sceneName, scene]) => {
             if (!scene) return;
             
@@ -508,7 +515,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+            escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
         ]
 
         allScenes.forEach(scene => {
@@ -559,7 +566,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.axleAtp, config.selectedColor, shellTextures, simpleNoise, normalMap,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
     ])
 
     // ── Apply Rim material to MAT_Rim based on wheel selection ───────────────
@@ -669,7 +676,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.frontStyle, staticTextures,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+        escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
     ])
 
     // Compute global bounds from base scenes
@@ -756,8 +763,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const leftWall = baseMeshes.getObjectByName('Left_Wall') || baseMeshes.getObjectByName('Left side wall Vanilla')
         const rightWall = baseMeshes.getObjectByName('Right_Wall') || baseMeshes.getObjectByName('Right side wall Vanilla')
         
-        if (baseInterior) baseInterior.visible = config.escapeDoor === 'none'
-        if (leftWall) leftWall.visible = config.escapeDoor === 'none'
+        if (baseInterior) baseInterior.visible = config.escapeDoor !== 'gullwing'
+        if (leftWall) leftWall.visible = config.escapeDoor !== 'gullwing'
         if (rightWall) rightWall.visible = true
 
         // ── Side Doors & Generator Box: mirrors the Blender node graph ─────────
@@ -902,7 +909,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeAddonMeshes.push('Non-Powered_Roof_Vent') // Legacy fallback
             activeAddonMeshes.push('Non-Powered Roof Vent') // The exact name in the GLB
         }
-
         if (config.recessedTireBox) {
             activeAddonMeshes.push('Recessed_Tire_Box')
         }
@@ -921,6 +927,39 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 activeAddonMeshes.push('110V_Interior_Receptacle_(15_AMP)')
                 activeAddonMeshes.push('110V Interior Receptacle (15 AMP)')
             }
+        }
+        
+        const activeSinkMeshes = [];
+        if (config.sinkPackage === 'sink') {
+            const SINK_FRONT_STYLE_MAP = {
+                vnose24: 'Water_Package_and_Sink(V-Nose)',
+                flatfront: 'Water_Package_and_Sink(Flat_Front)',
+                slantvnose: 'Water_Package_and_Sink(Slant_V-Nose)',
+                extendedvnose: 'Water_Package_and_Sink(Extended_V-Nose)',
+                gooseneck: 'Water_Package_and_Sink(Gooseneck)'
+            };
+            const sinkMeshName = SINK_FRONT_STYLE_MAP[config.frontStyle] || 'Water_Package_and_Sink(V-Nose)';
+            console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
+            console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
+            console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
+            activeSinkMeshes.push(sinkMeshName);
+            
+            // Also log if we can find this mesh across all scenes
+            const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene }
+            Object.entries(allScenes).forEach(([sceneName, scene]) => {
+                if (scene) {
+                    scene.traverse(child => {
+                        const nameLower = child.name.toLowerCase();
+                        if (nameLower.includes('sink') || nameLower.includes('water')) {
+                            console.log(`[DEBUG SINK FINDER] Found potential sink/water mesh in ${sceneName}:`, child.name);
+                        }
+                    });
+                }
+            });
+        }
+        
+        if (sinkScene) {
+            BlenderNodes.switchMeshes(sinkScene, activeSinkMeshes);
         }
 
         if (addons) {
@@ -1151,9 +1190,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights, config.ventilation, config.receptacles,
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
-        config.bathroom, config.awning, config.rampType, config.rearDoor, config.atpRamp,
+        config.bathroom, config.awning, config.rampType, config.rearDoor, config.atpRamp, config.sinkPackage,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
-        cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning
+        cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning, sinkScene
     ])
 
     // ── activeScenes must be computed BEFORE generatedETracks so the proxy scan
@@ -1168,6 +1207,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             axle,
             addons,
             cargo,
+            sinkScene
         ]
         if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
         if (config.awning?.length > 0) scenes.push(awning)

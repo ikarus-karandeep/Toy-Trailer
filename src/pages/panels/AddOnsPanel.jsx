@@ -23,13 +23,13 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     recessedTireBox, setRecessedTireBox,
     radioPackageSpeaker, setRadioPackageSpeaker,
     awning, setAwningRaw,
+    sinkPackage, setSinkPackage,
     length
   } = useConfigurator()
 
   const [waterPackage, setWaterPackage] = useState(null)
   const [largeWaterOpen, setLargeWaterOpen] = useState(true)
 
-  const [sinkPackage, setSinkPackage] = useState(null)
   const [sinkPackageOpen, setSinkPackageOpen] = useState(true)
 
   const [fullBathOpen, setFullBathOpen] = useState(true)
