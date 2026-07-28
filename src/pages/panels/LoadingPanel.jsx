@@ -27,7 +27,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     rampType, setRampType,
     rearDoor, setRearDoor,
     tieDowns, toggleTieDown,
-    jacks, toggleJack,
+    jacks, setJacksRaw, toggleJack,
     driverSideDoor, setDriverSideDoor,
     passengerSideDoor, setPassengerSideDoor,
     escapeDoor, setEscapeDoor,
@@ -328,19 +328,47 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('JACKS (MULTI-CHOICE)') && (
         <OptionSection title="JACKS (MULTI-CHOICE)">
           <div className="flex flex-col gap-2">
-            {JACKS_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isSelected={jacks.includes(opt.id)}
-                onClick={() => toggleJack(opt.id)}
-                packageBadge={getBadge(opt.id)}
-              />
-            ))}
+            {JACKS_OPTIONS.map((opt) => {
+              // Radio-group logic:
+              //  Fold Down group  → 'folddown' and 'folddownjacks' are mutually exclusive
+              //  Scissor group    → '5kscissor' and '5kscissorjacks' are mutually exclusive
+              //  Electric         → free multi-toggle
+              const FOLD_GROUP    = ['folddown', 'folddownjacks']
+              const SCISSOR_GROUP = ['5kscissor', '5kscissorjacks']
+
+              const handleJack = (id) => {
+                const isSelected = jacks.includes(id)
+                if (isSelected) {
+                  // Deselect: just remove this id
+                  setJacksRaw(jacks.filter(j => j !== id))
+                } else {
+                  // Select: remove sibling in same group first, then add
+                  if (FOLD_GROUP.includes(id)) {
+                    setJacksRaw([...jacks.filter(j => !FOLD_GROUP.includes(j)), id])
+                  } else if (SCISSOR_GROUP.includes(id)) {
+                    setJacksRaw([...jacks.filter(j => !SCISSOR_GROUP.includes(j)), id])
+                  } else {
+                    // Electric — free toggle
+                    toggleJack(id)
+                  }
+                }
+              }
+
+              return (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={jacks.includes(opt.id)}
+                  onClick={() => handleJack(opt.id)}
+                  packageBadge={getBadge(opt.id)}
+                />
+              )
+            })}
           </div>
         </OptionSection>
       )}
+
     </>
   )
 }

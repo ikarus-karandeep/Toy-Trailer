@@ -590,11 +590,11 @@ function ShadowLightSetup({ modelRef }) {
     light.shadow.needsUpdate = true
 
     if (frameCount.current === 1) {
-      console.log('[Shadow] light pos:', light.position, '| target:', center)
-      console.log('[Shadow] frustum L/R/T/B:',
-        light.shadow.camera.left.toFixed(2), light.shadow.camera.right.toFixed(2),
-        light.shadow.camera.top.toFixed(2), light.shadow.camera.bottom.toFixed(2)
-      )
+      // console.log('[Shadow] light pos:', light.position, '| target:', center)
+      // console.log('[Shadow] frustum L/R/T/B:',
+      //   light.shadow.camera.left.toFixed(2), light.shadow.camera.right.toFixed(2),
+      //   light.shadow.camera.top.toFixed(2), light.shadow.camera.bottom.toFixed(2)
+      // )
       
     }
   })

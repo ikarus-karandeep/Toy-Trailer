@@ -113,7 +113,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
   const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])
-  const [jacks, setJacksRaw] = useState(ic.jacks ?? ['folddownstabilizer'])
+  const [jacks, setJacksRaw] = useState(ic.jacks ?? [''])
 
   // Add-Ons
   const [waterPackage, setWaterPackage] = useState(ic.waterPackage ?? 'largewater')
@@ -178,7 +178,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
     setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
     setCabinetsRaw(pkgConfig.cabinets ?? ['vnosebase']);
-    setJacksRaw(pkgConfig.jacks ?? ['folddownstabilizer']);
+    setJacksRaw(pkgConfig.jacks ?? ['folddown']);
     setElectrical(pkgConfig.electrical ?? '110v8space');
     setRecessedTireBox(pkgConfig.recessedTireBox ?? false);
     setClimateControl(pkgConfig.climateControl ?? 'wirebrace');

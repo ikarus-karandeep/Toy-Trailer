@@ -350,10 +350,13 @@ export const E_TRACKS_OPTIONS = [
 ];
 
 export const JACKS_OPTIONS = [
+  { id: 'folddownjacks', label: 'FOLD DOWN STABILIZER JACKS' },
   { id: 'folddown', label: 'FOLD DOWN STABILIZER JACK (PAIR) (REAR CORNER STABILIZER)', price: 44 },
+  { id: '5kscissorjacks', label: '5K SCISSOR JACKS' },
   { id: '5kscissor', label: '5K SCISSOR JACK W/ HANDLE (PAIR) (HEAVY DUTY SIDE STABILIZER)', price: 135 },
   { id: '5000relectric', label: '5000R ELECTRIC TONGUE JACK W/DEEP CYCLE BATTERY', price: 526 },
 ];
+
 
 // Add-Ons
 export const WATER_PACKAGE_OPTIONS = [

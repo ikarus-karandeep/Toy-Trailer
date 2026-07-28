@@ -1391,7 +1391,7 @@
       }
     }
   },
-  "ATP Plate Generator Box R": {
+  "ATP Plate Generator Box R 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1405,7 +1405,7 @@
       }
     }
   },
-  "ATP Plate Generator Box L": {
+  "ATP Plate Generator Box L 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1419,7 +1419,7 @@
       }
     }
   },
-  "ATP Gooseneck": {
+  "ATP Gooseneck 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1433,7 +1433,35 @@
       }
     }
   },
-  "ATP Flat Panel L": {
+  "ATP Plate Generator Box R 12in": {
+    "0": {
+      "material_name": "Metallic Grates.006",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Plate Generator Box L 12in": {
+    "0": {
+      "material_name": "Metallic Grates.006",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Gooseneck 12in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1447,7 +1475,7 @@
       }
     }
   },
-  "ATP Flat Panel R": {
+  "ATP Flat Panel L 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1461,7 +1489,7 @@
       }
     }
   },
-  "ATP 36x72 Door Panel R": {
+  "ATP Flat Panel R 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1475,7 +1503,7 @@
       }
     }
   },
-  "ATP 36x72 Door Panel L": {
+  "ATP Flat Panel L 12in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1489,7 +1517,7 @@
       }
     }
   },
-  "ATP 36x78 Door Panel R": {
+  "ATP Flat Panel R 12in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1503,7 +1531,7 @@
       }
     }
   },
-  "ATP 36x78 Door Panel L": {
+  "ATP 36x72 Door Panel R 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1517,7 +1545,7 @@
       }
     }
   },
-  "ATP 48x78 Door Panel L": {
+  "ATP 36x72 Door Panel L 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1531,7 +1559,133 @@
       }
     }
   },
-  "ATP 48x78 Door Panel R": {
+  "ATP 36x72 Door Panel R 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 36x72 Door Panel L 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 36x78 Door Panel R 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 36x78 Door Panel L 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 36x78 Door Panel R 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 36x78 Door Panel L 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 48x78 Door Panel L 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 48x78 Door Panel R 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 48x78 Door Panel L 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 48x78 Door Panel R 12in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -1706,7 +1860,7 @@
   },
   "Heavy Duty Ramp": {
     "0": {
-      "material_name": "Material.017",
+      "material_name": "Material",
       "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
@@ -1718,7 +1872,7 @@
       }
     },
     "1": {
-      "material_name": "Roof.005",
+      "material_name": "Roof",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
       "metalness": "//..\\Textures\\Roof_Metallic.png",
@@ -1730,7 +1884,7 @@
       }
     },
     "2": {
-      "material_name": "New plate.001",
+      "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
       "metalness": 0.4773,
@@ -1742,7 +1896,7 @@
       }
     },
     "3": {
-      "material_name": "Chrome.002",
+      "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
       "metalness": "//..\\Textures\\Chrome_Metallic.png",
@@ -1754,7 +1908,7 @@
       }
     },
     "4": {
-      "material_name": "MAT_Shell.003",
+      "material_name": "MAT_Shell",
       "base_color": "#7B7D81",
       "roughness": 0.09,
       "metalness": 0.0,
@@ -1766,7 +1920,7 @@
       }
     },
     "5": {
-      "material_name": "MAT_Plywood.003",
+      "material_name": "MAT_Plywood",
       "base_color": "#E7E7E7",
       "roughness": 0.5,
       "metalness": 0.0,
@@ -1787,7 +1941,21 @@
       "emission": null
     }
   },
-  "ATP Barn Door": {
+  "ATP Barn Door 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP Barn Door 12in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -2577,7 +2745,7 @@
       }
     }
   },
-  "Side Panel ATP": {
+  "Side Panel ATP 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -2605,7 +2773,21 @@
       }
     }
   },
-  "3X ATP Flat Side": {
+  "Side Panel ATP 12in": {
+    "0": {
+      "material_name": "Metallic Grates.007",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X ATP Flat Side 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -2619,7 +2801,7 @@
       }
     }
   },
-  "2X ATP Flat Side": {
+  "2X ATP Flat Side 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -2633,7 +2815,35 @@
       }
     }
   },
-  "2X ATP Angled Side": {
+  "3X ATP Flat Side 12in": {
+    "0": {
+      "material_name": "Metallic Grates.001",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X ATP Flat Side 12in": {
+    "0": {
+      "material_name": "Metallic Grates.001",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X ATP Angled Side 24in": {
     "0": {
       "material_name": "Metallic Grates",
       "base_color": "#CBCBCB",
@@ -2647,9 +2857,37 @@
       }
     }
   },
-  "3X ATP Angled Side": {
+  "3X ATP Angled Side 24in": {
     "0": {
       "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X ATP Angled Side 12in": {
+    "0": {
+      "material_name": "Metallic Grates.002",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X ATP Angled Side 12in": {
+    "0": {
+      "material_name": "Metallic Grates.002",
       "base_color": "#CBCBCB",
       "roughness": 0.1,
       "metalness": 0.8533,
@@ -3734,32 +3972,6 @@
       }
     }
   },
-  "3X Axle Flat Side For GED": {
-    "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Roof",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "3X Axle Angled Side For GED": {
     "0": {
       "material_name": "Metallic Grates",
@@ -3786,13 +3998,13 @@
       }
     }
   },
-  "Escape Door 54x48": {
+  "3X Axle Flat Side For GED": {
     "0": {
-      "material_name": "MAT_Shell.004",
-      "base_color": "#7B7D81",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3800,31 +4012,7 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes.003",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Material.008",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Roof.006",
+      "material_name": "Roof",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
       "metalness": "//..\\Textures\\Roof_Metallic.png",
@@ -3836,7 +4024,169 @@
       }
     }
   },
-  "Glass Screen": {
+  "ATP For 2X Axle Angled Side For GED 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For 2X Axle Flat Side For GED 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For 3X Axle Angled Side For GED 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For 3X Axle Flat Side For GED 24in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For 2X Axle Angled Side For GED 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For 2X Axle Flat Side For GED 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For 3X Axle Angled Side For GED 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP For 3X Axle Flat Side For GED 12in": {
+    "0": {
+      "material_name": "Metallic Grates",
+      "base_color": "#CBCBCB",
+      "roughness": 0.1,
+      "metalness": 0.8533,
+      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Escape Door 54x48": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Reflective_Stripes",
+      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Glass Screen R": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -3850,7 +4200,7 @@
       }
     }
   },
-  "Concession Door": {
+  "Concession Door R": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -3888,13 +4238,13 @@
       }
     }
   },
-  "Base Interior(Concession Door)": {
+  "Base Interior(Concession Door) R": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
       "metalness": 0.0,
-      "normal": false,
+      "normal": "//..\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3926,9 +4276,177 @@
       }
     },
     "3": {
-      "material_name": "Trailer_Lights",
-      "base_color": "//..\\Textures\\Trailer_Lights_BaseColor.jpg",
-      "roughness": 0.3746,
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    },
+    "4": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#E7E7E7",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Concession Door L": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Glass Screen L": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Base Interior(Concession Door) L": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#7B7D81",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Roof",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Trailer Lights_Transmission",
+      "base_color": "#E7E7E7",
+      "roughness": 0.0937,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
+    }
+  },
+  "50\u00d730 Horizontal Slider": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "30\u00d730 Egress": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15\u00d730 Vertical Slider": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
@@ -4246,41 +4764,41 @@
   },
   "Fold Down Shelf": {
     "0": {
-      "material_name": "lambert1.011",
-      "base_color": "#BCBCBC",
+      "material_name": "Material",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "#000000",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     }
   },
   "110V GFI Receptacle (20 AMP)": {
     "0": {
-      "material_name": "pasted__lambert2.003",
-      "base_color": "#BCBCBC",
+      "material_name": "Material",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "#000000",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "1": {
-      "material_name": "lambert1.016",
-      "base_color": "#BCBCBC",
+      "material_name": "Material",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "#000000",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -4396,9 +4914,9 @@
   },
   "LED Rope Light Extension(V-Nose)": {
     "0": {
-      "material_name": "FBXASC050XFBXASC032AxleFBXASC032AngledFBXASC032SideSG.003",
-      "base_color": "#7C7C80",
-      "roughness": 0.7157,
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
@@ -4411,9 +4929,9 @@
   "LED Rope Light Extension(Flat Front)": {},
   "LED Rope Light": {
     "0": {
-      "material_name": "FBXASC050XFBXASC032AxleFBXASC032AngledFBXASC032SideSG.003",
-      "base_color": "#7C7C80",
-      "roughness": 0.7157,
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,

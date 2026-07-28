@@ -168,7 +168,7 @@ const TONGUE_MESH_MAP = {
 
 export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, environment }) {
     const config = useConfigurator()
-    console.log('[DEBUG RENDER] ModularTrailerModel rendering. sinkPackage is:', config.sinkPackage);
+    // console.log('[DEBUG RENDER] ModularTrailerModel rendering. sinkPackage is:', config.sinkPackage);
 
     let hasCabinet = config.cabinets?.includes('frontbase36') 
     if (config.sinkPackage === 'sink') {
@@ -271,7 +271,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     // console.log(`[DEBUG ${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
                 }
                 if (sceneName === 'rearDoors') {
-                    console.log(`[DEBUG rearDoors mesh available] "${child.name}"`);
+                    // console.log(`[DEBUG rearDoors mesh available] "${child.name}"`);
                 }
             })
         })
@@ -527,7 +527,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 mats.forEach((mat, i) => {
                     if (!mat) return
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
-                    if (normalized !== 'matwheelcover') return
+                    if (normalized !== 'matwheelcover' && normalized !== 'metallicgrates') return
 
                     const key = `${child.uuid}-${i}`
 
@@ -732,29 +732,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             activeRearDoorMeshes.push(rearDoorMesh)
         }
         
-        // Add ATP Barn Door if atpRamp is true and double rear doors is selected
+        // Add ATP Barn Door (size-driven) if atpRamp is true and double rear doors is selected
         if (config.atpRamp && config.rampType === 'doublereardoors') {
-            activeRearDoorMeshes.push('ATP_Barn_Door')
+            const atpBarnSize = config.protectionSize || '24'
+            activeRearDoorMeshes.push(`ATP Barn Door ${atpBarnSize}in`)
+            activeRearDoorMeshes.push(`ATP_Barn_Door_${atpBarnSize}in`)
         }
         
         BlenderNodes.switchMeshes(rearDoors, activeRearDoorMeshes)
-        
-        // Explicitly hide ATP_Barn_Door if atpRamp is false (in case it is a child of the main door mesh)
-        if (!config.atpRamp && rearDoors) {
-            console.log(`[DEBUG ATP] Hiding ATP_Barn_Door. atpRamp is false.`);
-            let hiddenCount = 0;
-            rearDoors.traverse(child => {
-                if (child.name && child.name.toLowerCase().includes('atp_barn_door')) {
-                    child.visible = false
-                    // Also disable proxy if one exists
-                    if (child.userData) child.userData.proxyActive = false
-                    hiddenCount++;
-                }
-            })
-            console.log(`[DEBUG ATP] Hidden ${hiddenCount} ATP_Barn_Door meshes.`);
-        } else if (config.atpRamp && rearDoors && config.rampType === 'doublereardoors') {
-            console.log(`[DEBUG ATP] atpRamp is TRUE. ATP_Barn_Door should be visible.`);
-        }
 
         // ── Base Meshes: Escape Door condition ────────────────────────
         // Mirrors the Blender "Base" node group.
@@ -781,19 +766,43 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         activeDoorMeshes.push('Generator_Box_Plate_R')
 
         // Build active ATP trim lists per side → Join Geometry (extFinish.glb)
-        const activeAtpMeshes = []
-        if (driverVariant && driverVariant.atpL) activeAtpMeshes.push(driverVariant.atpL)
-        if (passengerVariant && passengerVariant.atpR) activeAtpMeshes.push(passengerVariant.atpR)
-        
-        const uniqueAtpMeshes = [...new Set(activeAtpMeshes)]
+        // The full ATP trim is composed of TWO meshes per side:
+        //   1. ATP_Flat_Panel_L/R_{size}in  — the flat wall sections (non-door area)
+        //   2. ATP_{DoorSize}_Door_Panel_L/R_{size}in — the section covering the door cutout
+        // Both must be shown together to cover the full trailer.
+        const sizeSuffix = config.protectionSize ? `_${config.protectionSize}in` : '_24in';
+        const uniqueAtpMeshes = []
+
+        if (driverVariant) {
+            // Always add the flat panel for the driver side (covers non-door section)
+            uniqueAtpMeshes.push(`ATP_Flat_Panel_L${sizeSuffix}`)
+            // If there's a door, also add the door-cutout ATP panel
+            if (driverVariant.atpL && driverVariant.atpL !== 'ATP_Flat_Panel_L') {
+                uniqueAtpMeshes.push(`${driverVariant.atpL}${sizeSuffix}`)
+            }
+        }
+        if (passengerVariant) {
+            // Always add the flat panel for the passenger side (covers non-door section)
+            uniqueAtpMeshes.push(`ATP_Flat_Panel_R${sizeSuffix}`)
+            // If there's a door, also add the door-cutout ATP panel
+            if (passengerVariant.atpR && passengerVariant.atpR !== 'ATP_Flat_Panel_R') {
+                uniqueAtpMeshes.push(`${passengerVariant.atpR}${sizeSuffix}`)
+            }
+        }
 
         // ATP plates mirror the generator box plate visibility
-        uniqueAtpMeshes.push('ATP_Plate_Generator_Box_L')
-        uniqueAtpMeshes.push('ATP_Plate_Generator_Box_R')
+        uniqueAtpMeshes.push(`ATP_Plate_Generator_Box_L${sizeSuffix}`)
+        uniqueAtpMeshes.push(`ATP_Plate_Generator_Box_R${sizeSuffix}`)
 
         if (config.width === '8.5ftgn') {
-            uniqueAtpMeshes.push('ATP_Gooseneck')
+            uniqueAtpMeshes.push(`ATP_Gooseneck${sizeSuffix}`)
         }
+
+        // Log all meshes in extFinish to see exact names
+        const extNames = [];
+        extFinish.traverse(c => { if (c.isMesh) extNames.push(c.name); });
+        console.log('[DEBUG ATP] Available meshes in extFinish:', extNames);
+        console.log('[DEBUG ATP] uniqueAtpMeshes:', uniqueAtpMeshes, '| axleAtp:', config.axleAtp);
 
         BlenderNodes.switchMeshes(sideDoors, activeDoorMeshes)
         // When ATP is OFF, suppress all extFinish ATP trim meshes globally
@@ -852,6 +861,27 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         // ── Assorted Addons (from Addons node graph) ───────────────────────
+        // Fold Down Stabilizer Jacks (Pair) — gated by 'folddown' jack selection
+        if (config.jacks?.includes('folddown')) {
+            activeAddonMeshes.push('Fold_Down_Stablizer_Jacks(Pair)')
+        }
+
+        // Fold Down Stabilizer Jacks (non-pair) — gated by 'folddownjacks' jack selection
+        if (config.jacks?.includes('folddownjacks')) {
+            activeAddonMeshes.push('Fold_Down_Stablizer_Jacks')
+        }
+
+        // 5K Scissor Jack w/ Handle (Pair) — gated by '5kscissor' jack selection
+        if (config.jacks?.includes('5kscissor')) {
+            activeAddonMeshes.push('5K_Scissor_Jacks_w_Handle(Pair)')
+        }
+
+        // 5K Scissor Jacks (non-pair) — gated by '5kscissorjacks' jack selection
+        if (config.jacks?.includes('5kscissorjacks')) {
+            activeAddonMeshes.push('5K_Scissor_Jacks')
+        }
+
+
         if (config.jacks?.includes('5000relectric')) {
             if (config.frontStyle === 'extendedvnose') {
                 activeAddonMeshes.push('Electric_Jack(Extended_V-Nose)')
@@ -1049,8 +1079,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         cargo.traverse(child => {
             if (child.isMesh) allCargoNames.push(child.name);
         });
-        console.log('3. ALL meshes inside cargo:', allCargoNames);
-        console.log('=========================');
+        // console.log('3. ALL meshes inside cargo:', allCargoNames);
+        // console.log('=========================');
 
         const activeCargoMeshes = []
         if (config.tieDowns?.includes('small')) {
@@ -1115,8 +1145,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // ── Finishes section (gated by ATP Super Toggle in Blender graph) ─────────
         if (config.axleAtp) {
-            // Base ATP strip
-            activeAxleMeshes.push('Side_Panel_ATP')
+            // Base ATP strip — now size-driven (12in or 24in)
+            const atpSize = config.protectionSize || '24'
+            activeAxleMeshes.push(`Side Panel ATP ${atpSize}in`)
+            activeAxleMeshes.push(`Side_Panel_ATP_${atpSize}in`)
             // ATP directional trim — follows same angled/flat toggle
             if (config.spreadAxle) {
                 activeAxleMeshes.push(`ATP_Corvette_Fender_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
@@ -1191,6 +1223,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.climateControl, config.jacks, config.lights, config.ventilation, config.receptacles,
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
         config.bathroom, config.awning, config.rampType, config.rearDoor, config.atpRamp, config.sinkPackage,
+        config.protectionSize,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
         cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning, sinkScene
     ])
@@ -1604,6 +1637,27 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         
         // Clean up unneeded geometries to prevent memory leaks over time since this runs every frame during resize
         pointsGeometry.dispose()
+        
+        // DEBUG: Check ATP_Flat_Panel_L_24in once
+        if (extFinish && !window.hasLoggedATP) {
+            window.hasLoggedATP = true;
+            const sidePanel = extFinish.getObjectByName('ATP_Flat_Panel_L_24in')
+            if (sidePanel) {
+                const box = new THREE.Box3().setFromObject(sidePanel);
+                console.log('[DEBUG RENDER] ATP_Flat_Panel_L_24in visible:', sidePanel.visible, 'box min:', box.min, 'box max:', box.max, 'parent visible:', sidePanel.parent?.visible, 'material:', sidePanel.material);
+                
+                // Traverse up to find if any parent is hidden
+                let p = sidePanel.parent;
+                while (p) {
+                    if (!p.visible) {
+                        console.log('[DEBUG RENDER] HIDDEN PARENT FOUND:', p.name);
+                    }
+                    p = p.parent;
+                }
+            } else {
+                console.log('[DEBUG RENDER] ATP_Flat_Panel_L_24in NOT FOUND in extFinish during render loop!');
+            }
+        }
 
     })
 
