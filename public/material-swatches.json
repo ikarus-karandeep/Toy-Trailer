@@ -13,6 +13,19 @@
         "normal_map": "//..\\Textures\\Aluminum_Rim_Normal.jpg"
     },
     "1": {
+        "material_name": "Awning_DECAL",
+        "base_color": "#7B7D81",
+        "roughness": 0.09,
+        "metalness": 0.0,
+        "normal": true,
+        "alpha": "E:\\Vivek Singh Bisht\\Tupperwear\\For Screws\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+        "emission": {
+            "color": "#FFFFFF",
+            "strength": 0.0
+        },
+        "normal_map": "E:\\Vivek Singh Bisht\\Tupperwear\\For Screws\\Textures\\Trailer_Detailing_Decals_Normal.jpg"
+    },
+    "2": {
         "material_name": "Black Steel Wheel_Rim",
         "base_color": "//..\\Textures\\Black Steel_Rim_Base_color.jpg",
         "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
@@ -25,7 +38,7 @@
         },
         "normal_map": "//..\\Textures\\Black Steel_Rim_Normal.jpg"
     },
-    "2": {
+    "3": {
         "material_name": "Black_Shell",
         "base_color": "//..\\Textures\\Blackl_BaseColor.jpg",
         "roughness": 0.15,
@@ -37,7 +50,7 @@
             "strength": 0.0
         }
     },
-    "3": {
+    "4": {
         "material_name": "Brandy Wine_Shell",
         "base_color": "//..\\Textures\\Brandy Wine_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -49,7 +62,7 @@
             "strength": 0.0
         }
     },
-    "4": {
+    "5": {
         "material_name": "Charcoal Grey_Shell",
         "base_color": "//..\\Textures\\Charcoal Grey_BaseColor.jpg",
         "roughness": 0.15,
@@ -61,7 +74,7 @@
             "strength": 0.0
         }
     },
-    "5": {
+    "6": {
         "material_name": "Electric Blue_Shell",
         "base_color": "//..\\Textures\\Electric Blue_BaseColor.jpg",
         "roughness": 0.15,
@@ -73,7 +86,7 @@
             "strength": 0.0
         }
     },
-    "6": {
+    "7": {
         "material_name": "Electric Green_Shell",
         "base_color": "//..\\Textures\\Electric Green_BaseColor.jpg",
         "roughness": 0.15,
@@ -85,7 +98,7 @@
             "strength": 0.0
         }
     },
-    "7": {
+    "8": {
         "material_name": "Emerald Green_Shell",
         "base_color": "//..\\Textures\\Emerald Green_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -97,7 +110,7 @@
             "strength": 0.0
         }
     },
-    "8": {
+    "9": {
         "material_name": "Indigo Blue_Shell",
         "base_color": "//..\\Textures\\Indigo Blue_BaseColor.jpg",
         "roughness": 0.15,
@@ -109,7 +122,7 @@
             "strength": 0.0
         }
     },
-    "9": {
+    "10": {
         "material_name": "MAT_Shell_DECAL",
         "base_color": "#7B7D81",
         "roughness": 0.09,
@@ -122,7 +135,7 @@
         },
         "normal_map": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg"
     },
-    "10": {
+    "11": {
         "material_name": "Orange_Shell",
         "base_color": "//..\\Textures\\Orange_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -134,7 +147,7 @@
             "strength": 0.0
         }
     },
-    "11": {
+    "12": {
         "material_name": "OSB_Sheets",
         "base_color": "//..\\Textures\\Osb_Sheet_Base_color.jpg",
         "roughness": "//..\\Textures\\Osb_Sheet_Roughness.jpg",
@@ -147,7 +160,7 @@
         },
         "normal_map": "//..\\Textures\\Osb_Sheet_Normal.jpg"
     },
-    "12": {
+    "13": {
         "material_name": "Pink_Shell",
         "base_color": "//..\\Textures\\Pink_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -159,7 +172,7 @@
             "strength": 0.0
         }
     },
-    "13": {
+    "14": {
         "material_name": "Plywood",
         "base_color": "//..\\Textures\\Plywood Base_Color.jpg",
         "roughness": 0.85,
@@ -171,7 +184,7 @@
             "strength": 0.0
         }
     },
-    "14": {
+    "15": {
         "material_name": "Purple_Shell",
         "base_color": "//..\\Textures\\Purple_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -183,7 +196,7 @@
             "strength": 0.0
         }
     },
-    "15": {
+    "16": {
         "material_name": "Red_Shell",
         "base_color": "//..\\Textures\\Red_BaseColor.jpg",
         "roughness": 0.15,
@@ -195,7 +208,7 @@
             "strength": 0.0
         }
     },
-    "16": {
+    "17": {
         "material_name": "Sierra Desert_Shell",
         "base_color": "//..\\Textures\\Sierra Desert_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -207,7 +220,7 @@
             "strength": 0.0
         }
     },
-    "17": {
+    "18": {
         "material_name": "Silver_Shell",
         "base_color": "//..\\Textures\\Sillver_BaseColor.jpg",
         "roughness": 0.2221,
@@ -219,7 +232,7 @@
             "strength": 0.0
         }
     },
-    "18": {
+    "19": {
         "material_name": "Standard Silver_Rim",
         "base_color": "#E7E7E7",
         "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
@@ -232,7 +245,7 @@
         },
         "normal_map": "//..\\Textures\\Black Steel_Rim_Normal.jpg"
     },
-    "19": {
+    "20": {
         "material_name": "Thermal_Plywood",
         "base_color": "//..\\Textures\\Thermal_Plywood_Base_Color.jpg",
         "roughness": 0.75,
@@ -244,7 +257,7 @@
             "strength": 0.0
         }
     },
-    "20": {
+    "21": {
         "material_name": "Trailer_Detailing_DECAL",
         "base_color": "#7B7D81",
         "roughness": 0.09,
@@ -257,7 +270,7 @@
         },
         "normal_map": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg"
     },
-    "21": {
+    "22": {
         "material_name": "White_Shell",
         "base_color": "//..\\Textures\\White_BaseColor.jpg",
         "roughness": 0.15,
@@ -269,7 +282,7 @@
             "strength": 0.0
         }
     },
-    "22": {
+    "23": {
         "material_name": "Yellow_Shell",
         "base_color": "//..\\Textures\\Yellow_Shell_BaseColor.jpg",
         "roughness": 0.5,

@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { applyDimensionDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
-import { patchTriplanarMaterial } from '../utils/TriplanarMaterial'
+import { patchTriplanarMaterial, generateBoxProjectionUVs } from '../utils/TriplanarMaterial'
 import { MATERIAL_DEFS_NORM, STATIC_TEXTURE_PATHS, applyMaterialDef, isSpecialMaterial, normMatName } from '../utils/MaterialApplicator'
 import { COLOR_OPTIONS } from '../constants/configData'
 
@@ -498,6 +498,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 // Only apply triplanar if it's NOT the uvscale material
                 if (!isUvScale) {
                     finalMat = patchTriplanarMaterial(base, 10)
+                } else {
+                    const scaledNormal = normalMap.clone()
+                    scaledNormal.repeat.set(280, 280)
+                    scaledNormal.needsUpdate = true
+                    finalMat.normalMap = scaledNormal
                 }
                 
                 if (isArray) child.material[i] = finalMat
@@ -562,7 +567,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 mats.forEach((mat, i) => {
                     if (!mat) return
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
-                    if (normalized !== 'matwheelcover' && normalized !== 'metallicgrates') return
+                    if (normalized !== 'matwheelcover' && normalized !== 'matwheelcoveruvscale') return
 
                     const key = `${child.uuid}-${i}`
 
@@ -780,11 +785,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Mirrors the Blender "Base" node group.
         // Group Input -> Base Interior goes into Super Toggle, gated by Escape Door menu index.
         const baseInterior = baseMeshes.getObjectByName('Base_Interior') || baseMeshes.getObjectByName('Base Interior')
+        const baseInteriorL = baseMeshes.getObjectByName('Base_Interior_L') || baseMeshes.getObjectByName('Base Interior L')
+        const baseInteriorR = baseMeshes.getObjectByName('Base_Interior_R') || baseMeshes.getObjectByName('Base Interior R')
         const leftWall = baseMeshes.getObjectByName('Left_Wall') || baseMeshes.getObjectByName('Left side wall Vanilla')
         const rightWall = baseMeshes.getObjectByName('Right_Wall') || baseMeshes.getObjectByName('Right side wall Vanilla')
         
         const hideBaseInterior = config.escapeDoor === 'gullwing' || (config.concessionDoor && config.concessionDoor !== 'none');
         if (baseInterior) baseInterior.visible = !hideBaseInterior;
+        if (baseInteriorL) baseInteriorL.visible = config.escapeDoor !== 'gullwing' && config.concessionDoor !== 'driver';
+        if (baseInteriorR) baseInteriorR.visible = config.concessionDoor !== 'passenger';
         if (leftWall) leftWall.visible = config.escapeDoor !== 'gullwing' && config.concessionDoor !== 'driver';
         if (rightWall) rightWall.visible = config.concessionDoor !== 'passenger';
 
