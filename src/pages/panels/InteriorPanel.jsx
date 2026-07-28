@@ -22,6 +22,7 @@ import ToggleSwitch from '../../components/ToggleSwitch'
 export default function InteriorPanel({ activeSectionTitle }) {
   const {
     floor, setFloor,
+    floorOverlay, setFloorOverlay,
     walls, setWalls,
     ceiling, setCeiling,
     cabinets, toggleCabinet, setCabinetsRaw,
@@ -36,15 +37,11 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const [pitPack, setPitPack] = useState(false)
   const [pitPackOpen, setPitPackOpen] = useState(true)
 
-  const [floorMaterial, setFloorMaterial] = useState('34plywood')
-  const [floorOverlay, setFloorOverlay] = useState(null)
   const [floorInsulation, setFloorInsulation] = useState(null)
   const [atpWheelWells, setAtpWheelWells] = useState(false)
 
-  const [wallMaterial, setWallMaterial] = useState('38plywood')
   const [wallInsulation, setWallInsulation] = useState(null)
 
-  const [ceilingMaterial, setCeilingMaterial] = useState('thermaply')
   const [ceilingInsulation, setCeilingInsulation] = useState(null)
 
   const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(false)
@@ -155,8 +152,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={floorMaterial === opt.id}
-                  onClick={() => setFloorMaterial(opt.id)}
+                  isSelected={floor === opt.id}
+                  onClick={() => setFloor(opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}
@@ -215,8 +212,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={wallMaterial === opt.id}
-                  onClick={() => setWallMaterial(opt.id)}
+                  isSelected={walls === opt.id}
+                  onClick={() => setWalls(opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}
@@ -251,8 +248,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={ceilingMaterial === opt.id}
-                  onClick={() => setCeilingMaterial(opt.id)}
+                  isSelected={ceiling === opt.id}
+                  onClick={() => setCeiling(opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}

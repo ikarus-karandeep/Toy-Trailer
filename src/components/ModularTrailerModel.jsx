@@ -649,6 +649,143 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
     }, [config.wheelType, wheels, axleConfig, staticTextures])
 
+    // ── Apply Floor Overlay material to MAT_Interior_Flooring ───────────────
+    useEffect(() => {
+        let floorMatName = 'matinteriorflooring' // Default fallback to original JSON definition
+        if (config.floorOverlay === 'atp') floorMatName = 'atpinteriorflooring'
+        else if (config.floorOverlay === 'rtp') floorMatName = 'rtpinteriorflooring'
+        else if (config.floorOverlay === 'coin') floorMatName = 'coininteriorflooring'
+        else if (config.floorOverlay === 'tile') floorMatName = 'tileinteriorflooring'
+
+        const def = MATERIAL_DEFS_NORM.get(floorMatName)
+        if (!def) return
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+
+        allScenes.forEach((scene) => {
+            if (!scene) return
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (normalized !== 'matinteriorflooring') return
+                    
+                    let next = applyMaterialDef(mat, def, staticTextures)
+                    
+                    // Specific scale adjustments for floor materials if needed
+                    if (next.map) {
+                        next.map.repeat.set(20, 20)
+                        if (floorMatName === 'coininteriorflooring') next.map.repeat.set(50, 50)
+                    }
+                    if (next.normalMap) {
+                        next.normalMap.repeat.set(20, 20)
+                        if (floorMatName === 'coininteriorflooring') next.normalMap.repeat.set(50, 50)
+                    }
+                    
+                    next.needsUpdate = true
+
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
+            })
+        })
+    }, [config.floorOverlay, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures])
+
+    // ── Apply Ceiling material to MAT_Interior_Cealing ───────────────
+    useEffect(() => {
+        let ceilMatName = 'matinteriorcealing' // Default fallback to original JSON definition
+        if (config.ceiling === 'white_metal_ceiling') ceilMatName = 'whitemetalinternalcealing'
+        else if (config.ceiling === 'atp_ceiling') ceilMatName = 'atpinteriorcealing'
+
+        const def = MATERIAL_DEFS_NORM.get(ceilMatName)
+        if (!def) return
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+
+        allScenes.forEach((scene) => {
+            if (!scene) return
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (normalized !== 'matinteriorcealing') return
+                    
+                    let next = applyMaterialDef(mat, def, staticTextures)
+                    
+                    if (next.map) {
+                        next.map.repeat.set(20, 20)
+                    }
+                    if (next.normalMap) {
+                        next.normalMap.repeat.set(20, 20)
+                    }
+                    
+                    next.needsUpdate = true
+
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
+            })
+        })
+    }, [config.ceiling, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures])
+
+    // ── Apply Wall material to MAT_Interior_Walls ───────────────
+    useEffect(() => {
+        let wallMatName = 'matinteriorwalls' // Default fallback to original JSON definition
+        if (config.walls === 'white_metal_walls') wallMatName = 'whitemetalinternalwalls'
+        else if (config.walls === '34plywood') wallMatName = 'thermalplywoodinternalwalls' // Using Thermal Plywood for 3/4 plywood option
+
+        const def = MATERIAL_DEFS_NORM.get(wallMatName)
+        if (!def) return
+
+        const allScenes = [
+            base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
+            tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
+            escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
+        ]
+
+        allScenes.forEach((scene) => {
+            if (!scene) return
+            scene.traverse(child => {
+                if (!child.isMesh) return
+                const isArray = Array.isArray(child.material)
+                const mats = isArray ? child.material : [child.material]
+                mats.forEach((mat, i) => {
+                    if (!mat) return
+                    const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
+                    if (normalized !== 'matinteriorwalls') return
+                    
+                    let next = applyMaterialDef(mat, def, staticTextures)
+                    
+                    if (next.map) {
+                        next.map.repeat.set(20, 20)
+                    }
+                    if (next.normalMap) {
+                        next.normalMap.repeat.set(20, 20)
+                    }
+                    
+                    next.needsUpdate = true
+
+                    if (isArray) child.material[i] = next
+                    else child.material = next
+                })
+            })
+        })
+    }, [config.walls, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures])
+
     // ── Apply all standard materials driven by material_data.json ────────────
     // Only MAT_Shell, Metallic Grates, MAT_WheelCover, MAT_Rim remain special.
     useEffect(() => {

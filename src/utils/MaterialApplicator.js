@@ -31,6 +31,9 @@ const SPECIAL_MATERIALS = new Set([
     'Metallic Grates_UV_Scale',
     'matwheelcover',
     'matrim',
+    'matinteriorflooring',
+    'matinteriorcealing',
+    'matinteriorwalls',
 ])
 
 function isSpecialName(name) {

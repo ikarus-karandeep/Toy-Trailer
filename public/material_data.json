@@ -171,7 +171,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -381,7 +381,7 @@
       }
     },
     "4": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -515,7 +515,7 @@
       }
     },
     "4": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -625,7 +625,7 @@
       }
     },
     "4": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -759,7 +759,7 @@
       }
     },
     "4": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -817,6 +817,30 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "9": {
+      "material_name": "MAT_Interior_Cealing",
+      "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "10": {
+      "material_name": "MAT_Interior_Flooring",
+      "base_color": "#D4BD67",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Gooseneck 8_5\u00d728": {
@@ -833,7 +857,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1157,7 +1181,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1231,7 +1255,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1319,7 +1343,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1417,7 +1441,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1515,7 +1539,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1613,7 +1637,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1737,7 +1761,7 @@
       }
     },
     "3": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -1837,7 +1861,7 @@
       }
     },
     "3": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -3164,7 +3188,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -3202,7 +3226,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -3240,7 +3264,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -3278,7 +3302,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -3318,7 +3342,7 @@
   },
   "Side Panel Bottom Strip": {
     "0": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -3482,7 +3506,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -3520,7 +3544,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -4536,7 +4560,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -4598,7 +4622,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -5099,6 +5123,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "8": {
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
     }
   },
   "Corvette Fender Flat Side For GED": {
@@ -5127,7 +5163,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -5165,7 +5201,7 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -5191,7 +5227,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -5229,7 +5265,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -5267,7 +5303,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -5305,7 +5341,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -5511,7 +5547,7 @@
       }
     },
     "1": {
-      "material_name": "MAT_Stripes",
+      "material_name": "Reflective_Stripes",
       "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
       "roughness": 0.1178,
       "metalness": 0.4773,
@@ -7179,6 +7215,18 @@
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Vents",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
