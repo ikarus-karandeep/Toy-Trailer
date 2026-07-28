@@ -825,8 +825,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Log all meshes in extFinish to see exact names
         const extNames = [];
         extFinish.traverse(c => { if (c.isMesh) extNames.push(c.name); });
-        console.log('[DEBUG ATP] Available meshes in extFinish:', extNames);
-        console.log('[DEBUG ATP] uniqueAtpMeshes:', uniqueAtpMeshes, '| axleAtp:', config.axleAtp);
+        // console.log('[DEBUG ATP] Available meshes in extFinish:', extNames);
+        // console.log('[DEBUG ATP] uniqueAtpMeshes:', uniqueAtpMeshes, '| axleAtp:', config.axleAtp);
 
         BlenderNodes.switchMeshes(sideDoors, activeDoorMeshes)
         // When ATP is OFF, suppress all extFinish ATP trim meshes globally
@@ -834,8 +834,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // ── Windows ───────────────────────────────────────────────
         const activeWindowsMeshes = [];
-        console.log('[DEBUG WINDOWS] config.windows:', config.windows);
-        console.log('[DEBUG WINDOWS] config.windowSizes:', config.windowSizes);
+        // console.log('[DEBUG WINDOWS] config.windows:', config.windows);
+        // console.log('[DEBUG WINDOWS] config.windowSizes:', config.windowSizes);
         if (config.windows) {
             if (config.windows.vertical > 0 && config.windowSizes?.vertical === '15x30') {
                 activeWindowsMeshes.push('15×30_Vertical_Slider');
@@ -848,11 +848,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         }
         if (windowsScene) {
-            console.log('[DEBUG WINDOWS] activeWindowsMeshes:', activeWindowsMeshes);
+            // console.log('[DEBUG WINDOWS] activeWindowsMeshes:', activeWindowsMeshes);
             BlenderNodes.switchMeshes(windowsScene, activeWindowsMeshes);
             const allWindowsMeshes = []
             windowsScene.traverse(c => { if (c.isMesh) allWindowsMeshes.push(c.name) })
-            console.log('[DEBUG WINDOWS] All mesh names in Windows.glb:', allWindowsMeshes)
+            // console.log('[DEBUG WINDOWS] All mesh names in Windows.glb:', allWindowsMeshes)
         }
 
         // ── Addons.glb: unified mesh list ──────────────────────────────────────────
@@ -894,11 +894,26 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Gullwing Escape Door lives in its own Packaging GLB (added to activeScenes below)
         const activeGullwingMeshes = []
         if (config.escapeDoor === 'gullwing') {
-            activeGullwingMeshes.push('Gullwing_Escape_Door_2')
+            let foundDoorName = null;
+            let foundAtpName = null;
             
-            const variantPrefix = config.axleCount === 'triple' ? '3X' : '2X'
-            const style = config.axleAngled ? 'Angled' : 'Flat'
-            activeGullwingMeshes.push(`${variantPrefix}_Axle_${style}_Side_For_GED`)
+            gullwingDoor.traverse(child => {
+                if (!child.isMesh) return;
+                const name = child.name;
+                
+                // Find the main door mesh
+                if (name.includes('Gullwing') && !name.includes('ATP') && !name.includes('Proxy')) {
+                    foundDoorName = name;
+                }
+                
+                // Find the ATP mesh if ATP protection is enabled
+                if (config.protectionType === 'atp' && name.includes('ATP') && name.includes(config.protectionSize || '24')) {
+                    foundAtpName = name;
+                }
+            });
+            
+            if (foundDoorName) activeGullwingMeshes.push(foundDoorName);
+            if (foundAtpName) activeGullwingMeshes.push(foundAtpName);
         }
         BlenderNodes.switchMeshes(gullwingDoor, activeGullwingMeshes)
 
@@ -977,35 +992,35 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const lightRelatedMeshes = allAddonMeshNames.filter(n => 
             /dome|panel|rope|light/i.test(n)
         )
-        console.log('[DEBUG LIGHTS] All mesh names in Addons.glb:', allAddonMeshNames)
-        console.log('[DEBUG LIGHTS] Light-related meshes:', lightRelatedMeshes)
-        console.log('[DEBUG LIGHTS] config.interiorLights:', config.interiorLights)
-        console.log('[DEBUG LIGHTS] config.ledRope:', config.ledRope)
+        // console.log('[DEBUG LIGHTS] All mesh names in Addons.glb:', allAddonMeshNames)
+        // console.log('[DEBUG LIGHTS] Light-related meshes:', lightRelatedMeshes)
+        // console.log('[DEBUG LIGHTS] config.interiorLights:', config.interiorLights)
+        // console.log('[DEBUG LIGHTS] config.ledRope:', config.ledRope)
 
         // 12V LED Dome Light
         if (config.interiorLights?.['12vleddome'] > 0) {
             activeAddonMeshes.push('Dome_Light')
             activeAddonMeshes.push('Dome Light')
-            console.log('[DEBUG LIGHTS] Adding Dome Light to activeAddonMeshes')
+            // console.log('[DEBUG LIGHTS] Adding Dome Light to activeAddonMeshes')
         }
         // 12V 24" Flat Panel LED
         if (config.interiorLights?.['12vflatpanel'] > 0) {
             activeAddonMeshes.push('Flat_Panel_Light')
             activeAddonMeshes.push('Flat Panel Light')
-            console.log('[DEBUG LIGHTS] Adding Flat Panel Light to activeAddonMeshes')
+            // console.log('[DEBUG LIGHTS] Adding Flat Panel Light to activeAddonMeshes')
         }
         // LED Rope Lighting
         if (config.ledRope) {
             activeAddonMeshes.push('LED_Rope_Light')
             activeAddonMeshes.push('LED Rope Light')
-            console.log('[DEBUG LIGHTS] Adding LED Rope Light to activeAddonMeshes')
+            // console.log('[DEBUG LIGHTS] Adding LED Rope Light to activeAddonMeshes')
         }
 
         // Ladder Racks: instanced via useMemo (Top_Supports mesh is the template, never shown directly)
 
-        console.log(`[DEBUG Ventilation] Current config.ventilation:`, config.ventilation)
+        // console.log(`[DEBUG Ventilation] Current config.ventilation:`, config.ventilation)
         if (config.sidewallVents || config.ventilation === '2waysidewall') {
-            console.log(`[DEBUG Ventilation] Adding Aluminum_Sidewall_Vents`)
+            // console.log(`[DEBUG Ventilation] Adding Aluminum_Sidewall_Vents`)
             activeAddonMeshes.push('Aluminum_Sidewall_Vents')
         }
 
@@ -1047,9 +1062,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 gooseneck: 'Water_Package_and_Sink(Gooseneck)'
             };
             const sinkMeshName = SINK_FRONT_STYLE_MAP[config.frontStyle] || 'Water_Package_and_Sink(V-Nose)';
-            console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
-            console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
-            console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
+            // console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
+            // console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
+            // console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
             activeSinkMeshes.push(sinkMeshName);
             
             // Also log if we can find this mesh across all scenes
@@ -1059,7 +1074,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     scene.traverse(child => {
                         const nameLower = child.name.toLowerCase();
                         if (nameLower.includes('sink') || nameLower.includes('water')) {
-                            console.log(`[DEBUG SINK FINDER] Found potential sink/water mesh in ${sceneName}:`, child.name);
+                            // console.log(`[DEBUG SINK FINDER] Found potential sink/water mesh in ${sceneName}:`, child.name);
                         }
                     });
                 }
@@ -1073,11 +1088,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (addons) {
             const vent = addons.getObjectByName('Non-Powered Roof Vent')
             if (vent) {
-                console.log("[DEBUG] Non-Powered Roof Vent parent is:", vent.parent?.name)
+                // console.log("[DEBUG] Non-Powered Roof Vent parent is:", vent.parent?.name)
             }
         }
         
-        console.warn(`[DEBUG 3D] Final active addons meshes being sent to switchMeshes:`, activeAddonMeshes)
+        // console.warn(`[DEBUG 3D] Final active addons meshes being sent to switchMeshes:`, activeAddonMeshes)
         BlenderNodes.switchMeshes(addons, activeAddonMeshes)
 
         // ── Cabinets: node graph logic ───────────────────────────────────────────
@@ -1094,6 +1109,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const hasOverhead = config.cabinets?.includes('frontoverhead16') 
         const hasToolbox = config.toolBox && config.toolBox !== 'none'
         const hasWinch = config.winchSystem
+
+        const hasWallRun = config.cabinets?.includes('wallrun36')
 
         // 1. Main Cabinet
         if (hasCabinet) {
@@ -1113,6 +1130,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // 4. Cabinet Toolbox insert — only when a toolbox option is selected
         if (hasCabinet && hasToolbox) {
             activeCabinetMeshes.push('Cabinet_Toolbox')
+        }
+
+        // 5. Wheel Wall Cabinet (Wall Run 36"H)
+        // 5. Wheel Wall Cabinet (Wall Run 36"H)
+        if (hasWallRun) {
+            activeCabinetMeshes.push('Wheel_Wall_Cabinet');
+        }
+
+        // 6. Floor to Ceiling Cabinet
+        const hasFullHeight = config.cabinets?.includes('fullheight');
+        if (hasFullHeight) {
+            activeCabinetMeshes.push('Floor_to_Ceiling_Cabinet');
         }
 
         BlenderNodes.switchMeshes(cabinetsGLB, activeCabinetMeshes)
@@ -1726,18 +1755,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             const sidePanel = extFinish.getObjectByName('ATP_Flat_Panel_L_24in')
             if (sidePanel) {
                 const box = new THREE.Box3().setFromObject(sidePanel);
-                console.log('[DEBUG RENDER] ATP_Flat_Panel_L_24in visible:', sidePanel.visible, 'box min:', box.min, 'box max:', box.max, 'parent visible:', sidePanel.parent?.visible, 'material:', sidePanel.material);
+                // console.log('[DEBUG RENDER] ATP_Flat_Panel_L_24in visible:', sidePanel.visible, 'box min:', box.min, 'box max:', box.max, 'parent visible:', sidePanel.parent?.visible, 'material:', sidePanel.material);
                 
                 // Traverse up to find if any parent is hidden
                 let p = sidePanel.parent;
                 while (p) {
                     if (!p.visible) {
-                        console.log('[DEBUG RENDER] HIDDEN PARENT FOUND:', p.name);
+                        // console.log('[DEBUG RENDER] HIDDEN PARENT FOUND:', p.name);
                     }
                     p = p.parent;
                 }
             } else {
-                console.log('[DEBUG RENDER] ATP_Flat_Panel_L_24in NOT FOUND in extFinish during render loop!');
+                // console.log('[DEBUG RENDER] ATP_Flat_Panel_L_24in NOT FOUND in extFinish during render loop!');
             }
         }
 

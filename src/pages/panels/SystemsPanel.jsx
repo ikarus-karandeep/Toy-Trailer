@@ -235,7 +235,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   isSelected={ventilation === opt.id}
                   onClick={() => {
                     const newValue = opt.id === ventilation ? null : opt.id;
-                    console.warn(`[DEBUG UI] User clicked vent option: ${opt.label} | Setting ventilation state to:`, newValue);
+                    // console.warn(`[DEBUG UI] User clicked vent option: ${opt.label} | Setting ventilation state to:`, newValue);
                     setVentilation(newValue);
                   }}
                 />

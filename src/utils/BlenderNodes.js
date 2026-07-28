@@ -217,7 +217,7 @@ export class BlenderNodes {
             BlenderNodes._applyWithProxy(scene, target, true)
             return true
         }
-        console.warn(`[BlenderNodes] switchMesh → "${targetName}" NOT FOUND in scene`)
+        // console.warn(`[BlenderNodes] switchMesh → "${targetName}" NOT FOUND in scene`)
         return false
     }
 
@@ -247,10 +247,10 @@ export class BlenderNodes {
                 BlenderNodes._applyWithProxy(scene, target, true)
                 matched++
             } else {
-                console.warn(`[BlenderNodes] switchMeshes → "${name}" NOT FOUND in scene`)
+                // console.warn(`[BlenderNodes] switchMeshes → "${name}" NOT FOUND in scene`)
             }
         }
-        console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length} | list: [${targetNames.join(', ')}]`)
+        // console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length} | list: [${targetNames.join(', ')}]`)
         return matched
     }
 

@@ -295,7 +295,21 @@ export default function InteriorPanel({ activeSectionTitle }) {
                     isLocked={isLocked}
                     isSelected={cabinets.includes(opt.id)}
                     hasSettings={opt.id === 'frontbase36'}
-                    onClick={() => !isLocked && toggleCabinet(opt.id)}
+                    onClick={() => {
+                      if (isLocked) return;
+                      if (!cabinets.includes(opt.id)) {
+                        const baseIds = BASE_CABINET_OPTIONS.map(o => o.id);
+                        const overheadIds = OVERHEAD_CABINET_OPTIONS.map(o => o.id);
+                        const toRemove = [...baseIds, ...overheadIds];
+                        const newCabinets = cabinets.filter(c => !toRemove.includes(c));
+                        setCabinetsRaw([...newCabinets, opt.id]);
+                      } else {
+                        // Toggle off - also remove its corresponding overhead
+                        let correspondingOverhead = opt.id === 'wallrun36' ? 'wallrun16' : 'frontoverhead16';
+                        const newCabinets = cabinets.filter(c => c !== opt.id && c !== correspondingOverhead);
+                        setCabinetsRaw(newCabinets);
+                      }
+                    }}
                     isMulti={true}
                     packageBadge={getBadge(opt.id)}
                   />
