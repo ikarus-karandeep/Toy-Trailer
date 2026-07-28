@@ -3399,7 +3399,343 @@
       }
     }
   },
-  "Cabinet Toolbox": {
+  "Floor to Ceiling Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Wheel Wall Cabinet": {
+    "0": {
+      "material_name": "standardSurface1.003",
+      "base_color": "#AAAAAA",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Front Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "BlackROUGH",
+      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Flat Front Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "BlackROUGH",
+      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Extended V-Nose Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Extended V-Nose Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Slant V-Nose Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Slant V-Nose Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Gooseneck Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "BlackROUGH",
+      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Gooseneck Overhead Cabinet": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "BlackROUGH",
+      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Toolbox": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -3461,7 +3797,7 @@
       }
     }
   },
-  "V-Nose Cabinet": {
+  "Slot": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -3479,160 +3815,6 @@
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "V-Nose Cabinet Toolbox Slot": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "V-Nose Overhead Cabinet": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Flat Front Cabinet": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": 1.0,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Flat Front Cabinet Toolbox Slot": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Flat Front Overhead Cabinet": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": 1.0,
-      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4017,6 +4199,34 @@
       "roughness": "//..\\Textures\\Roof_Roughness.png",
       "metalness": "//..\\Textures\\Roof_Metallic.png",
       "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Corvette Fender Flat Side For GED": {
+    "0": {
+      "material_name": "Material.003",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Corvette Fender Angled Side For GED": {
+    "0": {
+      "material_name": "Material.003",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -4932,6 +5142,48 @@
       "material_name": "Material",
       "base_color": "#888888",
       "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "LED Rope Light Extension(Slant V-Nose)": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "LED Rope Light Extension(Gooseneck)": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "LED Rope Light Extension(Extended V-Nose)": {
+    "0": {
+      "material_name": "FBXASC050XFBXASC032AxleFBXASC032AngledFBXASC032SideSG.002",
+      "base_color": "#7C7C80",
+      "roughness": 0.7157,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,

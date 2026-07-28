@@ -6,12 +6,15 @@ export default function SegmentedControl({ options, value, onChange }) {
         return (
           <button
             key={opt.id}
-            onClick={() => onChange(opt.id)}
+            onClick={() => {
+              if (!opt.disabled) onChange(opt.id);
+            }}
+            disabled={opt.disabled}
             className={`flex-1 text-center py-2.5 text-[14px] uppercase font-normal rounded-full transition-all duration-200 ${
               isSelected
                 ? 'text-[#DA634B] border border-[#DA634B] z-10'
                 : 'text-gray-400 hover:text-white border border-transparent z-0'
-            }`}
+            } ${opt.disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
             style={
               isSelected
                 ? { 

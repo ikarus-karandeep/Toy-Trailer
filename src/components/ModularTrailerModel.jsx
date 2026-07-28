@@ -28,11 +28,13 @@ const PATHS = {
     spoiler: '/models/Packaging/Rear Spoiler.glb',
     gullwingDoor: '/models/Packaging/Gullwing Door.glb',
     escapeDoor: '/models/Packaging/Escape Door.glb',
+    concessionDoor: '/models/Packaging/Concession Door.glb',
     axleConfig: '/models/Structure/Axle Configs.glb',
     axle: '/models/Structure/Axle.glb',
     wheels: '/models/Structure/Wheels.glb',
     addons: '/models/Addons.glb',
     sink: '/models/Packaging/Sink.glb',
+    windows: '/models/Packaging/Windows.glb',
 }
 
 // Tyre count is driven by the axle variant (2x = 2 Tyres, 3x = 3 Tyres)
@@ -196,12 +198,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const { scene: spoiler } = useGLTF(PATHS.spoiler)
     const { scene: gullwingDoor } = useGLTF(PATHS.gullwingDoor)
     const { scene: escapeDoorScene } = useGLTF(PATHS.escapeDoor)
+    const { scene: concessionDoorScene } = useGLTF(PATHS.concessionDoor)
     const { scene: axleConfig } = useGLTF(PATHS.axleConfig)
     const { scene: axle } = useGLTF(PATHS.axle)
     const { scene: wheels } = useGLTF(PATHS.wheels)
     const { scene: addons } = useGLTF(PATHS.addons)
     const { scene: cargo } = useGLTF(PATHS.cargo)
     const { scene: sinkScene } = useGLTF(PATHS.sink)
+    const { scene: windowsScene } = useGLTF(PATHS.windows)
 
     const shellTextures = useTexture(SHELL_TEXTURES)
     const simpleNoise   = useTexture('/Materials/Simple_Noise.png')
@@ -232,7 +236,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
     // and explicitly hide any proxy meshes so they don't render.
     useEffect(() => {
-        const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene }
+        const allScenes = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene }
         Object.entries(allScenes).forEach(([sceneName, scene]) => {
             if (!scene) return;
             
@@ -275,7 +279,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 }
             })
         })
-    }, [base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, axleConfig, axle, wheels, addons, cargo])
+    }, [base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, axleConfig, axle, wheels, addons, cargo])
 
     const applyUvScalingForScene = (scene) => {
         scene.traverse(child => {
@@ -615,7 +619,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
             tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-            escapeDoorScene, axleConfig, axle, wheels, addons, cargo,
+            escapeDoorScene, concessionDoorScene, axleConfig, axle, wheels, addons, cargo,
         ]
         allScenes.forEach(scene => {
             const isGooseneckScene = (scene === frontStyle) && config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck');
@@ -676,7 +680,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.frontStyle, staticTextures,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
-        escapeDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
+        escapeDoorScene, concessionDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene
     ])
 
     // Compute global bounds from base scenes
@@ -748,9 +752,29 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const leftWall = baseMeshes.getObjectByName('Left_Wall') || baseMeshes.getObjectByName('Left side wall Vanilla')
         const rightWall = baseMeshes.getObjectByName('Right_Wall') || baseMeshes.getObjectByName('Right side wall Vanilla')
         
-        if (baseInterior) baseInterior.visible = config.escapeDoor !== 'gullwing'
-        if (leftWall) leftWall.visible = config.escapeDoor !== 'gullwing'
-        if (rightWall) rightWall.visible = true
+        const hideBaseInterior = config.escapeDoor === 'gullwing' || (config.concessionDoor && config.concessionDoor !== 'none');
+        if (baseInterior) baseInterior.visible = !hideBaseInterior;
+        if (leftWall) leftWall.visible = config.escapeDoor !== 'gullwing' && config.concessionDoor !== 'driver';
+        if (rightWall) rightWall.visible = config.concessionDoor !== 'passenger';
+
+        // ── Concession Door ───────────────────────────────────────────────
+        const activeConcessionDoorMeshes = [];
+        if (config.concessionDoor === 'driver') {
+            activeConcessionDoorMeshes.push('Concession Door L', 'Concession_Door_L');
+            activeConcessionDoorMeshes.push('Base Interior(Concession Door) L', 'Base_Interior(Concession_Door)_L');
+            if (config.glassScreen) {
+                activeConcessionDoorMeshes.push('Glass Screen L', 'Glass_Screen_L');
+            }
+        } else if (config.concessionDoor === 'passenger') {
+            activeConcessionDoorMeshes.push('Concession Door R', 'Concession_Door_R');
+            activeConcessionDoorMeshes.push('Base Interior(Concession Door) R', 'Base_Interior(Concession_Door)_R');
+            if (config.glassScreen) {
+                activeConcessionDoorMeshes.push('Glass Screen R', 'Glass_Screen_R');
+            }
+        }
+        if (concessionDoorScene) {
+            BlenderNodes.switchMeshes(concessionDoorScene, activeConcessionDoorMeshes);
+        }
 
         // ── Side Doors & Generator Box: mirrors the Blender node graph ─────────
         const driverVariant = DOOR_MESH_MAP[effectiveDriverDoor]
@@ -807,6 +831,29 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         BlenderNodes.switchMeshes(sideDoors, activeDoorMeshes)
         // When ATP is OFF, suppress all extFinish ATP trim meshes globally
         BlenderNodes.switchMeshes(extFinish, config.axleAtp ? uniqueAtpMeshes : [])
+
+        // ── Windows ───────────────────────────────────────────────
+        const activeWindowsMeshes = [];
+        console.log('[DEBUG WINDOWS] config.windows:', config.windows);
+        console.log('[DEBUG WINDOWS] config.windowSizes:', config.windowSizes);
+        if (config.windows) {
+            if (config.windows.vertical > 0 && config.windowSizes?.vertical === '15x30') {
+                activeWindowsMeshes.push('15×30_Vertical_Slider');
+            }
+            if (config.windows.horizontal > 0 && config.windowSizes?.horizontal === '50x30') {
+                activeWindowsMeshes.push('50×30_Horizontal_Slider');
+            }
+            if (config.windows.egress > 0 && config.windowSizes?.egress === '30x30') {
+                activeWindowsMeshes.push('30×30_Egress');
+            }
+        }
+        if (windowsScene) {
+            console.log('[DEBUG WINDOWS] activeWindowsMeshes:', activeWindowsMeshes);
+            BlenderNodes.switchMeshes(windowsScene, activeWindowsMeshes);
+            const allWindowsMeshes = []
+            windowsScene.traverse(c => { if (c.isMesh) allWindowsMeshes.push(c.name) })
+            console.log('[DEBUG WINDOWS] All mesh names in Windows.glb:', allWindowsMeshes)
+        }
 
         // ── Addons.glb: unified mesh list ──────────────────────────────────────────
         // All addon meshes are collected into ONE array and applied in a single
@@ -1249,7 +1296,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.cabinets, config.toolBox,
         config.driverSideDoor, config.passengerSideDoor,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
-        config.escapeDoor, config.generatorBox, config.winchSystem, config.tieDowns,
+        config.escapeDoor, config.concessionDoor, config.glassScreen, config.generatorBox, config.winchSystem, config.tieDowns,
+        config.windows, config.windowSizes,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights, config.ventilation, config.receptacles,
         config.ladderRacks, config.sidewallVents, config.recessedTireBox, config.interiorTireMount, config.spareTire,
@@ -1257,7 +1305,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.protectionSize,
         config.interiorLights, config.ledRope,
         frontStyle, rearDoors, sideDoors, extFinish, wheels, axle, axleConfig, addons,
-        cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning, sinkScene
+        cabinetsGLB, cargo, spoiler, tongue, bathroom, gullwingDoor, awning, sinkScene, concessionDoorScene, windowsScene
     ])
 
     // ── activeScenes must be computed BEFORE generatedETracks so the proxy scan
@@ -1280,12 +1328,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (config.exteriorAccessories === 'rearwingspoiler' || config.exteriorAccessories === 'rearwings') scenes.push(spoiler)
         if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)
         if (config.escapeDoor === '54x48') scenes.push(escapeDoorScene)
+        if (config.concessionDoor && config.concessionDoor !== 'none') scenes.push(concessionDoorScene)
+        if (config.windows && (config.windows.vertical > 0 || config.windows.horizontal > 0 || config.windows.egress > 0)) scenes.push(windowsScene)
         return scenes
     }, [
-        config.cabinets, config.awning, config.bathroom, config.exteriorAccessories, config.escapeDoor,
+        config.cabinets, config.awning, config.bathroom, config.exteriorAccessories, config.escapeDoor, config.concessionDoor, config.windows,
         lengthFt,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
-        tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor, escapeDoorScene
+        tongue, wheels, axleConfig, axle, addons, cabinetsGLB, awning, bathroom, cargo, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene
     ])
 
     activeScenesRef.current = activeScenes

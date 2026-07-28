@@ -325,9 +325,10 @@ export const WINDOWS_OPTIONS = [
 ];
 
 export const WINDOWS_SIZE_OPTIONS = [
-  { id: '30x15', label: '30" X 15"', price: 412 },
+  { id: '15x30', label: '15" X 30"', price: 412 },
   { id: '30x30', label: '30" X 30"', price: 412 },
   { id: '36x36', label: '36" X 36"', price: 500 },
+  { id: '50x30', label: '50" X 30"', price: 500 },
 ];
 
 export const WINDOWS_EGRESS_OPTIONS = [

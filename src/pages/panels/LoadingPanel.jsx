@@ -32,6 +32,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
     passengerSideDoor, setPassengerSideDoor,
     escapeDoor, setEscapeDoor,
     atpRamp, setAtpRamp,
+    concessionDoor, setConcessionDoor,
+    glassScreen, setGlassScreen,
+    windows, setWindows,
+    windowSizes, setWindowSizes,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -43,18 +47,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
   const [blackoutFrame, setBlackoutFrame] = useState(false)
 
-  const [concessionDoorPlacement, setConcessionDoorPlacement] = useState('driver')
+  // concessionDoor comes from context ('none' | 'driver' | 'passenger')
   const [concessionWidth, setConcessionWidth] = useState('72in')
   const [concessionHeight, setConcessionHeight] = useState('36in')
-  const [glassScreen, setGlassScreen] = useState(false)
 
-  const [windows, setWindows] = useState({
-    vertical: 0,
-    horizontal: 0,
-    egress: 0,
-  })
-  const [windowSize, setWindowSize] = useState('30x15')
-  
   const [dRings, setDRings] = useState({
     drings: 1, // Standard D-rings default
     walldrings: 0,
@@ -150,12 +146,19 @@ export default function LoadingPanel({ activeSectionTitle }) {
         <OptionSection title="ESCAPE DOOR">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Secondary Access/Emergency Egress</p>
 
+          {concessionDoor === 'driver' && (
+            <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
+              * Escape Door is disabled because a Concession Door is already on the Driver side.
+            </p>
+          )}
+
           <div className="flex flex-wrap gap-2">
             {ESCAPE_DOOR_SIZE_OPTIONS.map((opt) => (
               <OptionPill
                 key={opt.id}
                 label={opt.label}
                 isSelected={escapeDoor === opt.id}
+                isLocked={concessionDoor === 'driver' && opt.id !== 'none'}
                 onClick={() => setEscapeDoor(opt.id)}
               />
             ))}
@@ -177,16 +180,54 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
       {show('CONCESSION DOOR') && (
         <OptionSection title="CONCESSION DOOR">
-          <div className="mb-4">
-            <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Concession door placement</p>
-            <div className="w-full">
-              <SegmentedControl
-                options={CONCESSION_DOOR_PLACEMENT_OPTIONS}
-                value={concessionDoorPlacement}
-                onChange={setConcessionDoorPlacement}
-              />
-            </div>
+          {/* None / activate toggle */}
+          <div className="flex flex-col gap-2 mb-4">
+            <OptionPill
+              label="NONE"
+              isSelected={concessionDoor === 'none'}
+              onClick={() => setConcessionDoor('none')}
+            />
           </div>
+
+          {escapeDoor !== 'none' && (
+            <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
+              * Driver side placement is disabled because an Escape Door is already on the Driver side.
+            </p>
+          )}
+
+          {/* Side selector — only shown when door is active */}
+          {concessionDoor !== 'none' && (
+            <div className="mb-4">
+              <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Concession door placement</p>
+              <div className="w-full">
+                <SegmentedControl
+                  options={CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
+                    ...o,
+                    disabled: escapeDoor !== 'none' && o.id === 'driver'
+                  }))}
+                  value={concessionDoor}
+                  onChange={setConcessionDoor}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Activate by picking a side */}
+          {concessionDoor === 'none' && (
+            <div className="mb-4">
+              <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Select side to enable</p>
+              <div className="w-full">
+                <SegmentedControl
+                  options={CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
+                    ...o,
+                    disabled: escapeDoor !== 'none' && o.id === 'driver'
+                  }))}
+                  value={concessionDoor === 'none' ? '' : concessionDoor}
+                  onChange={(val) => setConcessionDoor(val)}
+                />
+              </div>
+            </div>
+          )}
 
           <div className="mt-8 flex flex-col items-center">
             <div className="flex w-full items-center justify-between gap-2 px-2">
@@ -222,48 +263,82 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
       {show('WINDOWS') && (
         <OptionSection title="WINDOWS">
-          <div className="flex flex-col gap-2 mb-4">
+          {concessionDoor === 'passenger' && (
+            <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
+              * Windows are disabled when a Concession Door is on the Passenger side.
+            </p>
+          )}
+          <div className="flex flex-col gap-6 mb-4">
             {WINDOWS_OPTIONS.map((opt) => {
               const qty = windows[opt.id]
               return (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price}
-                  isSelected={qty > 0}
-                  quantity={qty}
-                  onQuantityChange={(val) => updateQuantity(setWindows, opt.id, val)}
-                  onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
-                />
+                <div key={opt.id} className="flex flex-col gap-2">
+                  <OptionPill
+                    label={opt.label}
+                    price={opt.price}
+                    isSelected={qty > 0}
+                    isLocked={concessionDoor === 'passenger'}
+                    quantity={qty}
+                    onQuantityChange={(val) => updateQuantity(setWindows, opt.id, val)}
+                    onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
+                  />
+                  <div className="flex flex-wrap gap-2 pl-4">
+                    {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
+                      let isLocked = concessionDoor === 'passenger';
+                      if (!isLocked) {
+                        if (opt.id === 'vertical' && sizeOpt.id !== '15x30') isLocked = true;
+                        if (opt.id === 'horizontal' && sizeOpt.id !== '50x30') isLocked = true;
+                      }
+                      return (
+                        <OptionPill
+                          key={sizeOpt.id}
+                          label={sizeOpt.label}
+                          price={sizeOpt.price}
+                          isSelected={qty > 0 && windowSizes[opt.id] === sizeOpt.id}
+                          isLocked={isLocked}
+                          onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
               )
             })}
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            {WINDOWS_SIZE_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price}
-                isSelected={windowSize === opt.id}
-                onClick={() => setWindowSize(opt.id)}
-              />
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-6">
             {WINDOWS_EGRESS_OPTIONS.map((opt) => {
               const qty = windows[opt.id]
               return (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price}
-                  isSelected={qty > 0}
-                  quantity={qty}
-                  onQuantityChange={(val) => updateQuantity(setWindows, opt.id, val)}
-                  onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
-                />
+                <div key={opt.id} className="flex flex-col gap-2">
+                  <OptionPill
+                    label={opt.label}
+                    price={opt.price}
+                    isSelected={qty > 0}
+                    isLocked={concessionDoor === 'passenger'}
+                    quantity={qty}
+                    onQuantityChange={(val) => updateQuantity(setWindows, opt.id, val)}
+                    onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
+                  />
+                  <div className="flex flex-wrap gap-2 pl-4">
+                    {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
+                      let isLocked = concessionDoor === 'passenger';
+                      if (!isLocked) {
+                        if (sizeOpt.id !== '30x30') isLocked = true;
+                      }
+                      return (
+                        <OptionPill
+                          key={sizeOpt.id}
+                          label={sizeOpt.label}
+                          price={sizeOpt.price}
+                          isSelected={qty > 0 && windowSizes[opt.id] === sizeOpt.id}
+                          isLocked={isLocked}
+                          onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
               )
             })}
           </div>

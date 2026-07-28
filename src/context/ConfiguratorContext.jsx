@@ -131,7 +131,19 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Base addons (Base node graph)
   const [escapeDoor, setEscapeDoor] = useState(ic.escapeDoor ?? 'none')
+  const [concessionDoor, setConcessionDoor] = useState(ic.concessionDoor ?? 'none')
+  const [glassScreen, setGlassScreen] = useState(ic.glassScreen ?? false)
   const [generatorBox, setGeneratorBox] = useState(ic.generatorBox ?? false)
+  const [windows, setWindows] = useState(ic.windows ?? {
+    vertical: 0,
+    horizontal: 0,
+    egress: 0,
+  })
+  const [windowSizes, setWindowSizes] = useState(ic.windowSizes ?? {
+    vertical: '15x30',
+    horizontal: '50x30',
+    egress: '30x30',
+  })
 
   // Cabinet Addons
   const [winchSystem, setWinchSystem] = useState(ic.winchSystem ?? false)
@@ -250,7 +262,11 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     vNoseETrack, setVNoseETrack,
     batteryBox, setBatteryBox,
     escapeDoor, setEscapeDoor,
+    concessionDoor, setConcessionDoor,
+    glassScreen, setGlassScreen,
     generatorBox, setGeneratorBox,
+    windows, setWindows,
+    windowSizes, setWindowSizes,
     winchSystem, setWinchSystem,
     extendedTripleTongue, setExtendedTripleTongue,
     radioPackageSpeaker, setRadioPackageSpeaker,
@@ -272,7 +288,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     rampType, atpRamp, rearDoor, tieDowns, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,
-    escapeDoor, generatorBox, winchSystem,
+    escapeDoor, concessionDoor, glassScreen, generatorBox, winchSystem,
+    windows, windowSizes,
     extendedTripleTongue, radioPackageSpeaker, rearSpoiler,
     ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,
     showDimensions, visitedTabs, completionPercent,
