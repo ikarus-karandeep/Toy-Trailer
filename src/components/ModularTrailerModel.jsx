@@ -317,12 +317,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             if (!child.isMesh || !child.geometry?.attributes.uv) return
 
             const mats = Array.isArray(child.material) ? child.material : [child.material]
+            const isRampDoor = ['Heavy_Duty_Ramp', 'Super_Duty_Ramp', 'Heavy_Duty_Ramp_w_Flap'].includes(child.name)
+            
             const needsUvScale = mats.some(mat => {
                 const normalized = mat?.name?.replace(/[\s_]+/g, '').toLowerCase() || ''
-                return normalized.includes('uvscale')
+                return normalized.includes('uvscale') || normalized.includes('rubberflooring') || normalized.includes('atp') || normalized.includes('nudo')
             })
 
-            if (!needsUvScale) return
+            if (!needsUvScale && !isRampDoor) return
             const geo = child.geometry
             const uv = geo.attributes.uv
 
@@ -347,10 +349,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             
             // This is the base scale from your Blender material's Mapping node
             // Tweak this number if the texture is globally too small or large
-            const baseScale = 10.0 
+            let baseScale = 10.0 
+            if (['Heavy_Duty_Ramp', 'Super_Duty_Ramp', 'Heavy_Duty_Ramp_w_Flap'].includes(child.name)) {
+                baseScale = 24.0
+                console.log(`[DEBUG UV SCALE] Matched Ramp Door: ${child.name}, Setting baseScale: ${baseScale}`);
+            }
             
             const scaleX = distX / 2.02
             const scaleY = distY / 1.92 
+            
+            if (['Heavy_Duty_Ramp', 'Super_Duty_Ramp', 'Heavy_Duty_Ramp_w_Flap'].includes(child.name)) {
+                console.log(`[DEBUG UV SCALE] ${child.name} - scaleX: ${scaleX}, scaleY: ${scaleY}, distX: ${distX}, distY: ${distY}`);
+            }
 
             for (let i = 0; i < uv.count; i++) {
                 // X distance divided by 2.02
@@ -680,7 +690,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    next = patchTriplanarMaterial(next, 5)
+                    
+                    let scale = 5
+                    if (config.floorOverlay === 'coin') scale = 15
+                    else if (config.floorOverlay === 'tile') scale = 2
+                    
+                    next = patchTriplanarMaterial(next, scale)
                     
                     next.needsUpdate = true
 
@@ -760,7 +775,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    next = patchTriplanarMaterial(next, 5)
+                    next = patchTriplanarMaterial(next, )
                     
                     next.needsUpdate = true
 
@@ -1064,13 +1079,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Battery Box: Super Switch (V-Nose vs Flat Front cabinet variant)
         if (config.batteryBox) {
             const batMesh = frontStyleAddon.battery
-            console.log('[DEBUG BATTERY] config.batteryBox is ON. Front style:', config.frontStyle);
-            console.log('[DEBUG BATTERY] Mapped batMesh name:', batMesh);
+            // console.log('[DEBUG BATTERY] config.batteryBox is ON. Front style:', config.frontStyle);
+            // console.log('[DEBUG BATTERY] Mapped batMesh name:', batMesh);
             if (batMesh) {
                 const name1 = batMesh;
                 const name2 = batMesh.replace(/_/g, ' ');
                 const name3 = batMesh.replace(/ /g, '_');
-                console.log('[DEBUG BATTERY] Pushing names to activeAddonMeshes:', name1, name2, name3);
+                // console.log('[DEBUG BATTERY] Pushing names to activeAddonMeshes:', name1, name2, name3);
                 activeAddonMeshes.push(name1)
                 activeAddonMeshes.push(name2)
                 activeAddonMeshes.push(name3)
@@ -1082,7 +1097,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     allBatteryMeshes.push(c.name)
                 }
             })
-            console.log('[DEBUG BATTERY] All battery meshes in addons.glb:', allBatteryMeshes)
+            // console.log('[DEBUG BATTERY] All battery meshes in addons.glb:', allBatteryMeshes)
         }
 
         // V-Nose E Track: Super Toggle — only relevant when frontStyle is vnose
@@ -1121,22 +1136,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 expectedATP = `ATP_For_${panelPrefix}_${sideType}_For_GED_${atpSize}in`
             }
 
-            console.log('[GULLWING ATP DEBUG] Config:', {
-                escapeDoor: config.escapeDoor,
-                protectionType: config.protectionType,
-                protectionSize: config.protectionSize,
-                protectionSizeType: typeof config.protectionSize,
-                axleAngled: config.axleAngled,
-                axleCount: config.axleCount,
-                spreadAxle: config.spreadAxle,
-            })
-            console.log('[GULLWING ATP DEBUG] atpSize value:', atpSize, '| type:', typeof atpSize)
-            console.log('[GULLWING ATP DEBUG] Expected panel prefix:', expectedPanel)
-            console.log('[GULLWING ATP DEBUG] Expected ATP name:', JSON.stringify(expectedATP))
+            // console.log('[GULLWING ATP DEBUG] Config:', {
+            //     escapeDoor: config.escapeDoor,
+            //     protectionType: config.protectionType,
+            //     protectionSize: config.protectionSize,
+            //     protectionSizeType: typeof config.protectionSize,
+            //     axleAngled: config.axleAngled,
+            //     axleCount: config.axleCount,
+            //     spreadAxle: config.spreadAxle,
+            // })
+            // console.log('[GULLWING ATP DEBUG] atpSize value:', atpSize, '| type:', typeof atpSize)
+            // console.log('[GULLWING ATP DEBUG] Expected panel prefix:', expectedPanel)
+            // console.log('[GULLWING ATP DEBUG] Expected ATP name:', JSON.stringify(expectedATP))
             // Quick sanity check: does the expected name match the known 12in mesh name?
             const knownName12 = `ATP_For_2X_Axle_${config.axleAngled ? 'Angled_Side' : 'Flat_Side'}_For_GED_12in`
-            console.log('[GULLWING ATP DEBUG] Hardcoded 12in name:', JSON.stringify(knownName12))
-            console.log('[GULLWING ATP DEBUG] expectedATP startsWith knownName12?', expectedATP === knownName12)
+            // console.log('[GULLWING ATP DEBUG] Hardcoded 12in name:', JSON.stringify(knownName12))
+            // console.log('[GULLWING ATP DEBUG] expectedATP startsWith knownName12?', expectedATP === knownName12)
 
 
             // Dump all mesh names in the GLB for comparison
@@ -1455,8 +1470,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         
         const allCabinetNames = [];
         cabinetsGLB.traverse(c => { if (c.isMesh) allCabinetNames.push(c.name) });
-        console.log('[DEBUG CABINETS] All cabinet meshes in GLB:', allCabinetNames);
-        console.log('[DEBUG CABINETS] activeCabinetMeshes:', activeCabinetMeshes);
+        // console.log('[DEBUG CABINETS] All cabinet meshes in GLB:', allCabinetNames);
+        // console.log('[DEBUG CABINETS] activeCabinetMeshes:', activeCabinetMeshes);
 
         BlenderNodes.switchMeshes(cabinetsGLB, activeCabinetMeshes)
 
@@ -1994,9 +2009,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 floorInstanced.position.copy(floorTemplate.position)
                 floorInstanced.rotation.copy(floorTemplate.rotation)
                 floorInstanced.scale.copy(floorTemplate.scale)
-                // Apply clip transparency (alphaHash) to avoid OIT sorting issues on instanced mesh
+                // Apply clip transparency (alphaTest) to avoid OIT sorting issues on instanced mesh
                 const floorMats = Array.isArray(floorInstanced.material) ? floorInstanced.material : [floorInstanced.material]
-                floorMats.forEach(m => { if (m) { m.alphaHash = true; m.transparent = false; m.needsUpdate = true } })
+                floorMats.forEach(m => { if (m) { m.alphaTest = 0.5; m.alphaHash = false; m.transparent = false; m.needsUpdate = true } })
                 eTrackGroupRef.current.add(floorInstanced)
             })
         }
@@ -2068,9 +2083,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 wallInstanced.position.copy(wallTemplate.position)
                 wallInstanced.rotation.copy(wallTemplate.rotation)
                 wallInstanced.scale.copy(wallTemplate.scale)
-                // Apply clip transparency (alphaHash) to avoid OIT sorting issues on instanced mesh
+                // Apply clip transparency (alphaTest) to avoid OIT sorting issues on instanced mesh
                 const wallMats = Array.isArray(wallInstanced.material) ? wallInstanced.material : [wallInstanced.material]
-                wallMats.forEach(m => { if (m) { m.alphaHash = true; m.transparent = false; m.needsUpdate = true } })
+                wallMats.forEach(m => { if (m) { m.alphaTest = 0.5; m.alphaHash = false; m.transparent = false; m.needsUpdate = true } })
                 eTrackGroupRef.current.add(wallInstanced)
             })
         }

@@ -64,7 +64,17 @@ varying vec3 vWorldPos;
 varying vec3 vWorldNormal;
 uniform vec2 uScaleX;
 uniform vec2 uScaleY;
-uniform vec2 uScaleZ;`
+uniform vec2 uScaleZ;
+
+vec2 getTriplanarUvX(vec3 pos, vec3 normal) {
+  return vec2(pos.z * -sign(normal.x), -pos.y);
+}
+vec2 getTriplanarUvY(vec3 pos, vec3 normal) {
+  return vec2(pos.x * sign(normal.y), pos.z * sign(normal.y));
+}
+vec2 getTriplanarUvZ(vec3 pos, vec3 normal) {
+  return vec2(pos.x * sign(normal.z), -pos.y);
+}`
         )
 
         // Replace UV-based diffuse map sampling with triplanar blend
@@ -80,9 +90,9 @@ uniform vec2 uScaleZ;`
   _tp_blend = step(_tp_dom - 0.001, _tp_blend);
   _tp_blend /= max(dot(_tp_blend, vec3(1.0)), 0.001);
 
-  vec4 _tp_x = texture2D(map, vWorldPos.zy * uScaleX);
-  vec4 _tp_y = texture2D(map, vec2(vWorldPos.x, -vWorldPos.z) * uScaleY);
-  vec4 _tp_z = texture2D(map, vWorldPos.xy * uScaleZ);
+  vec4 _tp_x = texture2D(map, getTriplanarUvX(vWorldPos, vWorldNormal) * uScaleX);
+  vec4 _tp_y = texture2D(map, getTriplanarUvY(vWorldPos, vWorldNormal) * uScaleY);
+  vec4 _tp_z = texture2D(map, getTriplanarUvZ(vWorldPos, vWorldNormal) * uScaleZ);
   vec4 sampledDiffuseColor = _tp_x * _tp_blend.x + _tp_y * _tp_blend.y + _tp_z * _tp_blend.z;
 
   #ifdef DECODE_VIDEO_TEXTURE
@@ -94,6 +104,40 @@ uniform vec2 uScaleZ;`
   #endif
 
   diffuseColor *= sampledDiffuseColor;
+#endif`
+        )
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <roughnessmap_fragment>',
+            `float roughnessFactor = roughness;
+#ifdef USE_ROUGHNESSMAP
+  vec3 _tr_blend = abs(vWorldNormal);
+  float _tr_dom = max(_tr_blend.x, max(_tr_blend.y, _tr_blend.z));
+  _tr_blend = step(_tr_dom - 0.001, _tr_blend);
+  _tr_blend /= max(dot(_tr_blend, vec3(1.0)), 0.001);
+
+  vec4 _tr_x = texture2D(roughnessMap, getTriplanarUvX(vWorldPos, vWorldNormal) * uScaleX);
+  vec4 _tr_y = texture2D(roughnessMap, getTriplanarUvY(vWorldPos, vWorldNormal) * uScaleY);
+  vec4 _tr_z = texture2D(roughnessMap, getTriplanarUvZ(vWorldPos, vWorldNormal) * uScaleZ);
+  vec4 sampledRoughness = _tr_x * _tr_blend.x + _tr_y * _tr_blend.y + _tr_z * _tr_blend.z;
+  roughnessFactor *= sampledRoughness.g;
+#endif`
+        )
+
+        shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <metalnessmap_fragment>',
+            `float metalnessFactor = metalness;
+#ifdef USE_METALNESSMAP
+  vec3 _tm_blend = abs(vWorldNormal);
+  float _tm_dom = max(_tm_blend.x, max(_tm_blend.y, _tm_blend.z));
+  _tm_blend = step(_tm_dom - 0.001, _tm_blend);
+  _tm_blend /= max(dot(_tm_blend, vec3(1.0)), 0.001);
+
+  vec4 _tm_x = texture2D(metalnessMap, getTriplanarUvX(vWorldPos, vWorldNormal) * uScaleX);
+  vec4 _tm_y = texture2D(metalnessMap, getTriplanarUvY(vWorldPos, vWorldNormal) * uScaleY);
+  vec4 _tm_z = texture2D(metalnessMap, getTriplanarUvZ(vWorldPos, vWorldNormal) * uScaleZ);
+  vec4 sampledMetalness = _tm_x * _tm_blend.x + _tm_y * _tm_blend.y + _tm_z * _tm_blend.z;
+  metalnessFactor *= sampledMetalness.b;
 #endif`
         )
 
@@ -114,9 +158,9 @@ uniform vec2 uScaleZ;`
   _tn_blend = step(_tn_dom - 0.001, _tn_blend);
   _tn_blend /= max(dot(_tn_blend, vec3(1.0)), 0.001);
 
-  vec3 _ts_x = texture2D(normalMap, vWorldPos.zy * uScaleX).xyz * 2.0 - 1.0;
-  vec3 _ts_y = texture2D(normalMap, vec2(vWorldPos.x, -vWorldPos.z) * uScaleY).xyz * 2.0 - 1.0;
-  vec3 _ts_z = texture2D(normalMap, vWorldPos.xy * uScaleZ).xyz * 2.0 - 1.0;
+  vec3 _ts_x = texture2D(normalMap, getTriplanarUvX(vWorldPos, vWorldNormal) * uScaleX).xyz * 2.0 - 1.0;
+  vec3 _ts_y = texture2D(normalMap, getTriplanarUvY(vWorldPos, vWorldNormal) * uScaleY).xyz * 2.0 - 1.0;
+  vec3 _ts_z = texture2D(normalMap, getTriplanarUvZ(vWorldPos, vWorldNormal) * uScaleZ).xyz * 2.0 - 1.0;
 
   _ts_x.xy *= normalScale;
   _ts_y.xy *= normalScale;
@@ -138,17 +182,17 @@ uniform vec2 uScaleZ;`
 
   float _bp_eps = 0.001;
 
-  float _hx_c  = texture2D(bumpMap, vWorldPos.zy * uScaleX).r;
-  float _hx_du = texture2D(bumpMap, (vWorldPos.zy + vec2(_bp_eps, 0.0)) * uScaleX).r;
-  float _hx_dv = texture2D(bumpMap, (vWorldPos.zy + vec2(0.0, _bp_eps)) * uScaleX).r;
+  float _hx_c  = texture2D(bumpMap, getTriplanarUvX(vWorldPos, vWorldNormal) * uScaleX).r;
+  float _hx_du = texture2D(bumpMap, (getTriplanarUvX(vWorldPos, vWorldNormal) + vec2(_bp_eps, 0.0)) * uScaleX).r;
+  float _hx_dv = texture2D(bumpMap, (getTriplanarUvX(vWorldPos, vWorldNormal) + vec2(0.0, _bp_eps)) * uScaleX).r;
 
-  float _hy_c  = texture2D(bumpMap, vec2(vWorldPos.x, -vWorldPos.z) * uScaleY).r;
-  float _hy_du = texture2D(bumpMap, (vec2(vWorldPos.x, -vWorldPos.z) + vec2(_bp_eps, 0.0)) * uScaleY).r;
-  float _hy_dv = texture2D(bumpMap, (vec2(vWorldPos.x, -vWorldPos.z) + vec2(0.0, _bp_eps)) * uScaleY).r;
+  float _hy_c  = texture2D(bumpMap, getTriplanarUvY(vWorldPos, vWorldNormal) * uScaleY).r;
+  float _hy_du = texture2D(bumpMap, (getTriplanarUvY(vWorldPos, vWorldNormal) + vec2(_bp_eps, 0.0)) * uScaleY).r;
+  float _hy_dv = texture2D(bumpMap, (getTriplanarUvY(vWorldPos, vWorldNormal) + vec2(0.0, _bp_eps)) * uScaleY).r;
 
-  float _hz_c  = texture2D(bumpMap, vWorldPos.xy * uScaleZ).r;
-  float _hz_du = texture2D(bumpMap, (vWorldPos.xy + vec2(_bp_eps, 0.0)) * uScaleZ).r;
-  float _hz_dv = texture2D(bumpMap, (vWorldPos.xy + vec2(0.0, _bp_eps)) * uScaleZ).r;
+  float _hz_c  = texture2D(bumpMap, getTriplanarUvZ(vWorldPos, vWorldNormal) * uScaleZ).r;
+  float _hz_du = texture2D(bumpMap, (getTriplanarUvZ(vWorldPos, vWorldNormal) + vec2(_bp_eps, 0.0)) * uScaleZ).r;
+  float _hz_dv = texture2D(bumpMap, (getTriplanarUvZ(vWorldPos, vWorldNormal) + vec2(0.0, _bp_eps)) * uScaleZ).r;
 
   vec2 _bp_dHdxy = (bumpScale / _bp_eps) * (
     vec2(_hx_du - _hx_c, _hx_dv - _hx_c) * _bp_blend.x +
