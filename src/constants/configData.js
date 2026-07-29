@@ -230,6 +230,10 @@ export const FULL_HEIGHT_CABINET_OPTIONS = [
   { id: 'fullheight', label: 'FULL HEIGHT CABINET - $DYNAMIC', price: null },
 ];
 
+export const WHEEL_WALL_CABINET_OPTIONS = [
+  { id: 'wheelwallcabinet', label: 'WHEEL WALL CABINET', price: null },
+];
+
 export const TOOL_BOX_OPTIONS = [
   { id: 'none', label: 'NONE' },
   { id: 'frontbox', label: 'FRONT BOX', price: 9999 },

@@ -168,7 +168,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Door vs Cabinet conflict resolution (Always active across all panels)
   useEffect(() => {
     const hasPassengerDoor = (passengerSideDoor && passengerSideDoor !== 'none');
-    const hasDriverSideConflict = (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
+    const hasDriverSideConflict = (driverSideDoor && driverSideDoor !== 'none') || (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
     
     if (hasPassengerDoor && cabinets.includes('fullheight')) {
       setCabinetsRaw(prev => prev.filter(c => c !== 'fullheight'));
@@ -181,7 +181,19 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     if (parseFloat(length) < 24 && cabinets.includes('wallrun36')) {
       setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'));
     }
-  }, [passengerSideDoor, escapeDoor, concessionDoor, length, cabinets, setCabinetsRaw]);
+
+    if (genDoor && cabinets.includes('wallrun36')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'));
+    }
+
+    const hasWheelWallConflict =
+      (escapeDoor && escapeDoor !== 'none') ||
+      (concessionDoor === 'driver');
+
+    if (hasWheelWallConflict && cabinets.includes('wheelwallcabinet')) {
+      setCabinetsRaw(prev => prev.filter(c => c !== 'wheelwallcabinet'));
+    }
+  }, [driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor, genDoor, length, cabinets, setCabinetsRaw]);
 
   // Windows & Doors conflict resolution
   useEffect(() => {

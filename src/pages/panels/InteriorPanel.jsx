@@ -13,6 +13,7 @@ import {
   BASE_CABINET_OPTIONS,
   OVERHEAD_CABINET_OPTIONS,
   FULL_HEIGHT_CABINET_OPTIONS,
+  WHEEL_WALL_CABINET_OPTIONS,
   TOOL_BOX_OPTIONS
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
@@ -28,6 +29,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
     cabinets, toggleCabinet, setCabinetsRaw,
     toolBox, setToolBox,
     length,
+    bathroom,
+    genDoor,
     driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor,
   } = useConfigurator()
 
@@ -49,7 +52,14 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
   const hasPassengerDoor = (passengerSideDoor && passengerSideDoor !== 'none');
-  const hasDriverSideConflict = (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
+  const hasDriverSideConflict = (driverSideDoor && driverSideDoor !== 'none') || (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
+  const hasGenDoorConflict = Boolean(genDoor);
+  const hasWallRunConflict = hasDriverSideConflict || hasGenDoorConflict;
+  const hasWheelWallConflict =
+    (escapeDoor && escapeDoor !== 'none') ||
+    (concessionDoor === 'driver');
+  const hasBathroom = bathroom && bathroom !== 'none';
+  const hasFullHeightConflict = hasPassengerDoor || hasBathroom;
 
 
 
@@ -281,7 +291,12 @@ export default function InteriorPanel({ activeSectionTitle }) {
             <p className="text-gray-400 text-xs tracking-wider mb-4">ATP Diamond Plate Finish. Countertop Included</p>
             {hasDriverSideConflict && (
               <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
-                * Wall Run 36"H cabinet is disabled because a driver side escape or concession door is currently applied.
+                * Wall Run 36"H cabinet is disabled because a driver side door, escape door, or driver side concession door is currently applied.
+              </p>
+            )}
+            {hasGenDoorConflict && !hasDriverSideConflict && (
+              <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
+                * Wall Run 36"H cabinet is not available when the Generator Door is active.
               </p>
             )}
             <div className="flex flex-col gap-2">
@@ -289,7 +304,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 let isLocked = false;
                 if (opt.id === 'wallrun36') {
                   if (parseFloat(length) < 24) isLocked = true;
-                  if (hasDriverSideConflict) isLocked = true;
+                  if (hasWallRunConflict) isLocked = true;
                 }
                 
                 return (
@@ -350,9 +365,14 @@ export default function InteriorPanel({ activeSectionTitle }) {
 
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">FLOOR TO CEILING CABINETS</h4>
-            {hasPassengerDoor && (
+            {hasFullHeightConflict && (
               <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
-                * Floor to ceiling cabinets are disabled because a passenger side door is currently applied. They will only be available if no passenger side door is applied.
+                * Floor to Ceiling Cabinet is not available
+                {hasBathroom && hasPassengerDoor
+                  ? ' when a Bathroom and a Passenger Side Door are both applied.'
+                  : hasBathroom
+                  ? ' when a Bathroom is applied.'
+                  : ' when a Passenger Side Door is applied.'}
               </p>
             )}
             <div className="flex flex-col gap-2">
@@ -364,12 +384,35 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   isSelected={cabinets.includes(opt.id)}
                   onClick={() => toggleCabinet(opt.id)}
                   isMulti={true}
-                  isLocked={hasPassengerDoor}
+                  isLocked={hasFullHeightConflict}
                 />
               ))}
             </div>
           </div>
           <p className='border-t border-[#5D5E60]'></p>
+
+          <div className="mb-4">
+            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">WHEEL WALL CABINET</h4>
+            {hasWheelWallConflict && (
+              <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
+                * Wheel Wall Cabinet is not available when an Escape Door or Driver Side Concession Door is applied.
+              </p>
+            )}
+            <div className="flex flex-col gap-2">
+              {WHEEL_WALL_CABINET_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  isSelected={cabinets.includes(opt.id)}
+                  onClick={() => !hasWheelWallConflict && toggleCabinet(opt.id)}
+                  isMulti={true}
+                  isLocked={hasWheelWallConflict}
+                  packageBadge={getBadge(opt.id)}
+                />
+              ))}
+            </div>
+          </div>
           <div>
             <ToggleSwitch
               label="Blackout Cabinet Doors"

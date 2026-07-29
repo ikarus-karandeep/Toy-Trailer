@@ -1403,6 +1403,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const hasWinch = config.winchSystem
 
         const hasWallRun = config.cabinets?.includes('wallrun36')
+        const hasWallRunOverhead = config.cabinets?.includes('wallrun16')
+        const hasWheelWallCabinet = config.cabinets?.includes('wheelwallcabinet')
 
         // 1. Main Cabinet (front base) — hidden when lShapeCounter or genDoor is on
         if (hasCabinet) {
@@ -1427,8 +1429,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         }
 
-        // 5. Wheel Wall Cabinet (Wall Run 36"H)
+        // 5. Wall Run Cabinet (Wall Run 36"H)
         if (hasWallRun) {
+            activeCabinetMeshes.push('Wall_Run_Cabinet');
+        }
+
+        // 5b. Overhead Wall Run Cabinet (Wall Run 16"H)
+        if (hasWallRunOverhead) {
+            activeCabinetMeshes.push('Overhead_Wall_Run_Cabinet');
+        }
+
+        // 5c. Wheel Wall Cabinet
+        if (hasWheelWallCabinet) {
             activeCabinetMeshes.push('Wheel_Wall_Cabinet');
         }
 
