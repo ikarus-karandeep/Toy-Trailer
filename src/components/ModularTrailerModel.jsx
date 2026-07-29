@@ -1044,7 +1044,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         // Generator Box options mapped to Tongue Mounted Generator Box
-        console.log('[DEBUG GENERATOR] config.generatorBox:', config.generatorBox);
+        // console.log('[DEBUG GENERATOR] config.generatorBox:', config.generatorBox);
         if (config.generatorBox && config.frontStyle === 'flatfront') {
             allAddonMeshNames.forEach(n => {
                 const lower = n.toLowerCase();
@@ -1157,7 +1157,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             // Dump all mesh names in the GLB for comparison
             const allGullwingNames = []
             gullwingDoor.traverse(c => { if (c.isMesh) allGullwingNames.push(c.name) })
-            console.log('[GULLWING ATP DEBUG] All mesh names in GLB:', allGullwingNames)
+            // console.log('[GULLWING ATP DEBUG] All mesh names in GLB:', allGullwingNames)
 
             gullwingDoor.traverse(child => {
                 if (!child.isMesh) return;
@@ -1174,22 +1174,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 
                 // 2. Side Panel (handles suffixes like _1, _2)
                 if (normGlb(name).startsWith(normGlb(expectedPanel))) {
-                    console.log('[GULLWING ATP DEBUG] ✅ Panel matched:', name)
+                    // console.log('[GULLWING ATP DEBUG] ✅ Panel matched:', name)
                     activeGullwingMeshes.push(name);
                 }
                 
                 // 3. ATP (if enabled) — normalize spaces/underscores to handle GLB inconsistencies
                 if (config.protectionType === 'atp') {
                     if (normGlb(name).startsWith(normGlb(expectedATP))) {
-                        console.log('[GULLWING ATP DEBUG] ✅ ATP matched:', name)
+                        // console.log('[GULLWING ATP DEBUG] ✅ ATP matched:', name)
                         activeGullwingMeshes.push(name);
                     } else if (name.toLowerCase().includes('atp')) {
-                        console.log('[GULLWING ATP DEBUG] ⚠️ ATP mesh in GLB (not matched):', name)
+                        // console.log('[GULLWING ATP DEBUG] ⚠️ ATP mesh in GLB (not matched):', name)
                     }
                 }
             });
 
-            console.log('[GULLWING ATP DEBUG] Final activeGullwingMeshes:', activeGullwingMeshes)
+            // console.log('[GULLWING ATP DEBUG] Final activeGullwingMeshes:', activeGullwingMeshes)
         }
         BlenderNodes.switchMeshes(gullwingDoor, activeGullwingMeshes)
 
@@ -1282,7 +1282,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const genRelatedMeshes = allAddonMeshNames.filter(n =>
             /generator|lid|vented|slides|tray/i.test(n)
         )
-        console.log('[DEBUG GENERATOR MESHES] Found in Addons.glb:', genRelatedMeshes)
+        // console.log('[DEBUG GENERATOR MESHES] Found in Addons.glb:', genRelatedMeshes)
         // console.log('[DEBUG LIGHTS] Light-related meshes:', lightRelatedMeshes)
         // console.log('[DEBUG LIGHTS] config.interiorLights:', config.interiorLights)
         // console.log('[DEBUG LIGHTS] config.ledRope:', config.ledRope)
