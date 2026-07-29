@@ -680,19 +680,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    if (nameLower.includes('barn_door') || nameLower.includes('gullwing') || nameLower.includes('ramp')) {
-                        next = patchTriplanarMaterial(next, 10)
-                    } else {
-                        // Specific scale adjustments for floor materials if needed
-                        if (next.map) {
-                            next.map.repeat.set(5,5)
-                            if (floorMatName === 'coininteriorflooring') next.map.repeat.set(50, 50)
-                        }
-                        if (next.normalMap) {
-                            next.normalMap.repeat.set(5,5)
-                            if (floorMatName === 'coininteriorflooring') next.normalMap.repeat.set(50, 50)
-                        }
-                    }
+                    next = patchTriplanarMaterial(next, 5)
                     
                     next.needsUpdate = true
 
@@ -732,16 +720,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    if (nameLower.includes('barn_door') || nameLower.includes('gullwing') || nameLower.includes('ramp')) {
-                        next = patchTriplanarMaterial(next, 10)
-                    } else {
-                        if (next.map) {
-                            next.map.repeat.set(5,5)
-                        }
-                        if (next.normalMap) {
-                            next.normalMap.repeat.set(5,5)
-                        }
-                    }
+                    next = patchTriplanarMaterial(next, 5)
                     
                     next.needsUpdate = true
 
@@ -781,16 +760,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    if (nameLower.includes('barn_door') || nameLower.includes('gullwing') || nameLower.includes('ramp')) {
-                        next = patchTriplanarMaterial(next, 2)
-                    } else {
-                        if (next.map) {
-                            next.map.repeat.set(2,2)
-                        }
-                        if (next.normalMap) {
-                            next.normalMap.repeat.set(2,2)
-                        }
-                    }
+                    next = patchTriplanarMaterial(next, 5)
                     
                     next.needsUpdate = true
 
@@ -2012,6 +1982,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 floorInstanced.position.copy(floorTemplate.position)
                 floorInstanced.rotation.copy(floorTemplate.rotation)
                 floorInstanced.scale.copy(floorTemplate.scale)
+                // Apply clip transparency (alphaHash) to avoid OIT sorting issues on instanced mesh
+                const floorMats = Array.isArray(floorInstanced.material) ? floorInstanced.material : [floorInstanced.material]
+                floorMats.forEach(m => { if (m) { m.alphaHash = true; m.transparent = false; m.needsUpdate = true } })
                 eTrackGroupRef.current.add(floorInstanced)
             })
         }
@@ -2083,7 +2056,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 wallInstanced.position.copy(wallTemplate.position)
                 wallInstanced.rotation.copy(wallTemplate.rotation)
                 wallInstanced.scale.copy(wallTemplate.scale)
-                
+                // Apply clip transparency (alphaHash) to avoid OIT sorting issues on instanced mesh
+                const wallMats = Array.isArray(wallInstanced.material) ? wallInstanced.material : [wallInstanced.material]
+                wallMats.forEach(m => { if (m) { m.alphaHash = true; m.transparent = false; m.needsUpdate = true } })
                 eTrackGroupRef.current.add(wallInstanced)
             })
         }
