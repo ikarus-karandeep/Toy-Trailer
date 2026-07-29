@@ -241,6 +241,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const shellTextures = useTexture(SHELL_TEXTURES)
     const simpleNoise   = useTexture('/Materials/Simple_Noise.png')
     const normalMap = useTexture('/Materials/Metallic_Grates_Normal.png')
+    normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping
+    normalMap.colorSpace = THREE.NoColorSpace
+    normalMap.needsUpdate = true
     const staticTextures = useTexture(STATIC_TEXTURE_PATHS)
 
     const store = useRef(new Map())
@@ -258,6 +261,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     })
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
+    
+    // Force a re-render after initial mount to bypass WebGL first-frame texture upload bugs
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
     const wheelCoverOriginalMatsRef = useRef(new Map())
     // Incremented by the visibility useEffect after every switchMesh/switchMeshes call.
     // child.visible is accurate when the proxy scan runs.
@@ -462,8 +471,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         if (isArray) child.material[i] = patched
                         else child.material = patched
                     } else {
-                        const next = mat.clone()
+                        let next = mat.clone()
                         if (isDecal) {
+                            const origDef = MATERIAL_DEFS_NORM.get(normalized + 'decal')
+                            if (origDef) {
+                                next = applyMaterialDef(next, origDef, staticTextures)
+                            }
                             next.color.set(shellHex)
                         } else {
                             next.map         = texture
@@ -515,6 +528,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     finalMat.normalMap = scaledNormal
                 }
                 
+                finalMat.needsUpdate = true
                 if (isArray) child.material[i] = finalMat
                 else child.material = finalMat
             } else {
@@ -543,15 +557,124 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const isDecal = normalized.endsWith('decal')
                     if (isDecal) normalized = normalized.slice(0, -5)
                     
-                    if (normalized === 'metallicgrates') {
-                        applyGrates(child, mat, i, isArray, isDecal, false)
-                    } else if (normalized === 'metallicgratesuvscale') {
-                        applyGrates(child, mat, i, isArray, isDecal, true)
+                    if (normalized === 'metallicgrates' || normalized === 'metallicgratesuvscale' || normalized === 'matatp') {
+                        const isUvScale = normalized === 'metallicgratesuvscale';
+                        
+                        // Fix material mutation bug: cache the original GLB material
+                        const cacheKey = `atp_${child.uuid}_${i}`;
+                        if (!store.current.has(cacheKey)) {
+                            store.current.set(cacheKey, mat);
+                        }
+                        let originalMat = store.current.get(cacheKey);
+
+                        if (isDecal) {
+                            const origDef = MATERIAL_DEFS_NORM.get(normalized + 'decal');
+                            if (origDef) {
+                                originalMat = applyMaterialDef(originalMat.clone(), origDef, staticTextures);
+                            }
+                        }
+                        
+                        let overrideDef = null;
+                        // Avoid applying exterior protection materials to the interior floor or ceiling
+                        const nameLower = child.name.toLowerCase();
+                        const isInterior = nameLower.includes('interior') || nameLower.includes('floor') || nameLower.includes('cealing');
+                        
+                        if (!isInterior && !isDecal) {
+                            if (config.protectionType === 'anodized') {
+                                overrideDef = MATERIAL_DEFS_NORM.get('atpanodized');
+                            } else if (config.protectionType === 'coloredmetal') {
+                                overrideDef = MATERIAL_DEFS_NORM.get('atpcoloredmetal');
+                            }
+                        }
+
+                        if (overrideDef) {
+                            try {
+                                let newMat = applyMaterialDef(originalMat, overrideDef, staticTextures);
+                                if (newMat) {
+                                    // For Colored Metal, map the base color to match the trailer shell color
+                                    if (config.protectionType === 'coloredmetal') {
+                                        const shellColor = (config.selectedColor || 'white').toLowerCase();
+                                        const matchedTexture = shellTextures[shellColor];
+                                        
+                                        if (matchedTexture) {
+                                            newMat.map = matchedTexture;
+                                            newMat.color.setHex(0xffffff); // Ensure base color doesn't tint the texture
+                                        }
+                                    }
+
+                                    if (!isDecal) {
+                                        if (!isUvScale) {
+                                            newMat = patchTriplanarMaterial(newMat, 10);
+                                        } else {
+                                            if (newMat.map) {
+                                                const scaledMap = newMat.map.clone();
+                                                scaledMap.repeat.set(280, 280);
+                                                scaledMap.needsUpdate = true;
+                                                newMat.map = scaledMap;
+                                            }
+                                            if (newMat.normalMap) {
+                                                const scaledNormal = newMat.normalMap.clone();
+                                                scaledNormal.repeat.set(280, 280);
+                                                scaledNormal.needsUpdate = true;
+                                                newMat.normalMap = scaledNormal;
+                                            }
+                                        }
+                                    }
+                                    newMat.needsUpdate = true;
+                                    if (isArray) child.material[i] = newMat;
+                                    else child.material = newMat;
+                                }
+                            } catch (err) {
+                                console.error(`[DEBUG CRASH] Error applying override to ${child.name}:`, err);
+                            }
+                        } else {
+                            if (child.name.includes('ATP_Flat_Panel') || child.name.includes('Side_Panel_ATP')) {
+                                let targetColor = '#ffffff';
+                                let targetMetalness = 1;
+                                let targetRoughness = 0.1;
+                                
+                                if (config.generatorBox === 'blackoutatp') {
+                                    targetColor = '#333333';
+                                } else if (config.generatorBox === 'blackout') {
+                                    targetColor = '#1a1a1a'; 
+                                    targetMetalness = 0.2;
+                                    targetRoughness = 0.8;
+                                }
+
+                                originalMat.color.set(targetColor);
+                                originalMat.metalness = targetMetalness;
+                                originalMat.roughness = targetRoughness;
+                                originalMat.needsUpdate = true;
+                            }
+                            
+                            applyGrates(child, originalMat, i, isArray, isDecal, isUvScale);
+
+                            // Sync decal colors with the selected protection type
+                            if (isDecal && !isInterior) {
+                                const targetMat = isArray ? child.material[i] : child.material;
+                                if (config.protectionType === 'coloredmetal') {
+                                    const shellHex = COLOR_OPTIONS.find(c => c.id === config.selectedColor)?.color || '#ffffff';
+                                    targetMat.color.set(shellHex);
+                                    targetMat.metalness = 0.1;
+                                    targetMat.roughness = 0.5;
+                                } else if (config.protectionType === 'anodized') {
+                                    targetMat.color.set('#d0d0d0');
+                                    targetMat.metalness = 0.8;
+                                    targetMat.roughness = 0.3;
+                                }
+                                targetMat.needsUpdate = true;
+                            }
+                        }
                     }
                 })
             })
         })
     }, [
+        isMounted,
+        config.protectionType,
+        config.selectedColor,
+        shellTextures,
+        staticTextures,
         normalMap,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
@@ -709,7 +832,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // ── Apply Ceiling material to MAT_Interior_Cealing ───────────────
     useEffect(() => {
         let ceilMatName = 'matinteriorcealing' // Default fallback to original JSON definition
-        if (config.ceiling === 'white_metal_ceiling') ceilMatName = 'whitemetalinternalcealing'
+        if (config.ceiling === 'white_metal_ceiling') ceilMatName = 'whitemetalinteriorcealing'
         else if (config.ceiling === 'atp_ceiling') ceilMatName = 'atpinteriorcealing'
 
         const def = MATERIAL_DEFS_NORM.get(ceilMatName)
@@ -749,8 +872,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // ── Apply Wall material to MAT_Interior_Walls ───────────────
     useEffect(() => {
         let wallMatName = 'matinteriorwalls' // Default fallback to original JSON definition
-        if (config.walls === 'white_metal_walls') wallMatName = 'whitemetalinternalwalls'
-        else if (config.walls === '34plywood') wallMatName = 'thermalplywoodinternalwalls' // Using Thermal Plywood for 3/4 plywood option
+        if (config.walls === 'white_metal_walls') wallMatName = 'whitemetalinteriorwalls'
+        else if (config.walls === '34plywood') wallMatName = 'thermalplywoodinteriorwalls' // Using Thermal Plywood for 3/4 plywood option
+        else if (config.walls === '38plywood') wallMatName = 'plywoodinteriorwalls' // Explicit mapping for 3/8 plywood
 
         const def = MATERIAL_DEFS_NORM.get(wallMatName)
         if (!def) return
@@ -775,7 +899,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    next = patchTriplanarMaterial(next, )
+                    next = patchTriplanarMaterial(next)
                     
                     next.needsUpdate = true
 
@@ -809,7 +933,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     
                     const isGooseneckMesh = isGooseneckScene || child.name.toLowerCase().includes('gooseneck');
                     
-                    if (normMatName(mat.name) === 'reflectivestripes' && !isGooseneckMesh) {
+                    if (normMatName(mat.name) === 'matstripes' && !isGooseneckMesh) {
                         // Custom patch for stripes: preserves vertical UV to fit the trim perfectly,
                         // and uses world X/Z for horizontal wrap to prevent stretching on resize.
                         next.onBeforeCompile = (shader) => {

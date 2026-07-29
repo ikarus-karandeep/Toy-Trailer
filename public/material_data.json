@@ -41,11 +41,11 @@
   },
   "Door_Side_Piilers": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -171,8 +171,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -345,11 +345,11 @@
       }
     },
     "1": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -381,8 +381,8 @@
       }
     },
     "4": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -491,11 +491,11 @@
       }
     },
     "2": {
-      "material_name": "Metallic Grates_UV_Scale",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP_UV_Scale",
+      "base_color": "#9E4EC1",
+      "roughness": 0.3447,
+      "metalness": 0.2038,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -515,8 +515,8 @@
       }
     },
     "4": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -589,11 +589,11 @@
       }
     },
     "1": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -625,8 +625,8 @@
       }
     },
     "4": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -723,11 +723,11 @@
       }
     },
     "1": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -759,8 +759,8 @@
       }
     },
     "4": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -857,8 +857,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -881,11 +881,11 @@
       }
     },
     "3": {
-      "material_name": "Metallic Grates_UV_Scale",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP_UV_Scale",
+      "base_color": "#9E4EC1",
+      "roughness": 0.3447,
+      "metalness": 0.2038,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1181,8 +1181,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1255,8 +1255,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1343,8 +1343,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1441,8 +1441,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1539,8 +1539,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1637,8 +1637,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1761,8 +1761,8 @@
       }
     },
     "3": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1861,8 +1861,8 @@
       }
     },
     "3": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -1923,11 +1923,11 @@
   },
   "ATP Plate Generator Box R 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1937,11 +1937,11 @@
   },
   "ATP Plate Generator Box L 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1951,11 +1951,11 @@
   },
   "ATP Gooseneck 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1965,11 +1965,11 @@
   },
   "ATP Plate Generator Box R 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1979,11 +1979,11 @@
   },
   "ATP Plate Generator Box L 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1993,11 +1993,11 @@
   },
   "ATP Gooseneck 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2007,11 +2007,11 @@
   },
   "ATP Flat Panel L 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2021,11 +2021,11 @@
   },
   "ATP Flat Panel R 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2035,11 +2035,11 @@
   },
   "ATP Flat Panel L 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2049,11 +2049,11 @@
   },
   "ATP Flat Panel R 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2063,11 +2063,11 @@
   },
   "ATP 36x72 Door Panel R 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2077,11 +2077,11 @@
   },
   "ATP 36x72 Door Panel L 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2091,11 +2091,11 @@
   },
   "ATP 36x72 Door Panel L 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2105,11 +2105,11 @@
   },
   "ATP 36x72 Door Panel R 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2119,11 +2119,11 @@
   },
   "ATP 36x78 Door Panel R 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2133,11 +2133,11 @@
   },
   "ATP 36x78 Door Panel L 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2147,11 +2147,11 @@
   },
   "ATP 36x78 Door Panel L 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2161,11 +2161,11 @@
   },
   "ATP 36x78 Door Panel R 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2175,11 +2175,11 @@
   },
   "ATP 48x78 Door Panel L 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2189,11 +2189,11 @@
   },
   "ATP 48x78 Door Panel R 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2203,11 +2203,11 @@
   },
   "ATP 48x78 Door Panel L 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2217,11 +2217,11 @@
   },
   "ATP 48x78 Door Panel R 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2231,10 +2231,10 @@
   },
   "Barn Door": {
     "0": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -2386,11 +2386,11 @@
       }
     },
     "8": {
-      "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
-      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2524,11 +2524,11 @@
   },
   "ATP Barn Door 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2538,11 +2538,11 @@
   },
   "ATP Barn Door 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2565,7 +2565,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2591,7 +2591,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2617,7 +2617,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2643,7 +2643,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2669,7 +2669,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2695,7 +2695,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2721,7 +2721,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2747,7 +2747,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2773,7 +2773,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2799,7 +2799,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2825,7 +2825,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2851,7 +2851,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2877,7 +2877,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2903,7 +2903,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2929,7 +2929,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2955,7 +2955,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2981,7 +2981,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3007,7 +3007,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3033,7 +3033,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3059,7 +3059,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3085,7 +3085,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3111,7 +3111,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3137,7 +3137,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3163,7 +3163,7 @@
     },
     "1": {
       "material_name": "MAT_Rim",
-      "base_color": "#E7E7E7",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -3188,8 +3188,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -3201,10 +3201,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3226,8 +3226,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -3239,10 +3239,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3264,8 +3264,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -3277,10 +3277,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3302,8 +3302,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -3315,10 +3315,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3328,11 +3328,11 @@
   },
   "Side Panel ATP 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3342,8 +3342,8 @@
   },
   "Side Panel Bottom Strip": {
     "0": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -3356,11 +3356,11 @@
   },
   "Side Panel ATP 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3370,11 +3370,11 @@
   },
   "3X ATP Flat Side 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3384,11 +3384,11 @@
   },
   "2X ATP Flat Side 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3398,11 +3398,11 @@
   },
   "3X ATP Flat Side 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3412,11 +3412,11 @@
   },
   "2X ATP Flat Side 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3426,11 +3426,11 @@
   },
   "2X ATP Angled Side 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3440,11 +3440,11 @@
   },
   "3X ATP Angled Side 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3454,11 +3454,11 @@
   },
   "3X ATP Angled Side 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3468,11 +3468,11 @@
   },
   "2X ATP Angled Side 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3494,11 +3494,11 @@
       }
     },
     "1": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3506,8 +3506,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -3532,11 +3532,11 @@
       }
     },
     "1": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3544,8 +3544,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -3558,11 +3558,11 @@
   },
   "ATP Corvette Fender Angled Side 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3572,11 +3572,11 @@
   },
   "ATP Corvette Fender Flat Side 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3586,11 +3586,11 @@
   },
   "ATP Corvette Fender Flat Side 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -3600,11 +3600,11 @@
   },
   "ATP Corvette Fender Angled Side 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -4062,10 +4062,10 @@
   },
   "Wall Run Cabinet": {
     "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4074,10 +4074,10 @@
       }
     },
     "1": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4088,10 +4088,10 @@
   },
   "Overhead Wall Run Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4100,10 +4100,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4114,10 +4114,10 @@
   },
   "V-Nose Overhead Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4126,10 +4126,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4140,10 +4140,10 @@
   },
   "V-Nose Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4152,10 +4152,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4228,10 +4228,10 @@
   },
   "Slot": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4240,10 +4240,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4254,10 +4254,10 @@
   },
   "Slant V-Nose Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4266,10 +4266,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4280,10 +4280,10 @@
   },
   "Slant V-Nose Overhead Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4292,10 +4292,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4306,18 +4306,6 @@
   },
   "Gooseneck Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
@@ -4329,11 +4317,11 @@
         "strength": 0.0
       }
     },
-    "2": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+    "1": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4344,18 +4332,6 @@
   },
   "Gooseneck Overhead Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
@@ -4367,11 +4343,11 @@
         "strength": 0.0
       }
     },
-    "2": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+    "1": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4382,18 +4358,6 @@
   },
   "Flat Front Overhead Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
@@ -4405,11 +4369,11 @@
         "strength": 0.0
       }
     },
-    "2": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+    "1": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4420,18 +4384,6 @@
   },
   "Flat Front Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
@@ -4443,11 +4395,11 @@
         "strength": 0.0
       }
     },
-    "2": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+    "1": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4458,10 +4410,10 @@
   },
   "Extended V-Nose Overhead Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4470,10 +4422,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4484,10 +4436,10 @@
   },
   "Extended V-Nose Cabinet": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4496,10 +4448,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4532,6 +4484,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "2": {
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
     }
   },
   "Rear Spoiler Wing": {
@@ -4560,8 +4524,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -4622,8 +4586,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5137,8 +5101,8 @@
       }
     },
     "9": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5147,15 +5111,27 @@
         "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
         "strength": 0.0
       }
+    },
+    "10": {
+      "material_name": "White_Shell",
+      "base_color": "//..\\Textures\\White_BaseColor.jpg",
+      "roughness": 0.15,
+      "metalness": 0.3,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Corvette Fender Flat Side For GED": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5175,8 +5151,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5189,11 +5165,11 @@
   },
   "Corvette Fender Angled Side For GED": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5213,8 +5189,8 @@
       }
     },
     "2": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5239,8 +5215,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5252,10 +5228,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5277,8 +5253,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5290,10 +5266,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5315,8 +5291,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5328,10 +5304,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5353,8 +5329,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5366,10 +5342,10 @@
     },
     "2": {
       "material_name": "MAT_WheelCover",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5379,11 +5355,11 @@
   },
   "ATP For 2X Axle Angled Side For GED 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5393,11 +5369,11 @@
   },
   "ATP For 2X Axle Flat Side For GED 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5407,11 +5383,11 @@
   },
   "ATP For 3X Axle Angled Side For GED 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5421,11 +5397,11 @@
   },
   "ATP For 3X Axle Flat Side For GED 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5435,11 +5411,11 @@
   },
   "ATP Corvette Fender Flat Side GED 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5449,11 +5425,11 @@
   },
   "ATP Corvette Fender Angled Side GED 24in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5463,11 +5439,11 @@
   },
   "ATP For 2X Axle Angled Side For GED 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5477,11 +5453,11 @@
   },
   "ATP For 2X Axle Flat Side For GED 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5491,11 +5467,11 @@
   },
   "ATP For 3X Axle Angled Side For GED 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5505,11 +5481,11 @@
   },
   "ATP For 3X Axle Flat Side For GED 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5519,11 +5495,11 @@
   },
   "ATP Corvette Fender Flat Side GED  12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5533,11 +5509,11 @@
   },
   "ATP Corvette Fender Angled Side GED 12in": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -5559,8 +5535,8 @@
       }
     },
     "1": {
-      "material_name": "Reflective_Stripes",
-      "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
       "roughness": 0.1178,
       "metalness": 0.4773,
       "normal": false,
@@ -5749,10 +5725,10 @@
       }
     },
     "3": {
-      "material_name": "MAT_Interior_Walls",
-      "base_color": "#D1AD94",
-      "roughness": 0.5,
-      "metalness": 0.0,
+      "material_name": "White_Shell",
+      "base_color": "//..\\Textures\\White_BaseColor.jpg",
+      "roughness": 0.15,
+      "metalness": 0.3,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -5921,10 +5897,10 @@
       }
     },
     "3": {
-      "material_name": "MAT_Interior_Walls",
-      "base_color": "#D1AD94",
-      "roughness": 0.5,
-      "metalness": 0.0,
+      "material_name": "White_Shell",
+      "base_color": "//..\\Textures\\White_BaseColor.jpg",
+      "roughness": 0.15,
+      "metalness": 0.3,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -6261,15 +6237,15 @@
       }
     },
     "1": {
-      "material_name": "lambert2.003",
-      "base_color": "#BCBCBC",
+      "material_name": "Material",
+      "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
-        "color": "#000000",
-        "strength": 1.0
+        "color": "#FFFFFF",
+        "strength": 0.0
       }
     },
     "2": {
@@ -6549,7 +6525,7 @@
       }
     }
   },
-  "Interior Tire Mount": {
+  "Standard Spare Tire": {
     "0": {
       "material_name": "Material",
       "base_color": "#888888",
@@ -6592,6 +6568,18 @@
       "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
       "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
       "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6821,6 +6809,68 @@
       }
     }
   },
+  "Spider Spare Tire": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "Stair (Flat Front)": {
     "0": {
       "material_name": "Black Rubber_Membranes",
@@ -6851,11 +6901,11 @@
   },
   "ATP Battery Box(Flat Front, V-Nose, Slant V-Nose)": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6877,11 +6927,11 @@
   },
   "ATP Battery Box(Extended V-Nose)": {
     "0": {
-      "material_name": "Metallic Grates",
-      "base_color": "#CBCBCB",
-      "roughness": 0.1,
-      "metalness": 0.8533,
-      "normal": "//..\\Textures\\Metallic_Grates_Normal.png",
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6993,7 +7043,7 @@
       }
     }
   },
-  "LED Rope Light Extension (V-Nose)": {
+  "LED Rope Light Extension(V-Nose)": {
     "0": {
       "material_name": "LED_Lights",
       "base_color": "#E7E7E7",
@@ -7169,11 +7219,11 @@
       }
     },
     "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -7184,10 +7234,10 @@
   "Standard Generator Box Proxy": {},
   "L Shape Counter Hidden Generator Box": {
     "0": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -7196,10 +7246,10 @@
       }
     },
     "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -7235,11 +7285,11 @@
     },
     "2": {
       "material_name": "Vents",
-      "base_color": "#E7E7E7",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
+      "base_color": "//..\\Textures\\Fence_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Fence_Roughness.jpg",
+      "metalness": "//..\\Textures\\Fence_Metallic.jpg",
+      "normal": "//..\\Textures\\Fence_Normal.jpg",
+      "alpha": "//..\\Textures\\Fence_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -7274,11 +7324,11 @@
       }
     },
     "1": {
-      "material_name": "Metallic_Silver Stripes",
-      "base_color": "#C1C1C1",
-      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",

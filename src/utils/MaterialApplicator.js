@@ -27,7 +27,9 @@ export function normMatName(name) {
 // Keys MUST be the already-normalized form (no spaces, no underscores, lowercase).
 const SPECIAL_MATERIALS = new Set([
     'matshell',
+    'matshelldecal',
     'metallicgrates',
+    'metallicgratesdecal',
     'Metallic Grates_UV_Scale',
     'matwheelcover',
     'matrim',
@@ -66,7 +68,9 @@ Object.values(materialData).forEach(componentSlots => {
         if (normName.startsWith('mat')) {
             const baseName = normName.replace(/^mat_?/, '');
             let matchingSwatch = swatchesByNormName.get(baseName);
-            if (!matchingSwatch) {
+            if (normName === 'matstripes') {
+                matchingSwatch = swatchesByNormName.get('reflecivestripes') || swatchesByNormName.get('reflectivestripes');
+            } else if (!matchingSwatch) {
                 for (const [sNormName, swatch] of swatchesByNormName.entries()) {
                     if (sNormName.includes(baseName)) {
                         matchingSwatch = swatch;
@@ -249,7 +253,14 @@ export function applyMaterialDef(mat, def, textures) {
             tex.flipY = originalDef.flip_y === true
             tex.needsUpdate = true
             next.alphaMap = tex
-            next.transparent = true
+            
+            // Decals should use alphaTest to avoid depth sorting issues with the panels they sit on
+            if (normMatName(originalDef.material_name).endsWith('decal')) {
+                next.alphaTest = 0.5
+                next.transparent = false
+            } else {
+                next.transparent = true
+            }
         } else {
             next.transparent = true
             next.opacity = 0.0
