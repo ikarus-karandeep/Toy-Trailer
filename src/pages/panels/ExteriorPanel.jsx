@@ -66,7 +66,9 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             price={opt.price}
             isStandard={opt.isStandard}
             isSelected={exteriorFinish === opt.id}
+            isLocked={!!opt.disabled}
             onClick={() => {
+              if (opt.disabled) return;
               if (exteriorFinish === opt.id) {
                 setExteriorFinish(null)
               } else {
@@ -79,6 +81,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             packageBadge={getBadge(opt.id)}
           />
         ))}
+
       </div>
 
       {exteriorFinish === 'blackout' && (
