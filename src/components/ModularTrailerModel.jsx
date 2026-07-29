@@ -1328,13 +1328,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 }
                 
                 // 3. ATP (if enabled) — normalize spaces/underscores to handle GLB inconsistencies
-                if (config.protectionType === 'atp') {
-                    if (normGlb(name).startsWith(normGlb(expectedATP))) {
-                        // console.log('[GULLWING ATP DEBUG] ✅ ATP matched:', name)
-                        activeGullwingMeshes.push(name);
-                    } else if (name.toLowerCase().includes('atp')) {
-                        // console.log('[GULLWING ATP DEBUG] ⚠️ ATP mesh in GLB (not matched):', name)
-                    }
+                if (normGlb(name).startsWith(normGlb(expectedATP))) {
+                    // console.log('[GULLWING ATP DEBUG] ✅ ATP matched:', name)
+                    activeGullwingMeshes.push(name);
+                } else if (name.toLowerCase().includes('atp')) {
+                    // console.log('[GULLWING ATP DEBUG] ⚠️ ATP mesh in GLB (not matched):', name)
                 }
             });
 
