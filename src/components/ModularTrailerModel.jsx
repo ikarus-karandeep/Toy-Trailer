@@ -951,10 +951,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const mats = isArray ? child.material : [child.material]
                 mats.forEach((mat, i) => {
                     if (!mat || isSpecialMaterial(mat.name)) return
-                    const mappedName = getBlackoutMapped(normMatName(mat.name));
+                    const cacheKey = `gen_${child.uuid}_${i}`;
+                    if (!store.current.has(cacheKey)) {
+                        store.current.set(cacheKey, mat);
+                    }
+                    const originalMat = store.current.get(cacheKey);
+
+                    const mappedName = getBlackoutMapped(normMatName(originalMat.name));
                     const def = MATERIAL_DEFS_NORM.get(mappedName)
-                    if (!def) return
-                    let next = applyMaterialDef(mat, def, staticTextures)
+                    
+                    if (!def) {
+                        if (isArray) child.material[i] = originalMat
+                        else child.material = originalMat
+                        return
+                    }
+                    
+                    let next = applyMaterialDef(originalMat, def, staticTextures)
                     
                     const isGooseneckMesh = isGooseneckScene || child.name.toLowerCase().includes('gooseneck');
                     
@@ -1492,6 +1504,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         if (config.interiorTireMount || config.spareTire) {
             activeAddonMeshes.push('Interior_Tire_Mount')
+        }
+
+        if (config.spareTire) {
+            if (config.wheelType === 'spideraluminum') {
+                activeAddonMeshes.push('Spider_Spare_Tire')
+                activeAddonMeshes.push('Spider Spare Tire')
+            } else {
+                activeAddonMeshes.push('Standard_Spare_Tire')
+                activeAddonMeshes.push('Standard Spare Tire')
+            }
         }
 
         // Receptacles
