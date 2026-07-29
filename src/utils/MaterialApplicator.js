@@ -36,6 +36,7 @@ const SPECIAL_MATERIALS = new Set([
     'matinteriorflooring',
     'matinteriorcealing',
     'matinteriorwalls',
+    'matatp',
 ])
 
 function isSpecialName(name) {

@@ -75,6 +75,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 setExteriorFinish(opt.id)
                 if (opt.id === 'blackout') {
                   setSelectedColor('black')
+                  setProtectionType('atp')
                 }
               }
             }}
@@ -274,7 +275,11 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               price={opt.price}
               isStandard={opt.isStandard}
               isSelected={protectionType === opt.id}
-              onClick={() => setProtectionType(opt.id)}
+              isLocked={exteriorFinish === 'blackout' && opt.id !== 'atp'}
+              onClick={() => {
+                if (exteriorFinish === 'blackout' && opt.id !== 'atp') return;
+                setProtectionType(opt.id);
+              }}
             />
           ))}
         </div>

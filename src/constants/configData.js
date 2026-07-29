@@ -89,7 +89,7 @@ export const AXLE_RATING_OPTIONS = [
 
 // Exterior
 export const EXTERIOR_FINISH_OPTIONS = [
-  { id: 'blackout', label: 'BLACKOUT PACKAGE (EXTERIOR)', price: 320, disabled: true },
+  { id: 'blackout', label: 'BLACKOUT PACKAGE (EXTERIOR)', price: 320 },
 ];
 
 export const EXTERIOR_ACCESSORIES_OPTIONS = [

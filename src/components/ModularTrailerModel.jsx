@@ -216,6 +216,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (effectivePassengerDoor !== 'none' && effectivePassengerDoor !== '36x72') effectivePassengerDoor = '36x72'
     }
 
+    const isBlackout = config.exteriorFinish === 'blackout';
+    const getBlackoutMapped = (normName) => {
+        if (!isBlackout) return normName;
+        if (normName === 'matshell' || normName === 'matshelldecal') return normName;
+        if (normName.includes('atp') && !normName.includes('black')) return 'atpblack';
+        if (normName === 'matstripes' || normName.includes('stripes') && !normName.includes('black')) return 'blackstripes';
+        if (normName.includes('rim') && !normName.includes('black')) return 'blacksteelwheelrim';
+        if (normName.includes('grates') && !normName.includes('black') && !normName.includes('decal')) return 'blackedmetallicgrates';
+        return normName;
+    }
+
     const { scene: base } = useGLTF(PATHS.base)
     const { scene: baseMeshes } = useGLTF(PATHS.baseMeshes)
     const { scene: frontStyle } = useGLTF(PATHS.frontStyle)
@@ -458,7 +469,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const useTriplanar = true
                     
 
-                    if (useTriplanar && !isDecal) {
+                    if (useTriplanar && !isDecal && !isBlackout) {
                         // Clone base material preserving GLB PBR properties, then patch shader
                         const base = mat.clone()
                         base.map         = texture
@@ -470,6 +481,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         const patched = patchTriplanarMaterial(base, 0.06)
                         if (isArray) child.material[i] = patched
                         else child.material = patched
+                    } else if (!isDecal && isBlackout) {
+                        let next = mat.clone()
+                        const origDef = MATERIAL_DEFS_NORM.get('blackshell')
+                        if (origDef) {
+                            next = applyMaterialDef(next, origDef, staticTextures)
+                        }
+                        if (isArray) child.material[i] = next
+                        else child.material = next
                     } else {
                         let next = mat.clone()
                         if (isDecal) {
@@ -493,7 +512,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
     }, [
-        config.selectedColor, shellTextures, simpleNoise,
+        config.selectedColor, shellTextures, simpleNoise, isBlackout,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
@@ -580,7 +599,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         const isInterior = nameLower.includes('interior') || nameLower.includes('floor') || nameLower.includes('cealing');
                         
                         if (!isInterior && !isDecal) {
-                            if (config.protectionType === 'anodized') {
+                            if (isBlackout) {
+                                overrideDef = MATERIAL_DEFS_NORM.get('atpblack');
+                            } else if (config.protectionType === 'anodized') {
                                 overrideDef = MATERIAL_DEFS_NORM.get('atpanodized');
                             } else if (config.protectionType === 'coloredmetal') {
                                 overrideDef = MATERIAL_DEFS_NORM.get('atpcoloredmetal');
@@ -676,6 +697,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         shellTextures,
         staticTextures,
         normalMap,
+        isBlackout,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
@@ -736,7 +758,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
     }, [
-        config.axleAtp, config.selectedColor, shellTextures, simpleNoise, normalMap,
+        config.axleAtp, config.selectedColor, shellTextures, simpleNoise, normalMap, isBlackout,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
@@ -744,9 +766,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     // ── Apply Rim material to MAT_Rim based on wheel selection ───────────────
     useEffect(() => {
-        let rimMatName = 'blacksteelwheelrim'
-        if (config.wheelType === 'spideraluminum') rimMatName = 'aluminiumradialrim'
-        else if (config.wheelType === 'standardsilver') rimMatName = 'standardsilverrim'
+        let rimMatName = config.wheelType === 'spideraluminum' ? 'aluminiumradialrim'
+                       : config.wheelType === 'blacksteel' ? 'blacksteelwheelrim' 
+                       : 'standardsilverrim'
+        
+        if (isBlackout) rimMatName = 'blacksteelwheelrim';
 
         const def = MATERIAL_DEFS_NORM.get(rimMatName)
         // console.log('[DEBUG RIMS] wheelType:', config.wheelType, '| rimMatName:', rimMatName)
@@ -780,7 +804,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
         // console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
-    }, [config.wheelType, wheels, axleConfig, staticTextures])
+    }, [config.wheelType, wheels, axleConfig, staticTextures, isBlackout])
 
     // ── Apply Floor Overlay material to MAT_Interior_Flooring ───────────────
     useEffect(() => {
@@ -927,7 +951,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const mats = isArray ? child.material : [child.material]
                 mats.forEach((mat, i) => {
                     if (!mat || isSpecialMaterial(mat.name)) return
-                    const def = MATERIAL_DEFS_NORM.get(normMatName(mat.name))
+                    const mappedName = getBlackoutMapped(normMatName(mat.name));
+                    const def = MATERIAL_DEFS_NORM.get(mappedName)
                     if (!def) return
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
@@ -974,7 +999,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
     }, [
-        config.frontStyle, staticTextures,
+        config.frontStyle, staticTextures, isBlackout,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
