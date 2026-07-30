@@ -3518,10 +3518,10 @@
       }
     },
     "1": {
-      "material_name": "MAT_ATP",
-      "base_color": "#97B8C8",
-      "roughness": 0.8281,
-      "metalness": 0.1403,
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -3556,10 +3556,10 @@
       }
     },
     "1": {
-      "material_name": "MAT_ATP",
-      "base_color": "#97B8C8",
-      "roughness": 0.8281,
-      "metalness": 0.1403,
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -5175,10 +5175,10 @@
   },
   "Corvette Fender Flat Side For GED": {
     "0": {
-      "material_name": "MAT_ATP",
-      "base_color": "#97B8C8",
-      "roughness": 0.8281,
-      "metalness": 0.1403,
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -5213,10 +5213,10 @@
   },
   "Corvette Fender Angled Side For GED": {
     "0": {
-      "material_name": "MAT_ATP",
-      "base_color": "#97B8C8",
-      "roughness": 0.8281,
-      "metalness": 0.1403,
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
       "normal": false,
       "alpha": 1.0,
       "emission": {

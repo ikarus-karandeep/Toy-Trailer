@@ -394,14 +394,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             let baseScale = 10.0 
             if (isScaledMesh) {
                 baseScale = customBaseScale
-                console.log(`[DEBUG UV SCALE] Matched Scaled Mesh: ${child.name}, Setting baseScale: ${baseScale}`);
+                // console.log(`[DEBUG UV SCALE] Matched Scaled Mesh: ${child.name}, Setting baseScale: ${baseScale}`);
             }
             
             const scaleX = distX / 2.02
             const scaleY = distY / 1.92 
             
             if (isScaledMesh) {
-                console.log(`[DEBUG UV SCALE] ${child.name} - scaleX: ${scaleX}, scaleY: ${scaleY}, distX: ${distX}, distY: ${distY}`);
+                // console.log(`[DEBUG UV SCALE] ${child.name} - scaleX: ${scaleX}, scaleY: ${scaleY}, distX: ${distX}, distY: ${distY}`);
             }
 
             for (let i = 0; i < uv.count; i++) {
@@ -671,7 +671,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                     else child.material = newMat;
                                 }
                             } catch (err) {
-                                console.error(`[DEBUG CRASH] Error applying override to ${child.name}:`, err);
+                                // console.error(`[DEBUG CRASH] Error applying override to ${child.name}:`, err);
                             }
                         } else {
                             // Removed incorrect color overrides for Side_Panel_ATP
@@ -741,20 +741,25 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
                     if (config.axleAtp) {
                         let next = original.clone()
+                        
+                        // Increase scale for corvette fender
+                        const isCorvette = child.name.toLowerCase().includes('corvette');
+                        const repeatScale = isCorvette ? 5 : 20;
+
                         if (isBlackout) {
                             const overrideDef = MATERIAL_DEFS_NORM.get('atpblack');
                             if (overrideDef) {
                                 next = applyMaterialDef(next, overrideDef, staticTextures);
                                 if (next.normalMap) {
                                     const scaledNormal = next.normalMap.clone();
-                                    scaledNormal.repeat.set(20, 20);
+                                    scaledNormal.repeat.set(repeatScale, repeatScale);
                                     scaledNormal.needsUpdate = true;
                                     next.normalMap = scaledNormal;
                                 }
                             }
                         } else {
                             normalMap.flipY = false
-                            normalMap.repeat.set(20, 20)
+                            normalMap.repeat.set(repeatScale, repeatScale)
                             next.normalMap   = normalMap
                             next.normalScale = new THREE.Vector2(1.0, 1.0)
                             next.metalness   = 1
@@ -903,7 +908,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    next = patchTriplanarMaterial(next, 1, true)
+                    const scaleValue = ceilMatName === 'atpinteriorcealing' ? 5 : 1
+                    next = patchTriplanarMaterial(next, scaleValue, true)
                     
                     next.needsUpdate = true
 
@@ -1565,9 +1571,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 gooseneck: 'Gooseneck_Sink_'
             };
             const sinkMeshName = SINK_FRONT_STYLE_MAP[config.frontStyle] || 'V-Nose_Sink';
-            console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
-            console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
-            console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
+            // console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
+            // console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
+            // console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
             activeSinkMeshes.push(sinkMeshName);
             
             // Also log if we can find this mesh across all scenes

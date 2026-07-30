@@ -35,6 +35,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor,
     sinkPackage,
     viewMode, setViewMode,
+    setExteriorFinish, setAngledLights, setElectrical, setBattery, setLightsRaw, setAtpRamp
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -87,7 +88,21 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   originalPrice={opt.originalPrice}
                   isSelected={pitPack}
                   hasSettings
-                  onClick={() => setPitPack(!pitPack)}
+                  onClick={() => {
+                    const newValue = !pitPack
+                    setPitPack(newValue)
+                    if (newValue) {
+                      setCabinetsRaw(prev => [...new Set([...prev, 'frontbase36', 'frontoverhead16'])])
+                      setWalls('white_metal_walls')
+                      setCeiling('white_metal_ceiling')
+                      if (setExteriorFinish) setExteriorFinish('blackout')
+                      setFloorOverlay('atp')
+                      if (setAtpRamp) setAtpRamp(true)
+                      if (setAngledLights) setAngledLights(true)
+                      if (setElectrical) setElectrical('50amp')
+                      if (setBattery) setBattery('12vdeepcycle')
+                    }
+                  }}
                 />
                 
                 {pitPack && (

@@ -285,7 +285,13 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   // Proxy cutouts (e.g. Gullwing_Escape_Door_Proxy) ship without selection attrs.
   // The position-based width fallback spreads verts symmetrically about zCenter,
   // which mirrors the proxy onto the opposite wall.
-  const isProxy = meshName.toLowerCase().includes('proxy');
+  const isProxy = meshName.toLowerCase().includes('proxy') || 
+                  meshName.toLowerCase().includes('slides') || 
+                  meshName.toLowerCase().includes('tray') ||
+                  meshName.toLowerCase().includes('window') ||
+                  meshName.toLowerCase().includes('glider') ||
+                  meshName.toLowerCase().includes('slider') ||
+                  meshName.toLowerCase().includes('egress');
 
   const frontendKey = attrKeys.find(k => normKey(k).includes('frontend'))
   const rearendKey = attrKeys.find(k => normKey(k).includes('rearend'))
