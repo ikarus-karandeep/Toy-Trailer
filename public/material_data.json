@@ -6,7 +6,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -200,7 +200,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -250,7 +250,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -463,6 +463,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "11": {
+      "material_name": "Decals",
+      "base_color": "#FFFFFF",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Flat Front": {
@@ -492,7 +504,7 @@
     },
     "2": {
       "material_name": "MAT_ATP_UV_Scale",
-      "base_color": "#9E4EC1",
+      "base_color": "#A95299",
       "roughness": 0.3447,
       "metalness": 0.2038,
       "normal": false,
@@ -593,6 +605,30 @@
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "11": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "12": {
+      "material_name": "Decals",
+      "base_color": "#FFFFFF",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -731,6 +767,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "11": {
+      "material_name": "Decals",
+      "base_color": "#FFFFFF",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Extended V-Nose": {
@@ -865,6 +913,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "11": {
+      "material_name": "Decals",
+      "base_color": "#FFFFFF",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Gooseneck 8_5\u00d728": {
@@ -906,7 +966,7 @@
     },
     "3": {
       "material_name": "MAT_ATP_UV_Scale",
-      "base_color": "#9E4EC1",
+      "base_color": "#A95299",
       "roughness": 0.3447,
       "metalness": 0.2038,
       "normal": false,
@@ -1007,6 +1067,18 @@
       "metalness": 0.0,
       "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
       "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "12": {
+      "material_name": "Decals",
+      "base_color": "#FFFFFF",
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -2296,7 +2368,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -2346,7 +2418,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -2479,7 +2551,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -4515,7 +4587,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -4577,7 +4649,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -4639,7 +4711,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -4650,6 +4722,30 @@
       "base_color": "#888888",
       "roughness": 0.5,
       "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "6": {
+      "material_name": "Emission",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 10.3
+      }
+    },
+    "7": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -5142,7 +5238,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -5681,6 +5777,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "2": {
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
+      "emission": {
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
+        "strength": 1.0
+      }
     }
   },
   "15\u00d730 Vertical Slider": {
@@ -5852,7 +5960,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
@@ -6038,7 +6146,7 @@
       "roughness": 1.0,
       "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 1.0
