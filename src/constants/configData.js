@@ -385,6 +385,7 @@ export const WINCH_OPTIONS = [
 ];
 
 export const GENERATOR_BOX_OPTIONS = [
+  { id: 'none', label: 'NONE' },
   { id: 'lidonly', label: 'LID ONLY (NO DOOR, SLIDES OR TRAY)', price: 432 },
   { id: 'venteddoor', label: 'VENTED DOOR ONLY', price: 776 },
   { id: 'venteddoorslides', label: 'VENTED DOOR + SLIDES + TRAY', price: 1114 },

@@ -573,6 +573,30 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "9": {
+      "material_name": "MAT_Interior_Flooring",
+      "base_color": "#D4BD67",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "10": {
+      "material_name": "MAT_Interior_Cealing",
+      "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Slant V-Nose": {
@@ -929,6 +953,18 @@
       }
     },
     "7": {
+      "material_name": "MAT_Interior_Cealing",
+      "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "8": {
       "material_name": "MAT_Shell_DECAL",
       "base_color": "#7B7D81",
       "roughness": 0.09,
@@ -940,7 +976,7 @@
         "strength": 0.0
       }
     },
-    "8": {
+    "9": {
       "material_name": "Chrome_DECAL",
       "base_color": "#D8DAE2",
       "roughness": 0.09,
@@ -952,24 +988,12 @@
         "strength": 0.0
       }
     },
-    "9": {
+    "10": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
       "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
       "normal": "//..\\Textures\\Steel_Painted_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "10": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1105,11 +1129,11 @@
       }
     },
     "2": {
-      "material_name": "Black Rubber_Membranes",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1143,11 +1167,11 @@
       }
     },
     "2": {
-      "material_name": "Black Rubber_Membranes",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -4062,10 +4086,10 @@
   },
   "Wall Run Cabinet": {
     "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4100,10 +4124,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4126,10 +4150,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4152,10 +4176,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4190,10 +4214,10 @@
       }
     },
     "2": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4266,10 +4290,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4292,10 +4316,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4318,10 +4342,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4344,10 +4368,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4370,10 +4394,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4396,10 +4420,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4422,10 +4446,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4448,10 +4472,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -6525,68 +6549,6 @@
       }
     }
   },
-  "Standard Spare Tire": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "MAT_Rim",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "Recessed Tire Box": {
     "0": {
       "material_name": "Rubber_Flooring",
@@ -6801,68 +6763,6 @@
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Spider Spare Tire": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "MAT_Rim",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -7355,6 +7255,378 @@
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Standard Spare Tire 8-Lug": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Spider Spare Tire 8-Lug": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Spider Spare Tire 5-Lug": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Standard Spare Tire 6-Lug": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Standard Spare Tire 5-Lug": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Spider Spare Tire 6-Lug": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",

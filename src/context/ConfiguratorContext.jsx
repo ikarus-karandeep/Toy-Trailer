@@ -137,7 +137,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [escapeDoor, setEscapeDoor] = useState(ic.escapeDoor ?? 'none')
   const [concessionDoor, setConcessionDoor] = useState(ic.concessionDoor ?? 'none')
   const [glassScreen, setGlassScreen] = useState(ic.glassScreen ?? false)
-  const [generatorBox, setGeneratorBox] = useState(ic.generatorBox || 'lidonly')
+  const [generatorBox, setGeneratorBox] = useState(ic.generatorBox ?? 'none')
   const [windows, setWindows] = useState(ic.windows ?? {
     vertical: 0,
     horizontal: 0,

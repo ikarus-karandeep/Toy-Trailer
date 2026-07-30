@@ -40,6 +40,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     sideDoorsType, setSideDoorsType,
     width, length,
     stairs, setStairs,
+    viewMode, setViewMode,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -53,7 +54,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
   return (
-    <>
+    <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
       {show('EXTERIOR FINISH') && (
   <OptionSection title="EXTERIOR FINISH">
 
@@ -402,6 +403,6 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
   </OptionSection>
 )}
-    </>
+    </div>
   )
 }

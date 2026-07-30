@@ -36,6 +36,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     glassScreen, setGlassScreen,
     windows, setWindows,
     windowSizes, setWindowSizes,
+    viewMode, setViewMode,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -81,6 +82,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
   return (
     <>
       {show('REAR ENTRANCE') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="REAR ENTRANCE">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Rear Doors replace ramp and removes beavertail (on 8.5ft wide)</p>
           <div className="flex flex-col gap-2">
@@ -108,9 +110,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
             />
           </div>
         </OptionSection>
+        </div>
       )}
 
       {show('SIDE DOOR') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="SIDE DOOR">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">36" X 78" Steel base</p>
           
@@ -140,9 +144,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
             <img src="/Rear door.png" />
           </div>
         </OptionSection>
+        </div>
       )}
 
       {show('ESCAPE DOOR') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="ESCAPE DOOR">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Secondary Access/Emergency Egress</p>
 
@@ -176,10 +182,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
             />
           </div>
         </OptionSection>
+        </div>
       )}
 
-      {show('CONCESSION DOOR') && (
-        <OptionSection title="CONCESSION DOOR">
+      {show('CONCESSION DOOR / WINDOW') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <OptionSection title="CONCESSION DOOR / WINDOW">
           {/* None / activate toggle */}
           <div className="flex flex-col gap-2 mb-4">
             <OptionPill
@@ -259,10 +267,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
             />
           </div>
         </OptionSection>
+        </div>
       )}
 
-      {show('WINDOWS') && (
-        <OptionSection title="WINDOWS">
+      {show('WINDOWS (MULTI-CHOICE)') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <OptionSection title="WINDOWS (MULTI-CHOICE)">
           {concessionDoor === 'passenger' && (
             <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
               * Windows are disabled when a Concession Door is on the Passenger side.
@@ -343,9 +353,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
             })}
           </div>
         </OptionSection>
+        </div>
       )}
 
       {show('TIE DOWNS (MULTI-CHOICE)') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
         <OptionSection title="TIE DOWNS (MULTI-CHOICE)">
           <div className="mb-6">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">D-RINGS</h4>
@@ -398,9 +410,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
             </div>
           </div>
         </OptionSection>
+        </div>
       )}
 
       {show('JACKS (MULTI-CHOICE)') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="JACKS (MULTI-CHOICE)">
           <div className="flex flex-col gap-2">
             {JACKS_OPTIONS.map((opt) => {
@@ -442,6 +456,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
             })}
           </div>
         </OptionSection>
+        </div>
       )}
 
     </>

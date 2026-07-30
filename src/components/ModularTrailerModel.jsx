@@ -201,6 +201,8 @@ const TONGUE_MESH_MAP = {
 
 export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, environment }) {
     const config = useConfigurator()
+    const isFirstRender = useRef(true);
+    const prevVisibleInteriorNodes = useRef(new Set());
     // console.log('[DEBUG RENDER] ModularTrailerModel rendering. sinkPackage is:', config.sinkPackage);
 
     let hasCabinet = config.cabinets?.includes('frontbase36') 
@@ -336,15 +338,29 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         scene.traverse(child => {
             if (!child.isMesh || !child.geometry?.attributes.uv) return
 
-            const mats = Array.isArray(child.material) ? child.material : [child.material]
-            const isRampDoor = ['Heavy_Duty_Ramp', 'Super_Duty_Ramp', 'Heavy_Duty_Ramp_w_Flap'].includes(child.name)
+            let customBaseScale = null
+            let currentNode = child
+            while (currentNode) {
+                if (['Heavy_Duty_Ramp', 'Super_Duty_Ramp', 'Heavy_Duty_Ramp_w_Flap'].some(n => currentNode.name.includes(n))) {
+                    customBaseScale = 30.0
+                    break
+                }
+                if (currentNode.name.includes('Recessed_Tire_Box')) {
+                    customBaseScale = 80.0
+                    break
+                }
+                currentNode = currentNode.parent
+            }
             
+            let isScaledMesh = customBaseScale !== null
+            
+            const mats = Array.isArray(child.material) ? child.material : [child.material]
             const needsUvScale = mats.some(mat => {
                 const normalized = mat?.name?.replace(/[\s_]+/g, '').toLowerCase() || ''
                 return normalized.includes('uvscale') || normalized.includes('rubberflooring') || normalized.includes('atp') || normalized.includes('nudo')
             })
 
-            if (!needsUvScale && !isRampDoor) return
+            if (!needsUvScale && !isScaledMesh) return
             const geo = child.geometry
             const uv = geo.attributes.uv
 
@@ -370,15 +386,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             // This is the base scale from your Blender material's Mapping node
             // Tweak this number if the texture is globally too small or large
             let baseScale = 10.0 
-            if (['Heavy_Duty_Ramp', 'Super_Duty_Ramp', 'Heavy_Duty_Ramp_w_Flap'].includes(child.name)) {
-                baseScale = 24.0
-                console.log(`[DEBUG UV SCALE] Matched Ramp Door: ${child.name}, Setting baseScale: ${baseScale}`);
+            if (isScaledMesh) {
+                baseScale = customBaseScale
+                console.log(`[DEBUG UV SCALE] Matched Scaled Mesh: ${child.name}, Setting baseScale: ${baseScale}`);
             }
             
             const scaleX = distX / 2.02
             const scaleY = distY / 1.92 
             
-            if (['Heavy_Duty_Ramp', 'Super_Duty_Ramp', 'Heavy_Duty_Ramp_w_Flap'].includes(child.name)) {
+            if (isScaledMesh) {
                 console.log(`[DEBUG UV SCALE] ${child.name} - scaleX: ${scaleX}, scaleY: ${scaleY}, distX: ${distX}, distY: ${distY}`);
             }
 
@@ -496,7 +512,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                             if (origDef) {
                                 next = applyMaterialDef(next, origDef, staticTextures)
                             }
-                            next.color.set(shellHex)
+                            next.color.set(isBlackout ? '#1a1a1a' : shellHex)
                         } else {
                             next.map         = texture
                             next.color       = new THREE.Color(0xffffff)
@@ -1204,7 +1220,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // Generator Box options mapped to Tongue Mounted Generator Box
         // console.log('[DEBUG GENERATOR] config.generatorBox:', config.generatorBox);
-        if (config.generatorBox && config.frontStyle === 'flatfront') {
+        if (config.generatorBox && config.generatorBox !== 'none' && config.frontStyle === 'flatfront') {
             allAddonMeshNames.forEach(n => {
                 const lower = n.toLowerCase();
                 
@@ -1645,7 +1661,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // ── Bathroom GLB: Sink Area conditional visibility ─────────────────────
         // Sink Area requires all 3: bathroom selected + no generator box + v-nose (not flat front)
         const showSink = Boolean(config.bathroom && config.bathroom !== 'none')
-            && !config.generatorBox
+            && (!config.generatorBox || config.generatorBox === 'none')
             && config.frontStyle !== 'flatfront'
             && !hasCabinet
 
@@ -2282,6 +2298,76 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
     })
+
+    const prevVisibleExteriorNodes = useRef(new Set());
+    const prevVisibleNodes = useRef(new Set());
+
+    useEffect(() => {
+        const currentVisibleInteriorNodes = new Set();
+        const currentVisibleExteriorNodes = new Set();
+        const currentVisibleNodes = new Set();
+        let shouldSwitchToInterior = false;
+        let shouldSwitchToExterior = false;
+
+        activeScenes.forEach(scene => {
+            scene.traverse(child => {
+                if (child.visible) {
+                    currentVisibleNodes.add(child.uuid);
+
+                    // Debug: Log newly visible nodes and their userData
+                    if (!prevVisibleNodes.current.has(child.uuid) && child.userData && Object.keys(child.userData).length > 0) {
+                        console.log(`[DEBUG NEW VISIBLE NODE] name: "${child.name}", type: ${child.type}, userData:`, child.userData);
+                    }
+
+                    if (child.userData) {
+                        let propValue = undefined;
+                        for (const key in child.userData) {
+                            if (key.toLowerCase() === 'isinterior') {
+                                propValue = child.userData[key];
+                                break;
+                            }
+                        }
+
+                        if (propValue !== undefined) {
+                            const isInterior = propValue === true || propValue === 1 || propValue === 'true' || propValue === '1';
+                            const isExterior = propValue === false || propValue === 0 || propValue === 'false' || propValue === '0';
+
+                            if (isInterior) {
+                                currentVisibleInteriorNodes.add(child.uuid);
+                                if (!prevVisibleInteriorNodes.current.has(child.uuid)) {
+                                    shouldSwitchToInterior = true;
+                                    console.log(`[DEBUG INTERIOR] -> Switch to INTERIOR triggered by: ${child.name}`);
+                                }
+                            } else if (isExterior) {
+                                currentVisibleExteriorNodes.add(child.uuid);
+                                if (!prevVisibleExteriorNodes.current.has(child.uuid)) {
+                                    shouldSwitchToExterior = true;
+                                    console.log(`[DEBUG INTERIOR] -> Switch to EXTERIOR triggered by: ${child.name}`);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        if (!isFirstRender.current) {
+            if (shouldSwitchToInterior) {
+                if (config.viewMode !== 'INTERIOR') {
+                    config.setViewMode('INTERIOR');
+                }
+            } else if (shouldSwitchToExterior) {
+                if (config.viewMode === 'INTERIOR') {
+                    config.setViewMode('EXTERIOR');
+                }
+            }
+        }
+
+        prevVisibleInteriorNodes.current = currentVisibleInteriorNodes;
+        prevVisibleExteriorNodes.current = currentVisibleExteriorNodes;
+        prevVisibleNodes.current = currentVisibleNodes;
+        isFirstRender.current = false;
+    });
 
     return (
         <>

@@ -25,6 +25,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
     interiorHeight, setInteriorHeight,
     spreadAxle, setSpreadAxle,
     narrowTrackAxle, setNarrowTrackAxle,
+    viewMode, setViewMode,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -170,6 +171,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
           {/* AXLE CAPACITY */}
           {(show('AXLE CAPACITY') || !activeSectionTitle) && (
+            <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
             <div>
               <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE CAPACITY</h2>
               <p className="text-gray-400 text-xs tracking-wider mb-6">
@@ -188,6 +190,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                   />
                 ))}
               </div>
+            </div>
             </div>
           )}
         </OptionSection>
@@ -208,6 +211,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
       {/* SPREAD AXLE W/ CORVETTE FENDERS */}
       {show('SPREAD AXLE W/ CORVETTE FENDERS') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="SPREAD AXLE W/ CORVETTE FENDERS">
           <p className="text-gray-400 text-xs tracking-wider -mt-4">
             Auto Applies Torsion
@@ -219,10 +223,12 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
             disabled={axleCount === 'triple' || axleSuspension === 'dropspring'}
           />
         </OptionSection>
+        </div>
       )}
 
       {/* NARROW TRACK AXLE */}
       {show('NARROW TRACK AXLE') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="NARROW TRACK AXLE">
           <p className="text-gray-400 text-xs tracking-wider -mt-4">
             Applicable on 7ft wide trailer
@@ -233,6 +239,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
             onChange={setNarrowTrackAxle}
           />
         </OptionSection>
+        </div>
       )}
     </>
   )

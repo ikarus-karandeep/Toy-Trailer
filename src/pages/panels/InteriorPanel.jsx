@@ -32,6 +32,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     bathroom,
     genDoor,
     driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor,
+    viewMode, setViewMode,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -73,7 +74,12 @@ export default function InteriorPanel({ activeSectionTitle }) {
   }, [cabinets])
 
   return (
-    <>
+    <div 
+      className="contents" 
+      onClickCapture={() => { 
+        if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); 
+      }}
+    >
       {show('PIT PACK') && (
         <OptionSection title="PIT PACK">
           <div className="flex flex-col gap-2">
@@ -432,6 +438,6 @@ export default function InteriorPanel({ activeSectionTitle }) {
           />
         </OptionSection>
       )}
-    </>
+    </div>
   )
 }

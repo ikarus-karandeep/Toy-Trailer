@@ -111,7 +111,7 @@ export default function SummaryPanel() {
       if (vNoseETrack) { items.push({ label: 'V-NOSE E-TRACK', price: 100, onRemove: () => setVNoseETrack(false) }) }
       if (batteryBox) { items.push({ label: 'BATTERY BOX', price: 120, onRemove: () => setBatteryBox(false) }) }
       if (escapeDoor && escapeDoor !== 'none') { items.push({ label: 'ESCAPE DOOR', price: 800, onRemove: () => setEscapeDoor('none') }) }
-      if (generatorBox) { items.push({ label: 'GENERATOR BOX', price: 500, onRemove: () => setGeneratorBox(false) }) }
+      if (generatorBox && generatorBox !== 'none') { items.push({ label: 'GENERATOR BOX', price: 500, onRemove: () => setGeneratorBox('none') }) }
       if (winchSystem) { items.push({ label: 'WINCH SYSTEM', price: 1000, onRemove: () => setWinchSystem(false) }) }
       if (extendedTripleTongue) { items.push({ label: 'EXTENDED TRIPLE TONGUE', price: 400, onRemove: () => setExtendedTripleTongue(false) }) }
       if (radioPackageSpeaker) { items.push({ label: 'RADIO PACKAGE SPEAKER', price: 600, onRemove: () => setRadioPackageSpeaker(false) }) }

@@ -29,7 +29,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     genSlides, setGenSlides,
     genDoor, setGenDoor,
     frontStyle,
-    length
+    length,
+    viewMode, setViewMode
   } = useConfigurator()
 
   const [waterPackage, setWaterPackage] = useState(null)
@@ -61,6 +62,15 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       }
     }
   }, [length, awningLength, awning, setAwningRaw]);
+
+  useEffect(() => {
+    const hasGenBox = generatorBox && generatorBox !== 'none';
+    if (hasGenBox || genSlides || genDoor) {
+      if (batteryBox) {
+        setBatteryBox(false);
+      }
+    }
+  }, [generatorBox, genSlides, genDoor, batteryBox, setBatteryBox]);
 
   const show = (title) => {
     if (!activeSectionTitle) return true
@@ -165,7 +175,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
       {show('SINK PACKAGE') && (
-        <OptionSection title="SINK PACKAGE">
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+          <OptionSection title="SINK PACKAGE">
           <div className="flex flex-col gap-2">
             {SINK_PACKAGE_OPTIONS.map((opt) => (
               <div key={opt.id} className="w-full">
@@ -219,10 +230,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           </div>
           <AlertMessage message={'8" MF + ELECTRICAL REQUIRED'} />
         </OptionSection>
+        </div>
       )}
 
       {show('BATHROOM PACKAGES') && (
-        <OptionSection title="BATHROOM PACKAGES">
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+          <OptionSection title="BATHROOM PACKAGES">
           <div className="flex flex-col gap-2">
             {BATHROOM_PACKAGE_OPTIONS.map((opt) => (
               <DetailedOptionCard
@@ -250,10 +263,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             ))}
           </div>
         </OptionSection>
+        </div>
       )}
 
       {show('AWNINGS') && (
-        <OptionSection title="AWNINGS">
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+          <OptionSection title="AWNINGS">
           <img
             src="/Awnings.png"
             alt="Awning preview"
@@ -287,10 +302,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             </div>
           )}
         </OptionSection>
+        </div>
       )}
 
       {show('WINCH') && (
-        <OptionSection title="WINCH">
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+          <OptionSection title="WINCH">
           <div className="flex flex-col gap-2">
             {WINCH_OPTIONS.map((opt) => (
               <OptionPill
@@ -303,12 +320,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             ))}
           </div>
         </OptionSection>
+        </div>
       )}
 
-      
-
       {show('TONGUE MOUNTED GENERATOR BOX') && (
-        <OptionSection title="TONGUE MOUNTED GENERATOR BOX">
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+          <OptionSection title="TONGUE MOUNTED GENERATOR BOX">
           <div className="mb-8">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR BOX (34"H X 36"W X 26"D)</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Requires flat front + Extended Tongue</p>
@@ -352,20 +369,30 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             />
           </div>
         </OptionSection>
+        </div>
       )}
       
       {show('ATP BATTERY BOX ON TONGUE') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="ATP BATTERY BOX ON TONGUE">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Requires extended TTT</p>
-          <ToggleSwitch
-            label="Battery box on tongue"
-            checked={batteryBox}
-            onChange={setBatteryBox}
-          />
+          {(generatorBox && generatorBox !== 'none') || genSlides || genDoor ? (
+            <div className="mt-2">
+              <AlertMessage message="Hidden due to Tongue Mounted Generator Box selection" />
+            </div>
+          ) : (
+            <ToggleSwitch
+              label="Battery box on tongue"
+              checked={batteryBox}
+              onChange={setBatteryBox}
+            />
+          )}
         </OptionSection>
+        </div>
       )}
       
       {show('L-SHAPE COUNTER/HIDDEN GENERATOR BOX') && (
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
         <OptionSection title="L-SHAPE COUNTER/HIDDEN GENERATOR BOX">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Custom build</p>
           <ToggleSwitch
@@ -374,36 +401,43 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             onChange={setLShapeCounter}
           />
         </OptionSection>
+        </div>
       )}
 
       {show('LADDER RACKS') && (
-        <OptionSection title="LADDER RACKS">
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+          <OptionSection title="LADDER RACKS">
           <ToggleSwitch
             label="INCLUDE LADDER RACKS"
             checked={ladderRacks}
             onChange={setLadderRacks}
           />
         </OptionSection>
+        </div>
       )}
 
       {show('RECESSED TIRE BOX') && (
-        <OptionSection title="RECESSED TIRE BOX">
-          <ToggleSwitch
-            label="INCLUDE RECESSED TIRE BOX"
-            checked={recessedTireBox}
-            onChange={setRecessedTireBox}
-          />
-        </OptionSection>
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+          <OptionSection title="RECESSED TIRE BOX">
+            <ToggleSwitch
+              label="INCLUDE RECESSED TIRE BOX"
+              checked={recessedTireBox}
+              onChange={setRecessedTireBox}
+            />
+          </OptionSection>
+        </div>
       )}
 
       {show('RADIO PACKAGE SPEAKER') && (
-        <OptionSection title="RADIO PACKAGE SPEAKER">
-          <ToggleSwitch
-            label="INCLUDE RADIO PACKAGE SPEAKER"
-            checked={radioPackageSpeaker}
-            onChange={setRadioPackageSpeaker}
-          />
-        </OptionSection>
+        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+          <OptionSection title="RADIO PACKAGE SPEAKER">
+            <ToggleSwitch
+              label="INCLUDE RADIO PACKAGE SPEAKER"
+              checked={radioPackageSpeaker}
+              onChange={setRadioPackageSpeaker}
+            />
+          </OptionSection>
+        </div>
       )}
     </>
   )

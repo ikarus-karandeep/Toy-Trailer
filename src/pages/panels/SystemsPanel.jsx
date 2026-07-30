@@ -25,6 +25,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
     receptacles, setReceptacles,
     interiorLights, setInteriorLights,
     ledRope, setLedRope,
+    viewMode, setViewMode,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -180,7 +181,8 @@ export default function SystemsPanel({ activeSectionTitle }) {
 
       {show('LIGHTS') && (
         <OptionSection title="LIGHTS">
-          <div className="mb-6">
+          <div className="mb-6 contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+            <div className="mb-6">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">INTERIOR LIGHTING</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
             <div className="flex justify-center mb-4">
@@ -214,7 +216,9 @@ export default function SystemsPanel({ activeSectionTitle }) {
               })}
             </div>
           </div>
+          </div>
           <p className='border-t border-[#5D5E60]'></p>
+          <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
           <div>
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">EXTERIOR LIGHTING</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Racing Style Exterior Light</p>
@@ -231,6 +235,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 />
               ))}
             </div>
+          </div>
           </div>
         </OptionSection>
       )}
@@ -250,6 +255,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
             ))}
           </div>
 
+          <div className="mb-8 contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">PASSIVE VENTILATION</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
@@ -269,7 +275,9 @@ export default function SystemsPanel({ activeSectionTitle }) {
               ))}
             </div>
           </div>
+          </div>
 
+          <div className="mb-8 contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">AC PREP</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for any AC build now or prepping for later.</p>
@@ -279,7 +287,9 @@ export default function SystemsPanel({ activeSectionTitle }) {
               onChange={setAcPrep}
             />
           </div>
+          </div>
 
+          <div className="mb-8 contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">ROOFTOP AC</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Interior insulation Required. 13.5K BTU best for 14-24ft build. 15K BTU best for 26-32ft build</p>
@@ -296,7 +306,9 @@ export default function SystemsPanel({ activeSectionTitle }) {
               ))}
             </div>
           </div>
+          </div>
 
+          <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
           <div>
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">MINI SPLIT</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Requires Extended TTT<br/><br/>12K: Wall-Mount. Cool & comfortable<br/><br/>18K: Heat + Cool - Best choice for anyone spending real time in trailer<br/><br/>24K: High Capacity - Best for large builds</p>
@@ -312,6 +324,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 />
               ))}
             </div>
+          </div>
           </div>
         </OptionSection>
       )}
