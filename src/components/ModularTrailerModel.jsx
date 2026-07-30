@@ -812,7 +812,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 mats.forEach((mat, i) => {
                     if (!mat) return
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
-                    if (!normalized?.includes('rim')) return
+                    if (normalized !== 'matrim') return
                     
                     rimMeshesFound++;
                     // console.log(`[DEBUG RIMS] Mesh: ${child.name} | Original mat: ${mat.name}`);
