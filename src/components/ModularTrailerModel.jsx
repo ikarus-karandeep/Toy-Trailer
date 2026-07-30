@@ -351,6 +351,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     customBaseScale = 80.0
                     break
                 }
+                if (currentNode.name.toLowerCase().includes('vented_door_only')) {
+                    customBaseScale = 50.0
+                    break
+                }
                 currentNode = currentNode.parent
             }
             
@@ -874,6 +878,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         let ceilMatName = 'matinteriorcealing' // Default fallback to original JSON definition
         if (config.ceiling === 'white_metal_ceiling') ceilMatName = 'whitemetalinteriorcealing'
         else if (config.ceiling === 'atp_ceiling') ceilMatName = 'atpinteriorcealing'
+        else if (config.ceiling === 'thermaply') ceilMatName = 'thermalplywoodinteriorcealing'
 
         const def = MATERIAL_DEFS_NORM.get(ceilMatName)
         if (!def) return
@@ -898,7 +903,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let next = applyMaterialDef(mat, def, staticTextures)
                     
                     const nameLower = child.name.toLowerCase()
-                    next = patchTriplanarMaterial(next, 5)
+                    next = patchTriplanarMaterial(next, 1, true)
                     
                     next.needsUpdate = true
 

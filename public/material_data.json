@@ -4264,10 +4264,10 @@
       }
     },
     "1": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
+      "material_name": "MAT_Cabinets",
+      "base_color": "#C47C66",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {

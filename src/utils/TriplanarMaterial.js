@@ -14,7 +14,7 @@ const _cache = new Map()
  * Pass a single number for uniform tiling on all faces, or an object
  * { x: Vector2, y: Vector2, z: Vector2 } for per-face control.
  */
-export function patchTriplanarMaterial(material, scale = 1.0) {
+export function patchTriplanarMaterial(material, scale = 1.0, swapYAxes = false) {
     let sx, sy, sz
     if (typeof scale === 'number') {
         sx = new THREE.Vector2(scale, scale)
@@ -26,13 +26,13 @@ export function patchTriplanarMaterial(material, scale = 1.0) {
         sz = scale.z instanceof THREE.Vector2 ? scale.z : new THREE.Vector2(scale.z, scale.z)
     }
 
-    const key = `${material.uuid}_${sx.x}_${sx.y}_${sy.x}_${sy.y}_${sz.x}_${sz.y}`
+    const key = `${material.uuid}_${sx.x}_${sx.y}_${sy.x}_${sy.y}_${sz.x}_${sz.y}_${swapYAxes}`
     if (_cache.has(key)) return _cache.get(key)
 
     const patched = material.clone()
 
     patched.customProgramCacheKey = () => {
-        return `triplanar_${sx.x}_${sx.y}_${sz.x}_map:${!!patched.map}_norm:${!!patched.normalMap}_rough:${!!patched.roughnessMap}_metal:${!!patched.metalnessMap}`
+        return `triplanar_${sx.x}_${sx.y}_${sz.x}_${swapYAxes}_map:${!!patched.map}_norm:${!!patched.normalMap}_rough:${!!patched.roughnessMap}_metal:${!!patched.metalnessMap}`
     }
 
     patched.onBeforeCompile = (shader) => {
@@ -74,7 +74,7 @@ vec2 getTriplanarUvX(vec3 pos, vec3 normal) {
   return vec2(pos.z * -sign(normal.x), -pos.y);
 }
 vec2 getTriplanarUvY(vec3 pos, vec3 normal) {
-  return vec2(pos.x * sign(normal.y), pos.z * sign(normal.y));
+  ${swapYAxes ? 'return vec2(pos.z * sign(normal.y), pos.x * sign(normal.y));' : 'return vec2(pos.x * sign(normal.y), pos.z * sign(normal.y));'}
 }
 vec2 getTriplanarUvZ(vec3 pos, vec3 normal) {
   return vec2(pos.x * sign(normal.z), -pos.y);
