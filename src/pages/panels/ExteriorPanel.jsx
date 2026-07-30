@@ -74,7 +74,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               } else {
                 setExteriorFinish(opt.id)
                 if (opt.id === 'blackout') {
-                  setSelectedColor('black')
+                  // setSelectedColor('black')
                   setProtectionType('atp')
                 }
               }

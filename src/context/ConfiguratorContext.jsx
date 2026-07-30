@@ -230,11 +230,11 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     setAngledLights(pkgConfig.angledLights ?? false);
     setExteriorFinish(pkgConfig.exteriorFinish ?? null);
     
-    if (pkgConfig.exteriorFinish === 'blackout') {
-      setSelectedColor('black');
-    } else {
-      setSelectedColor('brandywine');
-    }
+    // if (pkgConfig.exteriorFinish === 'blackout') {
+    //   setSelectedColor('black');
+    // } else {
+    //   setSelectedColor('brandywine');
+    // }
 
     setTieDownsRaw(pkgConfig.tieDowns ?? ['drings']);
     setSpreadAxle(pkgConfig.spreadAxle ?? false);

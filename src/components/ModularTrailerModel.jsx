@@ -580,11 +580,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         const isUvScale = normalized === 'metallicgratesuvscale';
                         
                         // Fix material mutation bug: cache the original GLB material
-                        const cacheKey = `atp_${child.uuid}_${i}`;
-                        if (!store.current.has(cacheKey)) {
-                            store.current.set(cacheKey, mat);
+                        if (!child.userData.origMatsAtp) child.userData.origMatsAtp = {};
+                        if (!child.userData.origMatsAtp[i]) {
+                            child.userData.origMatsAtp[i] = mat.clone();
                         }
-                        let originalMat = store.current.get(cacheKey);
+                        let originalMat = child.userData.origMatsAtp[i].clone();
 
                         if (isDecal) {
                             const origDef = MATERIAL_DEFS_NORM.get(normalized + 'decal');
@@ -649,24 +649,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                 console.error(`[DEBUG CRASH] Error applying override to ${child.name}:`, err);
                             }
                         } else {
-                            if (child.name.includes('ATP_Flat_Panel') || child.name.includes('Side_Panel_ATP')) {
-                                let targetColor = '#ffffff';
-                                let targetMetalness = 1;
-                                let targetRoughness = 0.1;
-                                
-                                if (config.generatorBox === 'blackoutatp') {
-                                    targetColor = '#333333';
-                                } else if (config.generatorBox === 'blackout') {
-                                    targetColor = '#1a1a1a'; 
-                                    targetMetalness = 0.2;
-                                    targetRoughness = 0.8;
-                                }
-
-                                originalMat.color.set(targetColor);
-                                originalMat.metalness = targetMetalness;
-                                originalMat.roughness = targetRoughness;
-                                originalMat.needsUpdate = true;
-                            }
+                            // Removed incorrect color overrides for Side_Panel_ATP
                             
                             applyGrates(child, originalMat, i, isArray, isDecal, isUvScale);
 
@@ -724,13 +707,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
                     if (normalized !== 'matwheelcover' && normalized !== 'matwheelcoveruvscale') return
 
-                    const key = `${child.uuid}-${i}`
-
                     // Always store the GLB original on first encounter
-                    if (!wheelCoverOriginalMatsRef.current.has(key)) {
-                        wheelCoverOriginalMatsRef.current.set(key, mat)
+                    if (!child.userData.origMatsWheelCover) child.userData.origMatsWheelCover = {};
+                    if (!child.userData.origMatsWheelCover[i]) {
+                        child.userData.origMatsWheelCover[i] = mat.clone();
                     }
-                    const original = wheelCoverOriginalMatsRef.current.get(key)
+                    const original = child.userData.origMatsWheelCover[i];
 
                     if (config.axleAtp) {
                         normalMap.flipY = false
@@ -951,11 +933,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const mats = isArray ? child.material : [child.material]
                 mats.forEach((mat, i) => {
                     if (!mat || isSpecialMaterial(mat.name)) return
-                    const cacheKey = `gen_${child.uuid}_${i}`;
-                    if (!store.current.has(cacheKey)) {
-                        store.current.set(cacheKey, mat);
+                    if (!child.userData.origMatsGen) child.userData.origMatsGen = {};
+                    if (!child.userData.origMatsGen[i]) {
+                        child.userData.origMatsGen[i] = mat.clone();
                     }
-                    const originalMat = store.current.get(cacheKey);
+                    const originalMat = child.userData.origMatsGen[i];
 
                     const mappedName = getBlackoutMapped(normMatName(originalMat.name));
                     const def = MATERIAL_DEFS_NORM.get(mappedName)

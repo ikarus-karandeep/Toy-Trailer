@@ -31,6 +31,10 @@ export function patchTriplanarMaterial(material, scale = 1.0) {
 
     const patched = material.clone()
 
+    patched.customProgramCacheKey = () => {
+        return `triplanar_${sx.x}_${sx.y}_${sz.x}_map:${!!patched.map}_norm:${!!patched.normalMap}_rough:${!!patched.roughnessMap}_metal:${!!patched.metalnessMap}`
+    }
+
     patched.onBeforeCompile = (shader) => {
         shader.uniforms.uScaleX = { value: sx }
         shader.uniforms.uScaleY = { value: sy }
