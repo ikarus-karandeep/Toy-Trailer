@@ -390,11 +390,12 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       targetFov = 75
 
       const interiorLength = isLongX ? size.x : size.z
+      const interiorWidth = isLongX ? size.z : size.x
 
       // ── Distance limits ──────────────────────────────────────────────────────
       // Very tight: user can zoom in/out within a small range around the pivot
       cameraControlsRef.current.minDistance = 0.01
-      cameraControlsRef.current.maxDistance = interiorLength * 0.5
+      cameraControlsRef.current.maxDistance = interiorWidth * 0.45
       cameraControlsRef.current.minY = -Infinity
 
       // ── Polar angle clamp ────────────────────────────────────────────────────
