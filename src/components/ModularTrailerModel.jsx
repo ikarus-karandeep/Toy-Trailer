@@ -576,8 +576,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const isDecal = normalized.endsWith('decal')
                     if (isDecal) normalized = normalized.slice(0, -5)
                     
-                    if (normalized === 'metallicgrates' || normalized === 'metallicgratesuvscale' || normalized === 'matatp') {
-                        const isUvScale = normalized === 'metallicgratesuvscale';
+                    if (normalized === 'metallicgrates' || normalized === 'metallicgratesuvscale' || normalized === 'matatp' || normalized === 'matatpuvscale') {
+                        const isUvScale = normalized === 'metallicgratesuvscale' || normalized === 'matatpuvscale';
                         
                         // Fix material mutation bug: cache the original GLB material
                         if (!child.userData.origMatsAtp) child.userData.origMatsAtp = {};
@@ -605,6 +605,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                 overrideDef = MATERIAL_DEFS_NORM.get('atpanodized');
                             } else if (config.protectionType === 'coloredmetal') {
                                 overrideDef = MATERIAL_DEFS_NORM.get('atpcoloredmetal');
+                            } else if (normalized.includes('atp')) {
+                                overrideDef = MATERIAL_DEFS_NORM.get('atpsilver');
                             }
                         }
 
@@ -627,15 +629,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                         if (!isUvScale) {
                                             newMat = patchTriplanarMaterial(newMat, 10);
                                         } else {
+                                            const scaleFactor = normalized === 'matatpuvscale' ? 2 : 280;
                                             if (newMat.map) {
                                                 const scaledMap = newMat.map.clone();
-                                                scaledMap.repeat.set(280, 280);
+                                                scaledMap.repeat.set(scaleFactor, scaleFactor);
                                                 scaledMap.needsUpdate = true;
                                                 newMat.map = scaledMap;
                                             }
                                             if (newMat.normalMap) {
                                                 const scaledNormal = newMat.normalMap.clone();
-                                                scaledNormal.repeat.set(280, 280);
+                                                scaledNormal.repeat.set(scaleFactor, scaleFactor);
                                                 scaledNormal.needsUpdate = true;
                                                 newMat.normalMap = scaledNormal;
                                             }
@@ -715,13 +718,26 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const original = child.userData.origMatsWheelCover[i];
 
                     if (config.axleAtp) {
-                        normalMap.flipY = false
-                        normalMap.repeat.set(20, 20)
-                        const next = original.clone()
-                        next.normalMap   = normalMap
-                        next.normalScale = new THREE.Vector2(1.0, 1.0)
-                        next.metalness   = 1
-                        next.roughness   = 0.1
+                        let next = original.clone()
+                        if (isBlackout) {
+                            const overrideDef = MATERIAL_DEFS_NORM.get('atpblack');
+                            if (overrideDef) {
+                                next = applyMaterialDef(next, overrideDef, staticTextures);
+                                if (next.normalMap) {
+                                    const scaledNormal = next.normalMap.clone();
+                                    scaledNormal.repeat.set(20, 20);
+                                    scaledNormal.needsUpdate = true;
+                                    next.normalMap = scaledNormal;
+                                }
+                            }
+                        } else {
+                            normalMap.flipY = false
+                            normalMap.repeat.set(20, 20)
+                            next.normalMap   = normalMap
+                            next.normalScale = new THREE.Vector2(1.0, 1.0)
+                            next.metalness   = 1
+                            next.roughness   = 0.1
+                        }
                         next.needsUpdate = true
                         if (isArray) child.material[i] = next
                         else child.material = next

@@ -30,13 +30,14 @@ const SPECIAL_MATERIALS = new Set([
     'matshelldecal',
     'metallicgrates',
     'metallicgratesdecal',
-    'Metallic Grates_UV_Scale',
+    'metallicgratesuvscale',
     'matwheelcover',
     'matrim',
     'matinteriorflooring',
     'matinteriorcealing',
     'matinteriorwalls',
     'matatp',
+    'matatpuvscale',
 ])
 
 function isSpecialName(name) {
