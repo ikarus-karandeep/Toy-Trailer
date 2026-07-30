@@ -1558,16 +1558,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const activeSinkMeshes = [];
         if (config.sinkPackage === 'sink') {
             const SINK_FRONT_STYLE_MAP = {
-                vnose24: 'Water_Package_and_Sink(V-Nose)',
-                flatfront: 'Water_Package_and_Sink(Flat_Front)',
-                slantvnose: 'Water_Package_and_Sink(Slant_V-Nose)',
-                extendedvnose: 'Water_Package_and_Sink(Extended_V-Nose)',
-                gooseneck: 'Water_Package_and_Sink(Gooseneck)'
+                vnose24: 'V-Nose_Sink',
+                flatfront: 'Flat_Front_Sink',
+                slantvnose: 'Slant_V-Nose_Sink',
+                extendedvnose: 'Extended_V-Nose_Sink_',
+                gooseneck: 'Gooseneck_Sink_'
             };
-            const sinkMeshName = SINK_FRONT_STYLE_MAP[config.frontStyle] || 'Water_Package_and_Sink(V-Nose)';
-            // console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
-            // console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
-            // console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
+            const sinkMeshName = SINK_FRONT_STYLE_MAP[config.frontStyle] || 'V-Nose_Sink';
+            console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
+            console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
+            console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
             activeSinkMeshes.push(sinkMeshName);
             
             // Also log if we can find this mesh across all scenes
@@ -1577,7 +1577,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     scene.traverse(child => {
                         const nameLower = child.name.toLowerCase();
                         if (nameLower.includes('sink') || nameLower.includes('water')) {
-                            // console.log(`[DEBUG SINK FINDER] Found potential sink/water mesh in ${sceneName}:`, child.name);
+                            console.log(`[DEBUG SINK FINDER] Found potential sink/water mesh in ${sceneName}:`, child.name);
                         }
                     });
                 }

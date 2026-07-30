@@ -4852,6 +4852,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "8": {
+      "material_name": "Shower_Curtain",
+      "base_color": "#E7E7E7",
+      "roughness": 0.4366,
+      "metalness": 1.0,
+      "normal": false,
+      "alpha": 0.6314,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   " 34x34 Full Bathroom": {
@@ -4946,6 +4958,18 @@
       "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "8": {
+      "material_name": "Shower_Curtain",
+      "base_color": "#E7E7E7",
+      "roughness": 0.4366,
+      "metalness": 1.0,
+      "normal": false,
+      "alpha": 0.6314,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -6551,11 +6575,11 @@
   },
   "Recessed Tire Box": {
     "0": {
-      "material_name": "Rubber_Flooring",
-      "base_color": "//..\\Textures\\Rubber Flooring_Basecolor.jpg",
-      "roughness": "//..\\Textures\\Rubber Flooring_Roughness.jpg",
-      "metalness": 0.6571,
-      "normal": "//..\\Textures\\Rubber Flooring_Normal.jpg",
+      "material_name": "MAT_Interior_Flooring",
+      "base_color": "#D4BD67",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
