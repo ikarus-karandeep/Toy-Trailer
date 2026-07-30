@@ -1613,7 +1613,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const hasToolbox = config.toolBox && config.toolBox !== 'none'
         const hasWinch = config.winchSystem
 
-        const hasWallRun = config.cabinets?.includes('wallrun36')
+        let hasWallRun = config.cabinets?.includes('wallrun36')
+        if (config.sinkPackage === 'sink') hasWallRun = false;
         const hasWallRunOverhead = config.cabinets?.includes('wallrun16')
         const hasWheelWallCabinet = config.cabinets?.includes('wheelwallcabinet')
 

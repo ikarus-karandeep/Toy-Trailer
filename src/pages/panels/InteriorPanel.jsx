@@ -33,6 +33,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     bathroom,
     genDoor,
     driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor,
+    sinkPackage,
     viewMode, setViewMode,
   } = useConfigurator()
 
@@ -58,18 +59,14 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const hasWheelWallConflict =
     (escapeDoor && escapeDoor !== 'none') ||
     (concessionDoor === 'driver');
+  const hasSinkConflict = sinkPackage === 'sink';
   const hasBathroom = bathroom && bathroom !== 'none';
   const hasFullHeightConflict = hasPassengerDoor || hasBathroom;
 
 
 
   useEffect(() => {
-    if (!cabinets.includes('wallrun36') && cabinets.includes('wallrun16')) {
-      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun16'))
-    }
-    if (!cabinets.includes('frontbase36') && cabinets.includes('frontoverhead16')) {
-      setCabinetsRaw(prev => prev.filter(c => c !== 'frontoverhead16'))
-    }
+    // Removed automatic overhead cabinet removal when base cabinet is not selected
   }, [cabinets])
 
   return (
@@ -294,6 +291,11 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">BASE CABINETS</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">ATP Diamond Plate Finish. Countertop Included</p>
+            {hasSinkConflict && (
+              <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
+                * Base cabinets are disabled because the Sink Package is currently applied.
+              </p>
+            )}
             {hasDriverSideConflict && (
               <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
                 * Wall Run 36"H cabinet is disabled because a driver side door, escape door, or driver side concession door is currently applied.
@@ -306,7 +308,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
             )}
             <div className="flex flex-col gap-2">
               {BASE_CABINET_OPTIONS.map((opt) => {
-                let isLocked = false;
+                let isLocked = hasSinkConflict;
                 if (opt.id === 'wallrun36') {
                   if (parseFloat(length) < 24) isLocked = true;
                   if (hasWallRunConflict) isLocked = true;
@@ -329,9 +331,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
                         const newCabinets = cabinets.filter(c => !toRemove.includes(c));
                         setCabinetsRaw([...newCabinets, opt.id]);
                       } else {
-                        // Toggle off - also remove its corresponding overhead
-                        let correspondingOverhead = opt.id === 'wallrun36' ? 'wallrun16' : 'frontoverhead16';
-                        const newCabinets = cabinets.filter(c => c !== opt.id && c !== correspondingOverhead);
+                        // Toggle off - do not remove overhead automatically
+                        const newCabinets = cabinets.filter(c => c !== opt.id);
                         setCabinetsRaw(newCabinets);
                       }
                     }}
@@ -348,9 +349,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
             <p className="text-gray-400 text-xs tracking-wider mb-4">N/A with Slant/ Slant V-Nose</p>
             <div className="flex flex-col gap-2">
               {OVERHEAD_CABINET_OPTIONS.map((opt) => {
-                let isLocked = true;
-                if (opt.id === 'wallrun16' && cabinets.includes('wallrun36')) isLocked = false;
-                if (opt.id === 'frontoverhead16' && cabinets.includes('frontbase36')) isLocked = false;
+                let isLocked = false;
                 
                 return (
                   <OptionPill
@@ -359,7 +358,18 @@ export default function InteriorPanel({ activeSectionTitle }) {
                     price={opt.price}
                     isLocked={isLocked}
                     isSelected={cabinets.includes(opt.id)}
-                    onClick={() => !isLocked && toggleCabinet(opt.id)}
+                    onClick={() => {
+                      if (isLocked) return;
+                      if (!cabinets.includes(opt.id)) {
+                        // Remove other overhead cabinets when selecting one
+                        const overheadIds = OVERHEAD_CABINET_OPTIONS.map(o => o.id);
+                        const newCabinets = cabinets.filter(c => !overheadIds.includes(c));
+                        setCabinetsRaw([...newCabinets, opt.id]);
+                      } else {
+                        // Toggle off
+                        setCabinetsRaw(cabinets.filter(c => c !== opt.id));
+                      }
+                    }}
                     isMulti={true}
                   />
                 );
