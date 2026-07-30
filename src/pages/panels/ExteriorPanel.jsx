@@ -398,7 +398,10 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     <ToggleSwitch
       label="INCLUDE SPARE TIRE"
       checked={spareTire}
-      onChange={setSpareTire}
+      onChange={(val) => {
+        setSpareTire(val);
+        setViewMode('INTERIOR');
+      }}
     />
 
   </OptionSection>

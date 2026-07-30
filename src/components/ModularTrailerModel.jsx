@@ -219,7 +219,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     }
 
     const isBlackout = config.exteriorFinish === 'blackout';
+    const isCabinetBlackout = isBlackout || config.blackoutCabinetDoors;
     const getBlackoutMapped = (normName) => {
+        if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'cabinetwood' || normName === 'whiteceremiccabinet')) return 'blackceremiccabinet';
         if (!isBlackout) return normName;
         if (normName === 'matshell' || normName === 'matshelldecal') return normName;
         if (normName.includes('atp') && !normName.includes('black')) return 'atpblack';
@@ -793,7 +795,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (!def) return
 
         let rimMeshesFound = 0;
-        ;[wheels, axleConfig].forEach((scene, sceneIdx) => {
+        ;[wheels, axleConfig, addons].forEach((scene, sceneIdx) => {
             scene.traverse(child => {
                 if (!child.isMesh) return
                 const isArray = Array.isArray(child.material)
@@ -818,7 +820,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
         // console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
-    }, [config.wheelType, wheels, axleConfig, staticTextures, isBlackout])
+    }, [config.wheelType, wheels, axleConfig, addons, staticTextures, isBlackout])
 
     // ── Apply Floor Overlay material to MAT_Interior_Flooring ───────────────
     useEffect(() => {
@@ -971,7 +973,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     }
                     const originalMat = child.userData.origMatsGen[i];
 
-                    const mappedName = getBlackoutMapped(normMatName(originalMat.name));
+                    let mappedName = getBlackoutMapped(normMatName(originalMat.name));
+                    if (mappedName === 'matcabinets' || mappedName === 'cabinetwood') {
+                         mappedName = 'whiteceremiccabinet';
+                    }
                     const def = MATERIAL_DEFS_NORM.get(mappedName)
                     
                     if (!def) {
@@ -1025,7 +1030,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
     }, [
-        config.frontStyle, staticTextures, isBlackout,
+        config.frontStyle, staticTextures, isBlackout, config.blackoutCabinetDoors,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
@@ -1521,12 +1526,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         if (config.spareTire) {
+            const lugNumber = (config.lugType || '5lug').replace('lug', '');
+            const lugSuffix = `${lugNumber}-Lug`;
+
             if (config.wheelType === 'spideraluminum') {
-                activeAddonMeshes.push('Spider_Spare_Tire')
-                activeAddonMeshes.push('Spider Spare Tire')
+                activeAddonMeshes.push(`Spider_Spare_Tire_${lugSuffix}`)
+                activeAddonMeshes.push(`Spider Spare Tire ${lugSuffix}`)
             } else {
-                activeAddonMeshes.push('Standard_Spare_Tire')
-                activeAddonMeshes.push('Standard Spare Tire')
+                activeAddonMeshes.push(`Standard_Spare_Tire_${lugSuffix}`)
+                activeAddonMeshes.push(`Standard Spare Tire ${lugSuffix}`)
             }
         }
 

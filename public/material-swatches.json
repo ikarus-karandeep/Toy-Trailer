@@ -2,7 +2,7 @@
     "0": {
         "material_name": "Aluminium Radial_Rim",
         "base_color": "//..\\Textures\\Aluminum_Rim_Base_color.jpg",
-        "roughness": "//..\\Textures\\Aluminum_Rim_Roughness.jpg",
+        "roughness": "//..\\Textures\\Aluminum_Black Rim_Roughness.jpg",
         "metalness": "//..\\Textures\\Aluminum_Rim_Metallic.jpg",
         "normal": true,
         "alpha": 1.0,
@@ -91,6 +91,18 @@
         "normal_map": "//..\\Textures\\Metallic_Grates_Normal.png"
     },
     "7": {
+        "material_name": "Black Ceremic_Cabinet",
+        "base_color": "#2B2B2B",
+        "roughness": 0.2144,
+        "metalness": 0.0744,
+        "normal": false,
+        "alpha": 1.0,
+        "emission": {
+            "color": "#FFFFFF",
+            "strength": 0.0
+        }
+    },
+    "8": {
         "material_name": "Black Steel Wheel_Rim",
         "base_color": "//..\\Textures\\Black Steel_Rim_Base_color.jpg",
         "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
@@ -103,7 +115,7 @@
         },
         "normal_map": "//..\\Textures\\Black Steel_Rim_Normal.jpg"
     },
-    "8": {
+    "9": {
         "material_name": "Black_Shell",
         "base_color": "//..\\Textures\\Blackl_BaseColor.jpg",
         "roughness": 0.15,
@@ -115,7 +127,7 @@
             "strength": 0.0
         }
     },
-    "9": {
+    "10": {
         "material_name": "Black_Stripes",
         "base_color": "#353535",
         "roughness": 0.355,
@@ -127,7 +139,7 @@
             "strength": 0.0
         }
     },
-    "10": {
+    "11": {
         "material_name": "Blacked_Metallic_Grates",
         "base_color": "#707070",
         "roughness": 0.1,
@@ -140,7 +152,7 @@
         },
         "normal_map": "//..\\Textures\\Metallic_Grates_Normal.png"
     },
-    "11": {
+    "12": {
         "material_name": "Brandy Wine_Shell",
         "base_color": "//..\\Textures\\Brandy Wine_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -152,7 +164,7 @@
             "strength": 0.0
         }
     },
-    "12": {
+    "13": {
         "material_name": "Charcoal Grey_Shell",
         "base_color": "//..\\Textures\\Charcoal Grey_BaseColor.jpg",
         "roughness": 0.15,
@@ -164,7 +176,7 @@
             "strength": 0.0
         }
     },
-    "13": {
+    "14": {
         "material_name": "Coin_Interior_Flooring",
         "base_color": "//..\\Textures\\Coin_Interior_Flooring_Basecolor.jpg",
         "roughness": "//..\\Textures\\Coin_Interior_Flooring_Roughness.jpg",
@@ -177,7 +189,7 @@
         },
         "normal_map": "//..\\Textures\\Coin_Interior_Flooring_Normal.jpg"
     },
-    "14": {
+    "15": {
         "material_name": "Electric Blue_Shell",
         "base_color": "//..\\Textures\\Electric Blue_BaseColor.jpg",
         "roughness": 0.15,
@@ -189,7 +201,7 @@
             "strength": 0.0
         }
     },
-    "15": {
+    "16": {
         "material_name": "Electric Green_Shell",
         "base_color": "//..\\Textures\\Electric Green_BaseColor.jpg",
         "roughness": 0.15,
@@ -201,7 +213,7 @@
             "strength": 0.0
         }
     },
-    "16": {
+    "17": {
         "material_name": "Emerald Green_Shell",
         "base_color": "//..\\Textures\\Emerald Green_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -213,7 +225,7 @@
             "strength": 0.0
         }
     },
-    "17": {
+    "18": {
         "material_name": "Indigo Blue_Shell",
         "base_color": "//..\\Textures\\Indigo Blue_BaseColor.jpg",
         "roughness": 0.15,
@@ -225,7 +237,7 @@
             "strength": 0.0
         }
     },
-    "18": {
+    "19": {
         "material_name": "MAT_Shell_DECAL",
         "base_color": "#7B7D81",
         "roughness": 0.09,
@@ -238,7 +250,7 @@
         },
         "normal_map": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg"
     },
-    "19": {
+    "20": {
         "material_name": "Orange_Shell",
         "base_color": "//..\\Textures\\Orange_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -250,7 +262,7 @@
             "strength": 0.0
         }
     },
-    "20": {
+    "21": {
         "material_name": "OSB_Sheets_Interior_Walls",
         "base_color": "//..\\Textures\\OSB_Sheets_Internal_Walls_Base_color.jpg",
         "roughness": 0.5,
@@ -262,7 +274,7 @@
             "strength": 0.0
         }
     },
-    "21": {
+    "22": {
         "material_name": "Pink_Shell",
         "base_color": "//..\\Textures\\Pink_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -274,7 +286,7 @@
             "strength": 0.0
         }
     },
-    "22": {
+    "23": {
         "material_name": "Plywood_Interior_Walls",
         "base_color": "//..\\Textures\\Plywood_Interior_WallsBase_Color.jpg",
         "roughness": 0.85,
@@ -286,7 +298,7 @@
             "strength": 0.0
         }
     },
-    "23": {
+    "24": {
         "material_name": "Purple_Shell",
         "base_color": "//..\\Textures\\Purple_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -298,7 +310,7 @@
             "strength": 0.0
         }
     },
-    "24": {
+    "25": {
         "material_name": "Red_Shell",
         "base_color": "//..\\Textures\\Red_BaseColor.jpg",
         "roughness": 0.15,
@@ -310,7 +322,7 @@
             "strength": 0.0
         }
     },
-    "25": {
+    "26": {
         "material_name": "Reflecive_Stripes",
         "base_color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
         "roughness": 0.1178,
@@ -322,7 +334,7 @@
             "strength": 0.0
         }
     },
-    "26": {
+    "27": {
         "material_name": "RTP_Interior_Flooring",
         "base_color": "#444444",
         "roughness": 0.2571,
@@ -335,7 +347,7 @@
         },
         "normal_map": "//..\\Textures\\Metallic_Grates_Normal.png"
     },
-    "27": {
+    "28": {
         "material_name": "Sierra Desert_Shell",
         "base_color": "//..\\Textures\\Sierra Desert_Shell_BaseColor.jpg",
         "roughness": 0.15,
@@ -347,7 +359,7 @@
             "strength": 0.0
         }
     },
-    "28": {
+    "29": {
         "material_name": "Silver_Metallic_Grates",
         "base_color": "#CBCBCB",
         "roughness": 0.1,
@@ -360,7 +372,7 @@
         },
         "normal_map": "//..\\Textures\\Metallic_Grates_Normal.png"
     },
-    "29": {
+    "30": {
         "material_name": "Silver_Shell",
         "base_color": "//..\\Textures\\Sillver_BaseColor.jpg",
         "roughness": 0.2221,
@@ -372,7 +384,7 @@
             "strength": 0.0
         }
     },
-    "30": {
+    "31": {
         "material_name": "Standard Silver_Rim",
         "base_color": "#E7E7E7",
         "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
@@ -385,7 +397,19 @@
         },
         "normal_map": "//..\\Textures\\Black Steel_Rim_Normal.jpg"
     },
-    "31": {
+    "32": {
+        "material_name": "Thermal Plywood_Interior_Cealing",
+        "base_color": "//..\\Textures\\Thermal Plywood_Internal_Walls_Base_Color.jpg",
+        "roughness": 0.75,
+        "metalness": 0.0,
+        "normal": false,
+        "alpha": 1.0,
+        "emission": {
+            "color": "#FFFFFF",
+            "strength": 0.0
+        }
+    },
+    "33": {
         "material_name": "Thermal Plywood_Interior_Walls",
         "base_color": "//..\\Textures\\Thermal Plywood_Internal_Walls_Base_Color.jpg",
         "roughness": 0.75,
@@ -397,7 +421,7 @@
             "strength": 0.0
         }
     },
-    "32": {
+    "34": {
         "material_name": "Tile_Interior_Flooring",
         "base_color": "//..\\Textures\\Tile_Interior_Flooring_BaseColor.jpg",
         "roughness": "//..\\Textures\\Tile_Interior_Flooring_Roughness.jpg",
@@ -410,7 +434,7 @@
         },
         "normal_map": "//..\\Textures\\Tile_Interior_Flooring_Normal.jpg"
     },
-    "33": {
+    "35": {
         "material_name": "Trailer_Detailing_DECAL",
         "base_color": "#7B7D81",
         "roughness": 0.09,
@@ -423,7 +447,19 @@
         },
         "normal_map": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg"
     },
-    "34": {
+    "36": {
+        "material_name": "White Ceremic_Cabinet",
+        "base_color": "#E7E7E7",
+        "roughness": 0.2144,
+        "metalness": 0.0744,
+        "normal": false,
+        "alpha": 1.0,
+        "emission": {
+            "color": "#FFFFFF",
+            "strength": 0.0
+        }
+    },
+    "37": {
         "material_name": "White Metal_Interior_Cealing",
         "base_color": "#F1F1F1",
         "roughness": 0.15,
@@ -435,7 +471,7 @@
             "strength": 0.0
         }
     },
-    "35": {
+    "38": {
         "material_name": "White_Metal_Interior_Walls",
         "base_color": "#F1F1F1",
         "roughness": 0.15,
@@ -447,7 +483,7 @@
             "strength": 0.0
         }
     },
-    "36": {
+    "39": {
         "material_name": "White_Shell",
         "base_color": "//..\\Textures\\White_BaseColor.jpg",
         "roughness": 0.15,
@@ -459,7 +495,7 @@
             "strength": 0.0
         }
     },
-    "37": {
+    "40": {
         "material_name": "Yellow_Shell",
         "base_color": "//..\\Textures\\Yellow_Shell_BaseColor.jpg",
         "roughness": 0.5,

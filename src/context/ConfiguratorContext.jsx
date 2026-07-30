@@ -88,6 +88,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [walls, setWalls] = useState(ic.walls ?? '38plywood')
   const [ceiling, setCeiling] = useState(ic.ceiling ?? 'thermaply')
   const [cabinets, setCabinetsRaw] = useState(ic.cabinets ?? ['frontbase36'])
+  const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(ic.blackoutCabinetDoors ?? false)
   const [toolBox, setToolBox] = useState(ic.toolBox ?? 'none')
   const [leftSide, setLeftSide] = useState(ic.leftSide ?? true)
   const [rightSide, setRightSide] = useState(ic.rightSide ?? true)
@@ -287,6 +288,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     walls, setWalls,
     ceiling, setCeiling,
     cabinets, setCabinetsRaw, toggleCabinet,
+    blackoutCabinetDoors, setBlackoutCabinetDoors,
     toolBox, setToolBox,
     leftSide, setLeftSide,
     rightSide, setRightSide,
@@ -336,7 +338,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
-    floor, floorOverlay, walls, ceiling, cabinets, toolBox, leftSide, rightSide,
+    floor, floorOverlay, walls, ceiling, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
     electrical, battery, lights, interiorLights, ledRope, ventilation, climateControl, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, jacks,
     waterPackage, bathroom, awning, sinkPackage,

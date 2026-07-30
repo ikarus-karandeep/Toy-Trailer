@@ -27,6 +27,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     walls, setWalls,
     ceiling, setCeiling,
     cabinets, toggleCabinet, setCabinetsRaw,
+    blackoutCabinetDoors, setBlackoutCabinetDoors,
     toolBox, setToolBox,
     length,
     bathroom,
@@ -47,8 +48,6 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const [wallInsulation, setWallInsulation] = useState(null)
 
   const [ceilingInsulation, setCeilingInsulation] = useState(null)
-
-  const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(false)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 

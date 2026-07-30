@@ -19,18 +19,32 @@ function computeTrailerBounds(modelGroup) {
   
   modelGroup.traverse((node) => {
     if (node.isMesh && node.visible) {
-      const name = (node.name || '').toLowerCase();
+      let isIgnoredForBounds = false;
+      let isIgnoredForGround = false;
+      
+      let curr = node;
+      while (curr) {
+        const n = (curr.name || '').toLowerCase();
+        if (n.includes('awning') || n.includes('gullwing') || n.includes('escape') || n.includes('concession')) {
+          isIgnoredForBounds = true;
+          isIgnoredForGround = true;
+        }
+        if (n.includes('gooseneck')) {
+          isIgnoredForGround = true;
+        }
+        curr = curr.parent;
+      }
       
       if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
       const nodeBox = node.geometry.boundingBox.clone();
       nodeBox.applyMatrix4(node.matrixWorld);
       
-      if (!name.includes('awning')) {
+      if (!isIgnoredForBounds) {
         if (box.isEmpty()) box.copy(nodeBox);
         else box.union(nodeBox);
       }
       
-      if (!name.includes('awning') && !name.includes('gooseneck')) {
+      if (!isIgnoredForGround) {
         if (groundBox.isEmpty()) groundBox.copy(nodeBox);
         else groundBox.union(nodeBox);
       }
@@ -145,7 +159,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
 
     if (!cameraInitRef.current) {
       // First load: fit camera immediately — model geometry is already at rest
-      const bbox = new THREE.Box3().setFromObject(modelGroupRef.current)
+      const bbox = computeTrailerBounds(modelGroupRef.current)
       const bboxSize = new THREE.Vector3()
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
@@ -174,7 +188,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
     )
 
     // Seed lastCenter with the current (pre-lerp) model center
-    const seedBbox = new THREE.Box3().setFromObject(modelGroupRef.current)
+    const seedBbox = computeTrailerBounds(modelGroupRef.current)
     seedBbox.getCenter(lastCenterRef.current)
 
     isTrackingRef.current = true
@@ -189,7 +203,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
     if (viewModeRef.current === 'INTERIOR') { isTrackingRef.current = false; return }
     if (!modelGroupRef.current || !cameraControlsRef.current) return
 
-    const bbox = new THREE.Box3().setFromObject(modelGroupRef.current)
+    const bbox = computeTrailerBounds(modelGroupRef.current)
     const newCenter = new THREE.Vector3()
     bbox.getCenter(newCenter)
 
@@ -402,50 +416,29 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         }
       });
 
-      if (savedExteriorRef.current) {
-        const { position, target, fov } = savedExteriorRef.current
-        targetPosition = position
-        targetLookAt = target
-        targetFov = fov
+      const box = computeTrailerBounds(modelGroupRef.current);
+      const center = box.getCenter(new THREE.Vector3())
+      const size = box.getSize(new THREE.Vector3())
+      const maxDim = Math.max(size.x, size.y, size.z)
+      const distance = maxDim * 1.8
+      // Flat side view: align camera exactly on the Z-axis, centered on the trailer
+      targetPosition = new THREE.Vector3(center.x, center.y, center.z + distance)
+      targetLookAt = center.clone()
+      targetFov = 35
 
-        // Restore all saved constraints
-        cameraControlsRef.current.minPolarAngle   = savedExteriorRef.current.minPolarAngle
-        cameraControlsRef.current.maxPolarAngle   = savedExteriorRef.current.maxPolarAngle
-        cameraControlsRef.current.minAzimuthAngle = savedExteriorRef.current.minAzimuthAngle
-        cameraControlsRef.current.maxAzimuthAngle = savedExteriorRef.current.maxAzimuthAngle
-        // Always clear minY on return to exterior — GroundClamp owns floor logic
-        cameraControlsRef.current.minY            = -Infinity
+      // Restore zoom limits for exterior
+      cameraControlsRef.current.minDistance = maxDim * 0.1
+      cameraControlsRef.current.maxDistance = maxDim * 1.15
 
-        // Restore zoom limits for exterior
-        const box = computeTrailerBounds(modelGroupRef.current);
-        const size = box.getSize(new THREE.Vector3())
-        const maxDim = Math.max(size.x, size.y, size.z)
-        cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.15
-      } else {
-        const box = computeTrailerBounds(modelGroupRef.current);
-        const center = box.getCenter(new THREE.Vector3())
-        const size = box.getSize(new THREE.Vector3())
-        const maxDim = Math.max(size.x, size.y, size.z)
-        const distance = maxDim * 1.8
-        targetPosition = new THREE.Vector3(center.x + distance * 0.5, center.y + distance * 0.6, center.z + distance)
-        targetLookAt = center.clone()
-        targetFov = 35
-
-        // Restore zoom limits for exterior
-        cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.15
-
-        // Restore default angle constraints
-        cameraControlsRef.current.minPolarAngle   = 0
-        cameraControlsRef.current.maxPolarAngle   = Math.PI / 2
-        cameraControlsRef.current.minAzimuthAngle = -Infinity
-        cameraControlsRef.current.maxAzimuthAngle = Infinity
-        // minY intentionally NOT set — GroundClamp handles floor boundary
-        // smoothly via lerp. A hard minY here creates a snap "wall" that
-        // fights the lerp correction and causes jitter.
-        cameraControlsRef.current.minY            = -Infinity
-      }
+      // Restore default angle constraints
+      cameraControlsRef.current.minPolarAngle   = 0
+      cameraControlsRef.current.maxPolarAngle   = Math.PI / 2
+      cameraControlsRef.current.minAzimuthAngle = -Infinity
+      cameraControlsRef.current.maxAzimuthAngle = Infinity
+      // minY intentionally NOT set — GroundClamp handles floor boundary
+      // smoothly via lerp. A hard minY here creates a snap "wall" that
+      // fights the lerp correction and causes jitter.
+      cameraControlsRef.current.minY            = -Infinity
     }
 
     let cancelled = false
