@@ -36,7 +36,7 @@ export const PACKAGE_INITIAL_CONFIGS = {
     exteriorFinish: 'blackout',
     // FLOOR + WALL E-TRACK + D-RINGS
     // E-Track IDs: 'wall' and 'floor' (from E_TRACKS_OPTIONS in configData)
-    tieDowns: ['drings', 'wall', 'floor'],
+    tieDowns: ['wall', 'floor'],
     // SPREAD AXLES W/CORVETTE FENDERS
     spreadAxle: false,
     // 7000LB DROP SPRING / TORSION
@@ -50,7 +50,7 @@ export const PACKAGE_INITIAL_CONFIGS = {
     // ELECTRIC JACKS
     jacks: ['5000relectric'],
     // FLOOR + WALL E-TRACK + D-RINGS
-    tieDowns: ['drings', 'wall', 'floor'],
+    tieDowns: ['wall', 'floor'],
     // 30 AMP ELECTRICAL
     electrical: '30amp',
     // RECESSED TIRE BOX

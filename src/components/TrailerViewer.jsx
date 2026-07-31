@@ -1212,7 +1212,7 @@ function ScaledEnvironment({ environment, scaleY = 1.5, offsetY = 0.14, intensit
       uniforms: {
         envMap: { value: texture },
         scaleY: { value: scaleY },
-        offsetY: { value: offsetY },   // ← new
+        offsetY: { value: offsetY },
       },
       vertexShader: `
         varying vec3 vWorldPos;
@@ -1229,7 +1229,6 @@ function ScaledEnvironment({ environment, scaleY = 1.5, offsetY = 0.14, intensit
         #define PI 3.14159265359
         void main() {
           vec3 dir = normalize(vWorldPos);
-          // Match Blender Mapping node (Point): output = input*scale + location
           dir.y = dir.y * scaleY + offsetY;
           dir = normalize(dir);
           float u = atan(dir.z, dir.x) / (2.0 * PI) + 0.5;
@@ -1241,20 +1240,27 @@ function ScaledEnvironment({ environment, scaleY = 1.5, offsetY = 0.14, intensit
     })
     envScene.add(new THREE.Mesh(geo, mat))
 
-    const pmrem = new THREE.PMREMGenerator(gl)
-    const envMap = pmrem.fromScene(envScene, 0, 0.1, 1000).texture
-    scene.environment = envMap
+    // Use a high-resolution CubeCamera instead of the downscaled PMREMGenerator
+    const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(1024, {
+      generateMipmaps: true,
+      minFilter: THREE.LinearMipmapLinearFilter,
+      type: THREE.HalfFloatType, // <--- Preserves HDR values!
+      colorSpace: THREE.LinearSRGBColorSpace,
+    })
+    const cubeCamera = new THREE.CubeCamera(0.1, 1000, cubeRenderTarget)
+    cubeCamera.update(gl, envScene)
+
+    scene.environment = cubeRenderTarget.texture
     scene.environmentIntensity = intensity
 
     geo.dispose()
     mat.dispose()
-    pmrem.dispose()
 
     return () => {
-      envMap.dispose()
+      cubeRenderTarget.dispose()
       scene.environment = null
     }
-  }, [texture, scaleY, offsetY, gl, scene])   // ← add offsetY to deps
+  }, [texture, scaleY, offsetY, gl, scene])
 
   return null
 }

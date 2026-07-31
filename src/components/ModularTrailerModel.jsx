@@ -2,7 +2,7 @@ import { useRef, useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import { applyDimensionDeformations } from '../utils/GeometryUtils'
+import { applyDimensionDeformations, applyConcessionDoorDeformations, applyWindowDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import { patchTriplanarMaterial, generateBoxProjectionUVs } from '../utils/TriplanarMaterial'
@@ -213,15 +213,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     let effectiveDriverDoor = config.driverSideDoor || 'none'
     let effectivePassengerDoor = config.passengerSideDoor || 'none'
 
-    if (parseFloat(config.length) < 23.5) {
+    if (parseFloat(config.length) < 24) {
+        effectiveDriverDoor = 'none'
+        effectivePassengerDoor = 'none'
+    } else if (parseFloat(config.length) < 23.5) {
         if (effectiveDriverDoor !== 'none' && effectiveDriverDoor !== '36x72') effectiveDriverDoor = '36x72'
         if (effectivePassengerDoor !== 'none' && effectivePassengerDoor !== '36x72') effectivePassengerDoor = '36x72'
     }
 
+    const isShortTrailer = parseFloat(config.length) < 24;
+    const isShortTrailerForBathroom = parseFloat(config.length) < 28;
+    const effectiveBathroom = isShortTrailerForBathroom ? 'none' : (config.bathroom || 'none');
+
     const isBlackout = config.exteriorFinish === 'blackout';
     const isCabinetBlackout = isBlackout || config.blackoutCabinetDoors;
     const getBlackoutMapped = (normName) => {
-        if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'cabinetwood' || normName === 'whiteceremiccabinet')) return 'blackceremiccabinet';
+        if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'whiteceremiccabinet')) return 'blackceremiccabinet';
         if (!isBlackout) return normName;
         if (normName === 'matshell' || normName === 'matshelldecal') return normName;
         if (normName.includes('atp') && !normName.includes('black')) return 'atpblack';
@@ -266,7 +273,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         widthFt: 8.5,
         lengthFt: parseInt(config.length || '32'),
         heightFt: heightFt,
-        awningFt: config.awning && config.awning.length > 0 ? parseInt(config.awning[0].match(/\d+/)?.[0] || '18') : 18
+        awningFt: config.awning && config.awning.length > 0 ? parseInt(config.awning[0].match(/\d+/)?.[0] || '18') : 18,
+        concessionWidthIn: parseInt(config.concessionWidth) || 72,
+        concessionHeightIn: parseInt(config.concessionHeight) || 36
     })
     const targetRef = useRef({ 
         widthFt, 
@@ -985,9 +994,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const originalMat = child.userData.origMatsGen[i];
 
                     let mappedName = getBlackoutMapped(normMatName(originalMat.name));
-                    if (mappedName === 'matcabinets' || mappedName === 'cabinetwood') {
-                         mappedName = 'whiteceremiccabinet';
+                    
+                    // User wanted MAT_Cabinets to retain its raw GLB material
+                    if (mappedName === 'matcabinets') {
+                        if (isArray) child.material[i] = originalMat
+                        else child.material = originalMat
+                        return;
                     }
+                    
                     const def = MATERIAL_DEFS_NORM.get(mappedName)
                     
                     if (!def) {
@@ -997,6 +1011,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     }
                     
                     let next = applyMaterialDef(originalMat, def, staticTextures)
+                    
+                    // Scale the cabinet wood texture so the grain isn't stretched
+                    if (mappedName === 'cabinetwood' && next.map) {
+                        next.map = next.map.clone();
+                        next.map.repeat.set(25, 25);
+                        next.map.wrapS = THREE.RepeatWrapping;
+                        next.map.wrapT = THREE.RepeatWrapping;
+                        next.map.needsUpdate = true;
+                    }
                     
                     const isGooseneckMesh = isGooseneckScene || child.name.toLowerCase().includes('gooseneck');
                     
@@ -1204,23 +1227,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const activeWindowsMeshes = [];
         // console.log('[DEBUG WINDOWS] config.windows:', config.windows);
         // console.log('[DEBUG WINDOWS] config.windowSizes:', config.windowSizes);
-        if (config.windows) {
-            if (config.windows.vertical > 0 && config.windowSizes?.vertical === '15x30') {
+        if (!isShortTrailer && config.windows) {
+            if (config.windows.vertical > 0 && config.windowSizes?.vertical) {
                 activeWindowsMeshes.push('15×30_Vertical_Slider');
             }
-            if (config.windows.horizontal > 0 && config.windowSizes?.horizontal === '50x30') {
+            if (config.windows.horizontal > 0 && config.windowSizes?.horizontal) {
                 activeWindowsMeshes.push('50×30_Horizontal_Slider');
             }
-            if (config.windows.egress > 0 && config.windowSizes?.egress === '30x30') {
+            if (config.windows.egress > 0 && config.windowSizes?.egress) {
                 activeWindowsMeshes.push('30×30_Egress');
             }
         }
         if (windowsScene) {
-            // console.log('[DEBUG WINDOWS] activeWindowsMeshes:', activeWindowsMeshes);
             BlenderNodes.switchMeshes(windowsScene, activeWindowsMeshes);
-            const allWindowsMeshes = []
-            windowsScene.traverse(c => { if (c.isMesh) allWindowsMeshes.push(c.name) })
-            // console.log('[DEBUG WINDOWS] All mesh names in Windows.glb:', allWindowsMeshes)
         }
 
         // ── Addons.glb: unified mesh list ──────────────────────────────────────────
@@ -1620,8 +1639,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const hasWinch = config.winchSystem
 
         let hasWallRun = config.cabinets?.includes('wallrun36')
-        if (config.sinkPackage === 'sink') hasWallRun = false;
-        const hasWallRunOverhead = config.cabinets?.includes('wallrun16')
+        if (config.sinkPackage === 'sink' || isShortTrailer || effectiveDriverDoor !== 'none') hasWallRun = false;
+        let hasWallRunOverhead = config.cabinets?.includes('wallrun16')
+        if (isShortTrailer || effectiveDriverDoor !== 'none') hasWallRunOverhead = false;
         const hasWheelWallCabinet = config.cabinets?.includes('wheelwallcabinet')
 
         // 1. Main Cabinet (front base) — hidden when lShapeCounter or genDoor is on
@@ -1649,26 +1669,26 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // 5. Wall Run Cabinet (Wall Run 36"H)
         if (hasWallRun) {
-            activeCabinetMeshes.push('Wall_Run_Cabinet');
+            activeCabinetMeshes.push('Wall_Run_Cabinet', 'Wall Run Cabinet');
         }
 
         // 5b. Overhead Wall Run Cabinet (Wall Run 16"H)
         if (hasWallRunOverhead) {
-            activeCabinetMeshes.push('Overhead_Wall_Run_Cabinet');
+            activeCabinetMeshes.push('Overhead_Wall_Run_Cabinet', 'Overhead Wall Run Cabinet');
         }
 
         // 5c. Wheel Wall Cabinet
         if (hasWheelWallCabinet) {
-            activeCabinetMeshes.push('Wheel_Wall_Cabinet');
+            activeCabinetMeshes.push('Wheel_Wall_Cabinet', 'Wheel Wall Cabinet');
         }
 
         // 6. Floor to Ceiling Cabinet
-        const hasFullHeight = config.cabinets?.includes('fullheight');
-        const hasBathroom = config.bathroom && config.bathroom !== 'none';
+        const hasFullHeight = config.cabinets?.includes('fullheight') && !isShortTrailer;
+        const hasBathroom = effectiveBathroom !== 'none';
         
         // Hide Floor to Ceiling Cabinet if bathroom is present
         if (hasFullHeight && !hasBathroom) {
-            activeCabinetMeshes.push('Floor_to_Ceiling_Cabinet');
+            activeCabinetMeshes.push('Floor_to_Ceiling_Cabinet', 'Floor to Ceiling Cabinet');
         }
         
         const allCabinetNames = [];
@@ -1680,17 +1700,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // ── Bathroom GLB: Sink Area conditional visibility ─────────────────────
         // Sink Area requires all 3: bathroom selected + no generator box + v-nose (not flat front)
-        const showSink = Boolean(config.bathroom && config.bathroom !== 'none')
+        const showSink = Boolean(effectiveBathroom !== 'none')
             && (!config.generatorBox || config.generatorBox === 'none')
             && config.frontStyle !== 'flatfront'
             && !hasCabinet
 
         const activeBathroomMeshes = []
         let targetSubstring = '';
-        if (config.bathroom === 'half') targetSubstring = 'half';
-        else if (config.bathroom === '34x34') targetSubstring = '34x34';
-        else if (config.bathroom === '36x36') targetSubstring = '36x36';
-        else if (config.bathroom === 'full') targetSubstring = '34x34'; // legacy fallback
+        if (effectiveBathroom === 'half') targetSubstring = 'half';
+        else if (effectiveBathroom === '34x34') targetSubstring = '34x34';
+        else if (effectiveBathroom === '36x36') targetSubstring = '36x36';
+        else if (effectiveBathroom === 'full') targetSubstring = '34x34'; // legacy fallback
 
         if (bathroom && targetSubstring) {
             bathroom.traverse(child => {
@@ -1700,7 +1720,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             });
         }
         
-        if (activeBathroomMeshes.length === 0 && config.bathroom && config.bathroom !== 'none') {
+        if (activeBathroomMeshes.length === 0 && effectiveBathroom !== 'none') {
             activeBathroomMeshes.push('Bathroom'); // Last resort fallback
         }
 
@@ -1846,7 +1866,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     // ── Awning ───────────────────────────────────────────────────────────
     if (awning) {
-        const showAwning = config.awning?.length > 0;
+        const showAwning = !isShortTrailer && config.awning?.length > 0;
         awning.traverse(child => {
             if (!child.isMesh) return;
             if (child.name.toLowerCase().includes('proxy')) {
@@ -1894,13 +1914,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             sinkScene
         ]
         if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
-        if (config.awning?.length > 0) scenes.push(awning)
-        if (config.bathroom && config.bathroom !== 'none') scenes.push(bathroom)
+        if (!isShortTrailer && config.awning?.length > 0) scenes.push(awning)
+        if (effectiveBathroom !== 'none') scenes.push(bathroom)
         if (config.exteriorAccessories === 'rearwingspoiler' || config.exteriorAccessories === 'rearwings') scenes.push(spoiler)
         if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)
         if (config.escapeDoor === '54x48') scenes.push(escapeDoorScene)
         if (config.concessionDoor && config.concessionDoor !== 'none') scenes.push(concessionDoorScene)
-        if (config.windows && (config.windows.vertical > 0 || config.windows.horizontal > 0 || config.windows.egress > 0)) scenes.push(windowsScene)
+        if (!isShortTrailer && config.windows && (config.windows.vertical > 0 || config.windows.horizontal > 0 || config.windows.egress > 0)) scenes.push(windowsScene)
         return scenes
     }, [
         config.cabinets, config.awning, config.bathroom, config.exteriorAccessories, config.escapeDoor, config.concessionDoor, config.windows,
@@ -1979,17 +1999,27 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const targetAwningFt = awningMatch ? parseInt(awningMatch[0]) : 18
         const na = curr.awningFt + (targetAwningFt - curr.awningFt) * LERP_SPEED
 
+        const targetConcessionWidthIn = parseInt(config.concessionWidth) || 72;
+        const targetConcessionHeightIn = parseInt(config.concessionHeight) || 36;
+        const ncw = curr.concessionWidthIn + (targetConcessionWidthIn - curr.concessionWidthIn) * LERP_SPEED;
+        const nch = curr.concessionHeightIn + (targetConcessionHeightIn - curr.concessionHeightIn) * LERP_SPEED;
+
         const moved =
             Math.abs(nw - curr.widthFt) > LERP_THRESHOLD ||
             Math.abs(nl - curr.lengthFt) > LERP_THRESHOLD ||
             Math.abs(nh - curr.heightFt) > LERP_THRESHOLD ||
-            Math.abs(na - curr.awningFt) > LERP_THRESHOLD
+            Math.abs(na - curr.awningFt) > LERP_THRESHOLD ||
+            Math.abs(ncw - curr.concessionWidthIn) > LERP_THRESHOLD ||
+            Math.abs(nch - curr.concessionHeightIn) > LERP_THRESHOLD
             
         if (!moved && !dirtyRef.current) {
             return
         }
+
+
+            
         dirtyRef.current = false
-        animRef.current = { widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: na }
+        animRef.current = { widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: na, concessionWidthIn: ncw, concessionHeightIn: nch }
         const globalZCenter = store.current.get('_globalZCenter')
         const globalXMin = store.current.get('_globalXMin')
         const globalXMax = store.current.get('_globalXMax')
@@ -2014,6 +2044,48 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     globalZCenter, globalXMin, globalXMax,
                     we, ie, narrowTrackOffset
                 })
+                
+                if (scene === concessionDoorScene) {
+                    console.log(`[DEBUG CONCESSION] Applying deformations to ${child.name}. ncw: ${ncw}, nch: ${nch}`);
+                    applyConcessionDoorDeformations({
+                        geometry: child.geometry,
+                        widthIn: ncw,
+                        heightIn: nch
+                    })
+                }
+
+                if (scene === windowsScene) {
+                    child.scale.set(1, 1, 1);
+                    
+                    if (child.name.includes('15×30_Vertical_Slider') && config.windowSizes?.vertical) {
+                        const [w, h] = config.windowSizes.vertical.split('x').map(Number);
+                        applyWindowDeformations({
+                            geometry: child.geometry,
+                            widthIn: w,
+                            heightIn: h,
+                            baseWidthIn: 15,
+                            baseHeightIn: 30
+                        })
+                    } else if (child.name.includes('50×30_Horizontal_Slider') && config.windowSizes?.horizontal) {
+                        const [w, h] = config.windowSizes.horizontal.split('x').map(Number);
+                        applyWindowDeformations({
+                            geometry: child.geometry,
+                            widthIn: w,
+                            heightIn: h,
+                            baseWidthIn: 50,
+                            baseHeightIn: 30
+                        })
+                    } else if (child.name.includes('30×30_Egress') && config.windowSizes?.egress) {
+                        const [w, h] = config.windowSizes.egress.split('x').map(Number);
+                        applyWindowDeformations({
+                            geometry: child.geometry,
+                            widthIn: w,
+                            heightIn: h,
+                            baseWidthIn: 30,
+                            baseHeightIn: 30
+                        })
+                    }
+                }
             })
 
             applyUvScalingForScene(scene)

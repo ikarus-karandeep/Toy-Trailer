@@ -18,24 +18,24 @@ export const TABS = [
 
 // Size & Capacity
 export const WIDTH_OPTIONS = [
-  { id: '7ft',    label: '7FT',     price: null,  note: "7' wide trailer", locked: true },
+  { id: '7ft',    label: '7FT',     price: null,  note: "7' wide trailer" },
   { id: '8.5ft',  label: '8.5FT',  price: null,  note: "8.5' wide trailer" },
-  { id: '8.5ftgn', label: '8.5FT GN', price: 9999, note: "8.5' gooseneck wide", locked: true },
+  { id: '8.5ftgn', label: '8.5FT GN', price: 9999, note: "8.5' gooseneck wide" },
 ];
 
 export const LENGTH_OPTIONS = [
-  { id: '14', label: "14'", price: null, locked: true },
-  { id: '16', label: "16'", price: null, locked: true },
-  { id: '18', label: "18'", price: null, locked: true },
-  { id: '20', label: "20'", price: null, locked: true },
-  { id: '22', label: "22'", price: null, locked: true },
-  { id: '24', label: "24'", price: null, locked: true },
-  { id: '26', label: "26'", price: 320,  badge: '+$320 - 6000lb Base Axle', locked: true },
-  { id: '28', label: "28'", price: 320,  badge: '+$320 - 6000lb Base Axle', locked: true },
-  { id: '30', label: "30'", price: 320,  badge: '+$320 - 6000lb Base Axle', locked: true },
+  { id: '14', label: "14'", price: null },
+  { id: '16', label: "16'", price: null },
+  { id: '18', label: "18'", price: null },
+  { id: '20', label: "20'", price: null },
+  { id: '22', label: "22'", price: null },
+  { id: '24', label: "24'", price: null },
+  { id: '26', label: "26'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
+  { id: '28', label: "28'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
+  { id: '30', label: "30'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
   { id: '32', label: "32'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
-  { id: '34', label: "34'", price: 320,  badge: '+$320 - 6000lb Base Axle', locked: true },
-  { id: '36', label: "36'", price: 320,  badge: '+$320 - 6000lb Base Axle', locked: true },
+  { id: '34', label: "34'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
+  { id: '36', label: "36'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
 ];
 
 export const FRAME_SIZE_OPTIONS = [
@@ -61,13 +61,13 @@ export const AXLE_CAPACITY_OPTIONS = [
 ];
 
 export const INTERIOR_HEIGHT_OPTIONS = [
-  { id: '7ft0',  label: "7'0\"",  value: 0,  price: null, isStandard: true, locked: true },
-  { id: '7ft6',  label: "7'6\"",  value: 1,  price: 9999, locked: true },
-  { id: '8ft0',  label: "8'0\"",  value: 2,  price: 9999, locked: true },
+  { id: '7ft0',  label: "7'0\"",  value: 0,  price: null, isStandard: true },
+  { id: '7ft6',  label: "7'6\"",  value: 1,  price: 9999 },
+  { id: '8ft0',  label: "8'0\"",  value: 2,  price: 9999 },
   { id: '8ft6',  label: "8'6\"",  value: 3,  price: 9999 },
-  { id: '9ft0',  label: "9'0\"",  value: 4,  price: 9999, locked: true },
-  { id: '9ft6',  label: "9'6\"",  value: 5,  price: 9999, locked: true },
-  { id: '10ft0', label: "10'0\"", value: 6,  price: 9999, locked: true },
+  { id: '9ft0',  label: "9'0\"",  value: 4,  price: 9999 },
+  { id: '9ft6',  label: "9'6\"",  value: 5,  price: 9999 },
+  { id: '10ft0', label: "10'0\"", value: 6,  price: 9999 },
 ];
 
 export const AXLE_OPTIONS = [

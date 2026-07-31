@@ -85,8 +85,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
   const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay ?? 'atp')
-  const [walls, setWalls] = useState(ic.walls ?? '38plywood')
-  const [ceiling, setCeiling] = useState(ic.ceiling ?? 'thermaply')
+  const [walls, setWalls] = useState(ic.walls ?? 'white_metal_walls')
+  const [ceiling, setCeiling] = useState(ic.ceiling ?? 'white_metal_ceiling')
   const [cabinets, setCabinetsRaw] = useState(ic.cabinets ?? ['frontbase36'])
   const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(ic.blackoutCabinetDoors ?? false)
   const [toolBox, setToolBox] = useState(ic.toolBox ?? 'none')
@@ -116,7 +116,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   }, [rampType])
 
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
-  const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])
+  const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? [])
   const [jacks, setJacksRaw] = useState(ic.jacks ?? [''])
 
   // Add-Ons
@@ -139,6 +139,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [concessionDoor, setConcessionDoor] = useState(ic.concessionDoor ?? 'none')
   const [glassScreen, setGlassScreen] = useState(ic.glassScreen ?? false)
   const [generatorBox, setGeneratorBox] = useState(ic.generatorBox ?? 'none')
+  const [concessionWidth, setConcessionWidth] = useState(ic.concessionWidth ?? '72in')
+  const [concessionHeight, setConcessionHeight] = useState(ic.concessionHeight ?? '36in')
   const [windows, setWindows] = useState(ic.windows ?? {
     vertical: 0,
     horizontal: 0,
@@ -169,23 +171,17 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Door vs Cabinet conflict resolution (Always active across all panels)
   useEffect(() => {
     const hasPassengerDoor = (passengerSideDoor && passengerSideDoor !== 'none');
-    const hasDriverSideConflict = (driverSideDoor && driverSideDoor !== 'none') || (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
+    const hasDriverSideConflict = (driverSideDoor && driverSideDoor !== 'none');
     
     if (hasPassengerDoor && cabinets.includes('fullheight')) {
       setCabinetsRaw(prev => prev.filter(c => c !== 'fullheight'));
     }
 
-    if (hasDriverSideConflict && cabinets.includes('wallrun36')) {
-      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'));
-    }
+    // (Removed auto-stripping of wallrun cabinets on driverSideDoor per user request)
 
-    if (parseFloat(length) < 24 && cabinets.includes('wallrun36')) {
-      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'));
-    }
+    // (Removed auto-stripping of wallrun cabinets on length < 24 to preserve user selection)
 
-    if (genDoor && cabinets.includes('wallrun36')) {
-      setCabinetsRaw(prev => prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'));
-    }
+    // (Removed auto-stripping of wallrun cabinets on genDoor/escapeDoor/concessionDoor per user request)
 
     const hasWheelWallConflict =
       (escapeDoor && escapeDoor !== 'none') ||
@@ -237,7 +233,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     //   setSelectedColor('brandywine');
     // }
 
-    setTieDownsRaw(pkgConfig.tieDowns ?? ['drings']);
+    setTieDownsRaw(pkgConfig.tieDowns ?? []);
     setSpreadAxle(pkgConfig.spreadAxle ?? false);
     setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
     setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
@@ -317,6 +313,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     concessionDoor, setConcessionDoor,
     glassScreen, setGlassScreen,
     generatorBox, setGeneratorBox,
+    concessionWidth, setConcessionWidth,
+    concessionHeight, setConcessionHeight,
     lShapeCounter, setLShapeCounter,
     genSlides, setGenSlides,
     genDoor, setGenDoor,
@@ -343,7 +341,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     rampType, atpRamp, rearDoor, tieDowns, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,
-    escapeDoor, concessionDoor, glassScreen, generatorBox, lShapeCounter, genSlides, genDoor, winchSystem,
+    escapeDoor, concessionDoor, glassScreen, generatorBox, concessionWidth, concessionHeight, lShapeCounter, genSlides, genDoor, winchSystem,
     windows, windowSizes,
     extendedTripleTongue, radioPackageSpeaker, rearSpoiler,
     ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,

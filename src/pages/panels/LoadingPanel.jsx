@@ -37,6 +37,9 @@ export default function LoadingPanel({ activeSectionTitle }) {
     windows, setWindows,
     windowSizes, setWindowSizes,
     viewMode, setViewMode,
+    concessionWidth, setConcessionWidth,
+    concessionHeight, setConcessionHeight,
+    length,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -49,11 +52,9 @@ export default function LoadingPanel({ activeSectionTitle }) {
   const [blackoutFrame, setBlackoutFrame] = useState(false)
 
   // concessionDoor comes from context ('none' | 'driver' | 'passenger')
-  const [concessionWidth, setConcessionWidth] = useState('72in')
-  const [concessionHeight, setConcessionHeight] = useState('36in')
 
   const [dRings, setDRings] = useState({
-    drings: 1, // Standard D-rings default
+    drings: 0, // Standard D-rings default
     walldrings: 0,
     floordrings: 0,
   })
@@ -65,13 +66,13 @@ export default function LoadingPanel({ activeSectionTitle }) {
   }
 
   const concessionWidthOptions = [
-    { id: '48in', label: '48in', locked: true },
-    { id: '60in', label: '60in', locked: true },
+    { id: '48in', label: '48in' },
+    { id: '60in', label: '60in' },
     { id: '72in', label: '72in' },
-    { id: '96in', label: '96in', locked: true },
+    { id: '96in', label: '96in' },
   ]
   const concessionHeightOptions = [
-    { id: '48in', label: '48in', locked: true },
+    { id: '48in', label: '48in' },
     { id: '36in', label: '36in' },
   ]
 
@@ -116,33 +117,41 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('SIDE DOOR') && (
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="SIDE DOOR">
-          <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">36" X 78" Steel base</p>
-          
-          <div className="mb-4">
-            <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Side door placement</p>
-            <div className="w-full">
-              <SegmentedControl
-                options={SIDE_DOOR_PLACEMENT_OPTIONS}
-                value={sideDoorPlacement}
-                onChange={setSideDoorPlacement}
-              />
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            {SIDE_DOOR_SIZE_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                isSelected={currentSideDoor === opt.id}
-                onClick={() => setCurrentSideDoor(opt.id)}
-              />
-            ))}
-          </div>
-          
-          <div className="mt-8 flex justify-center">
-            <img src="/Rear door.png" />
-          </div>
+          {parseFloat(length) < 24 ? (
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+              * Side door options are hidden for trailers under 24ft length.
+            </p>
+          ) : (
+            <>
+              <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">36" X 78" Steel base</p>
+              
+              <div className="mb-4">
+                <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Side door placement</p>
+                <div className="w-full">
+                  <SegmentedControl
+                    options={SIDE_DOOR_PLACEMENT_OPTIONS}
+                    value={sideDoorPlacement}
+                    onChange={setSideDoorPlacement}
+                  />
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {SIDE_DOOR_SIZE_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    isSelected={currentSideDoor === opt.id}
+                    onClick={() => setCurrentSideDoor(opt.id)}
+                  />
+                ))}
+              </div>
+              
+              <div className="mt-8 flex justify-center">
+                <img src="/Rear door.png" />
+              </div>
+            </>
+          )}
         </OptionSection>
         </div>
       )}
@@ -273,12 +282,18 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('WINDOWS (MULTI-CHOICE)') && (
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="WINDOWS (MULTI-CHOICE)">
-          {concessionDoor === 'passenger' && (
-            <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
-              * Windows are disabled when a Concession Door is on the Passenger side.
+          {parseFloat(length) < 24 ? (
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+              * Window options are hidden for trailers under 24ft length.
             </p>
-          )}
-          <div className="flex flex-col gap-6 mb-4">
+          ) : (
+            <>
+              {concessionDoor === 'passenger' && (
+                <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
+                  * Windows are disabled when a Concession Door is on the Passenger side.
+                </p>
+              )}
+              <div className="flex flex-col gap-6 mb-4">
             {WINDOWS_OPTIONS.map((opt) => {
               const qty = windows[opt.id]
               return (
@@ -295,10 +310,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   <div className="flex flex-wrap gap-2 pl-4">
                     {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
                       let isLocked = concessionDoor === 'passenger';
-                      if (!isLocked) {
-                        if (opt.id === 'vertical' && sizeOpt.id !== '15x30') isLocked = true;
-                        if (opt.id === 'horizontal' && sizeOpt.id !== '50x30') isLocked = true;
-                      }
                       return (
                         <OptionPill
                           key={sizeOpt.id}
@@ -333,9 +344,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   <div className="flex flex-wrap gap-2 pl-4">
                     {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
                       let isLocked = concessionDoor === 'passenger';
-                      if (!isLocked) {
-                        if (sizeOpt.id !== '30x30') isLocked = true;
-                      }
                       return (
                         <OptionPill
                           key={sizeOpt.id}
@@ -352,6 +360,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
               )
             })}
           </div>
+          </>
+          )}
         </OptionSection>
         </div>
       )}

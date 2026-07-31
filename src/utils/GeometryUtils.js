@@ -557,3 +557,88 @@ export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
     normalAttr.needsUpdate = true
   }
 }
+/**
+ * Applies width and height deformations to the concession door.
+ * Input values are in inches (e.g., 48, 60, 72, 96 for width; 36, 48 for height).
+ */
+export function applyConcessionDoorDeformations({ geometry, widthIn, heightIn }) {
+  const position = geometry.attributes.position
+  if (!position) return
+
+  const IN_TO_M = 0.0254
+  const baseWidthIn = 72
+  const baseHeightIn = 36
+
+  const deltaWidth = (widthIn - baseWidthIn) * IN_TO_M
+  const deltaHeight = (heightIn - baseHeightIn) * IN_TO_M
+  
+  const frontWeight = geometry.attributes._frontend
+  const rearWeight = geometry.attributes._rearend
+  const topWeight = geometry.attributes._topend
+  const bottomWeight = geometry.attributes._bottomend
+
+  console.log(`[DEBUG CONCESSION GEOM] deltaWidth: ${deltaWidth}, deltaHeight: ${deltaHeight}. Attributes present: front=${!!frontWeight}, rear=${!!rearWeight}, top=${!!topWeight}, bottom=${!!bottomWeight}`);
+
+  if (deltaWidth === 0 && deltaHeight === 0) return;
+
+  for (let i = 0; i < position.count; i++) {
+    let dx = 0
+    let dy = 0
+
+    if (frontWeight) dx += (-deltaWidth / 2) * frontWeight.getX(i)
+    if (rearWeight) dx += (deltaWidth / 2) * rearWeight.getX(i)
+    if (topWeight) dy += (deltaHeight / 2) * topWeight.getX(i)
+    if (bottomWeight) dy += (-deltaHeight / 2) * bottomWeight.getX(i)
+
+    if (dx !== 0 || dy !== 0) {
+      position.setXYZ(
+        i,
+        position.getX(i) + dx,
+        position.getY(i) + dy,
+        position.getZ(i)
+      )
+    }
+  }
+
+  position.needsUpdate = true
+}
+
+export function applyWindowDeformations({ geometry, widthIn, heightIn, baseWidthIn, baseHeightIn }) {
+  const position = geometry.attributes.position
+  if (!position) return
+
+  const IN_TO_M = 0.0254
+
+  const deltaWidth = (widthIn - baseWidthIn) * IN_TO_M
+  const deltaHeight = (heightIn - baseHeightIn) * IN_TO_M
+  
+  const frontWeight = geometry.attributes._frontend
+  const rearWeight = geometry.attributes._rearend
+  const topWeight = geometry.attributes._topend
+  const bottomWeight = geometry.attributes._bottomend
+
+  if (deltaWidth === 0 && deltaHeight === 0) {
+    return
+  }
+
+  for (let i = 0; i < position.count; i++) {
+    let dx = 0
+    let dy = 0
+
+    if (frontWeight) dx += (-deltaWidth / 2) * frontWeight.getX(i)
+    if (rearWeight) dx += (deltaWidth / 2) * rearWeight.getX(i)
+    if (topWeight) dy += (deltaHeight / 2) * topWeight.getX(i)
+    if (bottomWeight) dy += (-deltaHeight / 2) * bottomWeight.getX(i)
+
+    if (dx !== 0 || dy !== 0) {
+      position.setXYZ(
+        i,
+        position.getX(i) + dx,
+        position.getY(i) + dy,
+        position.getZ(i)
+      )
+    }
+  }
+
+  position.needsUpdate = true
+}

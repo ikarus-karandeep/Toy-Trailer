@@ -54,15 +54,15 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
   const hasPassengerDoor = (passengerSideDoor && passengerSideDoor !== 'none');
-  const hasDriverSideConflict = (driverSideDoor && driverSideDoor !== 'none') || (escapeDoor && escapeDoor !== 'none') || (concessionDoor === 'driver');
-  const hasGenDoorConflict = Boolean(genDoor);
+  const hasDriverSideConflict = (driverSideDoor && driverSideDoor !== 'none');
+  const hasGenDoorConflict = false; // user requested to remove conflict
   const hasWallRunConflict = hasDriverSideConflict || hasGenDoorConflict;
   const hasWheelWallConflict =
     (escapeDoor && escapeDoor !== 'none') ||
     (concessionDoor === 'driver');
   const hasSinkConflict = sinkPackage === 'sink';
   const hasBathroom = bathroom && bathroom !== 'none';
-  const hasFullHeightConflict = hasPassengerDoor || hasBathroom;
+  const hasFullHeightConflict = hasPassengerDoor || hasBathroom || parseFloat(length) < 24;
 
 
 
@@ -311,14 +311,14 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 * Base cabinets are disabled because the Sink Package is currently applied.
               </p>
             )}
-            {hasDriverSideConflict && (
+            {parseFloat(length) < 24 && (
               <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
-                * Wall Run 36"H cabinet is disabled because a driver side door, escape door, or driver side concession door is currently applied.
+                * Wall Run 36"H cabinet is disabled for trailers under 24ft length.
               </p>
             )}
-            {hasGenDoorConflict && !hasDriverSideConflict && (
+            {hasDriverSideConflict && (
               <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
-                * Wall Run 36"H cabinet is not available when the Generator Door is active.
+                * Wall Run 36"H cabinet is disabled because a driver side door is currently applied.
               </p>
             )}
             <div className="flex flex-col gap-2">
@@ -341,8 +341,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                       if (isLocked) return;
                       if (!cabinets.includes(opt.id)) {
                         const baseIds = BASE_CABINET_OPTIONS.map(o => o.id);
-                        const overheadIds = OVERHEAD_CABINET_OPTIONS.map(o => o.id);
-                        const toRemove = [...baseIds, ...overheadIds];
+                        const toRemove = [...baseIds];
                         const newCabinets = cabinets.filter(c => !toRemove.includes(c));
                         setCabinetsRaw([...newCabinets, opt.id]);
                       } else {
@@ -365,6 +364,10 @@ export default function InteriorPanel({ activeSectionTitle }) {
             <div className="flex flex-col gap-2">
               {OVERHEAD_CABINET_OPTIONS.map((opt) => {
                 let isLocked = false;
+                if (opt.id === 'wallrun16') {
+                  if (parseFloat(length) < 24) isLocked = true;
+                  if (hasWallRunConflict) isLocked = true;
+                }
                 
                 return (
                   <OptionPill
@@ -398,7 +401,9 @@ export default function InteriorPanel({ activeSectionTitle }) {
             {hasFullHeightConflict && (
               <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
                 * Floor to Ceiling Cabinet is not available
-                {hasBathroom && hasPassengerDoor
+                {parseFloat(length) < 24
+                  ? ' for trailers under 24ft length.'
+                  : hasBathroom && hasPassengerDoor
                   ? ' when a Bathroom and a Passenger Side Door are both applied.'
                   : hasBathroom
                   ? ' when a Bathroom is applied.'

@@ -65,12 +65,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
 
   useEffect(() => {
     const hasGenBox = generatorBox && generatorBox !== 'none';
-    if (hasGenBox || genSlides || genDoor) {
+    if (hasGenBox) {
       if (batteryBox) {
         setBatteryBox(false);
       }
     }
-  }, [generatorBox, genSlides, genDoor, batteryBox, setBatteryBox]);
+  }, [generatorBox, batteryBox, setBatteryBox]);
 
   const show = (title) => {
     if (!activeSectionTitle) return true
@@ -236,7 +236,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       {show('BATHROOM PACKAGES') && (
         <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
           <OptionSection title="BATHROOM PACKAGES">
-          <div className="flex flex-col gap-2">
+          {parseFloat(length) < 28 ? (
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+              * Bathroom options are hidden for trailers under 28ft length.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-2">
             {BATHROOM_PACKAGE_OPTIONS.map((opt) => (
               <DetailedOptionCard
                 key={opt.id}
@@ -262,6 +267,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
+          )}
         </OptionSection>
         </div>
       )}
@@ -269,13 +275,19 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       {show('AWNINGS') && (
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
           <OptionSection title="AWNINGS">
-          <img
-            src="/Awnings.png"
-            alt="Awning preview"
-            className="w-full rounded-xl object-cover mb-4"
-            onError={(e) => { e.currentTarget.style.display = 'none' }}
-          />
-          <div className="flex flex-col gap-2">
+          {parseFloat(length) < 24 ? (
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+              * Awning options are hidden for trailers under 24ft length.
+            </p>
+          ) : (
+            <>
+              <img
+                src="/Awnings.png"
+                alt="Awning preview"
+                className="w-full rounded-xl object-cover mb-4"
+                onError={(e) => { e.currentTarget.style.display = 'none' }}
+              />
+              <div className="flex flex-col gap-2">
             <OptionPill
               label="Electric Awning"
               isSelected={awning?.length > 0}
@@ -300,6 +312,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 badge={awningBadgeMap[awningLength]}
               />
             </div>
+          )}
+          </>
           )}
         </OptionSection>
         </div>
@@ -376,7 +390,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="ATP BATTERY BOX ON TONGUE">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Requires extended TTT</p>
-          {(generatorBox && generatorBox !== 'none') || genSlides || genDoor ? (
+          {(generatorBox && generatorBox !== 'none') ? (
             <div className="mt-2">
               <AlertMessage message="Hidden due to Tongue Mounted Generator Box selection" />
             </div>
