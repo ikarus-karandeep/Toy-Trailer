@@ -8,6 +8,7 @@ export default function OptionPill({
   isSelected = false,
   isMulti = false,
   isLocked = false,
+  disabled = false,
   hasSettings = false,
   onSettingsClick,
   quantity,
@@ -37,13 +38,15 @@ export default function OptionPill({
     }
   };
 
+  const isInteractive = !isLocked && !disabled;
+
   return (
     <div
       role="button"
-      tabIndex={isLocked ? -1 : 0}
-      onClick={isLocked ? undefined : onClick}
+      tabIndex={!isInteractive ? -1 : 0}
+      onClick={!isInteractive ? undefined : onClick}
       onKeyDown={(e) => {
-        if (!isLocked && (e.key === 'Enter' || e.key === ' ')) {
+        if (isInteractive && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault();
           onClick && onClick(e);
         }
@@ -52,12 +55,14 @@ export default function OptionPill({
       className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
         isLocked
           ? 'border-[#3a3a3a] text-gray-500 bg-[#2a2a2a] cursor-not-allowed opacity-70'
-          : isSelected
-            ? 'border-[#DA634B] text-[#DA634B] bg-transparent cursor-pointer'
-            : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white cursor-pointer'
+          : disabled
+            ? 'border-[#3a3a3a] text-[#7a7a7a] bg-transparent cursor-not-allowed opacity-50'
+            : isSelected
+              ? 'border-[#DA634B] text-[#DA634B] bg-transparent cursor-pointer'
+              : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white cursor-pointer'
       }`}
       style={
-        isSelected && !isLocked
+        isSelected && isInteractive
           ? { boxShadow: '0 0 20px -2px rgba(218, 99, 75, 0.5), inset 0 -8px 38.8px -7px rgba(218, 99, 75, 0.42)' }
           : {}
       }

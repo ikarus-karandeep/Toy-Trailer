@@ -39,7 +39,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     viewMode, setViewMode,
     concessionWidth, setConcessionWidth,
     concessionHeight, setConcessionHeight,
-    length,
+    length, width, frontStyle,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -426,6 +426,9 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('JACKS (MULTI-CHOICE)') && (
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="JACKS (MULTI-CHOICE)">
+          {width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck')) ? (
+            <p className="text-gray-400 text-xs mb-3"> Electric Tongue Jack is not compatible with gooseneck models</p>
+          ) : null}
           <div className="flex flex-col gap-2">
             {JACKS_OPTIONS.map((opt) => {
               // Radio-group logic:
@@ -458,7 +461,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
-                  isSelected={jacks.includes(opt.id)}
+                  isSelected={jacks.includes(opt.id) && !(opt.id === '5000relectric' && (width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'))))}
+                  disabled={opt.id === '5000relectric' && (width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck')))}
                   onClick={() => handleJack(opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />

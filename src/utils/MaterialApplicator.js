@@ -256,8 +256,9 @@ export function applyMaterialDef(mat, def, textures) {
             tex.needsUpdate = true
             next.alphaMap = tex
             
-            // Decals should use alphaTest to avoid depth sorting issues with the panels they sit on
-            if (normMatName(originalDef.material_name).endsWith('decal')) {
+            // Decals and plates should use alphaTest to avoid depth sorting issues with the panels they sit on
+            const normalizedName = normMatName(originalDef.material_name);
+            if (normalizedName.endsWith('decal') || normalizedName.includes('plate')) {
                 next.alphaTest = 0.5
                 next.transparent = false
             } else {

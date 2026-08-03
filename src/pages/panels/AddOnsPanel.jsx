@@ -64,13 +64,13 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   }, [length, awningLength, awning, setAwningRaw]);
 
   useEffect(() => {
-    const hasGenBox = generatorBox && generatorBox !== 'none';
+    const hasGenBox = frontStyle === 'flatfront' && generatorBox && generatorBox !== 'none';
     if (hasGenBox) {
       if (batteryBox) {
         setBatteryBox(false);
       }
     }
-  }, [generatorBox, batteryBox, setBatteryBox]);
+  }, [frontStyle, generatorBox, batteryBox, setBatteryBox]);
 
   const show = (title) => {
     if (!activeSectionTitle) return true
@@ -390,7 +390,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="ATP BATTERY BOX ON TONGUE">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Requires extended TTT</p>
-          {(generatorBox && generatorBox !== 'none') ? (
+          {(frontStyle === 'flatfront' && generatorBox && generatorBox !== 'none') ? (
             <div className="mt-2">
               <AlertMessage message="Hidden due to Tongue Mounted Generator Box selection" />
             </div>

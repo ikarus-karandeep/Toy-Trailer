@@ -1742,13 +1742,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // console.log('=========================');
 
         const activeCargoMeshes = []
-        if (config.tieDowns?.includes('small')) {
-            cargo.traverse(child => {
-                if (child.isMesh && child.name.includes('Small')) {
-                    activeCargoMeshes.push(child.name)
-                }
-            })
-        }
         if (config.tieDowns?.includes('drings')) {
             cargo.traverse(child => {
                 if (child.isMesh) {
@@ -2097,13 +2090,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Find the base template meshes (we assume they are the original single-piece objects)
         const floorTemplates = []
         const wallTemplates = []   // collect ALL wall templates (one per side of trailer)
+        const smallTemplates = []
         if (cargo) {
             cargo.traverse(child => {
                 if (!child.isMesh) return
                 const isProxy = child.name.toLowerCase().includes('proxy')
             
                 if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplates.push(child)
-                if (child.name.includes('Wall_E-Track') && !child.name.includes('Small') && !isProxy) {
+                if (child.name.includes('Wall_E-Track') && !isProxy) {
+                    const targetArray = child.name.includes('Small') ? smallTemplates : wallTemplates;
                     child.geometry.computeBoundingBox();
                     const box = child.geometry.boundingBox;
                     if (box.min.z < -1 && box.max.z > 1) {
@@ -2124,9 +2119,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         }
                         leftChild.geometry.computeBoundingBox();
                         
-                        wallTemplates.push(leftChild, rightChild);
+                        targetArray.push(leftChild, rightChild);
                     } else {
-                        wallTemplates.push(child);
+                        targetArray.push(child);
                     }
                 }
             })
@@ -2167,6 +2162,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         const pointsGeometry = new THREE.BufferGeometry()
         pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
+
+        const smallCount = Math.min(count, Math.max(1, Math.ceil((4 * FEET_TO_M) / stepSize)))
+        const smallPoints = new Float32Array(smallCount * 3)
+        for (let i = 0; i < smallCount; i++) {
+            smallPoints[i * 3] = startX - (i * stepSize)
+            smallPoints[i * 3 + 1] = 0
+            smallPoints[i * 3 + 2] = 0
+        }
+        const smallPointsGeometry = new THREE.BufferGeometry()
+        smallPointsGeometry.setAttribute('position', new THREE.BufferAttribute(smallPoints, 3))
 
         // ── Globally enforce D-Rings visibility across all scenes ──
         const showDRings = config.tieDowns?.includes('drings')
@@ -2291,9 +2296,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         }
 
-        // Wall E-Track: per-wall generation with Z-aware proxy side detection.
+        // Wall & Small E-Track: per-wall generation with Z-aware proxy side detection.
+        const templatesToProcess = [];
         if (wallTemplates.length > 0 && config.tieDowns?.includes('wall')) {
-            wallTemplates.forEach((wallTemplate, wallIdx) => {
+            templatesToProcess.push(...wallTemplates);
+        }
+        if (smallTemplates.length > 0 && config.tieDowns?.includes('small')) {
+            templatesToProcess.push(...smallTemplates);
+        }
+        
+        if (templatesToProcess.length > 0) {
+            templatesToProcess.forEach((wallTemplate, wallIdx) => {
                 wallTemplate.updateWorldMatrix(true, false)
                 const wm = wallTemplate.matrixWorld
                 
@@ -2307,7 +2320,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 
                 const wallWorldZ = trueWallWorldZ
                 const wallProxyGaps = proxyGaps.filter(gap => {
-                    if (wallTemplates.length === 1) return true
+                    if (templatesToProcess.length === 1) return true
                     const proxyCenterZ = (gap.zMin + gap.zMax) / 2
                     const wallIsNearZero = Math.abs(wallWorldZ) < 0.05
                     const match = wallIsNearZero ? true : (Math.sign(wallWorldZ) === Math.sign(proxyCenterZ))
@@ -2316,7 +2329,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 
                 // console.log(`[DEBUG ETRACK] Wall ${wallIdx}: worldZ=${wallWorldZ.toFixed(2)}. Found ${wallProxyGaps.length} gaps for this wall (out of ${proxyGaps.length} total).`, proxyGaps.map(g => ({ name: g.name, z: ((g.zMin+g.zMax)/2).toFixed(2) })));
 
-                let wallGeom = pointsGeometry
+                const isSmallTemplate = wallTemplate.name.includes('Small')
+                const targetPlacedCount = isSmallTemplate ? smallCount : count
+                let wallGeom = isSmallTemplate ? smallPointsGeometry : pointsGeometry
 
                 wallTemplate.geometry.computeBoundingBox()
                 const tb = wallTemplate.geometry.boundingBox
@@ -2325,7 +2340,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const xFactor = worldScaleX * localXDirWorld
 
                     const filtered = []
+                    let placedCount = 0;
                     for (let i = 0; i < count; i++) {
+                        if (placedCount >= targetPlacedCount) break;
+
                         const px = startX - (i * stepSize)
                         const worldX = templateWorldPos.x + px * xFactor
 
@@ -2348,6 +2366,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
                         if (inGap) continue
                         filtered.push(px, 0, 0)
+                        placedCount++;
                     }
 
                     const wallPts = new Float32Array(filtered)
@@ -2367,6 +2386,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         
         // Clean up unneeded geometries to prevent memory leaks over time since this runs every frame during resize
         pointsGeometry.dispose()
+        smallPointsGeometry.dispose()
         
         // DEBUG: Check ATP_Flat_Panel_L_24in once
         if (extFinish && !window.hasLoggedATP) {
