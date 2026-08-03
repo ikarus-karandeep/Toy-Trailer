@@ -2046,7 +2046,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
                 
                 if (scene === concessionDoorScene) {
-                    // console.log(`[DEBUG CONCESSION] Applying deformations to ${child.name}. ncw: ${ncw}, nch: ${nch}`);
+a                    // console.log(`[DEBUG CONCESSION] Applying deformations to ${child.name}. ncw: ${ncw}, nch: ${nch}`);
                     applyConcessionDoorDeformations({
                         geometry: child.geometry,
                         widthIn: ncw,
