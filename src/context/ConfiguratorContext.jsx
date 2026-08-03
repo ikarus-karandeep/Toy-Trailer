@@ -189,6 +189,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor, genDoor, length, cabinets, setCabinetsRaw]);
 
+
   // Windows & Doors conflict resolution
   useEffect(() => {
     if (concessionDoor === 'driver' && escapeDoor !== 'none') {

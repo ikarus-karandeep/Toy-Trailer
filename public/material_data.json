@@ -4038,8 +4038,8 @@
     "0": {
       "material_name": "ETrack Material",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
       "normal": "//..\\Textures\\Interior decals_Normal.jpg",
       "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
@@ -4052,8 +4052,8 @@
     "0": {
       "material_name": "ETrack Material",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
       "normal": "//..\\Textures\\Interior decals_Normal.jpg",
       "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
@@ -4066,8 +4066,8 @@
     "0": {
       "material_name": "ETrack Material",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
       "normal": "//..\\Textures\\Interior decals_Normal.jpg",
       "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
@@ -4080,8 +4080,8 @@
     "0": {
       "material_name": "ETrack Material",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
       "normal": "//..\\Textures\\Interior decals_Normal.jpg",
       "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
@@ -4094,8 +4094,8 @@
     "0": {
       "material_name": "ETrack Material",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": 0.4215,
-      "metalness": 0.8761,
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
       "normal": "//..\\Textures\\Interior decals_Normal.jpg",
       "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {

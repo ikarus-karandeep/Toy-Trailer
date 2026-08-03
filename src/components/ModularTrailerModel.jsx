@@ -205,8 +205,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const prevVisibleInteriorNodes = useRef(new Set());
     // console.log('[DEBUG RENDER] ModularTrailerModel rendering. sinkPackage is:', config.sinkPackage);
 
+    const hasSinkForLShape = config.sinkPackage && config.sinkPackage !== 'none';
+    const hasBaseCabinetForLShape = config.cabinets && config.cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c));
+    const hideLShape = hasSinkForLShape || hasBaseCabinetForLShape;
+    const lShapeActive = config.lShapeCounter && !hideLShape;
+
     let hasCabinet = config.cabinets?.includes('frontbase36') 
-    if (config.sinkPackage === 'sink' || config.lShapeCounter || config.genDoor) {
+    if (config.sinkPackage === 'sink' || lShapeActive || config.genDoor) {
         hasCabinet = false;
     }
 
@@ -1466,14 +1471,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         // L-Shape Counter / Hidden Generator Box
-        if (config.lShapeCounter) {
+        if (lShapeActive) {
             activeAddonMeshes.push('L Shape Counter Hidden Generator Box')
             activeAddonMeshes.push('L_Shape_Counter_Hidden_Generator_Box')
         }
 
         // Generator Door 36"x36" (Standard Generator Box mesh)
         // Only shown when L-Shape Counter/Hidden Generator Box is NOT active and front style is flat front
-        if (config.genDoor && !config.lShapeCounter && config.frontStyle === 'flatfront') {
+        if (config.genDoor && !lShapeActive && config.frontStyle === 'flatfront') {
             activeAddonMeshes.push('Standard Generator Box')
             activeAddonMeshes.push('Standard_Generator_Box')
         }
@@ -2398,7 +2403,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 floorInstanced.scale.copy(floorTemplate.scale)
                 // Apply clip transparency (alphaTest) to avoid OIT sorting issues on instanced mesh
                 const floorMats = Array.isArray(floorInstanced.material) ? floorInstanced.material : [floorInstanced.material]
-                floorMats.forEach(m => { if (m) { m.alphaTest = 0.5; m.alphaHash = false; m.transparent = false; m.needsUpdate = true } })
+                floorMats.forEach(m => { 
+                    if (m) { 
+                        ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'alphaMap', 'emissiveMap', 'aoMap'].forEach(mapName => {
+                            if (m[mapName]) {
+                                m[mapName].magFilter = THREE.NearestMipmapNearestFilter;
+                                m[mapName].minFilter = THREE.LinearMipmapLinearFilter;
+                                m[mapName].needsUpdate = true;
+                            }
+                        });
+                        m.transparent = false; 
+                        m.needsUpdate = true; 
+                    } 
+                })
                 eTrackGroupRef.current.add(floorInstanced)
             })
         }
@@ -2486,7 +2503,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 wallInstanced.scale.copy(wallTemplate.scale)
                 // Apply clip transparency (alphaTest) to avoid OIT sorting issues on instanced mesh
                 const wallMats = Array.isArray(wallInstanced.material) ? wallInstanced.material : [wallInstanced.material]
-                wallMats.forEach(m => { if (m) { m.alphaTest = 0.5; m.alphaHash = false; m.transparent = false; m.needsUpdate = true } })
+                wallMats.forEach(m => { 
+                    if (m) { 
+                        ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'alphaMap', 'emissiveMap', 'aoMap'].forEach(mapName => {
+                            if (m[mapName]) {
+                                m[mapName].magFilter = THREE.NearestMipmapNearestFilter;
+                                m[mapName].minFilter = THREE.LinearMipmapLinearFilter;
+                                m[mapName].needsUpdate = true;
+                            }
+                        });
+                        m.transparent = false; 
+                        m.needsUpdate = true; 
+                    } 
+                })
                 eTrackGroupRef.current.add(wallInstanced)
             })
         }

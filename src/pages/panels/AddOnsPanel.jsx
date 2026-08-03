@@ -30,6 +30,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     genDoor, setGenDoor,
     frontStyle,
     length,
+    cabinets,
     viewMode, setViewMode
   } = useConfigurator()
 
@@ -409,11 +410,17 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
         <OptionSection title="L-SHAPE COUNTER/HIDDEN GENERATOR BOX">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Custom build</p>
-          <ToggleSwitch
-            label="Dimensions and placement quoted per order"
-            checked={lShapeCounter}
-            onChange={setLShapeCounter}
-          />
+          {((sinkPackage && sinkPackage !== 'none') || (cabinets && cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c)))) ? (
+            <div className="mt-2">
+              <AlertMessage message="Hidden due to Sink/Cabinets selection" />
+            </div>
+          ) : (
+            <ToggleSwitch
+              label="Dimensions and placement quoted per order"
+              checked={lShapeCounter}
+              onChange={setLShapeCounter}
+            />
+          )}
         </OptionSection>
         </div>
       )}

@@ -460,10 +460,10 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
 
       if (hasFrontEnd || hasRearEnd) {
         if (hasFrontEnd) {
-          ox -= (deltaAwning / 2) * frontEndSel.getX(i);
+          ox -= (deltaAwning * 0.6) * frontEndSel.getX(i);
         }
         if (hasRearEnd) {
-          ox += (deltaAwning / 2) * rearEndSel.getX(i);
+          ox += (deltaAwning * 0.4) * rearEndSel.getX(i);
         }
       }
 
