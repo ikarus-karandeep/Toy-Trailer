@@ -29,25 +29,12 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     if (spreadAxle) {
       setAxleSuspension('torsion');
     }
-  }, [spreadAxle])
-
-
-
-  // Automatically turn off spread axle when 'triple' axle count is selected
+  }, [spreadAxle])  // Automatically turn off spread axle when 'triple' axle count is selected
   useEffect(() => {
-    // Automatically select 'torsion' suspension when 'tandem' axle count is selected
-    if (axleCount === 'tandem') {
-      setAxleSuspension('torsion');
+    if (axleCount === 'triple') {
+      setSpreadAxle(false);
     }
   }, [axleCount])
-
-  // Automatically turn on spread axle when 'torsion' is selected (except for triple axle)
-  useEffect(() => {
-    if (axleSuspension === 'torsion' && axleCount !== 'triple') {
-      setSpreadAxle(true);
-    }
-  }, [axleSuspension, axleCount])
-
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
   const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)
   // axleRating is DERIVED from axleCount + axleSuspension + axleCapacity
@@ -81,6 +68,13 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [ceiling, setCeiling] = useState(ic.ceiling ?? 'white_metal_ceiling')
   const [cabinets, setCabinetsRaw] = useState(ic.cabinets ?? ['frontbase36'])
   const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(ic.blackoutCabinetDoors ?? false)
+
+  useEffect(() => {
+    if (exteriorFinish === 'blackout') {
+      setBlackoutCabinetDoors(true)
+    }
+  }, [exteriorFinish])
+
   const [toolBox, setToolBox] = useState(ic.toolBox ?? 'none')
   const [leftSide, setLeftSide] = useState(ic.leftSide ?? true)
   const [rightSide, setRightSide] = useState(ic.rightSide ?? true)

@@ -96,6 +96,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                       setWalls('white_metal_walls')
                       setCeiling('white_metal_ceiling')
                       if (setExteriorFinish) setExteriorFinish('blackout')
+                      if (setBlackoutCabinetDoors) setBlackoutCabinetDoors(true)
                       setFloorOverlay('atp')
                       if (setAtpRamp) setAtpRamp(true)
                       if (setAngledLights) setAngledLights(true)

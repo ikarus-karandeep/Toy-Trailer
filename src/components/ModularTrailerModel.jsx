@@ -231,7 +231,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const effectiveBathroom = isShortTrailerForBathroom ? 'none' : (config.bathroom || 'none');
 
     const isBlackout = config.exteriorFinish === 'blackout';
-    const isCabinetBlackout = isBlackout || config.blackoutCabinetDoors;
+    const isCabinetBlackout = config.blackoutCabinetDoors;
     const getBlackoutMapped = (normName) => {
         if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'whiteceremiccabinet')) return 'blackceremiccabinet';
         if (!isBlackout) return normName;

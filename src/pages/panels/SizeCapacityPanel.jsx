@@ -219,6 +219,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
             label="Wider stance, Corvette-style fenders"
             checked={spreadAxle}
             onChange={setSpreadAxle}
+            disabled={axleCount === 'triple'}
           />
         </OptionSection>
         </div>

@@ -4208,6 +4208,8 @@
       }
     }
   },
+  "Wheel Wall Cabinet Proxy": {},
+  "Floor to Ceiling Cabinet Proxy": {},
   "V-Nose Overhead Cabinet": {
     "0": {
       "material_name": "Black Alloy",
@@ -6719,20 +6721,6 @@
       }
     }
   },
-  "Aluminum Sidewall Vents": {
-    "0": {
-      "material_name": "Aluminium Radial_Rim",
-      "base_color": "//..\\Textures\\Aluminum_Rim_Base_color.jpg",
-      "roughness": "//..\\Textures\\Aluminum_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Aluminum_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Aluminum_Rim_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "Mini Split AC": {
     "0": {
       "material_name": "White_Ceremic",
@@ -6897,6 +6885,20 @@
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Aluminum Sidewall Vents": {
+    "0": {
+      "material_name": "Aluminum Vents Material",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0

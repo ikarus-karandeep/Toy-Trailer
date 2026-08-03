@@ -38,6 +38,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     wheelType, setWheelType,
     spareTire, setSpareTire,
     sideDoorsType, setSideDoorsType,
+    blackoutCabinetDoors, setBlackoutCabinetDoors,
     width, length,
     stairs, setStairs,
     viewMode, setViewMode,
@@ -77,6 +78,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 if (opt.id === 'blackout') {
                   // setSelectedColor('black')
                   setProtectionType('atp')
+                  if (setBlackoutCabinetDoors) setBlackoutCabinetDoors(true)
                 }
               }
             }}
