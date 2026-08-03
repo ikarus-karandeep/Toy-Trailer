@@ -6894,11 +6894,11 @@
   "Aluminum Sidewall Vents": {
     "0": {
       "material_name": "Aluminum Vents Material",
-      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
-      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
-      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "base_color": "//..\\Textures\\Aluminium vents_Base_color.jpg",
+      "roughness": "//..\\Textures\\Aluminium vents_Roughness.jpg",
+      "metalness": "//..\\Textures\\Aluminium vents_Metallic.jpg",
+      "normal": "//..\\Textures\\Aluminium vents_Normal.jpg",
+      "alpha": "//..\\Textures\\Aluminium vents_Metallic.jpg",
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
