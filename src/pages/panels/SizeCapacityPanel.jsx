@@ -153,7 +153,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                     isStandard={opt.isStandard}
                     isSelected={axleSuspension === opt.id}
                     isLocked={
-                      (opt.id === 'dropspring' && axleCount === 'tandem') ||
+                      (opt.id === 'dropspring' && spreadAxle) ||
                       (opt.id === 'torsion' && axleCount === 'triple')
                     }
                     onClick={() => setAxleSuspension(opt.id)}
@@ -220,7 +220,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
             label="Wider stance, Corvette-style fenders"
             checked={spreadAxle}
             onChange={setSpreadAxle}
-            disabled={axleCount === 'triple' || axleSuspension === 'dropspring'}
+            disabled={axleCount === 'triple'}
           />
         </OptionSection>
         </div>

@@ -46,12 +46,9 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [axleCount])
 
-  // Automatically turn off spread axle when 'dropspring' suspension is selected,
-  // and turn it on when 'torsion' is selected.
+  // Automatically turn on spread axle when 'torsion' is selected.
   useEffect(() => {
-    if (axleSuspension === 'dropspring') {
-      setSpreadAxle(false);
-    } else if (axleSuspension === 'torsion') {
+    if (axleSuspension === 'torsion') {
       setSpreadAxle(true);
     }
   }, [axleSuspension])

@@ -1979,7 +1979,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     useEffect(() => {
         dirtyRef.current = true
-    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.narrowTrackAxle])
+    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.narrowTrackAxle, config.windows, config.windowSizes])
 
     useFrame(() => {
         if (!store.current.has('_globalZCenter')) return
@@ -2017,9 +2017,116 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const globalXMin = store.current.get('_globalXMin')
         const globalXMax = store.current.get('_globalXMax')
 
+        if (windowsScene) {
+            const sides = {};
+            const IN_TO_M = 0.0254;
+
+            windowsScene.traverse(child => {
+                if (child.isMesh && child.visible) {
+                    if (child.userData.origX === undefined) {
+                        child.userData.origX = child.position.x;
+                        child.userData.origZ = child.position.z;
+                    }
+                    
+                    let type = null;
+                    if (child.name.includes('15×30_Vertical_Slider')) type = 'vertical';
+                    else if (child.name.includes('50×30_Horizontal_Slider')) type = 'horizontal';
+                    else if (child.name.includes('30×30_Egress')) type = 'egress';
+
+                    if (type) {
+                        const sideKey = child.userData.origZ > 0 ? 'right' : 'left';
+                        if (!sides[sideKey]) sides[sideKey] = {};
+
+                        if (!sides[sideKey][type]) {
+                            sides[sideKey][type] = { type, origX: child.userData.origX, children: [] };
+                        }
+                        sides[sideKey][type].children.push(child);
+                    }
+                }
+            });
+            
+            Object.values(sides).forEach(groups => {
+                const activeGroups = Object.values(groups);
+                if (activeGroups.length === 0) return;
+
+                activeGroups.sort((a, b) => a.origX - b.origX);
+                
+                const CONSTANT_GAP_M = 8 * IN_TO_M; // 8 inches constant gap between window edges
+                
+                activeGroups.forEach(group => {
+                    let wBase = 0, sizeStr = '';
+                    if (group.type === 'vertical') {
+                        wBase = 15; sizeStr = config.windowSizes?.vertical;
+                    } else if (group.type === 'horizontal') {
+                        wBase = 50; sizeStr = config.windowSizes?.horizontal;
+                    } else if (group.type === 'egress') {
+                        wBase = 30; sizeStr = config.windowSizes?.egress;
+                    }
+                    
+                    let maxTrueWidth = 0;
+                    let avgCenterOffset = 0;
+                    let count = 0;
+                    
+                    group.children.forEach(child => {
+                        if (child.geometry) {
+                            if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
+                            const bbox = child.geometry.boundingBox;
+                            const w = bbox.max.x - bbox.min.x;
+                            const center = (bbox.max.x + bbox.min.x) / 2;
+                            if (w > maxTrueWidth) maxTrueWidth = w;
+                            avgCenterOffset += center;
+                            count++;
+                        }
+                    });
+                    
+                    group.centerOffset = count > 0 ? avgCenterOffset / count : 0;
+                    
+                    if (sizeStr) {
+                        group.widthM = parseInt(sizeStr.split('x')[0]) * IN_TO_M;
+                    } else {
+                        group.widthM = wBase * IN_TO_M;
+                    }
+                    
+                    group.trueOrigCenterX = group.origX + group.centerOffset;
+                });
+
+                activeGroups.sort((a, b) => a.trueOrigCenterX - b.trueOrigCenterX);
+
+                activeGroups[0].targetCenterX = activeGroups[0].trueOrigCenterX;
+                for (let i = 1; i < activeGroups.length; i++) {
+                    const prev = activeGroups[i-1];
+                    const curr = activeGroups[i];
+                    
+                    const requiredDistance = (prev.widthM + curr.widthM) / 2 + CONSTANT_GAP_M;
+                    curr.targetCenterX = prev.targetCenterX + requiredDistance;
+                }
+                
+                const origCenter = (activeGroups[0].trueOrigCenterX + activeGroups[activeGroups.length - 1].trueOrigCenterX) / 2;
+                const newCenter = (activeGroups[0].targetCenterX + activeGroups[activeGroups.length - 1].targetCenterX) / 2;
+                const centerShift = newCenter - origCenter;
+                
+                console.log(`[DEBUG WINDOWS] -- Layout for Side --`);
+                activeGroups.forEach(g => {
+                    g.targetCenterX -= centerShift;
+                    // The shift required is the difference between target center and original center
+                    const shift = g.targetCenterX - g.trueOrigCenterX;
+                    console.log(`[DEBUG WINDOWS] Type: ${g.type}, Width: ${g.widthM.toFixed(3)}m, origCenter: ${g.trueOrigCenterX.toFixed(3)}, targetCenter: ${g.targetCenterX.toFixed(3)}, shift: ${shift.toFixed(3)}`);
+                    g.children.forEach(child => {
+                        child.position.x = child.userData.origX + shift;
+                    });
+                });
+            });
+        }
+
+        const processedGeometries = new Set()
+
         activeScenesRef.current.forEach(scene => {
             scene.traverse(child => {
                 if (!child.isMesh || !child.geometry) return
+
+                // Prevent applying deformations multiple times on shared geometries in a single frame
+                if (processedGeometries.has(child.geometry.uuid)) return
+                processedGeometries.add(child.geometry.uuid)
 
                 child.updateWorldMatrix(true, false)
                 const we = child.matrixWorld.elements
@@ -2033,7 +2140,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 applyDimensionDeformations({
                     geometry: child.geometry, store: store.current,
                     uuid: child.uuid, meshName: child.name || child.uuid,
-                    widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: na,
+                    widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: scene === awning ? na : 18,
                     globalZCenter, globalXMin, globalXMax,
                     we, ie, narrowTrackOffset
                 })
