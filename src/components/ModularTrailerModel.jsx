@@ -2046,7 +2046,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
                 
                 if (scene === concessionDoorScene) {
-                    console.log(`[DEBUG CONCESSION] Applying deformations to ${child.name}. ncw: ${ncw}, nch: ${nch}`);
+                    // console.log(`[DEBUG CONCESSION] Applying deformations to ${child.name}. ncw: ${ncw}, nch: ${nch}`);
                     applyConcessionDoorDeformations({
                         geometry: child.geometry,
                         widthIn: ncw,
@@ -2407,9 +2407,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     currentVisibleNodes.add(child.uuid);
 
                     // Debug: Log newly visible nodes and their userData
-                    if (!prevVisibleNodes.current.has(child.uuid) && child.userData && Object.keys(child.userData).length > 0) {
-                        console.log(`[DEBUG NEW VISIBLE NODE] name: "${child.name}", type: ${child.type}, userData:`, child.userData);
-                    }
+                    // if (!prevVisibleNodes.current.has(child.uuid) && child.userData && Object.keys(child.userData).length > 0) {
+                    //     console.log(`[DEBUG NEW VISIBLE NODE] name: "${child.name}", type: ${child.type}, userData:`, child.userData);
+                    // }
 
                     if (child.userData) {
                         let propValue = undefined;
@@ -2428,13 +2428,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                 currentVisibleInteriorNodes.add(child.uuid);
                                 if (!prevVisibleInteriorNodes.current.has(child.uuid)) {
                                     shouldSwitchToInterior = true;
-                                    console.log(`[DEBUG INTERIOR] -> Switch to INTERIOR triggered by: ${child.name}`);
+                                    // console.log(`[DEBUG INTERIOR] -> Switch to INTERIOR triggered by: ${child.name}`);
                                 }
                             } else if (isExterior) {
                                 currentVisibleExteriorNodes.add(child.uuid);
                                 if (!prevVisibleExteriorNodes.current.has(child.uuid)) {
                                     shouldSwitchToExterior = true;
-                                    console.log(`[DEBUG INTERIOR] -> Switch to EXTERIOR triggered by: ${child.name}`);
+                                    // console.log(`[DEBUG INTERIOR] -> Switch to EXTERIOR triggered by: ${child.name}`);
                                 }
                             }
                         }

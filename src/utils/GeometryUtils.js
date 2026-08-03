@@ -577,7 +577,7 @@ export function applyConcessionDoorDeformations({ geometry, widthIn, heightIn })
   const topWeight = geometry.attributes._topend
   const bottomWeight = geometry.attributes._bottomend
 
-  console.log(`[DEBUG CONCESSION GEOM] deltaWidth: ${deltaWidth}, deltaHeight: ${deltaHeight}. Attributes present: front=${!!frontWeight}, rear=${!!rearWeight}, top=${!!topWeight}, bottom=${!!bottomWeight}`);
+  // console.log(`[DEBUG CONCESSION GEOM] deltaWidth: ${deltaWidth}, deltaHeight: ${deltaHeight}. Attributes present: front=${!!frontWeight}, rear=${!!rearWeight}, top=${!!topWeight}, bottom=${!!bottomWeight}`);
 
   if (deltaWidth === 0 && deltaHeight === 0) return;
 
