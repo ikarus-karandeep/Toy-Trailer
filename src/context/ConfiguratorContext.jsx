@@ -24,11 +24,10 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? false)
   const [narrowTrackAxle, setNarrowTrackAxle] = useState(ic.narrowTrackAxle ?? false)
 
-  // Automatically select 'torsion' suspension and 'tandem' axle count when spread axle is turned on
+  // Automatically select 'torsion' suspension when spread axle is turned on
   useEffect(() => {
     if (spreadAxle) {
       setAxleSuspension('torsion');
-      setAxleCount('tandem');
     }
   }, [spreadAxle])
 
@@ -36,22 +35,18 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Automatically turn off spread axle when 'triple' axle count is selected
   useEffect(() => {
-    if (axleCount === 'triple') {
-      setSpreadAxle(false);
-      setAxleSuspension('dropspring');
-    }
     // Automatically select 'torsion' suspension when 'tandem' axle count is selected
     if (axleCount === 'tandem') {
       setAxleSuspension('torsion');
     }
   }, [axleCount])
 
-  // Automatically turn on spread axle when 'torsion' is selected.
+  // Automatically turn on spread axle when 'torsion' is selected (except for triple axle)
   useEffect(() => {
-    if (axleSuspension === 'torsion') {
+    if (axleSuspension === 'torsion' && axleCount !== 'triple') {
       setSpreadAxle(true);
     }
-  }, [axleSuspension])
+  }, [axleSuspension, axleCount])
 
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
   const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)

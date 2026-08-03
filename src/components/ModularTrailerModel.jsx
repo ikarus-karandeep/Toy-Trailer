@@ -1280,12 +1280,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         // ── Front Style node graph ────────────────────────────────────────
-        const frontStyleAddon = FRONT_STYLE_ADDON_MESH_MAP[config.frontStyle]
+        const effectiveAddonFrontStyle = (config.width === '8.5ftgn' || (config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck'))) ? 'gooseneck' : config.frontStyle;
+        const frontStyleAddon = FRONT_STYLE_ADDON_MESH_MAP[effectiveAddonFrontStyle]
             ?? FRONT_STYLE_ADDON_MESH_MAP.vnose
 
         // Stairs: Super Switch (V-Nose Stair vs Flat Front Stair) gated by stairs boolean
         // Hidden for gooseneck and extended v-nose (no compatible stair variant)
-        const isGooseneckStairs = config.width === '8.5ftgn' || (config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck'));
+        const isGooseneckStairs = effectiveAddonFrontStyle === 'gooseneck';
         const isExtendedVNose = config.frontStyle === 'extendedvnose';
         if (config.stairs && !isGooseneckStairs && !isExtendedVNose) {
             activeAddonMeshes.push(frontStyleAddon.stairs)
@@ -1433,16 +1434,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
 
-        if (config.jacks?.includes('5000relectric')) {
-            if (config.frontStyle === 'extendedvnose') {
-                activeAddonMeshes.push('Electric_Jack(Extended_V-Nose)')
+        if (config.width !== '8.5ftgn') {
+            if (config.jacks?.includes('5000relectric')) {
+                if (config.frontStyle === 'extendedvnose') {
+                    activeAddonMeshes.push('Electric_Jack(Extended_V-Nose)')
+                } else {
+                    activeAddonMeshes.push('Electric_Jack')
+                }
             } else {
-                activeAddonMeshes.push('Electric_Jack')
-            }
-        } else {
-            // Default manual jack for Extended V-Nose (since it's not built into the extended tongue mesh)
-            if (config.frontStyle === 'extendedvnose') {
-                activeAddonMeshes.push('Sidewind(Extended_V-Nose)')
+                // Default manual jack for Extended V-Nose (since it's not built into the extended tongue mesh)
+                if (config.frontStyle === 'extendedvnose') {
+                    activeAddonMeshes.push('Sidewind(Extended_V-Nose)')
+                }
             }
         }
 
@@ -1635,7 +1638,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         //   Overhead Cabinet Switch → gates Overhead Cabinet
         //   Toolbox Switch → gates the Toolbox AND Toolbox Slot (requires Cabinet=true)
         //   Winch System Switch → gates Winch System (independent)
-        const cabinetVariant = CABINET_MESH_MAP[config.frontStyle] ?? CABINET_MESH_MAP.vnose
+        const effectiveCabinetFrontStyle = (config.width === '8.5ftgn' || (config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck'))) ? 'gooseneck' : config.frontStyle;
+        const cabinetVariant = CABINET_MESH_MAP[effectiveCabinetFrontStyle] ?? CABINET_MESH_MAP.vnose
         const activeCabinetMeshes = []
 
         // Boolean inputs (mapping the array states to the node graph booleans)
