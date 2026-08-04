@@ -27,6 +27,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     rampType, setRampType,
     rearDoor, setRearDoor,
     tieDowns, toggleTieDown,
+    dRings, setDRings,
     jacks, setJacksRaw, toggleJack,
     driverSideDoor, setDriverSideDoor,
     passengerSideDoor, setPassengerSideDoor,
@@ -52,12 +53,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
   const [blackoutFrame, setBlackoutFrame] = useState(false)
 
   // concessionDoor comes from context ('none' | 'driver' | 'passenger')
-
-  const [dRings, setDRings] = useState({
-    drings: 0, // Standard D-rings default
-    walldrings: 0,
-    floordrings: 0,
-  })
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -412,6 +407,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
+                  price={opt.price}
                   isSelected={tieDowns.includes(opt.id)}
                   onClick={() => toggleTieDown(opt.id)}
                   packageBadge={getBadge(opt.id)}

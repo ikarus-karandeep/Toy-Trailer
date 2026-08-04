@@ -22,6 +22,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
     electrical, setElectrical,
     climateControl, setClimateControl,
     ventilation, setVentilation,
+    acPrep, setAcPrep,
     receptacles, setReceptacles,
     interiorLights, setInteriorLights,
     ledRope, setLedRope,
@@ -35,9 +36,6 @@ export default function SystemsPanel({ activeSectionTitle }) {
   const [offGridPower, setOffGridPower] = useState([])
   
   const [exteriorLights, setExteriorLights] = useState([])
-  
-
-  const [acPrep, setAcPrep] = useState(false)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -292,7 +290,11 @@ export default function SystemsPanel({ activeSectionTitle }) {
           <div className="mb-8 contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">ROOFTOP AC</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Interior insulation Required. 13.5K BTU best for 14-24ft build. 15K BTU best for 26-32ft build</p>
+            {/* <p className="text-gray-400 text-xs tracking-wider mb-3">Interior insulation Required. 13.5K BTU best for 14-24ft build. 15K BTU best for 26-32ft build</p> */}
+            {/* <div className="bg-[#1A1A1A] rounded-lg p-3 mb-4 flex items-start gap-3 border border-[#333]"> */}
+              {/* <span className="bg-[#333] text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase mt-0.5 whitespace-nowrap">NOTE</span> */}
+              <p className="text-gray-400 text-xs leading-relaxed mb-4">Always recommend insulation alongside AC. Pairing them as a bundle in UX increases AOV and reduces performance complaints.</p>
+            {/* </div> */}
             <div className="flex flex-col gap-2">
               {ROOFTOP_AC_OPTIONS.map((opt) => (
                 <OptionPill
@@ -311,7 +313,16 @@ export default function SystemsPanel({ activeSectionTitle }) {
           <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
           <div>
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">MINI SPLIT</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Requires Extended TTT<br/><br/>12K: Wall-Mount. Cool & comfortable<br/><br/>18K: Heat + Cool - Best choice for anyone spending real time in trailer<br/><br/>24K: High Capacity - Best for large builds</p>
+            {/* <p className="text-gray-400 text-xs tracking-wider mb-3">
+              Requires Extended TTT
+              {climateControl === '12kminisplit' && <><br/><br/>12K: Wall-Mount. Cool & comfortable</>}
+              {climateControl === '18kminisplit' && <><br/><br/>18K: Heat + Cool - Best choice for anyone spending real time in trailer</>}
+              {climateControl === '24kminisplit' && <><br/><br/>24K: High Capacity - Best for large builds</>}
+            </p> */}
+            {/* <div className="bg-[#1A1A1A] rounded-lg p-3 mb-4 flex items-start gap-3 border border-[#333]"> */}
+              {/* <span className="bg-[#333] text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase mt-0.5 whitespace-nowrap">NOTE</span> */}
+              <p className="text-gray-400 text-xs leading-relaxed mb-4">Mini splits: heating AND cooling, lower roofline, quieter, better for living quarter builds and where ceiling clearance matters.</p>
+            {/* </div> */}
             <div className="flex flex-col gap-2">
               {MINI_SPLIT_OPTIONS.map((opt) => (
                 <OptionPill

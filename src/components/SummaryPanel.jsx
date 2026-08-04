@@ -91,14 +91,26 @@ export default function SummaryPanel() {
       const items = []
       const e = find(ELECTRICAL_OPTIONS, electrical); if (e) items.push({ label: e.label, price: e.price })
       const b = find(BATTERY_OPTIONS, battery); if (b) items.push({ label: b.label, price: b.price })
-      const v = find(VENTILATION_OPTIONS, ventilation); if (v) items.push({ label: v.label, price: v.price })
+      const v = find(VENTILATION_OPTIONS, ventilation); if (v && v.id !== 'none') items.push({ label: v.label, price: v.price })
+      if (ctx.acPrep) items.push({ label: 'WIRE & BRACE FOR A/C (PREP ONLY)', price: 70, onRemove: () => ctx.setAcPrep(false) })
       const cc = find(CLIMATE_OPTIONS, climateControl); if (cc && cc.id !== 'none') items.push({ label: cc.label, price: cc.price })
       const r = find(RAMP_OPTIONS, rampType); if (r) items.push({ label: r.label, price: r.price })
       if (atpRamp) { items.push({ label: 'ATP ON RAMP', price: 400 }) }
       if (rearDoor) { items.push({ label: 'REAR DOOR', price: 0 }) }
       const sd = find(SIDE_DOOR_OPTIONS, sideDoorsType); if (sd && !sd.isStandard) items.push({ label: sd.label, price: sd.price })
       lights.forEach(id => { const o = find(LIGHT_OPTIONS, id); if (o && o.price) items.push({ label: o.label, price: o.price, onRemove: () => toggleLight(id) }) })
-      tieDowns.forEach(id => { const o = find(TIE_DOWN_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleTieDown(id) }) })
+      tieDowns.forEach(id => { 
+        const o = find(TIE_DOWN_OPTIONS, id); 
+        if (o) {
+          if (id === 'wall' || id === 'floor') {
+            const len = parseInt(ctx.length) || 0;
+            items.push({ label: `${len}'x ${o.label}`, price: (o.price || 0) * len, onRemove: () => toggleTieDown(id) });
+          } else {
+            const qty = (ctx.dRings && typeof ctx.dRings[id] === 'number' && ctx.dRings[id] > 0) ? ctx.dRings[id] : 1;
+            items.push({ label: qty > 1 ? `${qty}x ${o.label}` : o.label, price: (o.price || 0) * qty, onRemove: () => toggleTieDown(id) });
+          }
+        }
+      })
       jacks.forEach(id => { const o = find(JACKS_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleJack(id) }) })
       return items
     }
@@ -207,7 +219,7 @@ export default function SummaryPanel() {
 
         <div className="px-6 py-4">
           <div className="space-y-1 mb-3">
-            {[['Trailer Build', '$18,000'], ['Configurations', '$4,500'], ['Appearance', '$1,200']].map(([k, v]) => (
+            {[['Trailer Build', `$${ctx.pricing?.trailerBuild?.toLocaleString()}`], ['Configurations', `$${ctx.pricing?.configurations?.toLocaleString()}`], ['Appearance', `$${ctx.pricing?.appearance?.toLocaleString()}`]].map(([k, v]) => (
               <div key={k} className="flex justify-between text-sm text-gray-400"><span>{k}</span><span>{v}</span></div>
             ))}
           </div>

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useMemo, useCallback,useEffect } from 'react'
+import { usePricing } from '../hooks/usePricing'
 
 const makeToggle = (setter) => (id) =>
   setter(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
@@ -85,9 +86,25 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [lights, setLightsRaw] = useState(ic.lights ?? ['dome', 'racing'])
   const [interiorLights, setInteriorLights] = useState(ic.interiorLights ?? { '12vleddome': 0, '12vflatpanel': 0 })
   const [ledRope, setLedRope] = useState(ic.ledRope ?? false)
-  const [ventilation, setVentilation] = useState(ic.ventilation ?? 'sidewallvents')
+  const [ventilation, setVentilation] = useState(ic.ventilation ?? 'none')
   const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'none')
+  const [acPrep, setAcPrep] = useState(ic.acPrep ?? false)
   const [receptacles, setReceptacles] = useState(ic.receptacles ?? { '110vinterior': 0, '110vgfi': 0 })
+
+  // Automatically select 30amp electrical package if an AC unit is selected and no electrical package exists
+  useEffect(() => {
+    if (climateControl !== 'none' && electrical === 'none') {
+      setElectrical('30amp');
+      setReceptacles(prev => ({ 
+        ...prev, 
+        '110vinterior': (prev['110vinterior'] || 0) + 2 
+      }));
+      setInteriorLights(prev => ({ 
+        ...prev, 
+        '12vflatpanel': (prev['12vflatpanel'] || 0) + 1 
+      }));
+    }
+  }, [climateControl, electrical])
 
   // Loading
   const [rampType, setRampType] = useState(ic.rampType ?? 'doublereardoors')
@@ -102,7 +119,12 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   }, [rampType])
 
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
-  const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? [])
+  const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])
+  const [dRings, setDRings] = useState(ic.dRings ?? {
+    drings: 0,
+    walldrings: 0,
+    floordrings: 0,
+  })
   const [jacks, setJacksRaw] = useState(ic.jacks ?? [''])
 
   // Add-Ons
@@ -198,7 +220,20 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const markTabVisited = useCallback((tab) => setVisitedTabs(prev => new Set([...prev, tab])), [])
   const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
 
-  const totalPrice = 106995
+  const pricing = usePricing({
+    width, length, interiorHeight, axleAtp, axleSuspension, axleCapacity,
+    electrical, battery, ventilation, climateControl, rampType, atpRamp,
+    sideDoorsType, lights, tieDowns, jacks,
+    waterPackage, bathroom, stairs, angledLights, vNoseETrack, batteryBox,
+    escapeDoor, generatorBox, winchSystem, extendedTripleTongue, radioPackageSpeaker,
+    rearSpoiler, ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,
+    exteriorFinish, exteriorAccessories, frontStyle, exteriorBuild, roofBuild,
+    protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType,
+    spareTire, floor, walls, ceiling, cabinets, toolBox,
+    windows, dRings, acPrep
+  })
+
+  const totalPrice = pricing.totalPrice
 
   const toggleLight   = useCallback(makeToggle(setLightsRaw),   [])
   const toggleTieDown = useCallback(makeToggle(setTieDownsRaw), [])
@@ -282,11 +317,13 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     ledRope, setLedRope,
     ventilation, setVentilation,
     climateControl, setClimateControl,
+    acPrep, setAcPrep,
     receptacles, setReceptacles,
     rampType, setRampType,
     atpRamp, setAtpRamp,
     rearDoor, setRearDoor,
     tieDowns, setTieDownsRaw, toggleTieDown,
+    dRings, setDRings,
     jacks, setJacksRaw, toggleJack,
     waterPackage, setWaterPackage,
     bathroom, setBathroom,
@@ -316,6 +353,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     recessedTireBox, setRecessedTireBox,
     interiorTireMount, setInteriorTireMount,
     showDimensions, setShowDimensions,
+    pricing,
     totalPrice,
     completionPercent, markTabVisited,
   }), [
@@ -324,15 +362,15 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, floorOverlay, walls, ceiling, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
-    electrical, battery, lights, interiorLights, ledRope, ventilation, climateControl, receptacles,
-    rampType, atpRamp, rearDoor, tieDowns, jacks,
+    electrical, battery, lights, interiorLights, ledRope, ventilation, climateControl, acPrep, receptacles,
+    rampType, atpRamp, rearDoor, tieDowns, dRings, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,
     escapeDoor, concessionDoor, glassScreen, generatorBox, concessionWidth, concessionHeight, lShapeCounter, genSlides, genDoor, winchSystem,
     windows, windowSizes,
     extendedTripleTongue, radioPackageSpeaker, rearSpoiler,
     ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,
-    showDimensions, visitedTabs, completionPercent,
+    showDimensions, visitedTabs, completionPercent, pricing, totalPrice,
     toggleLight, toggleTieDown, toggleJack, toggleCabinet, toggleAwning, markTabVisited,
   ])
 

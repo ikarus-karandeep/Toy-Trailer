@@ -267,9 +267,9 @@ export const EXTERIOR_LIGHTING_OPTIONS = [
 ];
 
 export const PASSIVE_VENTILATION_OPTIONS = [
-  { id: 'nonpoweredvent', label: 'NON-POWERED VENT', price: 2000 },
-  { id: 'smokenonpowered', label: 'SMOKE COLORED NON-POWERED VENT', price: 3499 },
-  { id: '2waysidewall', label: '2-WAY SIDEWALL VENTS (SET OF 2)', price: 9999 },
+  { id: 'nonpoweredvent', label: 'NON-POWERED ROOF VENT', price: 40 },
+  { id: 'smokenonpowered', label: 'SMOKE COLORED NON-POWERED VENT', price: 40 },
+  { id: '2waysidewall', label: '2-WAY SIDEWALL VENTS (SET OF 2)', price: 100 },
 ];
 
 export const CLIMATE_CONTROL_OPTIONS = [
@@ -277,14 +277,14 @@ export const CLIMATE_CONTROL_OPTIONS = [
 ];
 
 export const ROOFTOP_AC_OPTIONS = [
-  { id: '135kbtu', label: '13.5K BTU A/C + HEAT STRIP', price: 15999 },
-  { id: '15kbtu', label: '15K BTU A/C + HEAT STRIP', price: 20000 },
+  { id: '135kbtu', label: '13,000 BTU A/C + HEAT STRIP', price: 1485 },
+  { id: '15kbtu', label: '15,000 BTU A/C + HEAT STRIP', price: 1755 },
 ];
 
 export const MINI_SPLIT_OPTIONS = [
-  { id: '12kminisplit', label: '12K MINI SPLIT AC', price: 30999 },
-  { id: '18kminisplit', label: '18K MINI SPLIT AC W/220V WIRE', price: 8999 },
-  { id: '24kminisplit', label: '24K MINI SPLIT AC W/220V WIRE', price: 14999 },
+  { id: '12kminisplit', label: 'MINI SPLIT 13K BTU', price: 1890 },
+  { id: '18kminisplit', label: 'MINI SPLIT 18K BTU', price: 2430 },
+  { id: '24kminisplit', label: 'MINI SPLIT 24K BTU', price: 3240 },
 ];
 
 // Loading
@@ -340,26 +340,26 @@ export const WINDOWS_EGRESS_OPTIONS = [
 ];
 
 export const D_RINGS_OPTIONS = [
-  { id: 'drings', label: 'D-RINGS (4) (5000LBS)' },
+  { id: 'drings', label: 'D-RINGS (4) (6000LBS)' },
 ];
 
 export const ADDITIONAL_D_RINGS_OPTIONS = [
-  { id: 'walldrings', label: 'ADDITIONAL WALL D-RINGS (5000LBS)', price: 16 },
-  { id: 'floordrings', label: 'ADDITIONAL FLOOR D-RINGS + BACKER', price: 16 },
+  { id: 'walldrings', label: 'ADDITIONAL WALL D-RINGS (6000LBS)', price: 20 },
+  { id: 'floordrings', label: 'ADDITIONAL FLOOR D-RINGS + BACKER', price: 23 },
 ];
 
 export const E_TRACKS_OPTIONS = [
-  { id: 'wall', label: 'WALL E-TRACK (CONTINUOUS ALUMINUM TRACK ALONG WALL) - $DYNAMIC' },
-  { id: 'floor', label: 'FLOOR E-TRACK + STEEL BACKER - $DYNAMIC' },
+  { id: 'wall', label: 'WALL E-TRACK (CONTINUOUS ALUMINUM TRACK ALONG WALL) - $DYNAMIC', price: 11 },
+  { id: 'floor', label: 'FLOOR E-TRACK + STEEL BACKER - $DYNAMIC', price: 14 },
   { id: 'small', label: 'SMALL SECTION E-TRACK - $DYNAMIC' },
 ];
 
 export const JACKS_OPTIONS = [
   { id: 'folddownjacks', label: 'FOLD DOWN STABILIZER JACKS' },
-  { id: 'folddown', label: 'FOLD DOWN STABILIZER JACK (PAIR) (REAR CORNER STABILIZER)', price: 44 },
+  { id: 'folddown', label: 'FOLD DOWN STABILIZER JACK (PAIR) (REAR CORNER STABILIZER)', price: 110 },
   { id: '5kscissorjacks', label: '5K SCISSOR JACKS' },
-  { id: '5kscissor', label: '5K SCISSOR JACK W/ HANDLE (PAIR) (HEAVY DUTY SIDE STABILIZER)', price: 135 },
-  { id: '5000relectric', label: '5000R ELECTRIC TONGUE JACK W/DEEP CYCLE BATTERY', price: 526 },
+  { id: '5kscissor', label: '5K SCISSOR JACK W/ HANDLE (PAIR) (HEAVY DUTY SIDE STABILIZER)', price: 160 },
+  { id: '5000relectric', label: '5000R ELECTRIC TONGUE JACK W/DEEP CYCLE BATTERY', price: 540 },
 ];
 
 
