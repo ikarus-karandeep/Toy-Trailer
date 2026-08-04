@@ -11,7 +11,8 @@ import {
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
   BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
-  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS
+  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS,
+  ESCAPE_DOOR_SIZE_OPTIONS
 } from '../constants/configData';
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
@@ -57,6 +58,14 @@ export function usePricing(ctx) {
     if (ctx.atpRamp) configurations += 400;
     configurations += findPrice(SIDE_DOOR_OPTIONS, ctx.sideDoorsType);
     
+    // Side Doors Pricing (Driver/Passenger strict assignments)
+    if (ctx.driverSideDoor === '48x78') configurations += 120;
+    
+    if (ctx.passengerSideDoor === '36x78' || ctx.passengerSideDoor === '36x72') configurations += 295;
+    else if (ctx.passengerSideDoor === '48x78') configurations += 335;
+
+    if (ctx.sideDoorBarLock) configurations += 60;
+
     if (ctx.lights) {
       ctx.lights.forEach(id => { configurations += findPrice(LIGHT_OPTIONS, id); });
     }
@@ -83,7 +92,14 @@ export function usePricing(ctx) {
     if (ctx.angledLights) configurations += 200;
     if (ctx.vNoseETrack) configurations += 100;
     if (ctx.batteryBox) configurations += 120;
-    if (ctx.escapeDoor && ctx.escapeDoor !== 'none') configurations += 800;
+    configurations += findPrice(ESCAPE_DOOR_SIZE_OPTIONS, ctx.escapeDoor);
+    
+    const isConcessionPriced = ctx.concessionDoor && ctx.concessionDoor !== 'none'
+                            && ctx.glassScreen
+                            && ctx.concessionWidth === '72in'
+                            && ctx.concessionHeight === '36in';
+    if (isConcessionPriced) configurations += 1250;
+    
     if (ctx.generatorBox && ctx.generatorBox !== 'none') configurations += 500;
     if (ctx.winchSystem) configurations += 1000;
     if (ctx.extendedTripleTongue) configurations += 400;
@@ -133,6 +149,8 @@ export function usePricing(ctx) {
     ctx.rearSpoiler, ctx.ladderRacks, ctx.sidewallVents, ctx.recessedTireBox, ctx.interiorTireMount,
     ctx.exteriorFinish, ctx.exteriorAccessories, ctx.frontStyle, ctx.exteriorBuild, ctx.roofBuild,
     ctx.protectionType, ctx.protectionSize, ctx.frontProtection, ctx.lugType, ctx.tireSize, ctx.wheelType,
-    ctx.spareTire, ctx.floor, ctx.walls, ctx.ceiling, ctx.cabinets, ctx.toolBox, ctx.dRings
+    ctx.spareTire, ctx.floor, ctx.walls, ctx.ceiling, ctx.cabinets, ctx.toolBox, ctx.dRings,
+    ctx.driverSideDoor, ctx.passengerSideDoor, ctx.sideDoorBarLock, ctx.concessionDoor,
+    ctx.glassScreen, ctx.concessionWidth, ctx.concessionHeight
   ]);
 }

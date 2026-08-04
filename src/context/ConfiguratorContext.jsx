@@ -59,8 +59,9 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [wheelType, setWheelType] = useState(ic.wheelType ?? 'standardsilver')
   const [spareTire, setSpareTire] = useState(ic.spareTire ?? true)
   const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
-  const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? 'none')
+  const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? '36x78')
   const [passengerSideDoor, setPassengerSideDoor] = useState(ic.passengerSideDoor ?? 'none')
+  const [sideDoorBarLock, setSideDoorBarLock] = useState(ic.sideDoorBarLock ?? false)
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
@@ -230,7 +231,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     exteriorFinish, exteriorAccessories, frontStyle, exteriorBuild, roofBuild,
     protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType,
     spareTire, floor, walls, ceiling, cabinets, toolBox,
-    windows, dRings, acPrep
+    windows, dRings, acPrep, sideDoorBarLock, driverSideDoor, passengerSideDoor,
+    concessionDoor, glassScreen, concessionWidth, concessionHeight
   })
 
   const totalPrice = pricing.totalPrice
@@ -301,6 +303,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     sideDoorsType, setSideDoorsType,
     driverSideDoor, setDriverSideDoor,
     passengerSideDoor, setPassengerSideDoor,
+    sideDoorBarLock, setSideDoorBarLock,
     floor, setFloor,
     floorOverlay, setFloorOverlay,
     walls, setWalls,
@@ -360,7 +363,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     packageId, applyPackage, activeTab, viewMode, summaryOpen,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
-    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
+    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, floorOverlay, walls, ceiling, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
     electrical, battery, lights, interiorLights, ledRope, ventilation, climateControl, acPrep, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, dRings, jacks,

@@ -290,9 +290,9 @@ export const MINI_SPLIT_OPTIONS = [
 // Loading
 export const REAR_ENTRANCE_OPTIONS = [
   { id: 'heavyduty', label: 'HEAVY DUTY RAMP W/FLAP - 4500 LB' },
-  { id: 'doublereardoors', label: 'DOUBLE REAR DOORS I/O RAMP' },
-  { id: 'rampdropjacks', label: 'RAMP DOOR W/ DROP LEG JACKS - $538' },
-  { id: 'superduty', label: 'SUPER DUTY RAMP W/ DROP LEG JACKS (7000LB CAPACITY) - $743' },
+  { id: 'doublereardoors', label: 'DOUBLE REAR DOORS I/O RAMP', price: 0 },
+  { id: 'rampdropjacks', label: 'RAMP DOOR W/ DROP LEG JACKS', price: 538 },
+  { id: 'superduty', label: 'SUPER DUTY RAMP W/ DROP LEG JACKS (7000LB CAPACITY)', price: 745 },
 ];
 
 export const SIDE_DOOR_PLACEMENT_OPTIONS = [
@@ -302,9 +302,9 @@ export const SIDE_DOOR_PLACEMENT_OPTIONS = [
 
 export const SIDE_DOOR_SIZE_OPTIONS = [
   { id: 'none', label: 'NONE' },
-  { id: '36x72', label: '36" X 72" - $412' },
-  { id: '36x78', label: '36" X 78" - $412' },
-  { id: '48x78', label: '48" X 78" - $500' },
+  { id: '36x72', label: '36" X 72"' },
+  { id: '36x78', label: '36" X 78"' },
+  { id: '48x78', label: '48" X 78"' },
 ];
 
 export const ESCAPE_DOOR_PLACEMENT_OPTIONS = [
@@ -314,7 +314,7 @@ export const ESCAPE_DOOR_PLACEMENT_OPTIONS = [
 
 export const ESCAPE_DOOR_SIZE_OPTIONS = [
   { id: 'none', label: 'NONE' },
-  { id: '54x48', label: '54" X 48"' },
+  { id: '54x48', label: '54" X 48"', price: 475 },
   { id: 'gullwing', label: 'GULLWING DOOR' },
 ];
 

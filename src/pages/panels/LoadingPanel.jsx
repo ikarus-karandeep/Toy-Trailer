@@ -31,6 +31,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     jacks, setJacksRaw, toggleJack,
     driverSideDoor, setDriverSideDoor,
     passengerSideDoor, setPassengerSideDoor,
+    sideDoorBarLock, setSideDoorBarLock,
     escapeDoor, setEscapeDoor,
     atpRamp, setAtpRamp,
     concessionDoor, setConcessionDoor,
@@ -45,7 +46,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
   const getBadge = usePackageBadge()
 
-  const [sideDoorPlacement, setSideDoorPlacement] = useState('passenger')
+  const [sideDoorPlacement, setSideDoorPlacement] = useState('driver')
   
   const currentSideDoor = sideDoorPlacement === 'driver' ? driverSideDoor : passengerSideDoor
   const setCurrentSideDoor = sideDoorPlacement === 'driver' ? setDriverSideDoor : setPassengerSideDoor
@@ -118,7 +119,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
             </p>
           ) : (
             <>
-              <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">36" X 78" Steel base</p>
+              <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">36" X 78" Steel base (Standard on Driver Side)</p>
               
               <div className="mb-4">
                 <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Side door placement</p>
@@ -132,16 +133,36 @@ export default function LoadingPanel({ activeSectionTitle }) {
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {SIDE_DOOR_SIZE_OPTIONS.map((opt) => (
-                  <OptionPill
-                    key={opt.id}
-                    label={opt.label}
-                    isSelected={currentSideDoor === opt.id}
-                    onClick={() => setCurrentSideDoor(opt.id)}
-                  />
-                ))}
+                {SIDE_DOOR_SIZE_OPTIONS.map((opt) => {
+                  let price = opt.price;
+                  if (sideDoorPlacement === 'driver') {
+                    if (opt.id === '48x78') price = 120;
+                    else price = 0;
+                  } else {
+                     if (opt.id === '48x78') price = 335;
+                     else price = 295;
+                  }
+                  
+                  return (
+                    <OptionPill
+                      key={opt.id}
+                      label={opt.label}
+                      price={opt.id === 'none' ? undefined : price}
+                      isSelected={currentSideDoor === opt.id}
+                      onClick={() => setCurrentSideDoor(opt.id)}
+                    />
+                  );
+                })}
               </div>
               
+              {/* <div className="mt-6">
+                <ToggleSwitch
+                  label="Bar Lock on Side Door (+$60)"
+                  checked={sideDoorBarLock}
+                  onChange={setSideDoorBarLock}
+                />
+              </div> */}
+
               <div className="mt-8 flex justify-center">
                 <img src="/Rear door.png" />
               </div>
@@ -167,6 +188,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
+                price={opt.price}
                 isSelected={escapeDoor === opt.id}
                 isLocked={concessionDoor === 'driver' && opt.id !== 'none'}
                 onClick={() => setEscapeDoor(opt.id)}

@@ -12,7 +12,7 @@ import {
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
   BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
-  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS
+  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS, ESCAPE_DOOR_SIZE_OPTIONS
 } from '../constants/configData'
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
@@ -70,6 +70,8 @@ export default function SummaryPanel() {
       floor, walls, ceiling, cabinets, toggleCabinet, toolBox, stairs, setStairs,
       angledLights, setAngledLights, vNoseETrack, setVNoseETrack, batteryBox, setBatteryBox,
       escapeDoor, setEscapeDoor, generatorBox, setGeneratorBox, winchSystem, setWinchSystem,
+      sideDoorBarLock, setSideDoorBarLock, concessionDoor, setConcessionDoor,
+      driverSideDoor, passengerSideDoor,
       extendedTripleTongue, setExtendedTripleTongue, radioPackageSpeaker, setRadioPackageSpeaker, rearSpoiler, setRearSpoiler,
       ladderRacks, setLadderRacks, sidewallVents, setSidewallVents, recessedTireBox, setRecessedTireBox, interiorTireMount, setInteriorTireMount
     } = ctx
@@ -98,6 +100,20 @@ export default function SummaryPanel() {
       if (atpRamp) { items.push({ label: 'ATP ON RAMP', price: 400 }) }
       if (rearDoor) { items.push({ label: 'REAR DOOR', price: 0 }) }
       const sd = find(SIDE_DOOR_OPTIONS, sideDoorsType); if (sd && !sd.isStandard) items.push({ label: sd.label, price: sd.price })
+      
+      if (driverSideDoor === '48x78') {
+        items.push({ label: '48" X 78" SIDE DOOR UPGRADE', price: 120, onRemove: () => ctx.setDriverSideDoor('36x78') });
+      }
+      
+      if (passengerSideDoor === '36x78' || passengerSideDoor === '36x72') {
+        items.push({ label: 'ADDITIONAL 36" SIDE DOOR', price: 295, onRemove: () => ctx.setPassengerSideDoor('none') });
+      } else if (passengerSideDoor === '48x78') {
+        items.push({ label: 'ADDITIONAL 48" X 78" SIDE DOOR', price: 335, onRemove: () => ctx.setPassengerSideDoor('none') });
+      }
+
+      // if (sideDoorBarLock) {
+      //   items.push({ label: 'BAR LOCK ON SIDE DOOR', price: 60, onRemove: () => setSideDoorBarLock(false) });
+      // }
       lights.forEach(id => { const o = find(LIGHT_OPTIONS, id); if (o && o.price) items.push({ label: o.label, price: o.price, onRemove: () => toggleLight(id) }) })
       tieDowns.forEach(id => { 
         const o = find(TIE_DOWN_OPTIONS, id); 
@@ -122,7 +138,20 @@ export default function SummaryPanel() {
       if (angledLights) { items.push({ label: 'ANGLED LIGHTS', price: 200, onRemove: () => setAngledLights(false) }) }
       if (vNoseETrack) { items.push({ label: 'V-NOSE E-TRACK', price: 100, onRemove: () => setVNoseETrack(false) }) }
       if (batteryBox) { items.push({ label: 'BATTERY BOX', price: 120, onRemove: () => setBatteryBox(false) }) }
-      if (escapeDoor && escapeDoor !== 'none') { items.push({ label: 'ESCAPE DOOR', price: 800, onRemove: () => setEscapeDoor('none') }) }
+      if (escapeDoor && escapeDoor !== 'none') { 
+        const ed = find(ESCAPE_DOOR_SIZE_OPTIONS, escapeDoor);
+        items.push({ label: ed ? ed.label : 'ESCAPE DOOR', price: ed ? ed.price : null, onRemove: () => setEscapeDoor('none') }) 
+      }
+      if (concessionDoor && concessionDoor !== 'none') {
+        const isConcessionPriced = ctx.glassScreen
+                                 && ctx.concessionWidth === '72in'
+                                 && ctx.concessionHeight === '36in';
+        if (isConcessionPriced) {
+          items.push({ label: "3'x6' CONCESSION WINDOW (WITH GLASS)", price: 1250, onRemove: () => ctx.setConcessionDoor('none') })
+        } else {
+          items.push({ label: "CONCESSION DOOR / WINDOW", price: 0, onRemove: () => ctx.setConcessionDoor('none') })
+        }
+      }
       if (generatorBox && generatorBox !== 'none') { items.push({ label: 'GENERATOR BOX', price: 500, onRemove: () => setGeneratorBox('none') }) }
       if (winchSystem) { items.push({ label: 'WINCH SYSTEM', price: 1000, onRemove: () => setWinchSystem(false) }) }
       if (extendedTripleTongue) { items.push({ label: 'EXTENDED TRIPLE TONGUE', price: 400, onRemove: () => setExtendedTripleTongue(false) }) }
