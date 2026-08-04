@@ -11,7 +11,7 @@ import {
   PROTECTION_TYPE_OPTIONS, PROTECTION_SIZE_OPTIONS, FRONT_PROTECTION_OPTIONS,
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
-  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
+  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
   SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS, ESCAPE_DOOR_SIZE_OPTIONS
 } from '../constants/configData'
 
@@ -25,7 +25,7 @@ const WHEEL_OPTIONS = WHEEL_TYPE_OPTIONS;
 const FLOOR_OPTIONS = [...FLOOR_MATERIAL_OPTIONS, ...FLOOR_OVERLAY_OPTIONS, ...FLOOR_INSULATION_OPTIONS];
 const WALL_OPTIONS = [...WALL_MATERIAL_OPTIONS, ...WALL_INSULATION_OPTIONS];
 const CEILING_OPTIONS = [...CEILING_MATERIAL_OPTIONS, ...CEILING_INSULATION_OPTIONS];
-const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS];
+const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS, ...WHEEL_WALL_CABINET_OPTIONS];
 const BATTERY_OPTIONS = OFF_GRID_POWER_OPTIONS;
 const BATHROOM_OPTIONS = BATHROOM_PACKAGE_OPTIONS;
 
@@ -181,7 +181,21 @@ export default function SummaryPanel() {
       const fl = find(FLOOR_OPTIONS, floor); if (fl && !fl.isStandard) items.push({ label: fl.label, price: fl.price })
       const wa = find(WALL_OPTIONS, walls); if (wa && !wa.isStandard) items.push({ label: wa.label, price: wa.price })
       const ce = find(CEILING_OPTIONS, ceiling); if (ce && !ce.isStandard) items.push({ label: ce.label, price: ce.price })
-      cabinets.forEach(id => { const o = find(CABINET_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleCabinet(id) }) })
+      cabinets.forEach(id => {
+        const o = find(CABINET_OPTIONS, id);
+        if (o) {
+          let price = o.price || 0;
+          if (id === 'wallrun36' || id === 'wallrun16') {
+            price *= parseInt(ctx.length) || 0;
+          } else if (id === 'wheelwallcabinet') {
+            price = (ctx.axleCount === 'triple') ? 1890 : 1620;
+          } else if (id === 'frontbase36' || id === 'frontoverhead16') {
+            const isVNose = ctx.frontStyle && ctx.frontStyle !== 'flatfront';
+            if (!isVNose) price = 0;
+          }
+          items.push({ label: o.label, price, onRemove: () => toggleCabinet(id) });
+        }
+      })
       const tb = find(TOOL_BOX_OPTIONS, toolBox); if (tb && tb.id !== 'none') items.push({ label: `TOOL BOX: ${tb.label}`, price: tb.price })
       return items
     }

@@ -10,7 +10,7 @@ import {
   PROTECTION_TYPE_OPTIONS, PROTECTION_SIZE_OPTIONS, FRONT_PROTECTION_OPTIONS,
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
-  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
+  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
   SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS,
   ESCAPE_DOOR_SIZE_OPTIONS
 } from '../constants/configData';
@@ -25,7 +25,7 @@ const WHEEL_OPTIONS = WHEEL_TYPE_OPTIONS;
 const FLOOR_OPTIONS = [...FLOOR_MATERIAL_OPTIONS, ...FLOOR_OVERLAY_OPTIONS, ...FLOOR_INSULATION_OPTIONS];
 const WALL_OPTIONS = [...WALL_MATERIAL_OPTIONS, ...WALL_INSULATION_OPTIONS];
 const CEILING_OPTIONS = [...CEILING_MATERIAL_OPTIONS, ...CEILING_INSULATION_OPTIONS];
-const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS];
+const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS, ...WHEEL_WALL_CABINET_OPTIONS];
 const BATTERY_OPTIONS = OFF_GRID_POWER_OPTIONS;
 const BATHROOM_OPTIONS = BATHROOM_PACKAGE_OPTIONS;
 
@@ -128,7 +128,18 @@ export function usePricing(ctx) {
     appearance += findPrice(CEILING_OPTIONS, ctx.ceiling);
     
     if (ctx.cabinets) {
-      ctx.cabinets.forEach(id => { appearance += findPrice(CABINET_OPTIONS, id); });
+      ctx.cabinets.forEach(id => { 
+        let price = findPrice(CABINET_OPTIONS, id);
+        if (id === 'wallrun36' || id === 'wallrun16') {
+          price *= parseInt(ctx.length) || 0;
+        } else if (id === 'wheelwallcabinet') {
+          price = (ctx.axleCount === 'triple') ? 1890 : 1620;
+        } else if (id === 'frontbase36' || id === 'frontoverhead16') {
+          const isVNose = ctx.frontStyle && ctx.frontStyle !== 'flatfront';
+          if (!isVNose) price = 0;
+        }
+        appearance += price; 
+      });
     }
     appearance += findPrice(TOOL_BOX_OPTIONS, ctx.toolBox);
 
@@ -141,7 +152,7 @@ export function usePricing(ctx) {
       totalPrice
     };
   }, [
-    ctx.width, ctx.length, ctx.interiorHeight, ctx.axleAtp, ctx.axleSuspension, ctx.axleCapacity,
+    ctx.width, ctx.length, ctx.interiorHeight, ctx.axleAtp, ctx.axleCount, ctx.axleSuspension, ctx.axleCapacity,
     ctx.electrical, ctx.battery, ctx.ventilation, ctx.climateControl, ctx.acPrep, ctx.rampType, ctx.atpRamp,
     ctx.sideDoorsType, ctx.lights, ctx.tieDowns, ctx.jacks,
     ctx.waterPackage, ctx.bathroom, ctx.stairs, ctx.angledLights, ctx.vNoseETrack, ctx.batteryBox,

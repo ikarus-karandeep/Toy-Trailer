@@ -222,7 +222,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
 
   const pricing = usePricing({
-    width, length, interiorHeight, axleAtp, axleSuspension, axleCapacity,
+    width, length, interiorHeight, axleAtp, axleCount, axleSuspension, axleCapacity,
     electrical, battery, ventilation, climateControl, rampType, atpRamp,
     sideDoorsType, lights, tieDowns, jacks,
     waterPackage, bathroom, stairs, angledLights, vNoseETrack, batteryBox,

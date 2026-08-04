@@ -29,7 +29,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     cabinets, toggleCabinet, setCabinetsRaw,
     blackoutCabinetDoors, setBlackoutCabinetDoors,
     toolBox, setToolBox,
-    length,
+    length, axleCount, frontStyle,
     bathroom,
     genDoor,
     driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor,
@@ -306,7 +306,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
         <OptionSection title="CABINETS">
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">BASE CABINETS</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">ATP Diamond Plate Finish. Countertop Included</p>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">ATP Diamond Plate Finish. Countertop Included.</p>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Wall cabinet runs require a specified run length — price updates live as the slider moves.</p>
             {hasSinkConflict && (
               <p className="text-xs mb-3 text-gray-400 p-2.5 rounded-lg leading-relaxed">
                 * Base cabinets are disabled because the Sink Package is currently applied.
@@ -329,12 +330,16 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   if (parseFloat(length) < 24) isLocked = true;
                   if (hasWallRunConflict) isLocked = true;
                 }
+                let displayPrice = opt.price;
+                if ((opt.id === 'frontbase36' || opt.id === 'frontoverhead16') && frontStyle === 'flatfront') {
+                  displayPrice = 0;
+                }
                 
                 return (
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
-                    price={opt.price}
+                    price={displayPrice}
                     isLocked={isLocked}
                     isSelected={cabinets.includes(opt.id)}
                     hasSettings={opt.id === 'frontbase36'}
@@ -361,7 +366,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <p className='border-t border-[#5D5E60]'></p>
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">OVERHEAD CABINETS</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">N/A with Slant/ Slant V-Nose</p>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">N/A with Slant/ Slant V-Nose.</p>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">Wall cabinet runs require a specified run length — price updates live as the slider moves.</p>
             <div className="flex flex-col gap-2">
               {OVERHEAD_CABINET_OPTIONS.map((opt) => {
                 let isLocked = false;
@@ -374,7 +380,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
-                    price={opt.price}
+                    price={(opt.id === 'frontoverhead16' && frontStyle === 'flatfront') ? 0 : opt.price}
                     isLocked={isLocked}
                     isSelected={cabinets.includes(opt.id)}
                     onClick={() => {
@@ -435,18 +441,23 @@ export default function InteriorPanel({ activeSectionTitle }) {
               </p>
             )}
             <div className="flex flex-col gap-2">
-              {WHEEL_WALL_CABINET_OPTIONS.map((opt) => (
+              {WHEEL_WALL_CABINET_OPTIONS.map((opt) => {
+                let displayPrice = opt.price;
+                if (opt.id === 'wheelwallcabinet') {
+                  displayPrice = (axleCount === 'triple') ? 1890 : 1620;
+                }
+                return (
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={displayPrice}
                   isSelected={cabinets.includes(opt.id)}
                   onClick={() => !hasWheelWallConflict && toggleCabinet(opt.id)}
                   isMulti={true}
                   isLocked={hasWheelWallConflict}
                   packageBadge={getBadge(opt.id)}
                 />
-              ))}
+              )})}
             </div>
           </div>
           <div>
@@ -464,7 +475,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <ToggleSwitch
             label="INCLUDE TOOL CABINET"
             checked={toolBox !== 'none' && toolBox !== false}
-            onChange={(checked) => setToolBox(checked ? 'included' : 'none')}
+            onChange={(checked) => setToolBox(checked ? 'frontbox' : 'none')}
           />
         </OptionSection>
       )}

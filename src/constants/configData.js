@@ -217,13 +217,13 @@ export const CEILING_INSULATION_OPTIONS = [
 ];
 
 export const BASE_CABINET_OPTIONS = [
-  { id: 'wallrun36', label: 'WALL RUN 36"H - $DYNAMIC', price: null },
-  { id: 'frontbase36', label: 'FRONT BASE 36"H', price: 1089 },
+  { id: 'wallrun36', label: 'WALL RUN 36"H - $DYNAMIC', price: 115 },
+  { id: 'frontbase36', label: 'FRONT BASE 36"H', price: 878 },
 ];
 
 export const OVERHEAD_CABINET_OPTIONS = [
-  { id: 'wallrun16', label: 'WALL RUN 16"H', locked: true },
-  { id: 'frontoverhead16', label: 'FRONT OVERHEAD 16"H', locked: true },
+  { id: 'wallrun16', label: 'WALL RUN 16"H', price: 122 },
+  { id: 'frontoverhead16', label: 'FRONT OVERHEAD 16"H', price: 945 },
 ];
 
 export const FULL_HEIGHT_CABINET_OPTIONS = [
@@ -236,7 +236,7 @@ export const WHEEL_WALL_CABINET_OPTIONS = [
 
 export const TOOL_BOX_OPTIONS = [
   { id: 'none', label: 'NONE' },
-  { id: 'frontbox', label: 'FRONT BOX', price: 9999 },
+  { id: 'frontbox', label: 'TOOL BOX', price: 640 },
 ];
 
 // Systems
