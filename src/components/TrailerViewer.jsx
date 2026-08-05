@@ -681,7 +681,7 @@ function GroundModel({ modelRef }) {
   const boundsRef = useRef(new THREE.Box3())
   const centerRef = useRef(new THREE.Vector3())
   const sizeRef = useRef(new THREE.Vector3())
-  const baseFootprintRef = useRef(null) // ground mesh's native XZ footprint, captured once
+  const baseFootprintRef = useRef(0)
 
   useEffect(() => {
     if (!baseFootprintRef.current) {
@@ -696,17 +696,22 @@ function GroundModel({ modelRef }) {
       colorMap.flipY = false
       colorMap.wrapS = THREE.RepeatWrapping
       colorMap.wrapT = THREE.RepeatWrapping
-      colorMap.repeat.set(10, 10)
       colorMap.anisotropy = 16
       colorMap.needsUpdate = true
     }
     if (opacityMap) {
       opacityMap.colorSpace = THREE.NoColorSpace
       opacityMap.flipY = false
-      opacityMap.wrapS = THREE.RepeatWrapping
-      opacityMap.wrapT = THREE.RepeatWrapping
+      opacityMap.wrapS = THREE.ClampToEdgeWrapping
+      opacityMap.wrapT = THREE.ClampToEdgeWrapping
       opacityMap.needsUpdate = true
     }
+    
+    console.log('[GroundModel] Textures loaded:', { 
+      colorMap: !!colorMap, 
+      opacityMap: !!opacityMap
+    })
+    console.log('[GroundModel] Ground Scene:', scene)
 
     const baseMaterial = new THREE.MeshBasicMaterial({
       map: colorMap,
@@ -715,13 +720,14 @@ function GroundModel({ modelRef }) {
       side: THREE.DoubleSide,
       depthWrite: false,
     })
-    const patchedMaterial = patchTriplanarMaterial(baseMaterial, 10 / baseFootprintRef.current)
-    patchedMaterial.needsUpdate = true
 
     scene.traverse((child) => {
       if (child.isMesh) {
-        child.material = patchedMaterial   // shared instance across all ground meshes
-        child.receiveShadow = false
+        if (!child.geometry.attributes.normal) {
+           child.geometry.computeVertexNormals()
+        }
+        child.material = baseMaterial   // Use standard UV mapping, no triplanar needed for a flat plane
+        child.receiveShadow = true      // Receive shadows for better realism
         child.renderOrder = 0   // draws first
       }
     })
@@ -743,15 +749,17 @@ function GroundModel({ modelRef }) {
     // Position ground slightly below the shadow material plane (which is at bbox.min.y - 0.001)
     groundRef.current.position.set(center.x, bbox.min.y - 0.002, center.z)
 
-    // Scale the ground footprint so it always extends comfortably past the
-    // trailer's current XZ footprint, whatever configuration is active.
-    // Because the triplanar patch samples using world position, scaling the
-    // mesh changes tiling density correctly rather than stretching the UVs.
+    // Scale the ground footprint so it always extends comfortably past the trailer's footprint.
     if (baseFootprintRef.current) {
       const margin = 1.08 // keep ground just larger than the trailer footprint
       const desired = Math.max(size.x, size.z) * margin
       const scale = desired / baseFootprintRef.current
       groundRef.current.scale.set(scale, 1, scale)
+
+      // Dynamically adjust tiling for textures that should tile in world space
+      // opacityMap stays 1x1 to stretch the fade effect across the whole scaled mesh
+      if (colorMap) colorMap.repeat.set(10 * scale, 10 * scale)
+      // if (roughnessMap) roughnessMap.repeat.set(10 * scale, 10 * scale)
     }
   })
 
