@@ -91,10 +91,7 @@ export default function SummaryPanel() {
       const w = find(WIDTH_OPTIONS, width); if (w) items.push({ label: `WIDTH: ${w.label}`, price: w.price })
       const l = find(LENGTH_OPTIONS, length); if (l) items.push({ label: `LENGTH: ${l.label}`, price: l.price })
       const h = find(INTERIOR_HEIGHT_OPTIONS, interiorHeight); if (h && !h.isStandard) items.push({ label: `HEIGHT: ${h.label}`, price: h.price })
-      if (axleAngled || axleAtp) {
-        const axleLabel = [axleAngled ? 'ANGLED' : 'FLAT', axleAtp ? '+ ATP' : ''].filter(Boolean).join(' ')
-        items.push({ label: `AXLE: ${axleLabel}`, price: axleAtp ? 9999 : 0 })
-      }
+
       const susp = find(AXLE_SUSPENSION_OPTIONS, axleSuspension); if (susp && !susp.isStandard) items.push({ label: `SUSPENSION: ${susp.label}`, price: susp.price })
       const cap = find(AXLE_CAPACITY_OPTIONS, axleCapacity); if (cap && !cap.isStandard) items.push({ label: `CAPACITY: ${cap.label}`, price: cap.price })
       return items
@@ -108,8 +105,6 @@ export default function SummaryPanel() {
       const cc = find(CLIMATE_OPTIONS, climateControl); if (cc && cc.id !== 'none') items.push({ label: cc.label, price: cc.price })
       const r = find(RAMP_OPTIONS, rampType); if (r) items.push({ label: r.label, price: r.price })
       if (atpRamp) { items.push({ label: 'ATP ON RAMP', price: 400 }) }
-      if (rearDoor) { items.push({ label: 'REAR DOOR', price: 0 }) }
-      const sd = find(SIDE_DOOR_OPTIONS, sideDoorsType); if (sd && !sd.isStandard) items.push({ label: sd.label, price: sd.price })
       
       if (driverSideDoor === '48x78') {
         items.push({ label: '48" X 78" SIDE DOOR UPGRADE', price: 120, onRemove: () => ctx.setDriverSideDoor('36x78') });
@@ -183,8 +178,7 @@ export default function SummaryPanel() {
       const wp = find(WATER_PACKAGE_OPTIONS, waterPackage); if (wp && wp.id !== 'none') items.push({ label: wp.label, price: wp.price })
       if (bathroom) { const o = find(BATHROOM_OPTIONS, bathroom); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setBathroom(null) }) }
       if (stairs) { items.push({ label: 'STAIRS', price: 150, onRemove: () => setStairs(false) }) }
-      if (angledLights) { items.push({ label: 'ANGLED LIGHTS', price: 200, onRemove: () => setAngledLights(false) }) }
-      if (vNoseETrack) { items.push({ label: 'V-NOSE E-TRACK', price: 100, onRemove: () => setVNoseETrack(false) }) }
+
       if (batteryBox) { items.push({ label: 'BATTERY BOX', price: 120, onRemove: () => setBatteryBox(false) }) }
       if (escapeDoor && escapeDoor !== 'none') { 
         const ed = find(ESCAPE_DOOR_SIZE_OPTIONS, escapeDoor);
@@ -201,14 +195,11 @@ export default function SummaryPanel() {
         }
       }
       if (generatorBox && generatorBox !== 'none') { items.push({ label: 'GENERATOR BOX', price: 500, onRemove: () => setGeneratorBox('none') }) }
-      if (winchSystem) { items.push({ label: 'WINCH SYSTEM', price: 1000, onRemove: () => setWinchSystem(false) }) }
-      if (extendedTripleTongue) { items.push({ label: 'EXTENDED TRIPLE TONGUE', price: 400, onRemove: () => setExtendedTripleTongue(false) }) }
-      if (radioPackageSpeaker) { items.push({ label: 'RADIO PACKAGE SPEAKER', price: 600, onRemove: () => setRadioPackageSpeaker(false) }) }
-      if (rearSpoiler) { items.push({ label: 'REAR SPOILER', price: 300, onRemove: () => setRearSpoiler(false) }) }
+
       if (ladderRacks) { items.push({ label: 'LADDER RACKS', price: 250, onRemove: () => setLadderRacks(false) }) }
-      if (sidewallVents) { items.push({ label: 'SIDEWALL VENTS', price: 150, onRemove: () => setSidewallVents(false) }) }
+
       if (recessedTireBox) { items.push({ label: 'RECESSED TIRE BOX', price: 200, onRemove: () => setRecessedTireBox(false) }) }
-      if (interiorTireMount) { items.push({ label: 'INTERIOR TIRE MOUNT', price: 100, onRemove: () => setInteriorTireMount(false) }) }
+
       return items
     }
     if (activeTab === 'APPEARANCE') {

@@ -45,7 +45,7 @@ export function usePricing(ctx) {
     trailerBuild += findPrice(WIDTH_OPTIONS, ctx.width);
     trailerBuild += findPrice(LENGTH_OPTIONS, ctx.length);
     trailerBuild += findPrice(INTERIOR_HEIGHT_OPTIONS, ctx.interiorHeight);
-    trailerBuild += (ctx.axleAtp ? 9999 : 0);
+
     trailerBuild += findPrice(AXLE_SUSPENSION_OPTIONS, ctx.axleSuspension);
     trailerBuild += findPrice(AXLE_CAPACITY_OPTIONS, ctx.axleCapacity);
 
@@ -57,7 +57,7 @@ export function usePricing(ctx) {
     if (ctx.acPrep) configurations += 70;
     configurations += findPrice(RAMP_OPTIONS, ctx.rampType);
     if (ctx.atpRamp) configurations += 400;
-    configurations += findPrice(SIDE_DOOR_OPTIONS, ctx.sideDoorsType);
+
     
     // Side Doors Pricing (Driver/Passenger strict assignments)
     if (ctx.driverSideDoor === '48x78') configurations += 120;
@@ -121,8 +121,6 @@ export function usePricing(ctx) {
     configurations += findPrice(WATER_PACKAGE_OPTIONS, ctx.waterPackage);
     configurations += findPrice(BATHROOM_OPTIONS, ctx.bathroom);
     if (ctx.stairs) configurations += 150;
-    if (ctx.angledLights) configurations += 200;
-    if (ctx.vNoseETrack) configurations += 100;
     if (ctx.batteryBox) configurations += 120;
     configurations += findPrice(ESCAPE_DOOR_SIZE_OPTIONS, ctx.escapeDoor);
     
@@ -133,14 +131,9 @@ export function usePricing(ctx) {
     if (isConcessionPriced) configurations += 1250;
     
     if (ctx.generatorBox && ctx.generatorBox !== 'none') configurations += 500;
-    if (ctx.winchSystem) configurations += 1000;
-    if (ctx.extendedTripleTongue) configurations += 400;
-    if (ctx.radioPackageSpeaker) configurations += 600;
-    if (ctx.rearSpoiler) configurations += 300;
     if (ctx.ladderRacks) configurations += 250;
-    if (ctx.sidewallVents) configurations += 150;
     if (ctx.recessedTireBox) configurations += 200;
-    if (ctx.interiorTireMount) configurations += 100;
+
 
     // APPEARANCE
     let exteriorFinishPrice = findPrice(EXTERIOR_FINISH_OPTIONS, ctx.exteriorFinish);
