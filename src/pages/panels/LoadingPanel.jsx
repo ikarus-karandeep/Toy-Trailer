@@ -87,7 +87,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isSelected={rampType === opt.id}
                 onClick={() => setRampType(opt.id)}
               />
@@ -100,10 +100,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
           <div className="mt-6">
             <ToggleSwitch
-              label="ATP / RTP RAMP & FLAP"
+              label="ATP/RTP RAMP & FLAP"
               checked={atpRamp}
               onChange={setAtpRamp}
               disabled={rampType !== 'doublereardoors'}
+              price={270}
+              // subtext="Matching diamond plate on the ramp surface"
             />
           </div>
         </OptionSection>
@@ -188,7 +190,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isSelected={escapeDoor === opt.id}
                 isLocked={concessionDoor === 'driver' && opt.id !== 'none'}
                 onClick={() => setEscapeDoor(opt.id)}
@@ -317,7 +319,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 <div key={opt.id} className="flex flex-col gap-2">
                   <OptionPill
                     label={opt.label}
-                    price={opt.price}
+                    price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     isLocked={concessionDoor === 'passenger'}
                     quantity={qty}
@@ -331,7 +333,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                         <OptionPill
                           key={sizeOpt.id}
                           label={sizeOpt.label}
-                          price={sizeOpt.price}
+                          price={opt.price} badge={opt.badge}
                           isSelected={qty > 0 && windowSizes[opt.id] === sizeOpt.id}
                           isLocked={isLocked}
                           onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
@@ -351,7 +353,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 <div key={opt.id} className="flex flex-col gap-2">
                   <OptionPill
                     label={opt.label}
-                    price={opt.price}
+                    price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     isLocked={concessionDoor === 'passenger'}
                     quantity={qty}
@@ -365,7 +367,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                         <OptionPill
                           key={sizeOpt.id}
                           label={sizeOpt.label}
-                          price={sizeOpt.price}
+                          price={opt.price} badge={opt.badge}
                           isSelected={qty > 0 && windowSizes[opt.id] === sizeOpt.id}
                           isLocked={isLocked}
                           onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
@@ -404,7 +406,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
-                    price={opt.price}
+                    price={opt.price} badge={opt.badge}
                     isSelected={tieDowns.includes(opt.id) || qty > 0}
                     quantity={qty}
                     onQuantityChange={(val) => {
@@ -429,7 +431,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={tieDowns.includes(opt.id)}
                   onClick={() => toggleTieDown(opt.id)}
                   packageBadge={getBadge(opt.id)}
@@ -478,7 +480,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={jacks.includes(opt.id) && !(opt.id === '5000relectric' && (width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'))))}
                   disabled={opt.id === '5000relectric' && (width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck')))}
                   onClick={() => handleJack(opt.id)}

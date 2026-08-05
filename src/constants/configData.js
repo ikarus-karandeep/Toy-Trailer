@@ -30,12 +30,12 @@ export const LENGTH_OPTIONS = [
   { id: '20', label: "20'", price: null },
   { id: '22', label: "22'", price: null },
   { id: '24', label: "24'", price: null },
-  { id: '26', label: "26'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
-  { id: '28', label: "28'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
-  { id: '30', label: "30'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
-  { id: '32', label: "32'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
-  { id: '34', label: "34'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
-  { id: '36', label: "36'", price: 320,  badge: '+$320 - 6000lb Base Axle' },
+  { id: '26', label: "26'", price: null },
+  { id: '28', label: "28'", price: null },
+  { id: '30', label: "30'", price: null },
+  { id: '32', label: "32'", price: null },
+  { id: '34', label: "34'", price: null },
+  { id: '36', label: "36'", price: null },
 ];
 
 export const FRAME_SIZE_OPTIONS = [
@@ -61,13 +61,13 @@ export const AXLE_CAPACITY_OPTIONS = [
 ];
 
 export const INTERIOR_HEIGHT_OPTIONS = [
-  { id: '7ft0',  label: "7'0\"",  value: 0,  price: null, isStandard: true },
-  { id: '7ft6',  label: "7'6\"",  value: 1,  price: 9999 },
-  { id: '8ft0',  label: "8'0\"",  value: 2,  price: 9999 },
-  { id: '8ft6',  label: "8'6\"",  value: 3,  price: 9999 },
-  { id: '9ft0',  label: "9'0\"",  value: 4,  price: 9999 },
-  { id: '9ft6',  label: "9'6\"",  value: 5,  price: 9999 },
-  { id: '10ft0', label: "10'0\"", value: 6,  price: 9999 },
+  { id: '7ft0',  label: "7'0\"",  value: 0,  price: null, rate: 16 },
+  { id: '7ft6',  label: "7'6\"",  value: 1,  rate: 31, badge: '+$31/LFT' },
+  { id: '8ft0',  label: "8'0\"",  value: 2,  rate: 41, badge: '+$41/LFT' },
+  { id: '8ft6',  label: "8'6\"",  value: 3,  rate: 55, badge: '+$55/LFT' },
+  { id: '9ft0',  label: "9'0\"",  value: 4,  rate: 65, badge: '+$65/LFT' },
+  { id: '9ft6',  label: "9'6\"",  value: 5,  rate: 80, badge: '+$80/LFT' },
+  { id: '10ft0', label: "10'0\"", value: 6,  rate: 89, badge: '+$89/LFT' },
 ];
 
 export const AXLE_OPTIONS = [
@@ -102,7 +102,19 @@ export const EXTERIOR_FINISH_OPTIONS = [
 export const EXTERIOR_ACCESSORIES_OPTIONS = [
   { id: 'none', label: 'NONE', isStandard: true },
   { id: 'rearwings', label: 'REAR WINGS' },
-  { id: 'rearwingspoiler', label: 'REAR WING SPOILER W/ 2 ANGLED LIGHTS', price: 473 },
+  { id: 'rearwingspoiler', label: 'REAR SPOILER WING W/ (2) RACING LIGHTS (STANDALONE)', price: 540, subtext: 'Rear wing — included in Race Package, available separately on any build' },
+];
+
+export const AWNING_OPTIONS = [
+  { id: '8ft', label: '8ft', price: 0 },
+  { id: '10ft', label: '10ft', price: 0 },
+  { id: '12ft', label: '12ft', price: 0 },
+  { id: '14ft', label: '14ft', price: 0 },
+  { id: '16ft', label: '16ft', price: 0 },
+  { id: '18ft', label: '18ft', price: 1820 },
+  { id: '20ft', label: '20ft', price: 1955 },
+  { id: '22ft', label: '22ft', price: 2090 },
+  // { id: '24ft', label: '24ft', price: 2430 },
 ];
 
 export const COLOR_OPTIONS = [
@@ -201,7 +213,7 @@ export const PIT_PACK_OPTIONS = [
 
 export const FLOOR_MATERIAL_OPTIONS = [
   { id: '34plywood', label: '3/4" PLYWOOD', isStandard: true },
-  { id: 'double34', label: 'DOUBLE 3/4" PLYWOOD - $DYNAMIC', price: null },
+  { id: 'double34', label: 'DOUBLE 3/4" PLYWOOD', price: 34, badge: '+$34/LFT', subtext: 'Extra structural rigidity underfoot' },
 ];
 
 export const FLOOR_OVERLAY_OPTIONS = [
@@ -217,31 +229,31 @@ export const FLOOR_INSULATION_OPTIONS = [
 
 export const WALL_MATERIAL_OPTIONS = [
   { id: '38plywood', label: '3/8" PLYWOOD', isStandard: true },
-  { id: '34plywood', label: '3/4" PLYWOOD - $DYNAMIC', price: null },
-  { id: 'white_metal_walls', label: '.030 WHITE METAL WALLS - $DYNAMIC', price: null },
+  { id: '34plywood', label: '3/4" PLYWOOD WALLS', price: 34, badge: '+$34/LFT', subtext: 'Thicker structural walls' },
+  { id: 'white_metal_walls', label: 'ALUMINUM INTERIOR WALLS', price: 38, badge: '+$38/LFT', subtext: 'White metal — clean, durable, washable', packageBadge: 'Race / LQ' },
 ];
 
 export const WALL_INSULATION_OPTIONS = [
-  { id: 'rfoil_walls', label: 'R-FOIL (THERMAL + ACOUSTIC BATTING)', price: 23 },
+  { id: 'rfoil_walls', label: 'R-FOIL (THERMAL + ACOUSTIC BATTING)', price: 23, badge: '+$23/LFT' },
 ];
 
 export const CEILING_MATERIAL_OPTIONS = [
   { id: 'thermaply', label: 'THERMA-PLY', isStandard: true },
-  { id: 'white_metal_ceiling', label: '.030 WHITE METAL CEILING - $DYNAMIC', price: null },
+  { id: 'white_metal_ceiling', label: 'ALUMINUM INTERIOR CEILING', price: 30, badge: '+$30/LFT', subtext: 'White metal ceiling liner' },
   { id: 'atp_ceiling', label: 'ATP CEILING (DIAMOND PLATE CEILING) - $DYNAMIC', price: null },
 ];
 
 export const CEILING_INSULATION_OPTIONS = [
-  { id: 'rfoil_ceiling', label: 'R-FOIL (THERMAL + ACOUSTIC BATTING)', price: 18 },
+  { id: 'rfoil_ceiling', label: 'R-FOIL (THERMAL + ACOUSTIC BATTING)', price: 18, badge: '+$18/LFT' },
 ];
 
 export const BASE_CABINET_OPTIONS = [
-  { id: 'wallrun36', label: 'WALL RUN 36"H - $DYNAMIC', price: 115 },
+  { id: 'wallrun36', label: 'WALL RUN 36"H - $DYNAMIC', price: 115, badge: '+$115/LFT' },
   { id: 'frontbase36', label: 'FRONT BASE 36"H', price: 878 },
 ];
 
 export const OVERHEAD_CABINET_OPTIONS = [
-  { id: 'wallrun16', label: 'WALL RUN 16"H', price: 122 },
+  { id: 'wallrun16', label: 'WALL RUN 16"H', price: 122, badge: '+$122/LFT' },
   { id: 'frontoverhead16', label: 'FRONT OVERHEAD 16"H', price: 945 },
 ];
 
@@ -374,8 +386,8 @@ export const ADDITIONAL_D_RINGS_OPTIONS = [
 ];
 
 export const E_TRACKS_OPTIONS = [
-  { id: 'wall', label: 'WALL E-TRACK (CONTINUOUS ALUMINUM TRACK ALONG WALL) - $DYNAMIC', price: 11 },
-  { id: 'floor', label: 'FLOOR E-TRACK + STEEL BACKER - $DYNAMIC', price: 14 },
+  { id: 'wall', label: 'WALL E-TRACK (CONTINUOUS ALUMINUM TRACK ALONG WALL) - $DYNAMIC', price: 11, badge: '+$11/LFT' },
+  { id: 'floor', label: 'FLOOR E-TRACK + STEEL BACKER - $DYNAMIC', price: 14, badge: '+$14/LFT' },
   { id: 'small', label: 'SMALL SECTION E-TRACK - $DYNAMIC' },
 ];
 
@@ -391,17 +403,17 @@ export const JACKS_OPTIONS = [
 // Add-Ons
 export const WATER_PACKAGE_OPTIONS = [
   { id: 'small', label: 'SMALL WATER PACKAGE', locked: true },
-  { id: 'large', label: 'LARGE WATER PACKAGE', price: 1721 },
+  { id: 'large', label: 'LARGE WATER PACKAGE', price: 1890 },
 ];
 
 export const SINK_PACKAGE_OPTIONS = [
-  { id: 'sink', label: 'SINK PACKAGE', price: 1399 },
+  { id: 'sink', label: 'SINK PACKAGE', price: 4725 },
 ];
 
 export const BATHROOM_PACKAGE_OPTIONS = [
-  { id: 'half', label: 'HALF BATHROOM PACKAGE', price: 4224 },
-  { id: '34x34', label: '34X34 FULL BATHROOM PACKAGE', price: 5410 },
-  { id: '36x36', label: '36X36 FULL BATHROOM PACKAGE', price: 5410 },
+  { id: 'half', label: 'HALF BATHROOM PACKAGE', price: 3375 },
+  { id: '34x34', label: '34X34 FULL BATHROOM PACKAGE', price: 5195 },
+  { id: '36x36', label: '36X36 FULL BATHROOM PACKAGE', price: 5530 },
 ];
 
 export const WINCH_OPTIONS = [

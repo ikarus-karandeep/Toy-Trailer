@@ -5,7 +5,8 @@ import {
   SINK_PACKAGE_OPTIONS,
   BATHROOM_PACKAGE_OPTIONS,
   WINCH_OPTIONS,
-  GENERATOR_BOX_OPTIONS
+  GENERATOR_BOX_OPTIONS,
+  AWNING_OPTIONS
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
@@ -31,10 +32,10 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     frontStyle,
     length,
     cabinets,
-    viewMode, setViewMode
+    viewMode, setViewMode,
+    waterPackage, setWaterPackage
   } = useConfigurator()
 
-  const [waterPackage, setWaterPackage] = useState(null)
   const [largeWaterOpen, setLargeWaterOpen] = useState(true)
 
   const [sinkPackageOpen, setSinkPackageOpen] = useState(true)
@@ -53,7 +54,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     const maxAwning = parseInt(length);
     const currentAwning = parseInt(awningLength);
     if (currentAwning > maxAwning) {
-      const validOptions = [8, 10, 12, 14, 16, 18, 20, 22].filter(v => v <= maxAwning);
+      const validOptions = [8, 10, 12, 14, 16, 18, 20, 22, 24].filter(v => v <= maxAwning);
       if (validOptions.length > 0) {
         const newLen = `${validOptions[validOptions.length - 1]}ft`;
         setAwningLength(newLen);
@@ -97,18 +98,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     setBathroom(bathroom === id ? null : id)
   }
 
-  const awningLengthOptions = [
-    { id: '8ft', label: '8ft' },
-    { id: '10ft', label: '10ft' },
-    { id: '12ft', label: '12ft' },
-    { id: '14ft', label: '14ft' },
-    { id: '16ft', label: '16ft' },
-    { id: '18ft', label: '18ft' },
-    { id: '20ft', label: '20ft' },
-    { id: '22ft', label: '22ft' },
-  ].filter(opt => parseInt(opt.id) <= parseInt(length || '22'))
-  const awningBadgeMap = {
-    '20ft': '+$203 - Added Battery'
+  const awningLengthOptions = AWNING_OPTIONS.filter(opt => parseInt(opt.id) <= parseInt(length || '24'))
+
+  const getAwningBadge = (len) => {
+    const opt = AWNING_OPTIONS.find(o => o.id === len)
+    if (opt && opt.price > 0) return `+$${opt.price.toLocaleString()}`
+    return null
   }
 
   return (
@@ -120,7 +115,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               <div key={opt.id} className="w-full">
                 <OptionPill
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isLocked={opt.locked}
                   isSelected={waterPackage === opt.id}
                   hasSettings={opt.id === 'large'}
@@ -183,7 +178,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               <div key={opt.id} className="w-full">
                 <OptionPill
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={sinkPackage === opt.id}
                   hasSettings
                   onClick={() => setSinkPackage(sinkPackage === opt.id ? null : opt.id)}
@@ -247,7 +242,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               <DetailedOptionCard
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isSelected={bathroom === opt.id}
                 onClick={() => handleBathroom(opt.id)}
                 includedItems={
@@ -310,7 +305,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                   setAwningLength(val)
                   setAwningRaw([val])
                 }}
-                badge={awningBadgeMap[awningLength]}
+                badge={getAwningBadge(awningLength)}
               />
             </div>
           )}
@@ -328,7 +323,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isSelected={winch === opt.id}
                 onClick={() => setWinch(winch === opt.id ? null : opt.id)}
               />
@@ -349,7 +344,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={generatorBox === opt.id}
                   isLocked={frontStyle !== 'flatfront'}
                   onClick={() => {

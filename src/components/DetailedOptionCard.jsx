@@ -4,6 +4,7 @@ import OptionPill from './OptionPill';
 export default function DetailedOptionCard({
   label,
   price,
+  badge,
   isSelected,
   onClick,
   includedItems = [],
@@ -18,6 +19,7 @@ export default function DetailedOptionCard({
         <OptionPill
           label={label}
           price={price}
+          badge={badge}
           isSelected={isSelected}
           onClick={onClick}
           packageBadge={packageBadge}
@@ -52,6 +54,7 @@ export default function DetailedOptionCard({
     <OptionPill
       label={label}
       price={price}
+      badge={badge}
       isSelected={isSelected}
       onClick={onClick}
       packageBadge={packageBadge}

@@ -13,6 +13,7 @@ import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import ToggleSwitch from '../../components/ToggleSwitch'
 import DotSlider from '../../components/DotSlider'
+import { getInteriorHeightPrice, getBaseTrailerPrice } from '../../hooks/usePricing'
 
 export default function SizeCapacityPanel({ activeSectionTitle }) {
   const {
@@ -38,7 +39,21 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
   const selectedHeight = INTERIOR_HEIGHT_OPTIONS[heightIndex] ?? INTERIOR_HEIGHT_OPTIONS[0]
 
   const lengthFt = parseInt(length, 10)
-  const needsSuperDutyRamp = heightIndex >= 2 // 8'0" or above
+  
+  const lengthPrice = getBaseTrailerPrice(width, length);
+  const lengthBadge = lengthPrice > 0 ? `+$${lengthPrice.toLocaleString()}` : null;
+
+  const heightPrice = getInteriorHeightPrice(interiorHeight, length);
+  const formattedPrice = heightPrice > 0 ? `+$${heightPrice.toLocaleString()}` : '';
+
+  let interiorHeightBadge = null;
+  if (heightIndex >= 3) {
+    interiorHeightBadge = `${formattedPrice} · Ramp + Winch Required`;
+  } else if (heightIndex >= 2) {
+    interiorHeightBadge = `${formattedPrice} · Super Duty Ramp Required`;
+  } else if (heightPrice > 0) {
+    interiorHeightBadge = formattedPrice;
+  }
 
 
   return (
@@ -51,7 +66,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isSelected={width === opt.id}
                 isLocked={opt.locked}
                 onClick={() => setWidth(opt.id)}
@@ -77,7 +92,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
       options={LENGTH_OPTIONS}
       value={length}
       onChange={setLength}
-      badge={selectedLength.badge || null}
+      badge={lengthBadge}
     />
   </OptionSection>
 )}
@@ -118,7 +133,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
-                    price={opt.price}
+                    price={opt.price} badge={opt.badge}
                     isStandard={opt.isStandard}
                     isSelected={axleCount === opt.id}
                     onClick={() => setAxleCount(opt.id)}
@@ -181,7 +196,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
-                    price={opt.price}
+                    price={opt.price} badge={opt.badge}
                     isStandard={opt.isStandard}
                     isSelected={axleCapacity === opt.id}
                     onClick={() => setAxleCapacity(opt.id)}
@@ -203,7 +218,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
             options={INTERIOR_HEIGHT_OPTIONS}
             value={interiorHeight}
             onChange={setInteriorHeight}
-            badge={needsSuperDutyRamp ? '+$1,520 · Super Duty Ramp Required' : null}
+            badge={interiorHeightBadge}
           />
         </OptionSection>
       )}
@@ -212,14 +227,14 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
       {show('SPREAD AXLE W/ CORVETTE FENDERS') && (
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="SPREAD AXLE W/ CORVETTE FENDERS">
-          <p className="text-gray-400 text-xs tracking-wider -mt-4">
+          <p className="text-gray-400 text-xs tracking-wider -mt-4 mb-4">
             Auto Applies Torsion
           </p>
           <ToggleSwitch
             label="Wider stance, Corvette-style fenders"
             checked={spreadAxle}
             onChange={setSpreadAxle}
-            disabled={axleCount === 'triple'}
+            price={axleCount === 'triple' ? 505 : 338}
           />
         </OptionSection>
         </div>

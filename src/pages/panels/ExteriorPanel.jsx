@@ -65,7 +65,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
           <OptionPill
             key={opt.id}
             label={opt.label}
-            price={opt.price}
+            price={opt.price} badge={opt.badge}
             isStandard={opt.isStandard}
             isSelected={exteriorFinish === opt.id}
             isLocked={!!opt.disabled}
@@ -169,7 +169,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isStandard={opt.isStandard}
                 isSelected={exteriorAccessories === opt.id}
                 onClick={() => setExteriorAccessories(opt.id)}
@@ -197,7 +197,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isStandard={opt.isStandard}
                 isSelected={frontStyle === opt.id}
                 isLocked={width === '8.5ftgn'}
@@ -224,7 +224,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             <OptionPill
               key={opt.id}
               label={opt.label}
-              price={opt.price}
+              price={opt.price} badge={opt.badge}
               isStandard={opt.isStandard}
               isSelected={exteriorBuild === opt.id}
               onClick={() => setExteriorBuild(exteriorBuild === opt.id ? null : opt.id)}
@@ -251,7 +251,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             <OptionPill
               key={opt.id}
               label={opt.label}
-              price={opt.price}
+              price={opt.price} badge={opt.badge}
               isStandard={opt.isStandard}
               isSelected={roofBuild === opt.id}
               onClick={() => setRoofBuild(roofBuild === opt.id ? null : opt.id)}
@@ -275,7 +275,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             <OptionPill
               key={opt.id}
               label={opt.label}
-              price={opt.price}
+              price={opt.price} badge={opt.badge}
               isStandard={opt.isStandard}
               isSelected={protectionType === opt.id}
               isLocked={exteriorFinish === 'blackout' && opt.id !== 'atp'}
@@ -293,7 +293,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             <OptionPill
               key={opt.id}
               label={opt.label}
-              price={opt.price}
+              price={opt.price} badge={opt.badge}
               isStandard={opt.isStandard}
               isSelected={protectionSize === opt.id}
               onClick={() => setProtectionSize(protectionSize === opt.id ? null : opt.id)}
@@ -318,7 +318,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             <OptionPill
               key={opt.id}
               label={opt.label}
-              price={opt.price}
+              price={opt.price} badge={opt.badge}
               isStandard={opt.isStandard}
               isSelected={frontProtection === opt.id}
               onClick={() => setFrontProtection(opt.id)}
@@ -342,7 +342,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
           <OptionPill
             key={opt.id}
             label={opt.locked ? `${opt.label} · 🔒` : opt.label}
-            price={opt.price}
+            price={opt.price} badge={opt.badge}
             isStandard={opt.isStandard}
             isSelected={lugType === opt.id}
             onClick={() => setLugType(opt.id)}
@@ -361,7 +361,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
           <OptionPill
             key={opt.id}
             label={opt.label}
-            price={opt.price}
+            price={opt.price} badge={opt.badge}
             isStandard={opt.isStandard}
             isSelected={tireSize === opt.id}
             onClick={() => setTireSize(opt.id)}
@@ -380,7 +380,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
           <OptionPill
             key={opt.id}
             label={opt.label}
-            price={opt.price}
+            price={opt.price} badge={opt.badge}
             isStandard={opt.isStandard}
             isSelected={wheelType === opt.id}
             onClick={() => setWheelType(opt.id)}

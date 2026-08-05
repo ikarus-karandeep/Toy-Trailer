@@ -1,13 +1,31 @@
-export default function ToggleSwitch({ label, checked, onChange, disabled }) {
+export default function ToggleSwitch({ label, subtext, checked, onChange, disabled, price, badge }) {
   return (
     <div 
       className={`flex items-center justify-between bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-3 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
       onClick={() => !disabled && onChange(!checked)}
     >
-      <span className="text-white text-sm font-medium tracking-widest">
-        {label}
-      </span>
-      <button
+      <div className="flex flex-col">
+        <span className="text-white text-sm font-medium tracking-widest">
+          {label}
+        </span>
+        {subtext && (
+          <span className="text-gray-400 text-xs mt-0.5 tracking-wide">
+            {subtext}
+          </span>
+        )}
+      </div>
+      <div className="flex items-center gap-3">
+        {(price != null) && (
+          <span className="text-gray-300 text-xs font-medium bg-[#1a1a1a] border border-[#3a3a3a] px-2 py-0.5 rounded-full">
+            +${price}
+          </span>
+        )}
+        {badge && (
+          <span className="text-[#3a8c5c] text-[10px] font-bold tracking-widest uppercase bg-[#3a8c5c]/20 px-2 py-0.5 rounded-full whitespace-nowrap">
+            {badge}
+          </span>
+        )}
+        <button
         type="button"
         role="switch"
         aria-checked={checked}
@@ -35,6 +53,7 @@ export default function ToggleSwitch({ label, checked, onChange, disabled }) {
   )}
 </span>
       </button>
+      </div>
     </div>
   )
 }

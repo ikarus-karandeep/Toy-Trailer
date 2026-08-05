@@ -13,8 +13,9 @@ import {
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
   BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
-  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS, ESCAPE_DOOR_SIZE_OPTIONS
+  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, SINK_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS, ESCAPE_DOOR_SIZE_OPTIONS, AWNING_OPTIONS
 } from '../constants/configData'
+import { getBaseTrailerPrice, getInteriorHeightPrice } from '../hooks/usePricing'
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
 const VENTILATION_OPTIONS = PASSIVE_VENTILATION_OPTIONS;
@@ -75,7 +76,7 @@ export default function SummaryPanel() {
       width, length, interiorHeight, axleAngled, axleAtp, axleRating, axleSuspension, axleCapacity,
       electrical, battery, lights, toggleLight, ventilation, climateControl,
       rampType, atpRamp, rearDoor, tieDowns, toggleTieDown, jacks, toggleJack,
-      waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning,
+      waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning, sinkPackage,
       exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire, setSpareTire,
       floor, walls, ceiling, cabinets, toggleCabinet, toolBox, stairs, setStairs,
       angledLights, setAngledLights, vNoseETrack, setVNoseETrack, batteryBox, setBatteryBox,
@@ -88,12 +89,31 @@ export default function SummaryPanel() {
 
     if (activeTab === 'TRAILER BUILD') {
       const items = []
-      const w = find(WIDTH_OPTIONS, width); if (w) items.push({ label: `WIDTH: ${w.label}`, price: w.price })
-      const l = find(LENGTH_OPTIONS, length); if (l) items.push({ label: `LENGTH: ${l.label}`, price: l.price })
-      const h = find(INTERIOR_HEIGHT_OPTIONS, interiorHeight); if (h && !h.isStandard) items.push({ label: `HEIGHT: ${h.label}`, price: h.price })
+      const w = find(WIDTH_OPTIONS, width);
+      const l = find(LENGTH_OPTIONS, length);
+      if (w && l) {
+        const wFormatted = w.label.replace('FT', '').replace(' GN', '');
+        const lFormatted = l.label.replace("'", '');
+        const comboLabel = w.id === '8.5ftgn' 
+          ? `${wFormatted} x ${lFormatted} ft GN`
+          : `${wFormatted} x ${lFormatted} ft`;
+        items.push({ label: comboLabel, price: getBaseTrailerPrice(width, length) });
+      }
+      const h = find(INTERIOR_HEIGHT_OPTIONS, interiorHeight); 
+      if (h && !h.isStandard) {
+        items.push({ label: `HEIGHT: ${h.label}`, price: getInteriorHeightPrice(interiorHeight, length) })
+      }
 
       const susp = find(AXLE_SUSPENSION_OPTIONS, axleSuspension); if (susp && !susp.isStandard) items.push({ label: `SUSPENSION: ${susp.label}`, price: susp.price })
       const cap = find(AXLE_CAPACITY_OPTIONS, axleCapacity); if (cap && !cap.isStandard) items.push({ label: `CAPACITY: ${cap.label}`, price: cap.price })
+      
+      if (ctx.spreadAxle) {
+        if (ctx.axleCount === 'triple') {
+          items.push({ label: 'SPREAD AXLE — TRIPLE', price: 505, subtext: 'Extended wheelbase, triple config', onRemove: () => ctx.setSpreadAxle(false) });
+        } else {
+          items.push({ label: 'SPREAD AXLE — TANDEM', price: 338, subtext: 'Extended wheelbase — wider stance, better stability, premium look', onRemove: () => ctx.setSpreadAxle(false) });
+        }
+      }
       return items
     }
     if (activeTab === 'CONFIGURATIONS') {
@@ -104,7 +124,7 @@ export default function SummaryPanel() {
       if (ctx.acPrep) items.push({ label: 'WIRE & BRACE FOR A/C (PREP ONLY)', price: 70, onRemove: () => ctx.setAcPrep(false) })
       const cc = find(CLIMATE_OPTIONS, climateControl); if (cc && cc.id !== 'none') items.push({ label: cc.label, price: cc.price })
       const r = find(RAMP_OPTIONS, rampType); if (r) items.push({ label: r.label, price: r.price })
-      if (atpRamp) { items.push({ label: 'ATP ON RAMP', price: 400 }) }
+      if (atpRamp) { items.push({ label: 'ATP/RTP RAMP & FLAP', price: 270, subtext: 'Matching diamond plate on the ramp surface', onRemove: () => ctx.setAtpRamp(false) }) }
       
       if (driverSideDoor === '48x78') {
         items.push({ label: '48" X 78" SIDE DOOR UPGRADE', price: 120, onRemove: () => ctx.setDriverSideDoor('36x78') });
@@ -175,7 +195,17 @@ export default function SummaryPanel() {
     }
     if (activeTab === 'ADD-ONS') {
       const items = []
+      
+      if (ctx.awning && ctx.awning.length > 0) {
+        const awningLen = ctx.awning[0];
+        const aOpt = find(AWNING_OPTIONS, awningLen);
+        if (aOpt) {
+          items.push({ label: `ELECTRIC AWNING ${aOpt.label}`, price: aOpt.price || 0, subtext: 'Solera electric retractable awning', onRemove: () => ctx.setAwningRaw([]) });
+        }
+      }
+
       const wp = find(WATER_PACKAGE_OPTIONS, waterPackage); if (wp && wp.id !== 'none') items.push({ label: wp.label, price: wp.price })
+      if (sinkPackage) { const sp = find(SINK_PACKAGE_OPTIONS, sinkPackage); if (sp) items.push({ label: sp.label, price: sp.price, onRemove: () => ctx.setSinkPackage(null) }) }
       if (bathroom) { const o = find(BATHROOM_OPTIONS, bathroom); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setBathroom(null) }) }
       if (stairs) { items.push({ label: 'STAIRS', price: 150, onRemove: () => setStairs(false) }) }
 
@@ -213,7 +243,7 @@ export default function SummaryPanel() {
         items.push({ label: ef.label, price });
       }
       const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
-      const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && ea.id !== 'none') items.push({ label: ea.label, price: ea.price })
+      const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && ea.id !== 'none') items.push({ label: ea.label, price: ea.price, subtext: ea.subtext })
       const fs = find(FRONT_STYLE_OPTIONS, frontStyle); if (fs && !fs.isStandard) items.push({ label: fs.label, price: fs.price })
       const eb = find(EXTERIOR_BUILD_OPTIONS, exteriorBuild); if (eb && !eb.isStandard) items.push({ label: eb.label, price: eb.price })
       const rb = find(ROOF_BUILD_OPTIONS, roofBuild); 
@@ -250,7 +280,14 @@ export default function SummaryPanel() {
           onRemove: () => setSpareTire(false) 
         });
       }
-      const fl = find(FLOOR_OPTIONS, floor); if (fl && !fl.isStandard) items.push({ label: fl.label, price: fl.price })
+      const fl = find(FLOOR_OPTIONS, floor); 
+      if (fl && !fl.isStandard) {
+        let flPrice = fl.price;
+        if (floor === 'double34') {
+          flPrice *= (parseInt(length) || 0);
+        }
+        items.push({ label: fl.label, price: flPrice, subtext: fl.subtext })
+      }
       if (ctx.floorOverlay) {
         const fo = find(FLOOR_OPTIONS, ctx.floorOverlay);
         if (fo && !fo.isStandard) {
@@ -259,12 +296,26 @@ export default function SummaryPanel() {
           items.push({ label: `FLOOR OVERLAY: ${fo.label}`, price: foPrice, onRemove: () => ctx.setFloorOverlay(null) });
         }
       }
-      const wa = find(WALL_OPTIONS, walls); if (wa && !wa.isStandard) items.push({ label: wa.label, price: wa.price })
+      const wa = find(WALL_OPTIONS, walls); 
+      if (wa && !wa.isStandard) {
+        let waPrice = wa.price;
+        if (['34plywood', 'white_metal_walls'].includes(walls)) {
+          waPrice *= (parseInt(length) || 0);
+        }
+        items.push({ label: wa.label, price: waPrice, subtext: wa.subtext, packageBadge: wa.packageBadge })
+      }
       if (ctx.wallInsulation) {
         const wi = find(WALL_OPTIONS, ctx.wallInsulation);
         if (wi) items.push({ label: `WALL INSULATION: ${wi.label}`, price: (wi.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setWallInsulation(null) });
       }
-      const ce = find(CEILING_OPTIONS, ceiling); if (ce && !ce.isStandard) items.push({ label: ce.label, price: ce.price })
+      const ce = find(CEILING_OPTIONS, ceiling); 
+      if (ce && !ce.isStandard) {
+        let cePrice = ce.price;
+        if (['white_metal_ceiling'].includes(ceiling)) {
+          cePrice *= (parseInt(length) || 0);
+        }
+        items.push({ label: ce.label, price: cePrice, subtext: ce.subtext })
+      }
       if (ctx.ceilingInsulation) {
         const ci = find(CEILING_OPTIONS, ctx.ceilingInsulation);
         if (ci) items.push({ label: `CEILING INSULATION: ${ci.label}`, price: (ci.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setCeilingInsulation(null) });

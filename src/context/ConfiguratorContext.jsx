@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useMemo, useCallback,useEffect } from 'react'
 import { usePricing } from '../hooks/usePricing'
+import { INTERIOR_HEIGHT_OPTIONS } from '../constants/configData'
 
 const makeToggle = (setter) => (id) =>
   setter(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
@@ -30,12 +31,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     if (spreadAxle) {
       setAxleSuspension('torsion');
     }
-  }, [spreadAxle])  // Automatically turn off spread axle when 'triple' axle count is selected
-  useEffect(() => {
-    if (axleCount === 'triple') {
-      setSpreadAxle(false);
-    }
-  }, [axleCount])
+  }, [spreadAxle])
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
   const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)
   // axleRating is DERIVED from axleCount + axleSuspension + axleCapacity
@@ -125,6 +121,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [rampType])
 
+
+
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
   const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])
   const [dRings, setDRings] = useState(ic.dRings ?? {
@@ -169,6 +167,17 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Cabinet Addons
   const [winchSystem, setWinchSystem] = useState(ic.winchSystem ?? false)
+
+  // Height auto assignments
+  useEffect(() => {
+    const heightIndex = INTERIOR_HEIGHT_OPTIONS.findIndex(o => o.id === interiorHeight);
+    if (heightIndex >= 2) {
+      setRampType('superduty');
+    }
+    if (heightIndex >= 3) {
+      setWinchSystem(true);
+    }
+  }, [interiorHeight, setRampType, setWinchSystem]);
 
   // System/Exterior Addons (from Addons node graph)
   const [extendedTripleTongue, setExtendedTripleTongue] = useState(ic.extendedTripleTongue ?? false)
@@ -228,10 +237,10 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
 
   const pricing = usePricing({
-    width, length, interiorHeight, axleAtp, axleCount, axleSuspension, axleCapacity,
+    width, length, interiorHeight, axleAtp, axleCount, axleSuspension, axleCapacity, spreadAxle,
     electrical, battery, ventilation, climateControl, rampType, atpRamp,
     sideDoorsType, lights, interiorLights, exteriorLights, receptacles, tieDowns, jacks,
-    waterPackage, bathroom, stairs, angledLights, vNoseETrack, batteryBox,
+    waterPackage, bathroom, stairs, angledLights, vNoseETrack, batteryBox, sinkPackage,
     escapeDoor, generatorBox, winchSystem, extendedTripleTongue, radioPackageSpeaker,
     rearSpoiler, ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,
     exteriorFinish, exteriorAccessories, frontStyle, exteriorBuild, roofBuild,

@@ -3,6 +3,7 @@ import { useState } from 'react';
 export default function OptionPill({
   label,
   price,
+  badge,
   originalPrice,
   isStandard = false,
   isSelected = false,
@@ -94,13 +95,13 @@ export default function OptionPill({
             STANDARD
           </span>
         )} */}
-        {!isStandard && !isLocked && price != null && quantity === undefined && (
+        {!isStandard && !isLocked && (price != null || badge != null) && quantity === undefined && (
           <span className={`flex-shrink-0 font-normal text-[12px] lg:text-[14px] ${
              isSelected
               ? 'text-[#DA634B]'
               : ''
           }`}>
-            · {formatPrice(price)}
+            · {badge ? badge : formatPrice(price)}
           </span>
         )}
         {originalPrice != null && (

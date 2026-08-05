@@ -81,7 +81,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
               <div key={opt.id} className="w-full">
                 <OptionPill
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   originalPrice={opt.originalPrice}
                   isSelected={pitPack}
                   hasSettings
@@ -176,7 +176,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={floor === opt.id}
                   onClick={() => setFloor(opt.id)}
                   packageBadge={getBadge(opt.id)}
@@ -192,7 +192,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={floorOverlay === opt.id}
                   onClick={() => setFloorOverlay(opt.id === floorOverlay ? null : opt.id)}
                 />
@@ -208,7 +208,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={floorInsulation === opt.id}
                   onClick={() => setFloorInsulation(opt.id === floorInsulation ? null : opt.id)}
                 />
@@ -237,7 +237,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={walls === opt.id}
                   onClick={() => setWalls(opt.id)}
                   packageBadge={getBadge(opt.id)}
@@ -254,7 +254,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={wallInsulation === opt.id}
                   onClick={() => setWallInsulation(opt.id === wallInsulation ? null : opt.id)}
                 />
@@ -273,7 +273,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={ceiling === opt.id}
                   onClick={() => setCeiling(opt.id)}
                   packageBadge={getBadge(opt.id)}
@@ -290,7 +290,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={ceilingInsulation === opt.id}
                   onClick={() => setCeilingInsulation(opt.id === ceilingInsulation ? null : opt.id)}
                 />
@@ -420,7 +420,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={cabinets.includes(opt.id)}
                   onClick={() => toggleCabinet(opt.id)}
                   isMulti={true}

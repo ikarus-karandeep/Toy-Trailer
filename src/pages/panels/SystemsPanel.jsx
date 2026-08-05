@@ -73,7 +73,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 <DetailedOptionCard
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={electrical === opt.id}
                   onClick={() => {
                     const prevElectrical = electrical;
@@ -140,7 +140,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
-                    price={opt.price}
+                    price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     quantity={qty > 0 ? qty : undefined}
                     onQuantityChange={(newQty) => updateQuantity(setReceptacles, opt.id, newQty)}
@@ -164,7 +164,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={offGridPower.includes(opt.id)}
                   hasSettings
                   onClick={() => toggleArrayItem(setOffGridPower, opt.id)}
@@ -192,7 +192,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                     <OptionPill
                       key={opt.id}
                       label={opt.label}
-                      price={opt.price}
+                      price={opt.price} badge={opt.badge}
                       isSelected={ledRope}
                       onClick={() => setLedRope(!ledRope)}
                     />
@@ -203,7 +203,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
-                    price={opt.price}
+                    price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     quantity={qty > 0 ? qty : undefined}
                     onQuantityChange={(newQty) => updateQuantity(setInteriorLights, opt.id, newQty)}
@@ -224,7 +224,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   badge={opt.badge}
                   subtext={opt.subtext}
                   isSelected={exteriorLights.includes(opt.id)}
@@ -245,7 +245,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
               <OptionPill
                 key={opt.id}
                 label={opt.label}
-                price={opt.price}
+                price={opt.price} badge={opt.badge}
                 isSelected={climateControl === opt.id}
                 onClick={() => setClimateControl(opt.id)}
                 packageBadge={getBadge(opt.id)}
@@ -262,7 +262,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={ventilation === opt.id}
                   onClick={() => {
                     const newValue = opt.id === ventilation ? null : opt.id;
@@ -300,7 +300,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={climateControl === opt.id}
                   onClick={() => setClimateControl(opt.id === climateControl ? 'none' : opt.id)}
                   packageBadge={getBadge(opt.id)}
@@ -328,7 +328,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price}
+                  price={opt.price} badge={opt.badge}
                   isSelected={climateControl === opt.id}
                   onClick={() => setClimateControl(opt.id === climateControl ? 'none' : opt.id)}
                   packageBadge={getBadge(opt.id)}

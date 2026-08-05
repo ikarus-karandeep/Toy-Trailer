@@ -12,8 +12,8 @@ import {
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
   BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
-  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS,
-  ESCAPE_DOOR_SIZE_OPTIONS
+  SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, SINK_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS,
+  ESCAPE_DOOR_SIZE_OPTIONS, AWNING_OPTIONS
 } from '../constants/configData';
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
@@ -35,19 +35,51 @@ const findPrice = (opts, id) => {
   return o && typeof o.price === 'number' ? o.price : 0;
 };
 
+export const getBaseTrailerPrice = (width, length) => {
+  if (width === '8.5ft') {
+    switch (length) {
+      case '18': return 8465;
+      case '20': return 8675;
+      case '22': return 8870;
+      case '24': return 9070;
+      case '26': return 11340;
+      case '28': return 11610;
+      case '30': return 12055;
+      case '32': return 12460;
+      case '34': return 14005;
+      default: return 0;
+    }
+  }
+  return 0;
+};
+
+export const getInteriorHeightPrice = (heightId, lengthStr) => {
+  const h = INTERIOR_HEIGHT_OPTIONS.find(o => o.id === heightId);
+  if (!h || !h.rate) return 0;
+  const len = parseInt(lengthStr) || 0;
+  return h.rate * len;
+};
+
 export function usePricing(ctx) {
   return useMemo(() => {
-    let trailerBuild = 18000; // Base price
+    let trailerBuild = 0; // Base price
     let configurations = 0;
     let appearance = 0;
 
     // TRAILER BUILD
-    trailerBuild += findPrice(WIDTH_OPTIONS, ctx.width);
-    trailerBuild += findPrice(LENGTH_OPTIONS, ctx.length);
-    trailerBuild += findPrice(INTERIOR_HEIGHT_OPTIONS, ctx.interiorHeight);
+    trailerBuild += getBaseTrailerPrice(ctx.width, ctx.length);
+    trailerBuild += getInteriorHeightPrice(ctx.interiorHeight, ctx.length);
 
     trailerBuild += findPrice(AXLE_SUSPENSION_OPTIONS, ctx.axleSuspension);
     trailerBuild += findPrice(AXLE_CAPACITY_OPTIONS, ctx.axleCapacity);
+
+    if (ctx.spreadAxle) {
+      if (ctx.axleCount === 'triple') {
+        trailerBuild += 505;
+      } else {
+        trailerBuild += 338;
+      }
+    }
 
     // CONFIGURATIONS (Systems & Loading & Add-ons)
     configurations += findPrice(ELECTRICAL_OPTIONS, ctx.electrical);
@@ -117,11 +149,18 @@ export function usePricing(ctx) {
       ctx.jacks.forEach(id => { configurations += findPrice(JACKS_OPTIONS, id); });
     }
 
+
     // Add-ons
+    if (ctx.awning && ctx.awning.length > 0) {
+      const awningLen = ctx.awning[0];
+      configurations += findPrice(AWNING_OPTIONS, awningLen);
+    }
     configurations += findPrice(WATER_PACKAGE_OPTIONS, ctx.waterPackage);
+    configurations += findPrice(SINK_PACKAGE_OPTIONS, ctx.sinkPackage);
     configurations += findPrice(BATHROOM_OPTIONS, ctx.bathroom);
     if (ctx.stairs) configurations += 150;
     if (ctx.batteryBox) configurations += 120;
+    if (ctx.atpRamp) configurations += 270;
     configurations += findPrice(ESCAPE_DOOR_SIZE_OPTIONS, ctx.escapeDoor);
     
     const isConcessionPriced = ctx.concessionDoor && ctx.concessionDoor !== 'none'
@@ -166,7 +205,11 @@ export function usePricing(ctx) {
         appearance += 160;
       }
     }
-    appearance += findPrice(FLOOR_OPTIONS, ctx.floor);
+    let baseFloorPrice = findPrice(FLOOR_OPTIONS, ctx.floor);
+    if (ctx.floor === 'double34') {
+      baseFloorPrice *= (parseInt(ctx.length) || 0);
+    }
+    appearance += baseFloorPrice;
     if (ctx.floorOverlay) {
       let floorOverlayPrice = findPrice(FLOOR_OPTIONS, ctx.floorOverlay);
       if (['atp', 'rtp', 'coin'].includes(ctx.floorOverlay)) {
@@ -174,12 +217,20 @@ export function usePricing(ctx) {
       }
       appearance += floorOverlayPrice;
     }
-    appearance += findPrice(WALL_OPTIONS, ctx.walls);
+    let baseWallPrice = findPrice(WALL_OPTIONS, ctx.walls);
+    if (['34plywood', 'white_metal_walls'].includes(ctx.walls)) {
+      baseWallPrice *= (parseInt(ctx.length) || 0);
+    }
+    appearance += baseWallPrice;
     if (ctx.wallInsulation) {
       let wallInsulationPrice = findPrice(WALL_OPTIONS, ctx.wallInsulation);
       appearance += wallInsulationPrice * (parseInt(ctx.length) || 0);
     }
-    appearance += findPrice(CEILING_OPTIONS, ctx.ceiling);
+    let baseCeilingPrice = findPrice(CEILING_OPTIONS, ctx.ceiling);
+    if (['white_metal_ceiling'].includes(ctx.ceiling)) {
+      baseCeilingPrice *= (parseInt(ctx.length) || 0);
+    }
+    appearance += baseCeilingPrice;
     if (ctx.ceilingInsulation) {
       let ceilingInsulationPrice = findPrice(CEILING_OPTIONS, ctx.ceilingInsulation);
       appearance += ceilingInsulationPrice * (parseInt(ctx.length) || 0);
@@ -211,10 +262,10 @@ export function usePricing(ctx) {
       totalPrice
     };
   }, [
-    ctx.width, ctx.length, ctx.interiorHeight, ctx.axleAtp, ctx.axleCount, ctx.axleSuspension, ctx.axleCapacity,
+    ctx.width, ctx.length, ctx.interiorHeight, ctx.axleAtp, ctx.axleCount, ctx.axleSuspension, ctx.axleCapacity, ctx.spreadAxle,
     ctx.electrical, ctx.battery, ctx.ventilation, ctx.climateControl, ctx.acPrep, ctx.rampType, ctx.atpRamp,
     ctx.sideDoorsType, ctx.lights, ctx.interiorLights, ctx.exteriorLights, ctx.receptacles, ctx.tieDowns, ctx.jacks,
-    ctx.waterPackage, ctx.bathroom, ctx.stairs, ctx.angledLights, ctx.vNoseETrack, ctx.batteryBox,
+    ctx.waterPackage, ctx.bathroom, ctx.stairs, ctx.angledLights, ctx.vNoseETrack, ctx.batteryBox, ctx.sinkPackage, ctx.awning,
     ctx.escapeDoor, ctx.generatorBox, ctx.winchSystem, ctx.extendedTripleTongue, ctx.radioPackageSpeaker,
     ctx.rearSpoiler, ctx.ladderRacks, ctx.sidewallVents, ctx.recessedTireBox, ctx.interiorTireMount,
     ctx.exteriorFinish, ctx.exteriorAccessories, ctx.frontStyle, ctx.exteriorBuild, ctx.roofBuild,
