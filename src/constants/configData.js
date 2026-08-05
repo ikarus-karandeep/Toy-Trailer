@@ -50,7 +50,7 @@ export const AXLE_COUNT_OPTIONS = [
 ];
 
 export const AXLE_SUSPENSION_OPTIONS = [
-  { id: 'dropspring', label: 'DROP SPRING', isStandard: false, price: null },
+  { id: 'dropspring', label: 'LEAF SPRING', isStandard: false, price: null },
   { id: 'torsion',    label: 'TORSION',     isStandard: true },
 ];
 
@@ -81,7 +81,7 @@ export const AXLE_OPTIONS = [
 export const AXLE_RATING_OPTIONS = [
   { id: '5200leafspring', label: '5200 lb Leaf Spring', isStandard: true },
   { id: '5200torsion',    label: '5200 lb Torsion',     price: 9999 },
-  { id: '7000dropspring', label: '7000 lb Drop Spring', price: 9999 },
+  { id: '7000dropspring', label: '7000 lb Leaf Spring', price: 9999 },
   { id: '7000torsion',    label: '7000 lb Torsion',     price: 9999 },
   { id: '8000torsion16k', label: '8000 lb Torsion 16K', price: 9999 },
   { id: '10000lbtandem',  label: '10,000 lb Tandem',   price: 9999 },

@@ -1099,18 +1099,6 @@
       }
     },
     "1": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
       "material_name": "Standard Silver_Rim",
       "base_color": "#C1C1C1",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
@@ -2461,15 +2449,6 @@
       }
     },
     "6": {
-      "material_name": null,
-      "base_color": null,
-      "roughness": null,
-      "metalness": null,
-      "normal": false,
-      "alpha": null,
-      "emission": null
-    },
-    "7": {
       "material_name": "Rubber_Flooring",
       "base_color": "//..\\Textures\\Rubber Flooring_Basecolor.jpg",
       "roughness": "//..\\Textures\\Rubber Flooring_Roughness.jpg",
@@ -2481,7 +2460,7 @@
         "strength": 0.0
       }
     },
-    "8": {
+    "7": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
@@ -3838,7 +3817,7 @@
       }
     }
   },
-  "2x 7000 lb Drop Spring": {
+  "2x 7000 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -3994,7 +3973,7 @@
       }
     }
   },
-  "3x 7000 lb Drop Spring": {
+  "3x 7000 lb Leaf Spring": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -4036,7 +4015,7 @@
   },
   "Left Floor E-Track": {
     "0": {
-      "material_name": "ETrack Material",
+      "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
       "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
       "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
@@ -4050,7 +4029,7 @@
   },
   "Left Wall E-Track": {
     "0": {
-      "material_name": "ETrack Material",
+      "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
       "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
       "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
@@ -4064,7 +4043,7 @@
   },
   "Right Floor E-Track": {
     "0": {
-      "material_name": "ETrack Material",
+      "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
       "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
       "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
@@ -4078,7 +4057,7 @@
   },
   "Right Wall E-Track": {
     "0": {
-      "material_name": "ETrack Material",
+      "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
       "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
       "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
@@ -4092,7 +4071,21 @@
   },
   "Wall E-Track Small Section": {
     "0": {
-      "material_name": "ETrack Material",
+      "material_name": "Interior decal",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "V-Nose E-Track": {
+    "0": {
+      "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
       "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
       "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
@@ -4740,7 +4733,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
-        "strength": 10.3
+        "strength": 10.0
       }
     },
     "7": {
@@ -6447,18 +6440,6 @@
   },
   "Electric Jack": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -6470,7 +6451,7 @@
         "strength": 0.0
       }
     },
-    "2": {
+    "1": {
       "material_name": "Wire_Covers",
       "base_color": "//..\\Textures\\Wire_Covers_BaseColor.jpg",
       "roughness": "//..\\Textures\\Wire_Covers_Roughness.jpg",
@@ -6482,144 +6463,6 @@
         "strength": 0.0
       }
     },
-    "3": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
-      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "AC Unit": {
-    "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Rubber_Membranes",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Radio Package Speaker": {
-    "0": {
-      "material_name": "Black_Shell",
-      "base_color": "//..\\Textures\\Blackl_BaseColor.jpg",
-      "roughness": 0.15,
-      "metalness": 0.3,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
-      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Brandy Wine_Shell",
-      "base_color": "//..\\Textures\\Brandy Wine_Shell_BaseColor.jpg",
-      "roughness": 0.15,
-      "metalness": 0.3,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Winch System": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Grainy_Plastic",
-      "base_color": "//..\\Textures\\Grainy_Plastic_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Grainy_Plastic_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Grainy_Plastic_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
     "2": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
@@ -6633,49 +6476,11 @@
       }
     },
     "3": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "Fabric_Strap",
-      "base_color": "//..\\Textures\\Fabric Strap_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Fabric Strap_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Fabric Strap_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "5": {
-      "material_name": "Winch_Wire",
-      "base_color": "//..\\Textures\\Winch_Wire_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Winch_Wire_Roughness.jpg",
-      "metalness": "//..\\Textures\\Winch_Wire_metallic.jpg",
-      "normal": "//..\\Textures\\Winch_Wire_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "V-Nose E Track_to be replaced": {
-    "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#C1C1C1",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6754,56 +6559,6 @@
       "roughness": "//..\\Textures\\Roof_Roughness.png",
       "metalness": "//..\\Textures\\Roof_Metallic.png",
       "normal": "//..\\Textures\\Roof_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Electric Jack(Extended V-Nose)": {
-    "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Wire_Covers",
-      "base_color": "//..\\Textures\\Wire_Covers_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Wire_Covers_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Black Rubber_Membranes",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
-      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6893,12 +6648,224 @@
   },
   "Aluminum Sidewall Vents": {
     "0": {
-      "material_name": "Aluminum Vents Material",
-      "base_color": "//..\\Textures\\Aluminium vents_Base_color.jpg",
-      "roughness": "//..\\Textures\\Aluminium vents_Roughness.jpg",
-      "metalness": "//..\\Textures\\Aluminium vents_Metallic.jpg",
-      "normal": "//..\\Textures\\Aluminium vents_Normal.jpg",
-      "alpha": "//..\\Textures\\Aluminium vents_Metallic.jpg",
+      "material_name": "Interior decal",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Winch System": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Grainy_Plastic",
+      "base_color": "//..\\Textures\\Grainy_Plastic_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Grainy_Plastic_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Grainy_Plastic_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "Winch_Wire",
+      "base_color": "//..\\Textures\\Winch_Wire_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Winch_Wire_Roughness.jpg",
+      "metalness": "//..\\Textures\\Winch_Wire_metallic.jpg",
+      "normal": "//..\\Textures\\Winch_Wire_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Radio Package Speaker": {
+    "0": {
+      "material_name": "Black_Shell",
+      "base_color": "//..\\Textures\\Blackl_BaseColor.jpg",
+      "roughness": 0.15,
+      "metalness": 0.3,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#C1C1C1",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Brandy Wine_Shell",
+      "base_color": "//..\\Textures\\Brandy Wine_Shell_BaseColor.jpg",
+      "roughness": 0.15,
+      "metalness": 0.3,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "AC Unit": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Detailed _Decals",
+      "base_color": "//..\\Textures\\Detailed_Decals_Base_color.jpg",
+      "roughness": "//..\\Textures\\Detailed_Decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Detailed_Decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Detailed_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Detailed_Decals_Base_color.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Electric Jack(Extended V-Nose)": {
+    "0": {
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Wire_Covers",
+      "base_color": "//..\\Textures\\Wire_Covers_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Wire_Covers_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#C1C1C1",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -7007,7 +6974,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
-        "strength": 10.3
+        "strength": 10.0
       }
     }
   },
@@ -7033,7 +7000,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
-        "strength": 10.3
+        "strength": 10.0
       }
     }
   },
@@ -7059,7 +7026,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
-        "strength": 10.3
+        "strength": 10.0
       }
     }
   },
@@ -7073,7 +7040,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#E8C788",
-        "strength": 1.8
+        "strength": 10.0
       }
     }
   },
@@ -7087,7 +7054,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#E8C788",
-        "strength": 1.8
+        "strength": 10.0
       }
     }
   },
@@ -7101,7 +7068,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#E8C788",
-        "strength": 1.8
+        "strength": 10.0
       }
     }
   },
@@ -7115,7 +7082,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#E8C788",
-        "strength": 1.8
+        "strength": 10.0
       }
     }
   },
@@ -7129,7 +7096,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#E8C788",
-        "strength": 1.8
+        "strength": 10.0
       }
     }
   },
@@ -7143,35 +7110,7 @@
       "alpha": 1.0,
       "emission": {
         "color": "#E8C788",
-        "strength": 1.8
-      }
-    }
-  },
-  "Fold Down Stablizer Jacks(Pair)": {
-    "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Fold Down Stablizer Jacks": {
-    "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
+        "strength": 10.0
       }
     }
   },
@@ -7203,23 +7142,39 @@
       }
     },
     "1": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "material_name": "Grainy_Plastic",
+      "base_color": "//..\\Textures\\Grainy_Plastic_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Grainy_Plastic_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Grainy_Plastic_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Fold Down Stablizer Jacks(Pair)": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
       }
-    },
-    "2": {
-      "material_name": "Grainy_Plastic",
-      "base_color": "//..\\Textures\\Grainy_Plastic_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Grainy_Plastic_Roughness.jpg",
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Grainy_Plastic_Normal.jpg",
+    }
+  },
+  "Fold Down Stablizer Jacks": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",

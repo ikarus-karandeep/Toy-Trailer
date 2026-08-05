@@ -11,6 +11,8 @@ import QRModal from './QRModal'
 import ModelReportPanel from './ModelReportPanel'
 import { isAndroidDevice } from '../utils/arPlatform'
 import { generateModelReport } from '../utils/modelReport'
+import { EffectComposer, Bloom, ToneMapping } from '@react-three/postprocessing'
+import { ToneMappingMode } from 'postprocessing'
 // Helper to compute stable bounding box that ignores exterior accessories (like awnings)
 // and exceptionally low meshes (like gooseneck jacks) from ground-level calculations.
 function computeTrailerBounds(modelGroup) {
@@ -607,15 +609,15 @@ function ShadowLightSetup({ modelRef }) {
           everywhere except where the directional light's shadow map projects.
           Positioned at model floor level by the useFrame above. */}
       <mesh
-  ref={floorRef}
-  receiveShadow
-  renderOrder={2}
-  rotation={[-Math.PI / 2, 0, 0]}
-  position={[0, -0.001, 0]}
->
+        ref={floorRef}
+        receiveShadow
+        renderOrder={2}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -0.001, 0]}
+      >
   <planeGeometry args={[80, 80]} />
-  <shadowMaterial transparent opacity={0.45} depthWrite={false} />
-</mesh>
+        <shadowMaterial transparent opacity={0.45} depthWrite={false} />
+      </mesh>
     </>
   )
 }
@@ -1028,9 +1030,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
 
               {/* Ground model loaded from public/models/Ground.glb */}
               {showGround && <GroundModel modelRef={modelGroupRef} />}
-              
-              {/* Soft drop shadow instead of harsh directional shadow */}
-              <DynamicContactShadow modelRef={modelGroupRef} />
+
 
               {showDimensions && (
                 <ModelDimensions groupRef={modelGroupRef} />
@@ -1063,6 +1063,10 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               />
               <CameraLayerSetup />
               <ShaderPrecompiler modelGroupRef={modelGroupRef} />
+              <EffectComposer disableNormalPass alpha={true}>
+                <Bloom luminanceThreshold={5} intensity={0.5} />
+                <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+              </EffectComposer>
             </Canvas>
           </Suspense>
 

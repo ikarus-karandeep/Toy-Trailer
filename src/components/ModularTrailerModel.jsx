@@ -94,7 +94,7 @@ const AXLE_RATING_MESH_MAP = {
     '3500lb-torsion': { '2x': '2X_3500_lb_Torsion', '3x': '3X_3500_lb_Torsion' },
     '6000lb-dropspring': { '2x': '2X_6000_lb_Leaf_Spring', '3x': '3X_6000_lb_Leaf_Spring' },
     '6000lb-torsion': { '2x': '2X_6000_lb_Torsion', '3x': '3X_6000_lb_Torsion' },
-    '7000lb-dropspring': { '2x': '2x_7000_lb_Drop_Spring', '3x': '3x_7000_lb_Drop_Spring' },
+    '7000lb-dropspring': { '2x': '2x_7000_lb_Leaf_Spring', '3x': '3x_7000_lb_Leaf_Spring' },
     '7000lb-torsion': { '2x': '2X_7000_lb_Torsion', '3x': '3X_7000_lb_Torsion' },
 }
 

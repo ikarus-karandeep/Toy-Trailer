@@ -10,7 +10,7 @@ const PACKAGES = [
       'ANGLED RACING LIGHTS', 'BLACKOUT PKG - EXTERIOR',
       'FLOOR + WALL E-TRACK', 'D-RINGS',
       'SPREAD AXLES W/CORVETTE FENDERS',
-      '7000LB DROP SPRING/ TORSION'
+      '7000LB LEAF SPRING/ TORSION'
     ],
     priceRange: '$3,200- $3,600',
     image: '/track-pack.png',

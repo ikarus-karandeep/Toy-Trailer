@@ -39,7 +39,7 @@ export const PACKAGE_INITIAL_CONFIGS = {
     tieDowns: ['drings', 'wall', 'floor'],
     // SPREAD AXLES W/CORVETTE FENDERS
     spreadAxle: false,
-    // 7000LB DROP SPRING / TORSION
+    // 7000LB LEAF SPRING / TORSION
     axleCapacity: '7000lb',
     axleSuspension: 'dropspring',
   },
