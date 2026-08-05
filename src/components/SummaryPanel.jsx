@@ -15,7 +15,7 @@ import {
   BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
   SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, SINK_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS, ESCAPE_DOOR_SIZE_OPTIONS, AWNING_OPTIONS
 } from '../constants/configData'
-import { getBaseTrailerPrice, getInteriorHeightPrice } from '../hooks/usePricing'
+import { getBaseTrailerPrice, getInteriorHeightPrice, getAxleConfigurationPrice } from '../hooks/usePricing'
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
 const VENTILATION_OPTIONS = PASSIVE_VENTILATION_OPTIONS;
@@ -73,7 +73,7 @@ export default function SummaryPanel() {
 
   const getItems = () => {
     const {
-      width, length, interiorHeight, axleAngled, axleAtp, axleRating, axleSuspension, axleCapacity,
+      width, length, interiorHeight, axleAngled, axleAtp, axleRating, axleCount, axleSuspension, axleCapacity,
       electrical, battery, lights, toggleLight, ventilation, climateControl,
       rampType, atpRamp, rearDoor, tieDowns, toggleTieDown, jacks, toggleJack,
       waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning, sinkPackage,
@@ -104,8 +104,16 @@ export default function SummaryPanel() {
         items.push({ label: `HEIGHT: ${h.label}`, price: getInteriorHeightPrice(interiorHeight, length) })
       }
 
-      const susp = find(AXLE_SUSPENSION_OPTIONS, axleSuspension); if (susp && !susp.isStandard) items.push({ label: `SUSPENSION: ${susp.label}`, price: susp.price })
-      const cap = find(AXLE_CAPACITY_OPTIONS, axleCapacity); if (cap && !cap.isStandard) items.push({ label: `CAPACITY: ${cap.label}`, price: cap.price })
+      const susp = find(AXLE_SUSPENSION_OPTIONS, axleSuspension);
+      const cap = find(AXLE_CAPACITY_OPTIONS, axleCapacity); 
+      
+      const combinedAxlePrice = getAxleConfigurationPrice(axleCount, axleSuspension, axleCapacity, length);
+      if (combinedAxlePrice > 0 || (susp && !susp.isStandard) || (cap && !cap.isStandard)) {
+        items.push({ 
+          label: `AXLE: ${axleCount.toUpperCase()} ${cap ? cap.label : ''} ${susp ? susp.label : ''}`, 
+          price: combinedAxlePrice 
+        });
+      }
       
       if (ctx.spreadAxle) {
         if (ctx.axleCount === 'triple') {

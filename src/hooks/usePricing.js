@@ -60,6 +60,37 @@ export const getInteriorHeightPrice = (heightId, lengthStr) => {
   return h.rate * len;
 };
 
+export const getAxleConfigurationPrice = (count, suspension, capacity, lengthStr) => {
+  const len = parseInt(lengthStr) || 0;
+  const isTriple = count === 'triple';
+  const cap = capacity;
+  const susp = suspension;
+
+  if (len >= 18 && len <= 24) {
+    if (!isTriple && cap === '3500lb' && susp === 'dropspring') return 0;
+    if (!isTriple && cap === '3500lb' && susp === 'torsion') return 410;
+    if (!isTriple && (cap === '5200lb' || cap === '6000lb') && susp === 'dropspring') return 875;
+    if (!isTriple && (cap === '5200lb' || cap === '6000lb') && susp === 'torsion') return 1080;
+    if (!isTriple && cap === '7000lb' && susp === 'dropspring') return 1350;
+    if (!isTriple && cap === '7000lb' && susp === 'torsion') return 1755;
+    if (!isTriple && cap === '8000lb' && susp === 'torsion') return 4050;
+
+    if (isTriple && cap === '3500lb' && susp === 'torsion') return 1485;
+    if (isTriple && (cap === '5200lb' || cap === '6000lb') && susp === 'torsion') return 1890;
+    if (isTriple && cap === '7000lb' && susp === 'torsion') return 2765;
+  } else if (len >= 26) {
+    if (!isTriple && (cap === '5200lb' || cap === '6000lb') && susp === 'dropspring') return 0;
+    if (!isTriple && (cap === '5200lb' || cap === '6000lb') && susp === 'torsion') return 640;
+    if (!isTriple && cap === '7000lb' && susp === 'dropspring') return 910;
+    if (!isTriple && cap === '7000lb' && susp === 'torsion') return 1315;
+    if (!isTriple && cap === '8000lb' && susp === 'torsion') return 3510;
+
+    if (isTriple && (cap === '5200lb' || cap === '6000lb') && susp === 'torsion') return 1755;
+    if (isTriple && cap === '7000lb' && susp === 'torsion') return 2630;
+  }
+  return 0;
+};
+
 export function usePricing(ctx) {
   return useMemo(() => {
     let trailerBuild = 0; // Base price
@@ -70,8 +101,7 @@ export function usePricing(ctx) {
     trailerBuild += getBaseTrailerPrice(ctx.width, ctx.length);
     trailerBuild += getInteriorHeightPrice(ctx.interiorHeight, ctx.length);
 
-    trailerBuild += findPrice(AXLE_SUSPENSION_OPTIONS, ctx.axleSuspension);
-    trailerBuild += findPrice(AXLE_CAPACITY_OPTIONS, ctx.axleCapacity);
+    trailerBuild += getAxleConfigurationPrice(ctx.axleCount, ctx.axleSuspension, ctx.axleCapacity, ctx.length);
 
     if (ctx.spreadAxle) {
       if (ctx.axleCount === 'triple') {

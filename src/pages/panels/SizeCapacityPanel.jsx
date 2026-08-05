@@ -165,6 +165,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                   <OptionPill
                     key={opt.id}
                     label={opt.label}
+                    price={opt.price} badge={opt.badge}
                     isStandard={opt.isStandard}
                     isSelected={axleSuspension === opt.id}
                     isLocked={
