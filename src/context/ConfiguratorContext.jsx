@@ -65,9 +65,13 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
-  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay ?? 'atp')
+  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay ?? null)
+  const [floorInsulation, setFloorInsulation] = useState(ic.floorInsulation ?? null)
   const [walls, setWalls] = useState(ic.walls ?? 'white_metal_walls')
   const [ceiling, setCeiling] = useState(ic.ceiling ?? 'white_metal_ceiling')
+  const [wallInsulation, setWallInsulation] = useState(ic.wallInsulation ?? null)
+  const [ceilingInsulation, setCeilingInsulation] = useState(ic.ceilingInsulation ?? null)
+  const [atpWheelWells, setAtpWheelWells] = useState(ic.atpWheelWells ?? false)
   const [cabinets, setCabinetsRaw] = useState(ic.cabinets ?? ['frontbase36'])
   const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(ic.blackoutCabinetDoors ?? false)
 
@@ -106,6 +110,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
       }));
     }
   }, [climateControl, electrical])
+
+  const [exteriorLights, setExteriorLights] = useState(ic.exteriorLights ?? [])
 
   // Loading
   const [rampType, setRampType] = useState(ic.rampType ?? 'doublereardoors')
@@ -224,13 +230,13 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const pricing = usePricing({
     width, length, interiorHeight, axleAtp, axleCount, axleSuspension, axleCapacity,
     electrical, battery, ventilation, climateControl, rampType, atpRamp,
-    sideDoorsType, lights, tieDowns, jacks,
+    sideDoorsType, lights, interiorLights, exteriorLights, receptacles, tieDowns, jacks,
     waterPackage, bathroom, stairs, angledLights, vNoseETrack, batteryBox,
     escapeDoor, generatorBox, winchSystem, extendedTripleTongue, radioPackageSpeaker,
     rearSpoiler, ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,
     exteriorFinish, exteriorAccessories, frontStyle, exteriorBuild, roofBuild,
     protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType,
-    spareTire, floor, walls, ceiling, cabinets, toolBox,
+    spareTire, floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, toolBox, dRings,
     windows, dRings, acPrep, sideDoorBarLock, driverSideDoor, passengerSideDoor,
     concessionDoor, glassScreen, concessionWidth, concessionHeight
   })
@@ -306,8 +312,12 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     sideDoorBarLock, setSideDoorBarLock,
     floor, setFloor,
     floorOverlay, setFloorOverlay,
+    floorInsulation, setFloorInsulation,
     walls, setWalls,
     ceiling, setCeiling,
+    wallInsulation, setWallInsulation,
+    ceilingInsulation, setCeilingInsulation,
+    atpWheelWells, setAtpWheelWells,
     cabinets, setCabinetsRaw, toggleCabinet,
     blackoutCabinetDoors, setBlackoutCabinetDoors,
     toolBox, setToolBox,
@@ -317,6 +327,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     battery, setBattery,
     lights, setLightsRaw, toggleLight,
     interiorLights, setInteriorLights,
+    exteriorLights, setExteriorLights,
     ledRope, setLedRope,
     ventilation, setVentilation,
     climateControl, setClimateControl,
@@ -364,8 +375,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
-    floor, floorOverlay, walls, ceiling, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
-    electrical, battery, lights, interiorLights, ledRope, ventilation, climateControl, acPrep, receptacles,
+    floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
+    electrical, battery, lights, interiorLights, exteriorLights, ledRope, ventilation, climateControl, acPrep, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, dRings, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,

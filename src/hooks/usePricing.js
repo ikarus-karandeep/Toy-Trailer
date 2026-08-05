@@ -3,6 +3,7 @@ import {
   WIDTH_OPTIONS, LENGTH_OPTIONS, INTERIOR_HEIGHT_OPTIONS,
   AXLE_SUSPENSION_OPTIONS, AXLE_CAPACITY_OPTIONS,
   ELECTRICAL_OPTIONS, OFF_GRID_POWER_OPTIONS, INTERIOR_LIGHTING_OPTIONS, EXTERIOR_LIGHTING_OPTIONS,
+  RECEPTACLE_OPTIONS,
   PASSIVE_VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
   REAR_ENTRANCE_OPTIONS, D_RINGS_OPTIONS, ADDITIONAL_D_RINGS_OPTIONS, E_TRACKS_OPTIONS, JACKS_OPTIONS,
   BATHROOM_PACKAGE_OPTIONS,
@@ -67,7 +68,38 @@ export function usePricing(ctx) {
     if (ctx.sideDoorBarLock) configurations += 60;
 
     if (ctx.lights) {
-      ctx.lights.forEach(id => { configurations += findPrice(LIGHT_OPTIONS, id); });
+      const interiorLightIds = new Set(Object.keys(ctx.interiorLights || {}));
+      const exteriorLightIds = new Set(ctx.exteriorLights || []);
+      ctx.lights.forEach(id => { 
+        if (!interiorLightIds.has(id) && !exteriorLightIds.has(id)) {
+          configurations += findPrice(LIGHT_OPTIONS, id); 
+        }
+      });
+    }
+    // interiorLights: quantity-based (id -> qty object)
+    if (ctx.interiorLights) {
+      Object.entries(ctx.interiorLights).forEach(([id, qty]) => {
+        if (qty > 0) {
+          const opt = INTERIOR_LIGHTING_OPTIONS.find(o => o.id === id);
+          if (opt && typeof opt.price === 'number') configurations += opt.price * qty;
+        }
+      });
+    }
+    // exteriorLights: boolean array
+    if (ctx.exteriorLights) {
+      ctx.exteriorLights.forEach(id => {
+        const opt = EXTERIOR_LIGHTING_OPTIONS.find(o => o.id === id);
+        if (opt && typeof opt.price === 'number') configurations += opt.price;
+      });
+    }
+    // receptacles: quantity-based (id -> qty object)
+    if (ctx.receptacles) {
+      Object.entries(ctx.receptacles).forEach(([id, qty]) => {
+        if (qty > 0) {
+          const opt = RECEPTACLE_OPTIONS.find(o => o.id === id);
+          if (opt && typeof opt.price === 'number') configurations += opt.price * qty;
+        }
+      });
     }
     if (ctx.tieDowns) {
       ctx.tieDowns.forEach(id => { 
@@ -111,21 +143,55 @@ export function usePricing(ctx) {
     if (ctx.interiorTireMount) configurations += 100;
 
     // APPEARANCE
-    appearance += findPrice(EXTERIOR_FINISH_OPTIONS, ctx.exteriorFinish);
+    let exteriorFinishPrice = findPrice(EXTERIOR_FINISH_OPTIONS, ctx.exteriorFinish);
+    if (ctx.exteriorFinish === 'blackout') {
+      exteriorFinishPrice *= parseInt(ctx.length) || 0;
+    }
+    appearance += exteriorFinishPrice;
     appearance += findPrice(EXTERIOR_ACCESSORIES_OPTIONS, ctx.exteriorAccessories);
     appearance += findPrice(FRONT_STYLE_OPTIONS, ctx.frontStyle);
     appearance += findPrice(EXTERIOR_BUILD_OPTIONS, ctx.exteriorBuild);
-    appearance += findPrice(ROOF_BUILD_OPTIONS, ctx.roofBuild);
+    let roofBuildPrice = findPrice(ROOF_BUILD_OPTIONS, ctx.roofBuild);
+    if (ctx.roofBuild === 'onepieceroof') roofBuildPrice *= parseInt(ctx.length) || 0;
+    appearance += roofBuildPrice;
+
     appearance += findPrice(PROTECTION_OPTIONS, ctx.protectionType);
-    appearance += findPrice(PROTECTION_OPTIONS, ctx.protectionSize);
+
+    let protectionSizePrice = findPrice(PROTECTION_OPTIONS, ctx.protectionSize);
+    if (ctx.protectionSize === '24') protectionSizePrice *= parseInt(ctx.length) || 0;
+    appearance += protectionSizePrice;
     appearance += findPrice(PROTECTION_OPTIONS, ctx.frontProtection);
     appearance += findPrice(LUG_OPTIONS, ctx.lugType);
     appearance += findPrice(TIRE_SIZE_OPTIONS, ctx.tireSize);
     appearance += findPrice(WHEEL_OPTIONS, ctx.wheelType);
-    if (ctx.spareTire) appearance += 250;
+    if (ctx.spareTire) {
+      if (ctx.lugType === '6lug') {
+        appearance += 200;
+      } else if (ctx.lugType === '8lug') {
+        appearance += 0;
+      } else {
+        appearance += 160;
+      }
+    }
     appearance += findPrice(FLOOR_OPTIONS, ctx.floor);
+    if (ctx.floorOverlay) {
+      let floorOverlayPrice = findPrice(FLOOR_OPTIONS, ctx.floorOverlay);
+      if (['atp', 'rtp', 'coin'].includes(ctx.floorOverlay)) {
+        floorOverlayPrice *= (parseInt(ctx.length) || 0);
+      }
+      appearance += floorOverlayPrice;
+    }
     appearance += findPrice(WALL_OPTIONS, ctx.walls);
+    if (ctx.wallInsulation) {
+      let wallInsulationPrice = findPrice(WALL_OPTIONS, ctx.wallInsulation);
+      appearance += wallInsulationPrice * (parseInt(ctx.length) || 0);
+    }
     appearance += findPrice(CEILING_OPTIONS, ctx.ceiling);
+    if (ctx.ceilingInsulation) {
+      let ceilingInsulationPrice = findPrice(CEILING_OPTIONS, ctx.ceilingInsulation);
+      appearance += ceilingInsulationPrice * (parseInt(ctx.length) || 0);
+    }
+    if (ctx.atpWheelWells) appearance += 472; // $236 each * 2
     
     if (ctx.cabinets) {
       ctx.cabinets.forEach(id => { 
@@ -154,13 +220,13 @@ export function usePricing(ctx) {
   }, [
     ctx.width, ctx.length, ctx.interiorHeight, ctx.axleAtp, ctx.axleCount, ctx.axleSuspension, ctx.axleCapacity,
     ctx.electrical, ctx.battery, ctx.ventilation, ctx.climateControl, ctx.acPrep, ctx.rampType, ctx.atpRamp,
-    ctx.sideDoorsType, ctx.lights, ctx.tieDowns, ctx.jacks,
+    ctx.sideDoorsType, ctx.lights, ctx.interiorLights, ctx.exteriorLights, ctx.receptacles, ctx.tieDowns, ctx.jacks,
     ctx.waterPackage, ctx.bathroom, ctx.stairs, ctx.angledLights, ctx.vNoseETrack, ctx.batteryBox,
     ctx.escapeDoor, ctx.generatorBox, ctx.winchSystem, ctx.extendedTripleTongue, ctx.radioPackageSpeaker,
     ctx.rearSpoiler, ctx.ladderRacks, ctx.sidewallVents, ctx.recessedTireBox, ctx.interiorTireMount,
     ctx.exteriorFinish, ctx.exteriorAccessories, ctx.frontStyle, ctx.exteriorBuild, ctx.roofBuild,
     ctx.protectionType, ctx.protectionSize, ctx.frontProtection, ctx.lugType, ctx.tireSize, ctx.wheelType,
-    ctx.spareTire, ctx.floor, ctx.walls, ctx.ceiling, ctx.cabinets, ctx.toolBox, ctx.dRings,
+    ctx.spareTire, ctx.floor, ctx.floorOverlay, ctx.walls, ctx.ceiling, ctx.wallInsulation, ctx.ceilingInsulation, ctx.atpWheelWells, ctx.cabinets, ctx.toolBox, ctx.dRings,
     ctx.driverSideDoor, ctx.passengerSideDoor, ctx.sideDoorBarLock, ctx.concessionDoor,
     ctx.glassScreen, ctx.concessionWidth, ctx.concessionHeight
   ]);

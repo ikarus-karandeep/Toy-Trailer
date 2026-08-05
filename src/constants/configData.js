@@ -89,7 +89,14 @@ export const AXLE_RATING_OPTIONS = [
 
 // Exterior
 export const EXTERIOR_FINISH_OPTIONS = [
-  { id: 'blackout', label: 'BLACKOUT PACKAGE (EXTERIOR)', price: 320 },
+  { 
+    id: 'blackout', 
+    label: 'BLACKOUT PACKAGE', 
+    price: 18, 
+    badge: '+$18/LFT',
+    popular: true,
+    subtext: 'Black trim, black ATP stoneguard, black ATP noseguard, black ATP fenders, black steel wheels'
+  },
 ];
 
 export const EXTERIOR_ACCESSORIES_OPTIONS = [
@@ -125,7 +132,7 @@ export const SIDE_DOOR_OPTIONS = [
 
 export const FRONT_STYLE_OPTIONS = [
   { id: 'vnose24', label: 'V-NOSE W/ 24" STONE GUARD' },
-  { id: 'flatfront', label: 'FLAT FRONT', price: 0 },
+  { id: 'flatfront', label: 'FLAT FRONT', price: 68 },
   { id: 'slantvnose', label: 'SLANT V-NOSE W/ ATP ON SLANT', price: 203 },
   { id: 'extendedvnose', label: "5' EXTENDED V-NOSE (INCL EXT TTT + SIDEWIND JACK)", price: 575 },
 ];
@@ -140,7 +147,13 @@ export const EXTERIOR_BUILD_OPTIONS = [
 ];
 
 export const ROOF_BUILD_OPTIONS = [
-  { id: 'onepieceroof', label: 'ONE PIECE ALUMINUM ROOF - SDYNAMIC' },
+  { 
+    id: 'onepieceroof', 
+    label: 'ONE PIECE ALUMINUM ROOF - SDYNAMIC',
+    price: 18,
+    badge: '+$18/LFT',
+    subtext: 'Seamless aluminum roof vs standard galvalume'
+  },
 ];
 
 export const PROTECTION_TYPE_OPTIONS = [
@@ -151,7 +164,13 @@ export const PROTECTION_TYPE_OPTIONS = [
 
 export const PROTECTION_SIZE_OPTIONS = [
   { id: '12', label: '12"', price: 320 },
-  { id: '24', label: '24"', price: 440 },
+  { 
+    id: '24', 
+    label: '24"', 
+    price: 22,
+    badge: '+$22/LFT',
+    subtext: 'Diamond plate protection on lower panels, sides and rear'
+  },
 ];
 
 export const FRONT_PROTECTION_OPTIONS = [
@@ -186,9 +205,9 @@ export const FLOOR_MATERIAL_OPTIONS = [
 ];
 
 export const FLOOR_OVERLAY_OPTIONS = [
-  { id: 'atp', label: 'ATP', price: 608 },
-  { id: 'rtp', label: 'RTP', price: 440 },
-  { id: 'coin', label: 'COIN', price: 440 },
+  { id: 'atp', label: 'ATP', price: 35, badge: '+$35/LFT', subtext: 'Diamond plate over plywood', packageBadge: 'Race / Contractor' },
+  { id: 'rtp', label: 'RTP', price: 35, badge: '+$35/LFT', subtext: 'Rubber tread plate over plywood', packageBadge: 'Race / Contractor' },
+  { id: 'coin', label: 'COIN', price: 35, badge: '+$35/LFT', subtext: 'Coin pattern over plywood', packageBadge: 'Race / Contractor' },
   { id: 'tile', label: 'TILE FLOOR', price: 440 },
 ];
 
@@ -203,7 +222,7 @@ export const WALL_MATERIAL_OPTIONS = [
 ];
 
 export const WALL_INSULATION_OPTIONS = [
-  { id: 'rfoil_walls', label: 'R-FOIL', price: 808 },
+  { id: 'rfoil_walls', label: 'R-FOIL (THERMAL + ACOUSTIC BATTING)', price: 23 },
 ];
 
 export const CEILING_MATERIAL_OPTIONS = [
@@ -213,7 +232,7 @@ export const CEILING_MATERIAL_OPTIONS = [
 ];
 
 export const CEILING_INSULATION_OPTIONS = [
-  { id: 'rfoil_ceiling', label: 'R-FOIL', price: 608 },
+  { id: 'rfoil_ceiling', label: 'R-FOIL (THERMAL + ACOUSTIC BATTING)', price: 18 },
 ];
 
 export const BASE_CABINET_OPTIONS = [
@@ -247,8 +266,8 @@ export const ELECTRICAL_OPTIONS = [
 ];
 
 export const RECEPTACLE_OPTIONS = [
-  { id: '110vinterior', label: '110V INTERIOR RECEPTACLE (15 AMP)', price: 2000 },
-  { id: '110vgfi', label: '110V GFI RECEPTACLE (20 AMP)', price: null },
+  { id: '110vinterior', label: '110V INTERIOR RECEPTACLE (15 AMP)', price: 75  },
+  { id: '110vgfi',      label: '110V GFI RECEPTACLE (20 AMP)',      price: 90  },
 ];
 
 export const OFF_GRID_POWER_OPTIONS = [
@@ -257,13 +276,19 @@ export const OFF_GRID_POWER_OPTIONS = [
 ];
 
 export const INTERIOR_LIGHTING_OPTIONS = [
-  { id: '12vleddome', label: '12V LED DOME LIGHT' },
-  { id: '12vflatpanel', label: '12V 24" FLAT PANEL LED (2 INCLUDED)' },
-  { id: 'ledrope', label: 'LED ROPE LIGHTING - $DYNAMIC', price: null },
+  { id: '12vleddome',   label: '12V LED DOME LIGHT',                 price: 20  },
+  { id: '12vflatpanel', label: '12V 24" FLAT PANEL LED (2 INCLUDED)', price: 135 },
+  { id: 'ledrope',      label: 'LED ROPE LIGHTING - $DYNAMIC',        price: null },
 ];
 
 export const EXTERIOR_LIGHTING_OPTIONS = [
-  { id: '12vangledracing', label: '12V ANGLED RACING LED EXTERIOR LIGHT 24"', price: 1200 },
+  { 
+    id: '12vangledracing', 
+    label: '12v Angled Racing Lights (exterior)', 
+    price: 100,
+    badge: 'Race builds',
+    subtext: 'Race-style exterior lighting'
+  },
 ];
 
 export const PASSIVE_VENTILATION_OPTIONS = [

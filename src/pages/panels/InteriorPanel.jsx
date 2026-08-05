@@ -35,7 +35,11 @@ export default function InteriorPanel({ activeSectionTitle }) {
     driverSideDoor, passengerSideDoor, escapeDoor, concessionDoor,
     sinkPackage,
     viewMode, setViewMode,
-    setExteriorFinish, setAngledLights, setElectrical, setBattery, setLightsRaw, setAtpRamp
+    setExteriorFinish, setAngledLights, setElectrical, setBattery, setLightsRaw, setAtpRamp,
+    wallInsulation, setWallInsulation,
+    ceilingInsulation, setCeilingInsulation,
+    floorInsulation, setFloorInsulation,
+    atpWheelWells, setAtpWheelWells
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -43,13 +47,6 @@ export default function InteriorPanel({ activeSectionTitle }) {
   // Local state for new UI components (until context is fully updated)
   const [pitPack, setPitPack] = useState(false)
   const [pitPackOpen, setPitPackOpen] = useState(true)
-
-  const [floorInsulation, setFloorInsulation] = useState(null)
-  const [atpWheelWells, setAtpWheelWells] = useState(false)
-
-  const [wallInsulation, setWallInsulation] = useState(null)
-
-  const [ceilingInsulation, setCeilingInsulation] = useState(null)
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -197,7 +194,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={opt.price}
                   isSelected={floorOverlay === opt.id}
-                  onClick={() => setFloorOverlay(opt.id)}
+                  onClick={() => setFloorOverlay(opt.id === floorOverlay ? null : opt.id)}
                 />
               ))}
             </div>
@@ -221,10 +218,11 @@ export default function InteriorPanel({ activeSectionTitle }) {
 
           <div>
             <ToggleSwitch
-              label="ATP Covered Wheel Wells - $440 ($135 each)"
+              label="ATP Covered Wheel Wells (+$236 each)"
               checked={atpWheelWells}
               onChange={setAtpWheelWells}
             />
+            <p className="text-gray-400 text-[11px] mt-1 ml-14">Diamond plate over axle humps — clean floor look</p>
           </div>
         </OptionSection>
       )}

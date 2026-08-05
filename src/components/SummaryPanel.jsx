@@ -4,6 +4,7 @@ import {
   WIDTH_OPTIONS, LENGTH_OPTIONS, INTERIOR_HEIGHT_OPTIONS, AXLE_RATING_OPTIONS,
   AXLE_SUSPENSION_OPTIONS, AXLE_CAPACITY_OPTIONS,
   ELECTRICAL_OPTIONS, OFF_GRID_POWER_OPTIONS, INTERIOR_LIGHTING_OPTIONS, EXTERIOR_LIGHTING_OPTIONS,
+  RECEPTACLE_OPTIONS,
   PASSIVE_VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
   REAR_ENTRANCE_OPTIONS, D_RINGS_OPTIONS, ADDITIONAL_D_RINGS_OPTIONS, E_TRACKS_OPTIONS, JACKS_OPTIONS,
   BATHROOM_PACKAGE_OPTIONS,
@@ -28,15 +29,24 @@ const CEILING_OPTIONS = [...CEILING_MATERIAL_OPTIONS, ...CEILING_INSULATION_OPTI
 const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS, ...WHEEL_WALL_CABINET_OPTIONS];
 const BATTERY_OPTIONS = OFF_GRID_POWER_OPTIONS;
 const BATHROOM_OPTIONS = BATHROOM_PACKAGE_OPTIONS;
+const RECEPTACLE_OPTIONS_ALL = RECEPTACLE_OPTIONS;
 
 const TABS = ['TRAILER BUILD', 'CONFIGURATIONS', 'ADD-ONS', 'APPEARANCE']
 const find = (opts, id) => opts.find(o => o.id === id)
 
-function LineItem({ label, price, onRemove }) {
+function LineItem({ label, price, unitPrice, qty, onRemove, subtext }) {
   return (
     <div className="flex items-center justify-between bg-[#252525] rounded-lg px-4 py-3">
-      <span className="text-white text-xs font-semibold tracking-widest uppercase">{label}</span>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-0.5 min-w-0">
+        <span className="text-white text-xs font-semibold tracking-widest uppercase">{label}</span>
+        {subtext && (
+          <span className="text-gray-400 text-[11px] tracking-wider mt-0.5">{subtext}</span>
+        )}
+        {qty > 1 && unitPrice != null && (
+          <span className="text-gray-500 text-[10px] tracking-wider">${unitPrice.toLocaleString()} each × {qty}</span>
+        )}
+      </div>
+      <div className="flex items-center gap-3 shrink-0 ml-3">
         {price != null && (
           <span className="text-[#DA634B] text-sm font-bold">+${price.toLocaleString()}</span>
         )}
@@ -114,7 +124,45 @@ export default function SummaryPanel() {
       // if (sideDoorBarLock) {
       //   items.push({ label: 'BAR LOCK ON SIDE DOOR', price: 60, onRemove: () => setSideDoorBarLock(false) });
       // }
-      lights.forEach(id => { const o = find(LIGHT_OPTIONS, id); if (o && o.price) items.push({ label: o.label, price: o.price, onRemove: () => toggleLight(id) }) })
+      // Skip IDs managed by the quantity-based interiorLights and exteriorLights objects
+      const interiorLightIds = new Set(Object.keys(ctx.interiorLights || {}));
+      const exteriorLightIds = new Set(ctx.exteriorLights || []);
+      lights.forEach(id => {
+        if (interiorLightIds.has(id) || exteriorLightIds.has(id)) return; // handled below with qty × price
+        const o = find(LIGHT_OPTIONS, id);
+        if (o && o.price) items.push({ label: o.label, price: o.price, onRemove: () => toggleLight(id) });
+      })
+      // Interior lights (quantity-based)
+      if (ctx.interiorLights) {
+        Object.entries(ctx.interiorLights).forEach(([id, qty]) => {
+          if (qty > 0) {
+            const o = find([...INTERIOR_LIGHTING_OPTIONS], id);
+            if (o && typeof o.price === 'number') {
+              items.push({ label: o.label, price: o.price * qty, unitPrice: o.price, qty });
+            }
+          }
+        });
+      }
+      // Exterior lights (boolean array)
+      if (ctx.exteriorLights) {
+        ctx.exteriorLights.forEach(id => {
+          const o = find([...EXTERIOR_LIGHTING_OPTIONS], id);
+          if (o && o.price != null) {
+            items.push({ label: o.label, price: Number(o.price), onRemove: () => ctx.setExteriorLights(prev => prev.filter(i => i !== id)) });
+          }
+        });
+      }
+      // Receptacles (quantity-based)
+      if (ctx.receptacles) {
+        Object.entries(ctx.receptacles).forEach(([id, qty]) => {
+          if (qty > 0) {
+            const o = find([...RECEPTACLE_OPTIONS_ALL], id);
+            if (o && typeof o.price === 'number') {
+              items.push({ label: o.label, price: o.price * qty, unitPrice: o.price, qty });
+            }
+          }
+        });
+      }
       tieDowns.forEach(id => { 
         const o = find(TIE_DOWN_OPTIONS, id); 
         if (o) {
@@ -165,22 +213,74 @@ export default function SummaryPanel() {
     }
     if (activeTab === 'APPEARANCE') {
       const items = []
-      const ef = find(EXTERIOR_FINISH_OPTIONS, exteriorFinish); if (ef && !ef.isStandard) items.push({ label: ef.label, price: ef.price })
+      const ef = find(EXTERIOR_FINISH_OPTIONS, exteriorFinish); 
+      if (ef && !ef.isStandard) {
+        let price = ef.price;
+        if (exteriorFinish === 'blackout') {
+          price *= parseInt(ctx.length) || 0;
+        }
+        items.push({ label: ef.label, price });
+      }
       const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
       const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && ea.id !== 'none') items.push({ label: ea.label, price: ea.price })
       const fs = find(FRONT_STYLE_OPTIONS, frontStyle); if (fs && !fs.isStandard) items.push({ label: fs.label, price: fs.price })
       const eb = find(EXTERIOR_BUILD_OPTIONS, exteriorBuild); if (eb && !eb.isStandard) items.push({ label: eb.label, price: eb.price })
-      const rb = find(ROOF_BUILD_OPTIONS, roofBuild); if (rb && !rb.isStandard) items.push({ label: rb.label, price: rb.price })
+      const rb = find(ROOF_BUILD_OPTIONS, roofBuild); 
+      if (rb && !rb.isStandard) {
+        let price = rb.price;
+        if (roofBuild === 'onepieceroof') price *= parseInt(ctx.length) || 0;
+        items.push({ label: rb.label, price });
+      }
       const pt = find(PROTECTION_OPTIONS, protectionType); if (pt && !pt.isStandard) items.push({ label: pt.label, price: pt.price })
-      const ps = find(PROTECTION_OPTIONS, protectionSize); if (ps && !ps.isStandard) items.push({ label: ps.label, price: ps.price })
+      const ps = find(PROTECTION_OPTIONS, protectionSize); 
+      if (ps && !ps.isStandard) {
+        let price = ps.price;
+        if (protectionSize === '24') price *= parseInt(ctx.length) || 0;
+        items.push({ label: ps.label, price });
+      }
       const fp = find(PROTECTION_OPTIONS, frontProtection); if (fp && !fp.isStandard) items.push({ label: fp.label, price: fp.price })
       const lt = find(LUG_OPTIONS, lugType); if (lt && !lt.isStandard) items.push({ label: lt.label, price: lt.price })
       const ts = find(TIRE_SIZE_OPTIONS, tireSize); if (ts && !ts.isStandard) items.push({ label: ts.label, price: ts.price })
       const wh = find(WHEEL_OPTIONS, wheelType); if (wh && !wh.isStandard) items.push({ label: wh.label, price: wh.price })
-      if (spareTire) { items.push({ label: 'SPARE TIRE', price: 250, onRemove: () => setSpareTire(false) }) }
+      if (spareTire) { 
+        let stPrice = 160;
+        let stLabelExt = '5-lug';
+        if (lugType === '6lug') {
+          stPrice = 200;
+          stLabelExt = '6-lug';
+        } else if (lugType === '8lug') {
+          stPrice = 0;
+          stLabelExt = '8-lug';
+        }
+        items.push({ 
+          label: `SPARE TIRE (${stLabelExt})`, 
+          price: stPrice, 
+          subtext: 'Mounted on tongue',
+          onRemove: () => setSpareTire(false) 
+        });
+      }
       const fl = find(FLOOR_OPTIONS, floor); if (fl && !fl.isStandard) items.push({ label: fl.label, price: fl.price })
+      if (ctx.floorOverlay) {
+        const fo = find(FLOOR_OPTIONS, ctx.floorOverlay);
+        if (fo && !fo.isStandard) {
+          let foPrice = fo.price || 0;
+          if (['atp', 'rtp', 'coin'].includes(ctx.floorOverlay)) foPrice *= (parseInt(ctx.length) || 0);
+          items.push({ label: `FLOOR OVERLAY: ${fo.label}`, price: foPrice, onRemove: () => ctx.setFloorOverlay(null) });
+        }
+      }
       const wa = find(WALL_OPTIONS, walls); if (wa && !wa.isStandard) items.push({ label: wa.label, price: wa.price })
+      if (ctx.wallInsulation) {
+        const wi = find(WALL_OPTIONS, ctx.wallInsulation);
+        if (wi) items.push({ label: `WALL INSULATION: ${wi.label}`, price: (wi.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setWallInsulation(null) });
+      }
       const ce = find(CEILING_OPTIONS, ceiling); if (ce && !ce.isStandard) items.push({ label: ce.label, price: ce.price })
+      if (ctx.ceilingInsulation) {
+        const ci = find(CEILING_OPTIONS, ctx.ceilingInsulation);
+        if (ci) items.push({ label: `CEILING INSULATION: ${ci.label}`, price: (ci.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setCeilingInsulation(null) });
+      }
+      if (ctx.atpWheelWells) {
+        items.push({ label: 'ATP COVERED WHEEL WELLS', price: 472, subtext: 'Diamond plate over axle humps — clean floor look', onRemove: () => ctx.setAtpWheelWells(false) });
+      }
       cabinets.forEach(id => {
         const o = find(CABINET_OPTIONS, id);
         if (o) {

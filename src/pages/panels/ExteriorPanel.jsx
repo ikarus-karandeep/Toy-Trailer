@@ -227,7 +227,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               price={opt.price}
               isStandard={opt.isStandard}
               isSelected={exteriorBuild === opt.id}
-              onClick={() => setExteriorBuild(opt.id)}
+              onClick={() => setExteriorBuild(exteriorBuild === opt.id ? null : opt.id)}
             />
           ))}
         </div>
@@ -254,7 +254,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               price={opt.price}
               isStandard={opt.isStandard}
               isSelected={roofBuild === opt.id}
-              onClick={() => setRoofBuild(opt.id)}
+              onClick={() => setRoofBuild(roofBuild === opt.id ? null : opt.id)}
             />
           ))}
         </div>
@@ -296,7 +296,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               price={opt.price}
               isStandard={opt.isStandard}
               isSelected={protectionSize === opt.id}
-              onClick={() => setProtectionSize(opt.id)}
+              onClick={() => setProtectionSize(protectionSize === opt.id ? null : opt.id)}
             />
           ))}
         </div>

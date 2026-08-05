@@ -25,6 +25,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
     acPrep, setAcPrep,
     receptacles, setReceptacles,
     interiorLights, setInteriorLights,
+    exteriorLights, setExteriorLights,
     ledRope, setLedRope,
     viewMode, setViewMode,
   } = useConfigurator()
@@ -34,8 +35,6 @@ export default function SystemsPanel({ activeSectionTitle }) {
   // Local state for new UI components (until context is fully updated)
   const [panel12Space, setPanel12Space] = useState(false)
   const [offGridPower, setOffGridPower] = useState([])
-  
-  const [exteriorLights, setExteriorLights] = useState([])
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
@@ -143,7 +142,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                     label={opt.label}
                     price={opt.price}
                     isSelected={qty > 0}
-                    quantity={qty}
+                    quantity={qty > 0 ? qty : undefined}
                     onQuantityChange={(newQty) => updateQuantity(setReceptacles, opt.id, newQty)}
                     onClick={() => updateQuantity(setReceptacles, opt.id, qty === 0 ? 1 : 0)}
                   />
@@ -206,7 +205,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                     label={opt.label}
                     price={opt.price}
                     isSelected={qty > 0}
-                    quantity={qty}
+                    quantity={qty > 0 ? qty : undefined}
                     onQuantityChange={(newQty) => updateQuantity(setInteriorLights, opt.id, newQty)}
                     onClick={() => updateQuantity(setInteriorLights, opt.id, qty === 0 ? 1 : 0)}
                   />
@@ -226,8 +225,9 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price}
+                  badge={opt.badge}
+                  subtext={opt.subtext}
                   isSelected={exteriorLights.includes(opt.id)}
-                  hasSettings
                   onClick={() => toggleArrayItem(setExteriorLights, opt.id)}
                   isMulti={true}
                 />
