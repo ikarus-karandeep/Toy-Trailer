@@ -5,7 +5,7 @@ import * as THREE from 'three';
 const _worldPos = new THREE.Vector3();
 const _sockM = new THREE.Matrix4();
 const _instM = new THREE.Matrix4();
-const _flipZ = new THREE.Matrix4().makeScale(1, 1, -1);
+const _flipYRot = new THREE.Matrix4().makeRotationY(Math.PI);
 const _baseM = new THREE.Matrix4();
 
 const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
@@ -68,18 +68,13 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
                 geometry.boundingSphere.radius = 0;
             }
 
-            const cloneAndSetDoubleSide = mat => {
-                const newMat = mat.clone();
-                newMat.side = THREE.DoubleSide;
-                return newMat;
-            };
-            
             // We MUST clone the materials so Three.js can compile them specifically for InstancedMesh.
             // Sharing a material between a regular Mesh and an InstancedMesh causes the initial black render bug.
+            // DO NOT use DoubleSide here as it can invert normals on instances and break tangent space, causing weird glow.
             const srcChild = instMesh.getObjectByName(child.name);
             const material = Array.isArray(srcChild.material)
-                ? srcChild.material.map(cloneAndSetDoubleSide)
-                : cloneAndSetDoubleSide(srcChild.material);
+                ? srcChild.material.map(m => m.clone())
+                : srcChild.material.clone();
 
             parts.push({ geometry, material, relMatrix, srcMesh: srcChild });
         });
@@ -115,7 +110,9 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
 
             _sockM.makeTranslation(_worldPos.x, _worldPos.y, _worldPos.z);
             if (socket.name.includes('_R')) {
-                _sockM.multiply(_flipZ); 
+                // Rotate 180 degrees around Y to flip the tire outwards instead of using negative scale.
+                // Negative scale on InstancedMesh breaks winding order (culling) and normal vectors.
+                _sockM.multiply(_flipYRot); 
             }
 
             instancedMeshes.forEach(({ iMesh, relMatrix }) => {
@@ -172,7 +169,7 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
                 if (!dstMat || dstMat === srcMat) return;
                 
                 let updated = false;
-                const props = ['map', 'envMap', 'envMapIntensity', 'color', 'roughness', 'metalness', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap', 'emissive', 'emissiveIntensity'];
+                const props = ['map', 'envMap', 'envMapIntensity', 'color', 'roughness', 'metalness', 'normalMap', 'normalScale', 'roughnessMap', 'metalnessMap', 'aoMap', 'emissive', 'emissiveIntensity'];
                 
                 props.forEach(prop => {
                     if (srcMat[prop] !== undefined) {

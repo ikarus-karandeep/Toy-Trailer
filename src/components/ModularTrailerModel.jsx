@@ -2003,39 +2003,23 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         });
         if (!socket) return null;
 
+        const tireSizeStr = config.tireSize || '15';
         const lugStr = (config.lugType || '5lug').replace('lug', '');
         let wheelStyleName = 'Standard';
-        if (config.wheelType === 'spideraluminum') {
-            wheelStyleName = 'Spider';
-        }
+        if (config.wheelType === 'spideraluminum') wheelStyleName = 'Spider';
 
+        const targetPrefix = `${tireSizeStr}in_${wheelStyleName}_Tire_${lugStr}-Lug_Inst`;
         let tireGroup = null;
-        let fallbackTireGroup = null;
         
-        const normWheelStyle = wheelStyleName.toLowerCase();
-        const normLug = `${lugStr}lug`;
-        const normLugDash = `${lugStr}-lug`;
-
-        // Search in wheels.glb for the highly detailed actual tire meshes
         wheels.traverse(child => {
-            const lowerName = child.name.toLowerCase();
-            const normName = lowerName.replace(/[\s_\-]/g, '');
-            
-            if (normName.includes('tire')) {
-                if (!lowerName.match(/_[0-9]+$/)) {
-                    if (!fallbackTireGroup) fallbackTireGroup = child;
-
-                    if (lowerName.includes(normWheelStyle) && (lowerName.includes(normLug) || lowerName.includes(normLugDash))) {
-                        tireGroup = child;
-                    }
-                }
+            if (tireGroup) return;
+            if (child.name === targetPrefix) {
+                tireGroup = child;
             }
         });
 
-        tireGroup = tireGroup || fallbackTireGroup;
-
         if (!tireGroup) {
-            console.warn(`[SpareTire Debug] FAILED to find any real tire group in wheels.glb!`);
+            console.warn(`[SpareTire] Could not find exact tire mesh: "${targetPrefix}"`);
             return null;
         }
 
