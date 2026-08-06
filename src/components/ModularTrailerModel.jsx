@@ -304,6 +304,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const eTrackGroupRef = useRef(new THREE.Group())
     const spareTireMountRef = useRef()
     const wheelMountsRef = useRef()
+    const axleMountsRef = useRef()
     // Incremented by the visibility useEffect after every switchMesh/switchMeshes call.
     // child.visible is accurate when the proxy scan runs.
     const [visibilityVersion, setVisibilityVersion] = useState(0)
@@ -1839,7 +1840,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)
-        BlenderNodes.switchMesh(axleConfig, AXLE_RATING_MESH_MAP[config.axleRating]?.[variant])
+        axleConfig.traverse(child => {
+            if (child.isMesh) child.visible = false;
+        })
 
         // ── Spoiler ──────────────────────────────────────────────────────────
         // First hide everything
@@ -2076,6 +2079,52 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         return { instMesh, sockets };
     }, [config.tireSize, config.lugType, config.wheelType, config.axleCount, wheels]);
+
+    // ── Socket-based Axle Rendering ────────────────────────────────────────────
+    const axleMountsData = useMemo(() => {
+        if (!axleConfig) return null;
+
+        const axleCountStr = config.axleCount === 'triple' ? '3' : '2';
+
+        const AXLE_INST_MAP = {
+            '3500lb-dropspring': '3500_lb_Leaf_Spring_Inst',
+            '3500lb-torsion': '3500_lb_Torsion_Inst',
+            '6000lb-dropspring': '6000_lb_Leaf_Spring_Inst',
+            '6000lb-torsion': '6000_lb_Torsion_Inst',
+            '7000lb-dropspring': '7000_lb_Leaf_Spring_Inst',
+            '7000lb-torsion': '7000_lb_Torsion_Inst',
+        };
+
+        const targetPrefix = AXLE_INST_MAP[config.axleRating];
+        let instMesh = null;
+        axleConfig.traverse(child => {
+            if (instMesh) return;
+            if (child.name === targetPrefix) {
+                instMesh = child;
+            }
+        });
+
+        if (!instMesh) {
+            console.warn(`[AxleMount] Could not find Inst mesh: "${targetPrefix}"`);
+            return null;
+        }
+
+        const socketPrefix = `Axle-${axleCountStr}_`;
+        const sockets = [];
+        axleConfig.traverse(child => {
+            if (child.name.startsWith(socketPrefix) && child.name.endsWith('Socket')) {
+                sockets.push(child);
+            }
+        });
+
+        if (sockets.length === 0) {
+            console.warn(`[AxleMount] No sockets found with prefix "${socketPrefix}"`);
+        } else {
+            console.log(`[AxleMount] Found ${sockets.length} sockets:`, sockets.map(s => s.name));
+        }
+
+        return { instMesh, sockets };
+    }, [config.axleRating, config.axleCount, axleConfig]);
 
     useEffect(() => {
         dirtyRef.current = true
@@ -2667,6 +2716,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // AFTER the chassis vertices have fully finished deforming this frame.
         if (spareTireMountRef.current) spareTireMountRef.current.updateMatrices();
         if (wheelMountsRef.current) wheelMountsRef.current.updateMatrices();
+        if (axleMountsRef.current) axleMountsRef.current.updateMatrices();
     })
 
     const prevVisibleExteriorNodes = useRef(new Set());
@@ -2760,6 +2810,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         instMesh={wheelMountsData.instMesh}
                         sockets={wheelMountsData.sockets}
                         relativeTo={wheels}
+                    />
+                )}
+                {axleMountsData && (
+                    <WheelInstances
+                        ref={axleMountsRef}
+                        instMesh={axleMountsData.instMesh}
+                        sockets={axleMountsData.sockets}
+                        relativeTo={axleConfig}
+                        allowDeformation={true}
                     />
                 )}
                 <primitive object={eTrackGroupRef.current} />

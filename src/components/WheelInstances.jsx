@@ -8,7 +8,7 @@ const _instM = new THREE.Matrix4();
 const _flipYRot = new THREE.Matrix4().makeRotationY(Math.PI);
 const _baseM = new THREE.Matrix4();
 
-const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
+const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo, allowDeformation = false }, ref) => {
     if (!instMesh || !sockets || sockets.length === 0 || !relativeTo) return null;
 
     // 1. Collect mesh parts and compute their base transformation
@@ -27,8 +27,8 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
         cloneForProcessing.traverse(child => {
             if (child.isMesh) {
                 child.geometry = child.geometry.clone();
-                // Wipe out any trailer deformations (stretching) before computing bounding box
-                if (child.geometry.userData.originalPosition) {
+                // Wipe out any trailer deformations (stretching) before computing bounding box, UNLESS deformation is allowed
+                if (!allowDeformation && child.geometry.userData.originalPosition) {
                     child.geometry.attributes.position.array.set(child.geometry.userData.originalPosition);
                     child.geometry.attributes.position.needsUpdate = true;
                     child.geometry.boundingBox = null;
@@ -147,7 +147,29 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
             proxyMeshRef.current.position.copy(center);
             proxyMeshRef.current.scale.copy(size);
             proxyMeshRef.current.updateMatrixWorld(true);
+
+            // console.log(`[WheelInstances] ProxyMesh Updated. Center:`, center, `Size:`, size, `Min Y:`, trueBounds.min.y);
         }
+
+        // --- EXPLICITLY SYNC VERTICES HERE ---
+        // By doing this synchronously inside updateMatrices() instead of useFrame,
+        // we guarantee zero lag because the parent component calls this immediately AFTER deforming.
+        instancedMeshes.forEach(({ iMesh, srcMesh }) => {
+            if (allowDeformation && srcMesh.geometry.attributes.position && iMesh.geometry.attributes.position) {
+                const srcPos = srcMesh.geometry.attributes.position.array;
+                const dstPos = iMesh.geometry.attributes.position.array;
+                let changed = false;
+                for (let i = 0; i < srcPos.length; i++) {
+                    if (dstPos[i] !== srcPos[i]) {
+                        dstPos[i] = srcPos[i];
+                        changed = true;
+                    }
+                }
+                if (changed) {
+                    iMesh.geometry.attributes.position.needsUpdate = true;
+                }
+            }
+        });
     };
 
     useImperativeHandle(ref, () => ({
@@ -161,6 +183,7 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo }, ref) => {
     // 4. Per-frame sync
     useFrame(() => {
         instancedMeshes.forEach(({ iMesh, srcMesh }) => {
+
             const src = Array.isArray(srcMesh.material) ? srcMesh.material : [srcMesh.material];
             const dest = Array.isArray(iMesh.material) ? iMesh.material : [iMesh.material];
             
