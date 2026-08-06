@@ -2,7 +2,8 @@ import { useRef, useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import { applyDimensionDeformations, applyConcessionDoorDeformations, applyWindowDeformations } from '../utils/GeometryUtils'
+import DynamicMount from './DynamicMount'
+import { applyDimensionDeformations, applyConcessionDoorDeformations, applyWindowDeformations, applyObjectDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import { patchTriplanarMaterial, generateBoxProjectionUVs } from '../utils/TriplanarMaterial'
@@ -268,6 +269,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const shellTextures = useTexture(SHELL_TEXTURES)
     const simpleNoise   = useTexture('/Materials/Simple_Noise.png')
     const normalMap = useTexture('/Materials/Metallic_Grates_Normal.png')
+    
     normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping
     normalMap.colorSpace = THREE.NoColorSpace
     normalMap.needsUpdate = true
@@ -301,6 +303,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // child.visible is accurate when the proxy scan runs.
     const [visibilityVersion, setVisibilityVersion] = useState(0)
     const eTrackGroupRef = useRef(new THREE.Group())
+    const spareTireMountRef = useRef(null)
 
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
     // and explicitly hide any proxy meshes so they don't render.
@@ -1564,16 +1567,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         if (config.spareTire) {
-            const lugNumber = (config.lugType || '5lug').replace('lug', '');
-            const lugSuffix = `${lugNumber}-Lug`;
-
-            if (config.wheelType === 'spideraluminum') {
-                activeAddonMeshes.push(`Spider_Spare_Tire_${lugSuffix}`)
-                activeAddonMeshes.push(`Spider Spare Tire ${lugSuffix}`)
-            } else {
-                activeAddonMeshes.push(`Standard_Spare_Tire_${lugSuffix}`)
-                activeAddonMeshes.push(`Standard Spare Tire ${lugSuffix}`)
-            }
+            // Push the mount mesh itself so it becomes visible (try both naming conventions to be safe)
+            activeAddonMeshes.push('Spare Tire Mount');
+            activeAddonMeshes.push('Spare_Tire_Mount');
+            
+            // The actual spare tire mesh is now dynamically instanced in the render tree 
+            // at the location of the 'Spare Tire Mount Socket' node.
         }
 
         // Receptacles
@@ -1986,6 +1985,56 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         return <primitive object={instanced} />
     }, [addons, lengthFt, config.ladderRacks])
 
+    const spareTireData = useMemo(() => {
+        if (!config.spareTire) return null;
+
+        let socket = null;
+        addons.traverse(child => {
+            if (child.name === 'Spare Tire Mount Socket' || child.name === 'Spare_Tire_Mount_Socket') {
+                socket = child;
+            }
+        });
+        if (!socket) return null;
+
+        const lugStr = (config.lugType || '5lug').replace('lug', '');
+        let wheelStyleName = 'Standard';
+        if (config.wheelType === 'spideraluminum') {
+            wheelStyleName = 'Spider';
+        }
+
+        let tireGroup = null;
+        let fallbackTireGroup = null;
+        
+        const normWheelStyle = wheelStyleName.toLowerCase();
+        const normLug = `${lugStr}lug`;
+        const normLugDash = `${lugStr}-lug`;
+
+        // Search in wheels.glb for the highly detailed actual tire meshes
+        wheels.traverse(child => {
+            const lowerName = child.name.toLowerCase();
+            const normName = lowerName.replace(/[\s_\-]/g, '');
+            
+            if (normName.includes('tire')) {
+                if (!lowerName.match(/_[0-9]+$/)) {
+                    if (!fallbackTireGroup) fallbackTireGroup = child;
+
+                    if (lowerName.includes(normWheelStyle) && (lowerName.includes(normLug) || lowerName.includes(normLugDash))) {
+                        tireGroup = child;
+                    }
+                }
+            }
+        });
+
+        tireGroup = tireGroup || fallbackTireGroup;
+
+        if (!tireGroup) {
+            console.warn(`[SpareTire Debug] FAILED to find any real tire group in wheels.glb!`);
+            return null;
+        }
+
+        return { tireGroup, socket };
+    }, [config.spareTire, config.tireSize, config.lugType, config.wheelType, addons, wheels]);
+
     useEffect(() => {
         dirtyRef.current = true
     }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.narrowTrackAxle, config.windows, config.windowSizes])
@@ -2131,11 +2180,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         activeScenesRef.current.forEach(scene => {
             scene.traverse(child => {
-                if (!child.isMesh || !child.geometry) return
+                // If it's not a mesh and doesn't have custom properties, skip it.
+                if (!child.isMesh && (!child.userData || Object.keys(child.userData).length === 0)) return;
 
                 // Prevent applying deformations multiple times on shared geometries in a single frame
-                if (processedGeometries.has(child.geometry.uuid)) return
-                processedGeometries.add(child.geometry.uuid)
+                if (child.geometry) {
+                    if (processedGeometries.has(child.geometry.uuid)) return;
+                    processedGeometries.add(child.geometry.uuid);
+                }
 
                 child.updateWorldMatrix(true, false)
                 const we = child.matrixWorld.elements
@@ -2146,13 +2198,21 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     narrowTrackOffset = 0.1 // Shift inward by ~2.4 inches per side
                 }
 
-                applyDimensionDeformations({
-                    geometry: child.geometry, store: store.current,
-                    uuid: child.uuid, meshName: child.name || child.uuid,
-                    widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: scene === awning ? na : 18,
-                    globalZCenter, globalXMin, globalXMax,
-                    we, ie, narrowTrackOffset
-                })
+                if (child.geometry) {
+                    applyDimensionDeformations({
+                        geometry: child.geometry, store: store.current,
+                        userData: child.userData || {},
+                        uuid: child.uuid, meshName: child.name || child.uuid,
+                        widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: scene === awning ? na : 18,
+                        globalZCenter, globalXMin, globalXMax,
+                        we, ie, narrowTrackOffset
+                    })
+                } else if (child.isObject3D) {
+                    applyObjectDeformations(child, {
+                        widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: scene === awning ? na : 18,
+                        narrowTrackOffset
+                    });
+                }
                 
                 if (scene === concessionDoorScene) {
                    // console.log(`[DEBUG CONCESSION] Applying deformations to ${child.name}. ncw: ${ncw}, nch: ${nch}`);
@@ -2199,6 +2259,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
             applyUvScalingForScene(scene)
         })
+
+        if (spareTireMountRef.current) {
+            spareTireMountRef.current.updatePosition();
+        }
 
         // ── Dynamically Generate E-Track ────────────────────────
         eTrackGroupRef.current.clear()
@@ -2628,6 +2692,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     <primitive key={scene.uuid} object={scene} />
                 ))}
                 {ladderRacksGroup}
+                {spareTireData && (
+                    <DynamicMount 
+                        ref={spareTireMountRef}
+                        sourceMesh={spareTireData.tireGroup} 
+                        socket={spareTireData.socket} 
+                        relativeTo={addons}
+                        applyRotation={false}
+                    />
+                )}
                 <primitive object={eTrackGroupRef.current} />
             </group>
         </>

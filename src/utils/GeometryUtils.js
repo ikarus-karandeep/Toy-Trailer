@@ -2,6 +2,7 @@
  * Reusable geometry deformation utilities for Blender Geometry Node setups
  */
 import { BlenderNodes } from './BlenderNodes'
+import * as THREE from 'three'
 
 // ─── Core: store original vertex positions ────────────────────────────────────
 
@@ -163,7 +164,7 @@ const _loggedMeshAttrs = new Set()
  * @param {number} params.heightFt  - target height in feet (e.g. 6.58–10.5)
  * @param {boolean} params.hasCabinet - whether the trailer has a cabinet
  */
-export function applyDimensionDeformations({ geometry, store, uuid, meshName, widthFt, lengthFt, heightFt, awningFt, hasCabinet, globalZCenter, globalXMin, globalXMax, we, ie, narrowTrackOffset = 0 }) {
+export function applyDimensionDeformations({ geometry, userData = {}, store, uuid, meshName, widthFt, lengthFt, heightFt, awningFt, hasCabinet, globalZCenter, globalXMin, globalXMax, we, ie, narrowTrackOffset = 0 }) {
   const position = geometry.attributes.position
   if (!position) {
     console.warn(`[deform] "${meshName}" — SKIP: no position attribute`)
@@ -278,10 +279,27 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const rearSel1 = key1 ? geometry.attributes[key1] : null
   const topSel = topKey ? geometry.attributes[topKey] : null
 
-  const hasSel4 = !!rearSel4;
-  const hasSel3 = !!rearSel3;
-  const hasSel2 = !!rearSel2;
-  const hasSel1 = !!rearSel1;
+  // Support Object-level Custom Properties (Blender "Custom Properties" tab)
+  const udLeft = userData['Left Selection'] ?? userData['leftselection']
+  const udRight = userData['Right Selection'] ?? userData['rightselection']
+  const udRear4 = userData['Rear Selection 4'] ?? userData['rearselection4']
+  const udRear3 = userData['Rear Selection 3'] ?? userData['rearselection3']
+  const udRear2 = userData['Rear Selection 2'] ?? userData['rearselection2']
+  const udRear1 = userData['Rear Selection'] ?? userData['rearselection']
+  const udTop = userData['Top Selection'] ?? userData['topselection']
+
+  const hasSel4 = !!rearSel4 || udRear4 !== undefined;
+  const hasSel3 = !!rearSel3 || udRear3 !== undefined;
+  const hasSel2 = !!rearSel2 || udRear2 !== undefined;
+  const hasSel1 = !!rearSel1 || udRear1 !== undefined;
+
+  if (meshName.toLowerCase().includes('socket')) {
+      console.log(`[DEFORM DEBUG] Mesh: ${meshName}
+      udRear1: ${udRear1}, udRear2: ${udRear2}, udRear3: ${udRear3}, udRear4: ${udRear4}, udLeft: ${udLeft}, udRight: ${udRight}
+      hasSel1: ${hasSel1} (val: ${hasSel1 ? (rearSel1 ? "from vertex" : udRear1) : 0})
+      deltaLength: ${deltaLength.toFixed(2)}`);
+  }
+
   // Proxy cutouts (e.g. Gullwing_Escape_Door_Proxy) ship without selection attrs.
   // The position-based width fallback spreads verts symmetrically about zCenter,
   // which mirrors the proxy onto the opposite wall.
@@ -297,8 +315,12 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
   const rearendKey = attrKeys.find(k => normKey(k).includes('rearend'))
   const frontEndSel = frontendKey ? geometry.attributes[frontendKey] : null
   const rearEndSel = rearendKey ? geometry.attributes[rearendKey] : null
-  const hasFrontEnd = !!frontEndSel
-  const hasRearEnd = !!rearEndSel
+
+  const udFrontEnd = userData['Front End'] ?? userData['frontend']
+  const udRearEnd = userData['Rear End'] ?? userData['rearend']
+
+  const hasFrontEnd = !!frontEndSel || udFrontEnd !== undefined
+  const hasRearEnd = !!rearEndSel || udRearEnd !== undefined
   const BASE_AWNING_FT = 18
   const deltaAwning = awningFt !== undefined ? (awningFt - BASE_AWNING_FT) * FEET_TO_M : 0
 
@@ -370,9 +392,9 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
           }
           let nox = ox, noy = oy, noz = oz;
           
-          if (leftSel || rightSel) {
-            if (leftSel) noz += deltaWidth * leftSel.getX(i);
-            if (rightSel) noz -= deltaWidth * rightSel.getX(i);
+          if (leftSel || rightSel || udLeft !== undefined || udRight !== undefined) {
+            if (leftSel || udLeft !== undefined) noz += deltaWidth * (leftSel ? leftSel.getX(i) : udLeft);
+            if (rightSel || udRight !== undefined) noz -= deltaWidth * (rightSel ? rightSel.getX(i) : udRight);
           } else if (deltaWidth !== 0) {
             noz += deltaWidth;
           }
@@ -384,18 +406,18 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
           
           if (hasSel1 || hasSel2 || hasSel3 || hasSel4) {
             let move = 0;
-            if (hasSel4) move += applyDelta4 * rearSel4.getX(i);
-            if (hasSel3) move += applyDelta3 * rearSel3.getX(i);
-            if (hasSel2) move += applyDelta2 * rearSel2.getX(i);
-            if (hasSel1) move += applyDelta1 * rearSel1.getX(i);
+            if (hasSel4) move += applyDelta4 * (rearSel4 ? rearSel4.getX(i) : udRear4);
+            if (hasSel3) move += applyDelta3 * (rearSel3 ? rearSel3.getX(i) : udRear3);
+            if (hasSel2) move += applyDelta2 * (rearSel2 ? rearSel2.getX(i) : udRear2);
+            if (hasSel1) move += applyDelta1 * (rearSel1 ? rearSel1.getX(i) : udRear1);
             nox += move;
           } else if (!isProxy && deltaLength !== 0 && globalXMax !== undefined && globalXMin !== undefined) {
             const globalXRange = globalXMin - globalXMax;
             if (globalXRange !== 0) nox += ((nox - globalXMax) / globalXRange) * deltaLength;
           }
           
-          if (topSel) {
-            noy += deltaHeight * topSel.getX(i);
+          if (topSel || udTop !== undefined) {
+            noy += deltaHeight * (topSel ? topSel.getX(i) : udTop);
           } else if (!isProxy && deltaHeight !== 0 && yRange > 0) {
             noy += ((noy - minY) / yRange) * deltaHeight;
           }
@@ -427,9 +449,9 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
       oy += proxyMoveY;
       oz += proxyMoveZ;
     } else {
-      if (leftSel || rightSel) {
-        if (leftSel) oz += deltaWidth * leftSel.getX(i)
-        if (rightSel) oz -= deltaWidth * rightSel.getX(i)
+      if (leftSel || rightSel || udLeft !== undefined || udRight !== undefined) {
+        if (leftSel || udLeft !== undefined) oz += deltaWidth * (leftSel ? leftSel.getX(i) : udLeft)
+        if (rightSel || udRight !== undefined) oz -= deltaWidth * (rightSel ? rightSel.getX(i) : udRight)
       } else if (deltaWidth !== 0 && zRange > 0) {
         const t = (oz - zCenter) / zRange
         oz += t * deltaWidth
@@ -445,10 +467,10 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
 
       if (hasSel1 || hasSel2 || hasSel3 || hasSel4) {
         let move = 0;
-        if (hasSel4) move += applyDelta4 * rearSel4.getX(i);
-        if (hasSel3) move += applyDelta3 * rearSel3.getX(i);
-        if (hasSel2) move += applyDelta2 * rearSel2.getX(i);
-        if (hasSel1) move += applyDelta1 * rearSel1.getX(i);
+        if (hasSel4) move += applyDelta4 * (rearSel4 ? rearSel4.getX(i) : udRear4);
+        if (hasSel3) move += applyDelta3 * (rearSel3 ? rearSel3.getX(i) : udRear3);
+        if (hasSel2) move += applyDelta2 * (rearSel2 ? rearSel2.getX(i) : udRear2);
+        if (hasSel1) move += applyDelta1 * (rearSel1 ? rearSel1.getX(i) : udRear1);
         ox += move;
       } else if (deltaLength !== 0 && globalXMax !== undefined && globalXMin !== undefined) {
         const globalXRange = globalXMin - globalXMax
@@ -458,20 +480,22 @@ export function applyDimensionDeformations({ geometry, store, uuid, meshName, wi
         }
       }
 
-      if (hasFrontEnd || hasRearEnd) {
-        if (hasFrontEnd) {
-          ox -= (deltaAwning * 0.6) * frontEndSel.getX(i);
-        }
-        if (hasRearEnd) {
-          ox += (deltaAwning * 0.4) * rearEndSel.getX(i);
-        }
-      }
-
-      if (topSel) {
-        oy += deltaHeight * topSel.getX(i)
-      } else if (deltaHeight !== 0 && yRange > 0) {
+      // Handle top selection
+      if (topSel || udTop !== undefined) {
+        oy += deltaHeight * (topSel ? topSel.getX(i) : udTop)
+      } else if (!isProxy && deltaHeight !== 0 && yRange > 0) {
         const t = (oy - minY) / yRange
         oy += t * deltaHeight
+      }
+
+      // Handle front/rear end logic for awning
+      if (hasFrontEnd || hasRearEnd) {
+        if (hasFrontEnd) {
+          ox -= deltaAwning * (frontEndSel ? frontEndSel.getX(i) : udFrontEnd)
+        }
+        if (hasRearEnd) {
+          ox += deltaAwning * (rearEndSel ? rearEndSel.getX(i) : udRearEnd)
+        }
       }
     }
 
@@ -621,6 +645,7 @@ export function applyWindowDeformations({ geometry, widthIn, heightIn, baseWidth
     return
   }
 
+
   for (let i = 0; i < position.count; i++) {
     let dx = 0
     let dy = 0
@@ -641,4 +666,120 @@ export function applyWindowDeformations({ geometry, widthIn, heightIn, baseWidth
   }
 
   position.needsUpdate = true
+}
+
+/**
+ * Applies dimension deformations directly to an Object3D's position (e.g. an Empty or Socket)
+ * based purely on its userData Custom Properties.
+ */
+export function applyObjectDeformations(child, { lengthFt, widthFt, heightFt, awningFt, narrowTrackOffset = 0 }) {
+  if (!child || !child.isObject3D) return;
+  
+  const userData = child.userData || {};
+  
+  const udLeft = userData['Left Selection'] ?? userData['leftselection']
+  const udRight = userData['Right Selection'] ?? userData['rightselection']
+  const udRear4 = userData['Rear Selection 4'] ?? userData['rearselection4']
+  const udRear3 = userData['Rear Selection 3'] ?? userData['rearselection3']
+  const udRear2 = userData['Rear Selection 2'] ?? userData['rearselection2']
+  const udRear1 = userData['Rear Selection'] ?? userData['rearselection']
+  const udTop = userData['Top Selection'] ?? userData['topselection']
+  
+  const udFrontEnd = userData['Front End'] ?? userData['frontend']
+  const udRearEnd = userData['Rear End'] ?? userData['rearend']
+
+  if (udLeft === undefined && udRight === undefined && udRear4 === undefined && udRear3 === undefined && udRear2 === undefined && udRear1 === undefined && udTop === undefined && udFrontEnd === undefined && udRearEnd === undefined) {
+          return; // No custom properties to deform
+  }
+
+  // Cache original position if not done yet
+  if (!userData.originalPosition3D) {
+      userData.originalPosition3D = child.position.clone();
+      console.log(`[OBJECT DEFORM DEBUG] Cached original position for ${child.name}:`, userData.originalPosition3D);
+  }
+  
+  const FEET_TO_M = 0.3048;
+  const BASE_WIDTH_FT = 8.5;
+  const BASE_LENGTH_FT = 32;
+  const BASE_HEIGHT_FT = 6.5833;
+  const BASE_AWNING_FT = 18;
+
+  const WIDTH_FACTOR = 0.500; // Must match applyDimensionDeformations (Factor=0.5 on Move nodes)
+  const deltaWidth = widthFt !== undefined ? (widthFt - BASE_WIDTH_FT) * FEET_TO_M * WIDTH_FACTOR : 0;
+  const deltaHeight = heightFt !== undefined ? (heightFt - BASE_HEIGHT_FT) * FEET_TO_M : 0;
+  const deltaAwning = awningFt !== undefined ? (awningFt - BASE_AWNING_FT) * FEET_TO_M : 0;
+
+  let delta4 = 0, delta3 = 0, delta2 = 0, delta1 = 0;
+  if (lengthFt !== undefined) {
+      // Node 1: Handles length changes ABOVE 27ft
+      delta1 = (Math.max(lengthFt - 27, 0) - Math.max(BASE_LENGTH_FT - 27, 0)) * FEET_TO_M;
+      
+      // Node 2: Handles length changes BETWEEN 23.5ft and 27ft
+      const clampL2 = Math.max(Math.min(lengthFt, 27), 23.5);
+      const clampB2 = Math.max(Math.min(BASE_LENGTH_FT, 27), 23.5);
+      delta2 = (clampL2 - clampB2) * FEET_TO_M;
+
+      // Node 3: Handles length changes BELOW 23.5ft
+      const minL3 = Math.min(lengthFt, 23.5);
+      const minB3 = Math.min(BASE_LENGTH_FT, 23.5);
+      delta3 = (minL3 - minB3) * FEET_TO_M;
+
+      // Node 4: Handles length changes BELOW 16.5ft
+      const minL4 = Math.min(lengthFt, 16.5);
+      const minB4 = Math.min(BASE_LENGTH_FT, 16.5);
+      delta4 = (minL4 - minB4) * FEET_TO_M;
+  }
+
+  const applyDelta4 = delta4 * 1.3;
+  const applyDelta3 = delta3 - delta4 * 1.3;
+  const applyDelta2 = delta2;
+  const applyDelta1 = delta1;
+
+  let worldPos = new THREE.Vector3();
+  if (child.parent) {
+      child.parent.updateMatrixWorld(true);
+      worldPos.copy(userData.originalPosition3D).applyMatrix4(child.parent.matrixWorld);
+  } else {
+      worldPos.copy(userData.originalPosition3D);
+  }
+
+  let ox = worldPos.x;
+  let oy = worldPos.y;
+  let oz = worldPos.z;
+
+  // Apply Width Deformations (Three.js Z axis)
+  if (udLeft !== undefined) oz += deltaWidth * udLeft;
+  if (udRight !== undefined) oz -= deltaWidth * udRight;
+
+  if (narrowTrackOffset !== 0) {
+      if (oz > 0) oz -= narrowTrackOffset;
+      else oz += narrowTrackOffset;
+  }
+
+  // Apply Length Deformations (Three.js X axis)
+  let move = 0;
+  if (udRear4 !== undefined) move += applyDelta4 * udRear4;
+  if (udRear3 !== undefined) move += applyDelta3 * udRear3;
+  if (udRear2 !== undefined) move += applyDelta2 * udRear2;
+  if (udRear1 !== undefined) move += applyDelta1 * udRear1;
+  ox += move;
+
+  // Apply Height Deformations (Three.js Y axis)
+  if (udTop !== undefined) oy += deltaHeight * udTop;
+
+  // Apply Awning Deformations
+  if (udFrontEnd !== undefined) ox -= deltaAwning * udFrontEnd;
+  if (udRearEnd !== undefined) ox += deltaAwning * udRearEnd;
+
+  worldPos.set(ox, oy, oz);
+
+  // Convert back to local space
+  if (child.parent) {
+      let inverseParent = child.parent.matrixWorld.clone().invert();
+      worldPos.applyMatrix4(inverseParent);
+  }
+
+  child.position.copy(worldPos);
+  child.updateMatrix();
+  child.updateMatrixWorld(true);
 }
