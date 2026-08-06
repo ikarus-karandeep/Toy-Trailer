@@ -2,7 +2,7 @@ import { useRef, useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
-import DynamicMount from './DynamicMount'
+import WheelInstances from './WheelInstances'
 import { applyDimensionDeformations, applyConcessionDoorDeformations, applyWindowDeformations, applyObjectDeformations } from '../utils/GeometryUtils'
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
@@ -298,12 +298,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     useEffect(() => {
         setIsMounted(true);
     }, []);
-    const wheelCoverOriginalMatsRef = useRef(new Map())
+    const wheelCoverOriginalMatsRef = useRef()
+    const trailerGroupRef = useRef()
+    const wheelsGroupRef = useRef()
+    const eTrackGroupRef = useRef(new THREE.Group())
+    const spareTireMountRef = useRef()
+    const wheelMountsRef = useRef()
     // Incremented by the visibility useEffect after every switchMesh/switchMeshes call.
     // child.visible is accurate when the proxy scan runs.
     const [visibilityVersion, setVisibilityVersion] = useState(0)
-    const eTrackGroupRef = useRef(new THREE.Group())
-    const spareTireMountRef = useRef(null)
 
     // DEBUG: log mesh names + material names as Three.js sees them after GLB load
     // and explicitly hide any proxy meshes so they don't render.
@@ -1776,17 +1779,21 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Target normalized name: e.g. "162standardwheels5lug" or "162spiderwheels5lug"
         const targetWheelNorm = `${tireSizeStr}${axleCountStr}${wheelStyleName}${lugStr}lug`;
         
-        const activeWheelMeshes = [];
+        // Hide ALL tire/wheel meshes in the wheels scene.
+        // Both the old "_Wheels_" static meshes and "_Inst" meshes are suppressed.
+        // Tires are now rendered exclusively via DynamicMount + socket system.
+        const relevantSocketPrefix = `${tireSizeStr}-${axleCountStr}_`;
         wheels.traverse(child => {
             if (child.isMesh) {
-                const normName = child.name.toLowerCase().replace(/[\s_\-]/g, '');
-                if (normName.includes(targetWheelNorm)) {
-                    activeWheelMeshes.push(child.name);
-                }
+                child.visible = false;
+            }
+            // Hide socket objects that don't match the current size + axle config
+            if (child.name && child.name.endsWith('_Socket') && child.name !== 'Spare_Tire_Mount_Socket') {
+                child.visible = child.name.startsWith(relevantSocketPrefix);
             }
         });
-
-        BlenderNodes.switchMeshes(wheels, activeWheelMeshes);
+        // Pass empty array so BlenderNodes.switchMeshes hides everything
+        BlenderNodes.switchMeshes(wheels, []);
 
         const variant = config.axleCount === 'triple' ? '3x' : '2x';
         const prefix = variant === '3x' ? '3X_' : '2X_';
@@ -2035,6 +2042,57 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         return { tireGroup, socket };
     }, [config.spareTire, config.tireSize, config.lugType, config.wheelType, addons, wheels]);
 
+    // ── Socket-based Wheel Rendering ────────────────────────────────────────────
+    // Finds the correct Inst mesh and all relevant sockets from wheels.glb,
+    // then renders one DynamicMount per socket so tires sit at the exact positions.
+    const wheelMountsData = useMemo(() => {
+        if (!wheels) return null;
+
+        const axleCountStr = config.axleCount === 'triple' ? '3' : '2';
+        const tireSizeStr = config.tireSize || '15';
+        const lugStr = (config.lugType || '5lug').replace('lug', '');
+        let wheelStyleName = 'Standard';
+        if (config.wheelType === 'spideraluminum') wheelStyleName = 'Spider';
+
+        // Find the Inst base mesh (the first one with no trailing _N suffix that matches)
+        // Name pattern: "16in_Standard_Tire_5-Lug_Inst" (the base, not _1 or _2)
+        const targetPrefix = `${tireSizeStr}in_${wheelStyleName}_Tire_${lugStr}-Lug_Inst`;
+        let instMesh = null;
+        wheels.traverse(child => {
+            if (instMesh) return;
+            if (child.name === targetPrefix) {
+                instMesh = child;
+            }
+        });
+
+        if (!instMesh) {
+            console.warn(`[WheelMount] Could not find Inst mesh: "${targetPrefix}"`);
+            // Log all available names to help debug
+            const available = [];
+            wheels.traverse(c => { if (c.name) available.push(c.name); });
+            console.log('[WheelMount] All names in wheels.glb:', available);
+            return null;
+        }
+        console.log(`[WheelMount] Found instMesh: "${instMesh.name}", type: ${instMesh.type}, children: ${instMesh.children?.length}`);
+
+        // Find all sockets matching the current size + axle count
+        // Pattern: "16-2_L1_Socket", "16-2_R1_Socket", "15-3_L1_Socket" etc.
+        const socketPrefix = `${tireSizeStr}-${axleCountStr}_`;
+        const sockets = [];
+        wheels.traverse(child => {
+            if (child.name.startsWith(socketPrefix) && child.name.endsWith('_Socket')) {
+                sockets.push(child);
+            }
+        });
+
+        if (sockets.length === 0) {
+            console.warn(`[WheelMount] No sockets found with prefix "${socketPrefix}"`);
+        }
+        console.log(`[WheelMount] Found ${sockets.length} sockets for prefix "${socketPrefix}":`, sockets.map(s => s.name));
+
+        return { instMesh, sockets };
+    }, [config.tireSize, config.lugType, config.wheelType, config.axleCount, wheels]);
+
     useEffect(() => {
         dirtyRef.current = true
     }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.narrowTrackAxle, config.windows, config.windowSizes])
@@ -2208,6 +2266,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         we, ie, narrowTrackOffset
                     })
                 } else if (child.isObject3D) {
+                    // Skip wheel sockets that don't belong to the current tire size + axle config.
+                    // Socket names follow pattern: "16-2_L1_Socket", "15-3_R2_Socket" etc.
+                    if (scene === wheels && child.name.endsWith('_Socket') && child.name !== 'Spare_Tire_Mount_Socket') {
+                        const axleCountStr = config.axleCount === 'triple' ? '3' : '2';
+                        const tireSizeStr = config.tireSize || '15';
+                        const relevantPrefix = `${tireSizeStr}-${axleCountStr}_`;
+                        if (!child.name.startsWith(relevantPrefix)) {
+                            return; // Skip sockets for other sizes/configs
+                        }
+                    }
                     applyObjectDeformations(child, {
                         widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: scene === awning ? na : 18,
                         narrowTrackOffset
@@ -2260,9 +2328,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             applyUvScalingForScene(scene)
         })
 
-        if (spareTireMountRef.current) {
-            spareTireMountRef.current.updatePosition();
-        }
 
         // ── Dynamically Generate E-Track ────────────────────────
         eTrackGroupRef.current.clear()
@@ -2613,6 +2678,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         }
 
+        // --- EXPLICITLY SYNC WHEELS LAST ---
+        // By calling this here, we ensure the wheels grab their new positions 
+        // AFTER the chassis vertices have fully finished deforming this frame.
+        if (spareTireMountRef.current) spareTireMountRef.current.updateMatrices();
+        if (wheelMountsRef.current) wheelMountsRef.current.updateMatrices();
     })
 
     const prevVisibleExteriorNodes = useRef(new Set());
@@ -2693,12 +2763,19 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 ))}
                 {ladderRacksGroup}
                 {spareTireData && (
-                    <DynamicMount 
+                    <WheelInstances 
                         ref={spareTireMountRef}
-                        sourceMesh={spareTireData.tireGroup} 
-                        socket={spareTireData.socket} 
+                        instMesh={spareTireData.tireGroup} 
+                        sockets={[spareTireData.socket]} 
                         relativeTo={addons}
-                        applyRotation={false}
+                    />
+                )}
+                {wheelMountsData && (
+                    <WheelInstances
+                        ref={wheelMountsRef}
+                        instMesh={wheelMountsData.instMesh}
+                        sockets={wheelMountsData.sockets}
+                        relativeTo={wheels}
                     />
                 )}
                 <primitive object={eTrackGroupRef.current} />

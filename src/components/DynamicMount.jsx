@@ -21,7 +21,8 @@ const DynamicMount = forwardRef(({
     sourceMesh, 
     relativeTo, 
     applyRotation = false, 
-    applyScale = false 
+    applyScale = false,
+    mirrorZ = false
 }, ref) => {
     // Refs for real-time material synchronization
     const materialRefs = useRef({ cloned: null, original: null });
@@ -30,14 +31,23 @@ const DynamicMount = forwardRef(({
         const { cloned } = materialRefs.current;
         if (!cloned || !socket || !cloned.parent) return;
 
-        socket.updateMatrixWorld(true);
-        cloned.parent.updateMatrixWorld(true);
+        // updateWorldMatrix(updateParents=true, updateChildren=false)
+        // traverses UP the ancestor chain first, ensuring the wheels scene's
+        // matrixWorld is correct before we read the socket's world position.
+        socket.updateWorldMatrix(true, false);
+        cloned.parent.updateWorldMatrix(true, false);
         
         // Extract only world position from socket, convert to cloned.parent local space
         const worldPos = new THREE.Vector3();
         socket.getWorldPosition(worldPos);
+
         cloned.parent.worldToLocal(worldPos);
         cloned.position.copy(worldPos);
+
+        // Mirror Z for right-side mounts (hub facing outward on both sides)
+        if (mirrorZ) {
+            cloned.scale.set(1, 1, -1);
+        }
 
         // Only apply rotation/scale if explicitly requested
         if (applyRotation) {
@@ -84,29 +94,45 @@ const DynamicMount = forwardRef(({
             }
         });
 
-        // Mathematically auto-center the pristine, un-deformed geometry
+        // Auto-center the geometry so the socket position IS the visual center.
+        // Only apply if the mesh center is significantly off from world origin.
         const bbox = new THREE.Box3().setFromObject(cloned);
         const center = new THREE.Vector3();
         bbox.getCenter(center);
         
-        cloned.traverse(child => {
-            if (child.isMesh) {
-                // Center the geometry perfectly at (0,0,0)
-                child.geometry.translate(-center.x, -center.y, -center.z);
-            }
-        });
+        // Only center if the object is far from origin (e.g. spare tire from addons scene).
+        // Wheel Inst meshes are already centered in their local space from Blender.
+        const distFromOrigin = center.length();
+        if (distFromOrigin > 0.1) {
+            cloned.traverse(child => {
+                if (child.isMesh) {
+                    child.geometry.translate(-center.x, -center.y, -center.z);
+                }
+            });
+        }
 
         // Copy custom properties (like weights) from the socket to the cloned mesh
         if (socket.userData) {
             cloned.userData = { ...cloned.userData, ...socket.userData };
         }
 
+        // ── Pre-position at socket to prevent 1-frame flash at origin ────────────
+        // The clone isn't in the scene yet so cloned.parent is null.
+        // The outer <group> wrapper has identity matrix, so world pos ≈ local pos.
+        // We set it here so the very first rendered frame is already correct.
+        socket.updateWorldMatrix(true, false);
+        const initPos = new THREE.Vector3();
+        socket.getWorldPosition(initPos);
+        cloned.position.copy(initPos);
+        if (mirrorZ) cloned.scale.set(1, 1, -1);
+        // ────────────────────────────────────────────────────────────────────────
+
         // Save refs for the material sync loop and dynamic transform loop
         materialRefs.current.cloned = cloned;
         materialRefs.current.original = sourceMesh;
 
         return cloned;
-    }, [sourceMesh, socket, relativeTo, applyRotation, applyScale]);
+    }, [sourceMesh, socket, relativeTo, applyRotation, applyScale, mirrorZ]);
 
     useFrame(() => {
         const { cloned, original } = materialRefs.current;

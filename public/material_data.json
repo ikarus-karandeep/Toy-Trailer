@@ -2625,6 +2625,162 @@
       }
     }
   },
+  "16in Standard Tire 5-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16in Standard Tire 6-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16in Standard Tire 8-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15in Standard Tire 5-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15in Standard Tire 6-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15in Standard Tire 8-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "16-3 Standard Wheels 8-Lug": {
     "0": {
       "material_name": "Tyre_Rubber",
@@ -2912,6 +3068,198 @@
     }
   },
   "15-2 Standard Wheels 5-Lug": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16in Spider Tire 5-Lug Inst": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16in Spider Tire 6-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "16in Spider Tire 8-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15in Spider Tire 5-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15in Spider Tire 6-Lug Inst": {
+    "0": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "15in Spider Tire 8-Lug Inst": {
     "0": {
       "material_name": "Tyre_Rubber",
       "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
@@ -6865,6 +7213,68 @@
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Spare Tire Mount": {
+    "0": {
+      "material_name": "Material",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "3": {
+      "material_name": "Tyre_Rubber",
+      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
+      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
+      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
+      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Rim",
+      "base_color": "#888888",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",

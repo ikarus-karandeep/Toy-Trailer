@@ -695,7 +695,6 @@ export function applyObjectDeformations(child, { lengthFt, widthFt, heightFt, aw
   // Cache original position if not done yet
   if (!userData.originalPosition3D) {
       userData.originalPosition3D = child.position.clone();
-      console.log(`[OBJECT DEFORM DEBUG] Cached original position for ${child.name}:`, userData.originalPosition3D);
   }
   
   const FEET_TO_M = 0.3048;
