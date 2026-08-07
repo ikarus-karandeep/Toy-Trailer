@@ -526,8 +526,8 @@ export function applyDimensionDeformations({ geometry, userData = {}, store, uui
     normalAttr.needsUpdate = true
   }
 
-  geometry.computeBoundingBox()
-  geometry.computeBoundingSphere()
+  // geometry.computeBoundingBox()
+  // geometry.computeBoundingSphere()
 }
 
 

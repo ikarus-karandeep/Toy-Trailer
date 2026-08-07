@@ -9,7 +9,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "1": {
@@ -203,7 +203,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "5": {
@@ -253,7 +253,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "3": {
@@ -1100,7 +1100,7 @@
     },
     "1": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -1126,7 +1126,7 @@
     },
     "1": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -1152,7 +1152,7 @@
     },
     "1": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -2359,7 +2359,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "4": {
@@ -2409,7 +2409,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "3": {
@@ -2476,7 +2476,7 @@
   "Super Duty Ramp": {
     "0": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -2488,7 +2488,7 @@
     },
     "1": {
       "material_name": "Metallic_Silver Stripes",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Wire_Covers_Normal.jpg",
@@ -2533,7 +2533,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "3": {
@@ -2574,7 +2574,7 @@
     },
     "6": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -3570,7 +3570,7 @@
   "D-Rings": {
     "0": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -4153,7 +4153,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     }
   },
@@ -4215,7 +4215,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     }
   },
@@ -4277,7 +4277,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "5": {
@@ -4725,7 +4725,7 @@
     },
     "2": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -4804,7 +4804,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "9": {
@@ -5350,7 +5350,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     }
   },
@@ -5526,7 +5526,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "4": {
@@ -5712,7 +5712,7 @@
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
         "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 1.0
+        "strength": 10.0
       }
     },
     "5": {
@@ -6045,7 +6045,7 @@
     },
     "3": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -6083,7 +6083,7 @@
     },
     "2": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -6111,7 +6111,7 @@
   "Sidewind(Extended V-Nose)": {
     "0": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -6317,7 +6317,7 @@
     },
     "2": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -6340,11 +6340,11 @@
       }
     },
     "4": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -6429,7 +6429,7 @@
     },
     "3": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -6596,14 +6596,14 @@
       }
     },
     "1": {
-      "material_name": "Emission",
-      "base_color": "#E7E7E7",
-      "roughness": 0.5,
-      "metalness": 0.0,
+      "material_name": "New plate",
+      "base_color": "//..\\Textures\\Number_Plate.jpg",
+      "roughness": 1.0,
+      "metalness": 0.4773,
       "normal": false,
-      "alpha": 1.0,
+      "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "#FFFFFF",
+        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
         "strength": 10.0
       }
     }
@@ -6744,7 +6744,7 @@
       }
     }
   },
-  "5K Scissor Jack": {
+  "5K Scissor Jack Inst": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -6758,7 +6758,7 @@
       }
     }
   },
-  "5K Scissor Jack w/ Handle": {
+  "5K Scissor Jack w/ Handle Inst": {
     "0": {
       "material_name": "Steel_Painted",
       "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
@@ -6784,7 +6784,7 @@
       }
     }
   },
-  "Fold Down Stablizer Jack": {
+  "Fold Down Stablizer Jack Inst": {
     "0": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
@@ -6878,7 +6878,7 @@
     },
     "1": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -6904,7 +6904,7 @@
   "Slides+Tray": {
     "0": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
@@ -6956,7 +6956,7 @@
     },
     "1": {
       "material_name": "Standard Silver_Rim",
-      "base_color": "#C1C1C1",
+      "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",

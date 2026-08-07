@@ -61,7 +61,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
-  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay ?? null)
+  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay ?? 'atp')
   const [floorInsulation, setFloorInsulation] = useState(ic.floorInsulation ?? null)
   const [walls, setWalls] = useState(ic.walls ?? 'white_metal_walls')
   const [ceiling, setCeiling] = useState(ic.ceiling ?? 'white_metal_ceiling')
@@ -276,13 +276,13 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     setSpreadAxle(pkgConfig.spreadAxle ?? false);
     setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
     setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
-    setCabinetsRaw(pkgConfig.cabinets ?? ['vnosebase']);
+    setCabinetsRaw(pkgConfig.cabinets ?? ['frontbase36']);
     setJacksRaw(pkgConfig.jacks ?? ['folddown']);
     setElectrical(pkgConfig.electrical ?? '110v8space');
     setRecessedTireBox(pkgConfig.recessedTireBox ?? false);
     setClimateControl(pkgConfig.climateControl ?? 'wirebrace');
-    setWalls(pkgConfig.walls ?? '38plywood');
-    setCeiling(pkgConfig.ceiling ?? 'thermal');
+    setWalls(pkgConfig.walls ?? 'white_metal_walls');
+    setCeiling(pkgConfig.ceiling ?? 'white_metal_ceiling');
   }, []);
 
   const value = useMemo(() => ({

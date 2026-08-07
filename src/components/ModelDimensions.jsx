@@ -25,21 +25,30 @@ function formatFt(ft) {
   return `${Math.round(ft * 100) / 100}'`
 }
 
-function computeDims(group, camera) {
-  _box.makeEmpty()
-  group.traverseVisible((child) => {
-    if (!child.isMesh || !child.geometry) return
-    if (!child.geometry.boundingBox) child.geometry.computeBoundingBox()
-    _childBox.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld)
-    _box.union(_childBox)
-  })
-  if (_box.isEmpty()) return null
+let _cachedBox = new THREE.Box3()
+let _lastBoxUpdate = 0
 
-  _box.getCenter(_center)
-  _box.getSize(_size)
+function computeDims(group, camera) {
+  const now = performance.now()
+  // Only recalculate the expensive total bounding box every 200ms to prevent camera rotation lag
+  if (now - _lastBoxUpdate > 200) {
+    _cachedBox.makeEmpty()
+    group.traverseVisible((child) => {
+      if (!child.isMesh || !child.geometry) return
+      if (!child.geometry.boundingBox) child.geometry.computeBoundingBox()
+      _childBox.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld)
+      _cachedBox.union(_childBox)
+    })
+    _lastBoxUpdate = now
+  }
+  
+  if (_cachedBox.isEmpty()) return null
+
+  _cachedBox.getCenter(_center)
+  _cachedBox.getSize(_size)
   _dir.copy(camera.position).sub(_center)
 
-  const { min, max } = _box
+  const { min, max } = _cachedBox
   const zXAxis = _dir.z > 0 ? max.z + OFFSET : min.z - OFFSET
   const xYAxis = _dir.x > 0 ? max.x + OFFSET : min.x - OFFSET
   const zYAxis = _dir.z > 0 ? max.z + OFFSET : min.z - OFFSET
@@ -207,6 +216,7 @@ export default function ModelDimensions({ groupRef }) {
 
   useFrame(({ camera }) => {
     if (!groupRef.current) return
+    
     const d = computeDims(groupRef.current, camera)
     
     if (!d) {

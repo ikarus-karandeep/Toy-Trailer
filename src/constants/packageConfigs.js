@@ -18,8 +18,8 @@ export const PACKAGE_BADGES = {
  */
 export const PACKAGE_OPTION_IDS = {
   'track-pack': new Set(['rearwingspoiler', 'spideraluminum', 'blackout', 'dropspring', '7000lb', 'drings', 'wall', 'floor']),
-  'job-site':   new Set(['30amp', 'drings', 'wall', 'floor', '5000relectric', 'vnosebase', 'wallrun36', 'wallrun16']),
-  'base-camp':  new Set(['50amp', '18kminisplit', '5000relectric', 'vnosebase', 'wallrun36', 'wallrun16', 'white_metal_walls', 'white_metal_ceiling']),
+  'job-site':   new Set(['30amp', 'drings', 'wall', 'floor', '5000relectric', 'frontbase36', 'wallrun36', 'wallrun16']),
+  'base-camp':  new Set(['50amp', '18kminisplit', '5000relectric', 'frontbase36', 'wallrun36', 'wallrun16', 'white_metal_walls', 'white_metal_ceiling']),
   'no-package': new Set(),
 }
 
@@ -46,7 +46,7 @@ export const PACKAGE_INITIAL_CONFIGS = {
 
   'job-site': {
     // BASE & OVERHEAD CABINETS
-    cabinets: ['vnosebase', 'wallrun36', 'wallrun16'],
+    cabinets: ['frontbase36', 'wallrun36', 'wallrun16'],
     // ELECTRIC JACKS
     jacks: ['5000relectric'],
     // FLOOR + WALL E-TRACK + D-RINGS
@@ -59,7 +59,7 @@ export const PACKAGE_INITIAL_CONFIGS = {
 
   'base-camp': {
     // BASE & OVERHEAD CABINETS
-    cabinets: ['vnosebase', 'wallrun36', 'wallrun16'],
+    cabinets: ['frontbase36', 'wallrun36', 'wallrun16'],
     // ELECTRIC JACK
     jacks: ['5000relectric'],
     // 18K MINI SPLIT AC W/200V WIRE

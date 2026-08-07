@@ -15,7 +15,15 @@ import { EffectComposer, Bloom, ToneMapping } from '@react-three/postprocessing'
 import { ToneMappingMode } from 'postprocessing'
 // Helper to compute stable bounding box that ignores exterior accessories (like awnings)
 // and exceptionally low meshes (like gooseneck jacks) from ground-level calculations.
+let _cachedTrailerBounds = new THREE.Box3();
+let _lastTrailerBoundsUpdate = 0;
+
 function computeTrailerBounds(modelGroup) {
+  const now = performance.now();
+  if (now - _lastTrailerBoundsUpdate < 200 && !_cachedTrailerBounds.isEmpty()) {
+    return _cachedTrailerBounds;
+  }
+
   const box = new THREE.Box3();
   const groundBox = new THREE.Box3();
   
@@ -55,6 +63,9 @@ function computeTrailerBounds(modelGroup) {
   
   if (box.isEmpty()) box.setFromObject(modelGroup);
   if (!groundBox.isEmpty()) box.min.y = groundBox.min.y;
+  
+  _cachedTrailerBounds.copy(box);
+  _lastTrailerBoundsUpdate = now;
   
   return box;
 }
@@ -143,24 +154,22 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
   const { camera, size } = useThree()
   const cameraInitRef = useRef(false)
   const lastBboxRef = useRef(null)
-  // Tracks the model center from the previous frame during a size-change lerp
   const lastCenterRef = useRef(new THREE.Vector3())
-  // True while the model is still lerping to a new size
-  const isTrackingRef = useRef(false)
-  // Mirror of viewMode prop so useFrame can read it without stale closure
   const viewModeRef = useRef(viewMode)
+  const wasAnimatingRef = useRef(false)
+  
   useEffect(() => { viewModeRef.current = viewMode }, [viewMode])
 
-  useEffect(() => {
-    // Don't touch the camera while inside the model — CameraController owns it
+  useFrame(() => {
     if (viewModeRef.current === 'INTERIOR') return
     if (!modelGroupRef.current || !cameraControlsRef.current) return
-    let hasMeshes = false
-    modelGroupRef.current.traverse((o) => { if (o.isMesh) hasMeshes = true })
-    if (!hasMeshes) return
-
+    
+    // Check if initial fit is needed
     if (!cameraInitRef.current) {
-      // First load: fit camera immediately — model geometry is already at rest
+      let hasMeshes = false
+      modelGroupRef.current.traverse((o) => { if (o.isMesh) hasMeshes = true })
+      if (!hasMeshes) return
+
       const bbox = computeTrailerBounds(modelGroupRef.current)
       const bboxSize = new THREE.Vector3()
       bbox.getSize(bboxSize)
@@ -170,6 +179,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       if (groundYRef) groundYRef.current = bbox.min.y
       cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
       cameraInitRef.current = true
+      
       const initCenter = new THREE.Vector3()
       bbox.getCenter(initCenter)
       lastCenterRef.current.copy(initCenter)
@@ -177,73 +187,51 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       return
     }
 
-    // Size changed: cancel any residual drag inertia immediately, then let
-    // useFrame smoothly track the model center as it lerps each frame.
-    const currentPos = new THREE.Vector3()
-    const currentTarget = new THREE.Vector3()
-    cameraControlsRef.current.getPosition(currentPos)
-    cameraControlsRef.current.getTarget(currentTarget)
-    cameraControlsRef.current.setLookAt(
-      currentPos.x, currentPos.y, currentPos.z,
-      currentTarget.x, currentTarget.y, currentTarget.z,
-      false  // synchronous snap — clears queued inertia
-    )
+    // React EXACTLY to the end of the size animation, no matter how long it takes.
+    const isAnimating = !!modelGroupRef.current.userData.isAnimatingSize
+    
+    if (wasAnimatingRef.current && !isAnimating) {
+      // Animation JUST finished. The geometries have their new bounding boxes calculated.
+      // Force cache clear to ensure we get the absolute latest bounds
+      _lastTrailerBoundsUpdate = 0;
+      const bbox = computeTrailerBounds(modelGroupRef.current)
+      
+      const newCenter = new THREE.Vector3()
+      bbox.getCenter(newCenter)
 
-    // Seed lastCenter with the current (pre-lerp) model center
-    const seedBbox = computeTrailerBounds(modelGroupRef.current)
-    seedBbox.getCenter(lastCenterRef.current)
-
-    isTrackingRef.current = true
-  }, [configKey])  // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Every frame while isTrackingRef is true: measure how much the model
-  // center moved this frame and pan the camera by the same delta.
-  // No animation easing needed — running every frame IS the smooth movement.
-  useFrame(() => {
-    if (!isTrackingRef.current) return
-    // Stop tracking if user switched to INTERIOR while lerp was in progress
-    if (viewModeRef.current === 'INTERIOR') { isTrackingRef.current = false; return }
-    if (!modelGroupRef.current || !cameraControlsRef.current) return
-
-    const bbox = computeTrailerBounds(modelGroupRef.current)
-    const newCenter = new THREE.Vector3()
-    bbox.getCenter(newCenter)
-
-    const dx = newCenter.x - lastCenterRef.current.x
-    const dy = newCenter.y - lastCenterRef.current.y
-    const dz = newCenter.z - lastCenterRef.current.z
-    const moved = Math.abs(dx) + Math.abs(dy) + Math.abs(dz)
-
-    if (moved > 0.0001) {
-      // Model is still lerping — pan camera by the same delta this frame
-      const currentTarget = new THREE.Vector3()
-      cameraControlsRef.current.getTarget(currentTarget)
-      const currentPos = new THREE.Vector3()
-      cameraControlsRef.current.getPosition(currentPos)
-
-      cameraControlsRef.current.setLookAt(
-        currentPos.x + dx, currentPos.y + dy, currentPos.z + dz,
-        currentTarget.x + dx, currentTarget.y + dy, currentTarget.z + dz,
-        false  // no easing — we apply it every frame, so it's already smooth
-      )
-    } else {
-      // Lerp complete — update distance limits and stop tracking
-      const bboxSize = new THREE.Vector3()
-      bbox.getSize(bboxSize)
-      const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
-      cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 1.15
-      if (groundYRef) groundYRef.current = bbox.min.y
-      lastBboxRef.current = bbox.clone()
-      isTrackingRef.current = false
+      const dx = newCenter.x - lastCenterRef.current.x
+      const dy = newCenter.y - lastCenterRef.current.y
+      const dz = newCenter.z - lastCenterRef.current.z
+      const moved = Math.abs(dx) + Math.abs(dy) + Math.abs(dz)
+      
+      if (moved > 0.0001) {
+        const currentTarget = new THREE.Vector3()
+        cameraControlsRef.current.getTarget(currentTarget)
+        
+        // Smoothly pan the camera over 0.5 seconds to perfectly center the new bounds, without zooming.
+        cameraControlsRef.current.smoothTime = 0.5
+        cameraControlsRef.current.moveTo(
+          currentTarget.x + dx, currentTarget.y + dy, currentTarget.z + dz,
+          true 
+        )
+        
+        const bboxSize = new THREE.Vector3()
+        bbox.getSize(bboxSize)
+        const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
+        cameraControlsRef.current.minDistance = maxDim * 0.1
+        cameraControlsRef.current.maxDistance = maxDim * 1.15
+        if (groundYRef) groundYRef.current = bbox.min.y
+        
+        lastCenterRef.current.copy(newCenter)
+        lastBboxRef.current = bbox.clone()
+      }
     }
-
-    lastCenterRef.current.copy(newCenter)
+    
+    wasAnimatingRef.current = isAnimating
   })
 
   useEffect(() => {
     if (!lastBboxRef.current || !camera.isPerspectiveCamera || !cameraControlsRef.current) return
-    // CameraControls automatically adjusts aspect ratio.
   }, [size.width, size.height]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null
@@ -834,6 +822,14 @@ function ShaderPrecompiler({ modelGroupRef }) {
 
 const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen }, ref) {
   const { width, length, interiorHeight, showDimensions, setShowDimensions, viewMode } = useConfigurator()
+
+  // Automatically turn off dimensions in the UI when the user changes the size
+  useEffect(() => {
+    if (showDimensions) {
+      setShowDimensions(false)
+    }
+  }, [width, length, interiorHeight]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const [arUrl, setArUrl] = useState(null)
   const [arExporting, setArExporting] = useState(false)
   const [showQR, setShowQR] = useState(false)

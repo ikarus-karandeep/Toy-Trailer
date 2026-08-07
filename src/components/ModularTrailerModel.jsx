@@ -236,6 +236,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const getBlackoutMapped = (normName) => {
         if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'whiteceremiccabinet')) return 'blackceremiccabinet';
         if (!isBlackout) return normName;
+        if (!normName.startsWith('mat')) return normName;
         if (normName === 'matshell' || normName === 'matshelldecal') return normName;
         if (normName.includes('atp') && !normName.includes('black')) return 'atpblack';
         if (normName === 'matstripes' || normName.includes('stripes') && !normName.includes('black')) return 'blackstripes';
@@ -2229,11 +2230,29 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             Math.abs(ncw - curr.concessionWidthIn) > LERP_THRESHOLD ||
             Math.abs(nch - curr.concessionHeightIn) > LERP_THRESHOLD
             
+        if (activeScenesRef.current && activeScenesRef.current.length > 0) {
+            const root = activeScenesRef.current[0].parent?.parent;
+            if (root) {
+                root.userData.isAnimatingSize = moved;
+            }
+        }
+            
         if (!moved && !dirtyRef.current) {
+            if (store.current.get('_needsBoundsUpdate')) {
+                activeScenesRef.current.forEach(scene => {
+                    scene.traverse(child => {
+                        if (child.isMesh && child.geometry) {
+                            child.geometry.computeBoundingBox();
+                            child.geometry.computeBoundingSphere();
+                        }
+                    });
+                });
+                store.current.set('_needsBoundsUpdate', false);
+            }
             return
         }
 
-
+        store.current.set('_needsBoundsUpdate', true);
             
         dirtyRef.current = false
         animRef.current = { widthFt: nw, lengthFt: nl, heightFt: nh, awningFt: na, concessionWidthIn: ncw, concessionHeightIn: nch }
@@ -2357,7 +2376,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
                 child.updateWorldMatrix(true, false)
                 const we = child.matrixWorld.elements
-                const ie = child.matrixWorld.clone().invert().elements
+                
+                // Use a cached matrix to avoid memory allocation and GC lag every frame
+                if (!child.userData._invMat) child.userData._invMat = new THREE.Matrix4();
+                child.userData._invMat.copy(child.matrixWorld).invert();
+                const ie = child.userData._invMat.elements
 
                 let narrowTrackOffset = 0
                 if (config.narrowTrackAxle && (scene === wheels || scene === axleConfig)) {

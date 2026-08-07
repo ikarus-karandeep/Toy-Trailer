@@ -113,7 +113,7 @@ swatchesByNormName.forEach((swatch, normName) => {
 const texturePathSet = new Set()
 MATERIAL_DEFS.forEach((def, name) => {
     if (isSpecialName(name)) return
-    const fields = [def.base_color, def.roughness, def.metalness, def.normal, def.normal_map, def.alpha]
+    const fields = [def.base_color, def.roughness, def.metalness, def.normal, def.normal_map, def.alpha, def.emission?.color]
     fields.forEach(v => { if (isTexturePath(v)) texturePathSet.add(blenderPathToWeb(v)) })
 })
 
@@ -154,6 +154,7 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.flipY = def.flip_y === true
                 if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
                 if (normMatName(def.material_name).includes('rim')) tex.repeat.set(50, 50)
+                if (normMatName(def.material_name) === 'wirecovers') tex.repeat.set(10, 10)
                 tex.needsUpdate = true
                 next.map = tex
                 next.color.set('#FFFFFF')
@@ -179,6 +180,7 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.flipY = def.flip_y === true
                 if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
                 if (normMatName(def.material_name).includes('rim')) tex.repeat.set(50, 50)
+                if (normMatName(def.material_name) === 'wirecovers') tex.repeat.set(10, 10)
                 tex.needsUpdate = true
                 next.roughnessMap = tex
                 next.roughness = 1.0
@@ -203,6 +205,7 @@ export function applyMaterialDef(mat, def, textures) {
                 tex.flipY = def.flip_y === true
                 if (normMatName(def.material_name) === 'roof') tex.repeat.set(20, 20)
                 if (normMatName(def.material_name).includes('rim')) tex.repeat.set(50, 50)
+                if (normMatName(def.material_name) === 'wirecovers') tex.repeat.set(10, 10)
                 tex.needsUpdate = true
                 next.metalnessMap = tex
                 next.metalness = 1.0
@@ -223,13 +226,20 @@ export function applyMaterialDef(mat, def, textures) {
     let normalPath = isTexturePath(originalDef.normal) ? originalDef.normal : (originalDef.normal === true && isTexturePath(originalDef.normal_map) ? originalDef.normal_map : null)
 
     if (normalPath) {
-        const tex = getTexture(textures, normalPath)
+        let tex = getTexture(textures, normalPath)
         if (tex) {
+            tex = tex.clone()
             tex.colorSpace = THREE.NoColorSpace
             tex.wrapS = tex.wrapT = THREE.RepeatWrapping
             tex.flipY = originalDef.flip_y === true
             if (normMatName(originalDef.material_name) === 'roof') tex.repeat.set(20, 20)
             if (normMatName(originalDef.material_name).includes('rim')) tex.repeat.set(50, 50)
+            if (normMatName(originalDef.material_name) === 'wirecovers') tex.repeat.set(10, 10)
+            if (normMatName(originalDef.material_name) === 'metallicsilverstripes') {
+                tex.repeat.set(10, 10)
+                tex.rotation = Math.PI / 2
+                tex.center.set(0.5, 0.5)
+            }
             tex.needsUpdate = true
             next.normalMap = tex
         } else {

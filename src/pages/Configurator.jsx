@@ -133,7 +133,7 @@ export default function Configurator({ onModelReady }) {
           {/* Mobile Panel Layout */}
           <div className="lg:hidden flex flex-col">
             {sectionIdx !== null && (
-              <div className="max-h-[30vh] overflow-y-auto scrollbar-hide">
+              <div key={`mobile-${activeTab}-${sectionIdx}`} className="max-h-[30vh] overflow-y-auto scrollbar-hide">
                 {ActivePanel && <ActivePanel activeSectionTitle={activeSectionTitle} />}
               </div>
             )}
@@ -147,7 +147,7 @@ export default function Configurator({ onModelReady }) {
           </div>
 
           {/* Desktop Panel Layout */}
-          <aside className="hidden lg:block flex-1 overflow-y-auto mt-[30px] pr-4 scrollbar-hide">
+          <aside key={`desktop-${activeTab}`} className="hidden lg:block flex-1 overflow-y-auto mt-[30px] pr-4 scrollbar-hide">
             {ActivePanel && <ActivePanel />}
           </aside>
         </div>
