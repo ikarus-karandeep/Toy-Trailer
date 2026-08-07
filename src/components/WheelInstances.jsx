@@ -8,7 +8,7 @@ const _instM = new THREE.Matrix4();
 const _flipYRot = new THREE.Matrix4().makeRotationY(Math.PI);
 const _baseM = new THREE.Matrix4();
 
-const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo, allowDeformation = false }, ref) => {
+const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo, allowDeformation = false, disableAutoCenter = false }, ref) => {
     if (!instMesh || !sockets || sockets.length === 0 || !relativeTo) return null;
 
     // 1. Collect mesh parts and compute their base transformation
@@ -52,10 +52,12 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo, allowDeforma
             const relMatrix = _baseM.clone().multiply(child.matrix);
             
             const geometry = child.geometry;
-            // Center the pristine geometry around local origin so the socket is the visual center
-            if (distFromOrigin > 0.1) {
+            // Center the pristine geometry around local origin so the socket is the visual center.
+            // Disable this if the mesh's origin is already perfectly placed (e.g. Jacks).
+            if (!disableAutoCenter && distFromOrigin > 0.1) {
                 geometry.translate(-center.x, -center.y, -center.z);
             }
+            
             geometry.computeBoundingBox();
             
             // Save the true bounding box before we wipe it

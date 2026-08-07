@@ -33,7 +33,7 @@ const PATHS = {
     axleConfig: '/models/Structure/Axle Configs.glb',
     axle: '/models/Structure/Axle.glb',
     wheels: '/models/Structure/Wheels.glb',
-    addons: '/models/Addons.glb',
+    addons: '/models/Addons.glb?v=' + Date.now(), // Force cache bust
     sink: '/models/Packaging/Sink.glb',
     windows: '/models/Packaging/Windows.glb',
 }
@@ -2126,6 +2126,81 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         return { instMesh, sockets };
     }, [config.axleRating, config.axleCount, axleConfig]);
 
+    // 🛠️ Socket-based Jack Rendering 🛠️
+    const jackMountsRefs = useRef([]);
+
+    const jackMountsData = useMemo(() => {
+        if (!addons) return [];
+        const jacksConf = config.jacks || [];
+        console.log('[JackMounts] config.jacks:', jacksConf);
+        if (!Array.isArray(jacksConf) || jacksConf.length === 0) return [];
+
+        const results = [];
+        const grouped = {};
+        const addSockets = (meshName, socketNames) => {
+            if (!grouped[meshName]) grouped[meshName] = { sockets: new Set() };
+            socketNames.forEach(s => grouped[meshName].sockets.add(s));
+        };
+
+        if (jacksConf.includes('folddownjacks')) {
+            addSockets('Fold_Down_Stablizer_Jack_Inst', ['Fold_Down_Stablizer_Jack_L1_Socket', 'Fold_Down_Stablizer_Jack_R1_Socket']);
+        }
+        if (jacksConf.includes('folddown')) {
+            addSockets('Fold_Down_Stablizer_Jack_Inst', [
+                'Fold_Down_Stablizer_Jack_Pair_L1_Socket', 'Fold_Down_Stablizer_Jack_Pair_L2_Socket',
+                'Fold_Down_Stablizer_Jack_Pair_R1_Socket', 'Fold_Down_Stablizer_Jack_Pair_R2_Socket'
+            ]);
+        }
+        if (jacksConf.includes('5kscissorjacks')) {
+            addSockets('5K_Scissor_Jack_Inst', ['Scissor_Jack_L1_Socket', 'Scissor_Jack_R1_Socket']);
+        }
+        if (jacksConf.includes('5kscissor')) {
+            addSockets('5K_Scissor_Jack_w_Handle_Inst', [
+                'Scissor_Jack_w_handle_L1_Socket', 'Scissor_Jack_w_handle_L2_Socket',
+                'Scissor_Jack_w_handle_R1_Socket', 'Scissor_Jack_w_handle_R2_Socket'
+            ]);
+        }
+        
+        console.log('[JackMounts] Looking for:', Object.keys(grouped).map(k => ({ mesh: k, sockets: Array.from(grouped[k].sockets) })));
+
+        let foundNodes = 0;
+        const allJackNames = [];
+        addons.traverse(child => {
+            if (child.name.toLowerCase().includes('jack')) allJackNames.push(child.name);
+            Object.keys(grouped).forEach(meshName => {
+                if (child.name === meshName) {
+                    grouped[meshName].instMesh = child;
+                    foundNodes++;
+                }
+                if (grouped[meshName].sockets.has(child.name)) {
+                    if (!grouped[meshName].resolvedSockets) grouped[meshName].resolvedSockets = [];
+                    grouped[meshName].resolvedSockets.push(child);
+                    foundNodes++;
+                }
+            });
+        });
+
+        console.log(`[JackMounts] Traverse finished. Found ${foundNodes} matching nodes. Available Jack nodes:`, allJackNames);
+
+        Object.keys(grouped).forEach(meshName => {
+            const data = grouped[meshName];
+            if (data.instMesh && data.resolvedSockets && data.resolvedSockets.length > 0) {
+                console.log(`[JackMounts] Successfully built data for ${meshName} with ${data.resolvedSockets.length} sockets`);
+                results.push({
+                    id: meshName,
+                    instMesh: data.instMesh,
+                    sockets: data.resolvedSockets
+                });
+            } else {
+                if (!data.instMesh) console.warn(`[JackMounts] Missing instMesh for ${meshName}`);
+                if (!data.resolvedSockets || data.resolvedSockets.length === 0) console.warn(`[JackMounts] Missing sockets for ${meshName}`);
+            }
+        });
+
+        return results;
+
+    }, [config.jacks, addons]);
+
     useEffect(() => {
         dirtyRef.current = true
     }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.narrowTrackAxle, config.windows, config.windowSizes])
@@ -2717,6 +2792,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (spareTireMountRef.current) spareTireMountRef.current.updateMatrices();
         if (wheelMountsRef.current) wheelMountsRef.current.updateMatrices();
         if (axleMountsRef.current) axleMountsRef.current.updateMatrices();
+        jackMountsRefs.current.forEach(ref => {
+            if (ref) ref.updateMatrices();
+        });
     })
 
     const prevVisibleExteriorNodes = useRef(new Set());
@@ -2821,6 +2899,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         allowDeformation={true}
                     />
                 )}
+                {jackMountsData.map((data, idx) => (
+                    <WheelInstances
+                        key={data.id}
+                        ref={el => jackMountsRefs.current[idx] = el}
+                        instMesh={data.instMesh}
+                        sockets={data.sockets}
+                        relativeTo={addons}
+                        disableAutoCenter={true}
+                    />
+                ))}
                 <primitive object={eTrackGroupRef.current} />
             </group>
         </>
