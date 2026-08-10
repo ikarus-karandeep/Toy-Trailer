@@ -174,10 +174,13 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       const bboxSize = new THREE.Vector3()
       bbox.getSize(bboxSize)
       const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
+      const isMobile = size.width < 768;
       cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 1.15
+      cameraControlsRef.current.maxDistance = maxDim * (isMobile ? 3.0 : 1.5)
       if (groundYRef) groundYRef.current = bbox.min.y
-      cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: 1, paddingRight: 1, paddingBottom: 1, paddingTop: 1 })
+      
+      const padding = isMobile ? 2.0 : 1;
+      cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: padding, paddingRight: padding, paddingBottom: padding, paddingTop: padding })
       cameraInitRef.current = true
       
       const initCenter = new THREE.Vector3()
@@ -218,8 +221,9 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
         const bboxSize = new THREE.Vector3()
         bbox.getSize(bboxSize)
         const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
+        const isMobile = size.width < 768;
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.15
+        cameraControlsRef.current.maxDistance = maxDim * (isMobile ? 3.0 : 1.5)
         if (groundYRef) groundYRef.current = bbox.min.y
         
         lastCenterRef.current.copy(newCenter)
@@ -232,6 +236,10 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
 
   useEffect(() => {
     if (!lastBboxRef.current || !camera.isPerspectiveCamera || !cameraControlsRef.current) return
+    const isMobile = size.width < 768;
+    const padding = isMobile ? 2.0 : 1;
+    cameraControlsRef.current.maxDistance = 100 * (isMobile ? 3.0 : 1.5); // Temporarily lift maxDistance so fitToBox can work, just in case
+    cameraControlsRef.current.fitToBox(modelGroupRef.current, true, { paddingLeft: padding, paddingRight: padding, paddingBottom: padding, paddingTop: padding })
   }, [size.width, size.height]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null
