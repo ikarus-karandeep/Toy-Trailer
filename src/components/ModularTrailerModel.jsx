@@ -2058,10 +2058,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             // Log all available names to help debug
             const available = [];
             wheels.traverse(c => { if (c.name) available.push(c.name); });
-            console.log('[WheelMount] All names in wheels.glb:', available);
+            // console.log('[WheelMount] All names in wheels.glb:', available);
             return null;
         }
-        console.log(`[WheelMount] Found instMesh: "${instMesh.name}", type: ${instMesh.type}, children: ${instMesh.children?.length}`);
+        // console.log(`[WheelMount] Found instMesh: "${instMesh.name}", type: ${instMesh.type}, children: ${instMesh.children?.length}`);
 
         // Find all sockets matching the current size + axle count
         // Pattern: "16-2_L1_Socket", "16-2_R1_Socket", "15-3_L1_Socket" etc.
@@ -2076,7 +2076,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (sockets.length === 0) {
             console.warn(`[WheelMount] No sockets found with prefix "${socketPrefix}"`);
         }
-        console.log(`[WheelMount] Found ${sockets.length} sockets for prefix "${socketPrefix}":`, sockets.map(s => s.name));
+        // console.log(`[WheelMount] Found ${sockets.length} sockets for prefix "${socketPrefix}":`, sockets.map(s => s.name));
 
         return { instMesh, sockets };
     }, [config.tireSize, config.lugType, config.wheelType, config.axleCount, wheels]);
@@ -2118,11 +2118,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         });
 
-        if (sockets.length === 0) {
-            console.warn(`[AxleMount] No sockets found with prefix "${socketPrefix}"`);
-        } else {
-            console.log(`[AxleMount] Found ${sockets.length} sockets:`, sockets.map(s => s.name));
-        }
+        // if (sockets.length === 0) {
+        //     console.warn(`[AxleMount] No sockets found with prefix "${socketPrefix}"`);
+        // } else {
+        //     console.log(`[AxleMount] Found ${sockets.length} sockets:`, sockets.map(s => s.name));
+        // }
 
         return { instMesh, sockets };
     }, [config.axleRating, config.axleCount, axleConfig]);

@@ -705,11 +705,11 @@ function GroundModel({ modelRef }) {
       opacityMap.needsUpdate = true
     }
     
-    console.log('[GroundModel] Textures loaded:', { 
-      colorMap: !!colorMap, 
-      opacityMap: !!opacityMap
-    })
-    console.log('[GroundModel] Ground Scene:', scene)
+    // console.log('[GroundModel] Textures loaded:', { 
+    //   colorMap: !!colorMap, 
+    //   opacityMap: !!opacityMap
+    // })
+    // console.log('[GroundModel] Ground Scene:', scene)
 
     const baseMaterial = new THREE.MeshBasicMaterial({
       map: colorMap,
