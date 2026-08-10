@@ -58,7 +58,7 @@ export default function Configurator({ onModelReady }) {
                   window.location.hash = 'package'
                 }
               }}
-              className="pointer-events-auto flex items-center justify-center w-14 h-14 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white rounded-[20px] transition-colors shadow-lg"
+              className="pointer-events-auto flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white rounded-xl lg:rounded-[20px] transition-colors shadow-lg"
               aria-label="Previous Menu"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
