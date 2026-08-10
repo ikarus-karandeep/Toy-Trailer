@@ -2133,7 +2133,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const jackMountsData = useMemo(() => {
         if (!addons) return [];
         const jacksConf = config.jacks || [];
-        console.log('[JackMounts] config.jacks:', jacksConf);
+        // console.log('[JackMounts] config.jacks:', jacksConf);
         if (!Array.isArray(jacksConf) || jacksConf.length === 0) return [];
 
         const results = [];
@@ -2162,7 +2162,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             ]);
         }
         
-        console.log('[JackMounts] Looking for:', Object.keys(grouped).map(k => ({ mesh: k, sockets: Array.from(grouped[k].sockets) })));
+        // console.log('[JackMounts] Looking for:', Object.keys(grouped).map(k => ({ mesh: k, sockets: Array.from(grouped[k].sockets) })));
 
         let foundNodes = 0;
         const allJackNames = [];
@@ -2181,12 +2181,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             });
         });
 
-        console.log(`[JackMounts] Traverse finished. Found ${foundNodes} matching nodes. Available Jack nodes:`, allJackNames);
+        // console.log(`[JackMounts] Traverse finished. Found ${foundNodes} matching nodes. Available Jack nodes:`, allJackNames);
 
         Object.keys(grouped).forEach(meshName => {
             const data = grouped[meshName];
             if (data.instMesh && data.resolvedSockets && data.resolvedSockets.length > 0) {
-                console.log(`[JackMounts] Successfully built data for ${meshName} with ${data.resolvedSockets.length} sockets`);
+                // console.log(`[JackMounts] Successfully built data for ${meshName} with ${data.resolvedSockets.length} sockets`);
                 results.push({
                     id: meshName,
                     instMesh: data.instMesh,
