@@ -586,6 +586,7 @@ export function applyWidthDeformation({ geometry, store, uuid, widthFactor }) {
  * Input values are in inches (e.g., 48, 60, 72, 96 for width; 36, 48 for height).
  */
 export function applyConcessionDoorDeformations({ geometry, widthIn, heightIn }) {
+  if (!geometry || !geometry.attributes) return
   const position = geometry.attributes.position
   if (!position) return
 
@@ -628,6 +629,7 @@ export function applyConcessionDoorDeformations({ geometry, widthIn, heightIn })
 }
 
 export function applyWindowDeformations({ geometry, widthIn, heightIn, baseWidthIn, baseHeightIn }) {
+  if (!geometry || !geometry.attributes) return
   const position = geometry.attributes.position
   if (!position) return
 
