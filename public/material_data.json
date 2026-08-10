@@ -8,8 +8,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "1": {
@@ -202,8 +202,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "5": {
@@ -252,8 +252,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "3": {
@@ -2358,8 +2358,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "4": {
@@ -2408,8 +2408,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "3": {
@@ -2532,8 +2532,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "3": {
@@ -4152,8 +4152,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     }
   },
@@ -4214,8 +4214,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     }
   },
@@ -4276,8 +4276,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "5": {
@@ -4803,8 +4803,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "9": {
@@ -5349,8 +5349,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     }
   },
@@ -5525,8 +5525,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "4": {
@@ -5711,8 +5711,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     },
     "5": {
@@ -6603,8 +6603,8 @@
       "normal": false,
       "alpha": "//..\\Textures\\Number_Plate_Opacity.jpg",
       "emission": {
-        "color": "//..\\Textures\\Number_Plate_Emissive.jpg",
-        "strength": 10.0
+        "color": "//..\\Textures\\Number_Plate_Emissive.png",
+        "strength": 25.0
       }
     }
   },
