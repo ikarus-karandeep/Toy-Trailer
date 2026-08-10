@@ -42,28 +42,19 @@ export default function AddOnsPanel({ activeSectionTitle }) {
 
   const [fullBathOpen, setFullBathOpen] = useState(true)
 
-  const [awningLength, setAwningLength] = useState('18ft')
+  const [awningLength, setAwningLength] = useState(awning?.length > 0 ? awning[0] : '18ft')
 
   const [winch, setWinch] = useState('winchsystem')
 
 
   
 
+  // Sync local slider state with global awning state changes
   useEffect(() => {
-    if (!length) return;
-    const maxAwning = parseInt(length);
-    const currentAwning = parseInt(awningLength);
-    if (currentAwning > maxAwning) {
-      const validOptions = [8, 10, 12, 14, 16, 18, 20, 22, 24].filter(v => v <= maxAwning);
-      if (validOptions.length > 0) {
-        const newLen = `${validOptions[validOptions.length - 1]}ft`;
-        setAwningLength(newLen);
-        if (awning?.length > 0) {
-          setAwningRaw([newLen]);
-        }
-      }
+    if (awning && awning.length > 0) {
+      setAwningLength(awning[0]);
     }
-  }, [length, awningLength, awning, setAwningRaw]);
+  }, [awning]);
 
   useEffect(() => {
     const hasGenBox = frontStyle === 'flatfront' && generatorBox && generatorBox !== 'none';
@@ -98,7 +89,23 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     setBathroom(bathroom === id ? null : id)
   }
 
-  const awningLengthOptions = AWNING_OPTIONS.filter(opt => parseInt(opt.id) <= parseInt(length || '24'))
+  const awningLengthOptions = AWNING_OPTIONS.filter(opt => {
+    const optLen = parseInt(opt.id);
+    const trailerLen = parseInt(length || '24');
+    return optLen <= trailerLen;
+  }).map(opt => {
+    const optLen = parseInt(opt.id);
+    const trailerLen = parseInt(length || '24');
+    let locked = false;
+    if (optLen >= 24 && trailerLen < 32) locked = true;
+    else if (optLen >= 18 && optLen <= 22 && trailerLen <= 28) locked = true;
+    else if (optLen === 16 && trailerLen <= 26) locked = true;
+
+    return {
+      ...opt,
+      locked
+    };
+  });
 
   const getAwningBadge = (len) => {
     const opt = AWNING_OPTIONS.find(o => o.id === len)
@@ -307,6 +314,13 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 }}
                 badge={getAwningBadge(awningLength)}
               />
+              {parseInt(length || '24') < 32 && (
+                <p className="text-gray-400/80 text-[10px] tracking-wider mt-5 text-center px-2 leading-relaxed">
+                  * Some larger awning sizes are disabled to fit your current trailer. 
+                  <br/>
+                  <span className="font-semibold text-gray-400">16ft</span> requires 28ft+ | <span className="font-semibold text-gray-400">18ft-22ft</span> requires 30ft+ | <span className="font-semibold text-gray-400">24ft</span> requires 32ft+
+                </p>
+              )}
             </div>
           )}
           </>

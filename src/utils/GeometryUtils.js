@@ -322,7 +322,9 @@ export function applyDimensionDeformations({ geometry, userData = {}, store, uui
   const hasFrontEnd = !!frontEndSel || udFrontEnd !== undefined
   const hasRearEnd = !!rearEndSel || udRearEnd !== undefined
   const BASE_AWNING_FT = 18
-  const deltaAwning = awningFt !== undefined ? (awningFt - BASE_AWNING_FT) * FEET_TO_M : 0
+  const deltaAwningTotal = awningFt !== undefined ? (awningFt - BASE_AWNING_FT) * FEET_TO_M : 0
+  const deltaAwningFront = deltaAwningTotal * 0.60
+  const deltaAwningRear = deltaAwningTotal * 0.40
 
   // ── DEBUG: log attribute discovery once per mesh ─────────────────────────────
   // if (!_loggedMeshAttrs.has(meshName)) {
@@ -491,10 +493,10 @@ export function applyDimensionDeformations({ geometry, userData = {}, store, uui
       // Handle front/rear end logic for awning
       if (hasFrontEnd || hasRearEnd) {
         if (hasFrontEnd) {
-          ox -= deltaAwning * (frontEndSel ? frontEndSel.getX(i) : udFrontEnd)
+          ox -= deltaAwningFront * (frontEndSel ? frontEndSel.getX(i) : udFrontEnd)
         }
         if (hasRearEnd) {
-          ox += deltaAwning * (rearEndSel ? rearEndSel.getX(i) : udRearEnd)
+          ox += deltaAwningRear * (rearEndSel ? rearEndSel.getX(i) : udRearEnd)
         }
       }
     }
@@ -708,7 +710,9 @@ export function applyObjectDeformations(child, { lengthFt, widthFt, heightFt, aw
   const WIDTH_FACTOR = 0.500; // Must match applyDimensionDeformations (Factor=0.5 on Move nodes)
   const deltaWidth = widthFt !== undefined ? (widthFt - BASE_WIDTH_FT) * FEET_TO_M * WIDTH_FACTOR : 0;
   const deltaHeight = heightFt !== undefined ? (heightFt - BASE_HEIGHT_FT) * FEET_TO_M : 0;
-  const deltaAwning = awningFt !== undefined ? (awningFt - BASE_AWNING_FT) * FEET_TO_M : 0;
+  const deltaAwningTotal = awningFt !== undefined ? (awningFt - BASE_AWNING_FT) * FEET_TO_M : 0;
+  const deltaAwningFront = deltaAwningTotal * 0.60;
+  const deltaAwningRear = deltaAwningTotal * 0.40;
 
   let delta4 = 0, delta3 = 0, delta2 = 0, delta1 = 0;
   if (lengthFt !== undefined) {
@@ -769,8 +773,8 @@ export function applyObjectDeformations(child, { lengthFt, widthFt, heightFt, aw
   if (udTop !== undefined) oy += deltaHeight * udTop;
 
   // Apply Awning Deformations
-  if (udFrontEnd !== undefined) ox -= deltaAwning * udFrontEnd;
-  if (udRearEnd !== undefined) ox += deltaAwning * udRearEnd;
+  if (udFrontEnd !== undefined) ox -= deltaAwningFront * udFrontEnd;
+  if (udRearEnd !== undefined) ox += deltaAwningRear * udRearEnd;
 
   worldPos.set(ox, oy, oz);
 

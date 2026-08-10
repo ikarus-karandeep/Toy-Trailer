@@ -41,7 +41,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     viewMode, setViewMode,
     concessionWidth, setConcessionWidth,
     concessionHeight, setConcessionHeight,
-    length, width, frontStyle,
+    length, width, frontStyle, awning,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -65,7 +65,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     { id: '48in', label: '48in' },
     { id: '60in', label: '60in' },
     { id: '72in', label: '72in' },
-    { id: '96in', label: '96in' },
+    { id: '96in', label: '96in', locked: awning?.length > 0 && awning[0] === '8ft' },
   ]
   const concessionHeightOptions = [
     { id: '48in', label: '48in' },

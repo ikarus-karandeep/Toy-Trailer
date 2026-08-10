@@ -179,6 +179,32 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [interiorHeight, setRampType, setWinchSystem]);
 
+  // Awning length clamping based on trailer length
+  useEffect(() => {
+    if (!length || !awning || awning.length === 0) return;
+    const trailerLen = parseInt(length);
+    const currentAwning = parseInt(awning[0]);
+    
+    const isInvalid = currentAwning > trailerLen || 
+                      (currentAwning >= 24 && trailerLen < 32) || 
+                      (currentAwning >= 18 && currentAwning <= 22 && trailerLen <= 28) ||
+                      (currentAwning === 16 && trailerLen <= 26);
+                      
+    if (isInvalid) {
+      const validOptions = [8, 10, 12, 14, 16, 18, 20, 22, 24].filter(v => {
+        if (v >= 24 && trailerLen < 32) return false;
+        if (v >= 18 && v <= 22 && trailerLen <= 28) return false;
+        if (v === 16 && trailerLen <= 26) return false;
+        return v <= trailerLen;
+      });
+      if (validOptions.length > 0) {
+        setAwningRaw([`${validOptions[validOptions.length - 1]}ft`]);
+      } else {
+        setAwningRaw([]);
+      }
+    }
+  }, [length, awning, setAwningRaw]);
+
   // System/Exterior Addons (from Addons node graph)
   const [extendedTripleTongue, setExtendedTripleTongue] = useState(ic.extendedTripleTongue ?? false)
   const [radioPackageSpeaker, setRadioPackageSpeaker] = useState(ic.radioPackageSpeaker ?? false)
@@ -231,6 +257,13 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
       }
     }
   }, [concessionDoor, escapeDoor, windows, setEscapeDoor, setConcessionDoor, setWindows]);
+
+  // Awning vs Concession Width conflict resolution
+  useEffect(() => {
+    if (awning?.length > 0 && awning[0] === '8ft' && concessionWidth === '96in') {
+      setConcessionWidth('72in');
+    }
+  }, [awning, concessionWidth, setConcessionWidth]);
 
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = useCallback((tab) => setVisitedTabs(prev => new Set([...prev, tab])), [])
