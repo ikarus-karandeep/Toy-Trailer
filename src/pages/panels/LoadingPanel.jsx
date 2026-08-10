@@ -180,7 +180,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Secondary Access/Emergency Egress</p>
 
           {concessionDoor === 'driver' && (
-            <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
               * Escape Door is disabled because a Concession Door is already on the Driver side.
             </p>
           )}
@@ -216,54 +216,28 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('CONCESSION DOOR / WINDOW') && (
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="CONCESSION DOOR / WINDOW">
-          {/* None / activate toggle */}
-          <div className="flex flex-col gap-2 mb-4">
-            <OptionPill
-              label="NONE"
-              isSelected={concessionDoor === 'none'}
-              onClick={() => setConcessionDoor('none')}
-            />
-          </div>
-
           {escapeDoor !== 'none' && (
-            <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
               * Driver side placement is disabled because an Escape Door is already on the Driver side.
             </p>
           )}
 
-          {/* Side selector — only shown when door is active */}
-          {concessionDoor !== 'none' && (
-            <div className="mb-4">
-              <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Concession door placement</p>
-              <div className="w-full">
-                <SegmentedControl
-                  options={CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
+          <div className="mb-4">
+            <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Concession door placement</p>
+            <div className="w-full">
+              <SegmentedControl
+                options={[
+                  { id: 'none', label: 'NONE' },
+                  ...CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
                     ...o,
                     disabled: escapeDoor !== 'none' && o.id === 'driver'
-                  }))}
-                  value={concessionDoor}
-                  onChange={setConcessionDoor}
-                />
-              </div>
+                  }))
+                ]}
+                value={concessionDoor}
+                onChange={setConcessionDoor}
+              />
             </div>
-          )}
-
-          {/* Activate by picking a side */}
-          {concessionDoor === 'none' && (
-            <div className="mb-4">
-              <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Select side to enable</p>
-              <div className="w-full">
-                <SegmentedControl
-                  options={CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
-                    ...o,
-                    disabled: escapeDoor !== 'none' && o.id === 'driver'
-                  }))}
-                  value={concessionDoor === 'none' ? '' : concessionDoor}
-                  onChange={(val) => setConcessionDoor(val)}
-                />
-              </div>
-            </div>
-          )}
+          </div>
 
           <div className="mt-8 flex flex-col items-center">
             <div className="flex w-full items-center justify-between gap-2 px-2">
@@ -308,7 +282,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
           ) : (
             <>
               {concessionDoor === 'passenger' && (
-                <p className="text-[#DA634B] text-xs tracking-wider mb-4 -mt-3">
+                <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
                   * Windows are disabled when a Concession Door is on the Passenger side.
                 </p>
               )}
@@ -322,13 +296,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     isLocked={concessionDoor === 'passenger'}
-                    quantity={qty}
-                    onQuantityChange={(val) => updateQuantity(setWindows, opt.id, val)}
                     onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
                   />
                   <div className="flex flex-wrap gap-2 pl-4">
                     {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
-                      let isLocked = concessionDoor === 'passenger';
+                      let isLocked = concessionDoor === 'passenger' || !qty;
                       return (
                         <OptionPill
                           key={sizeOpt.id}
@@ -356,13 +328,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     isLocked={concessionDoor === 'passenger'}
-                    quantity={qty}
-                    onQuantityChange={(val) => updateQuantity(setWindows, opt.id, val)}
                     onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
                   />
                   <div className="flex flex-wrap gap-2 pl-4">
                     {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
-                      let isLocked = concessionDoor === 'passenger';
+                      let isLocked = concessionDoor === 'passenger' || !qty;
                       return (
                         <OptionPill
                           key={sizeOpt.id}
