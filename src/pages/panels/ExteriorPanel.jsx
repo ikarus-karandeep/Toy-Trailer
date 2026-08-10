@@ -321,7 +321,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               price={opt.price} badge={opt.badge}
               isStandard={opt.isStandard}
               isSelected={frontProtection === opt.id}
-              onClick={() => setFrontProtection(opt.id)}
+              onClick={() => setFrontProtection(frontProtection === opt.id ? null : opt.id)}
             />
           ))}
         </div>
@@ -389,8 +389,8 @@ export default function ExteriorPanel({ activeSectionTitle }) {
       </div>
 
       {/* Wheel preview image */}
-      <div className="flex justify-center my-6">
-        <img src="/wheel type.png"/>
+      <div className="flex justify-center mt-6 mb-0">
+        <img src={wheelType === 'spideraluminum' ? "/spider wheel.webp" : "/standard wheel.webp"} alt="Wheel Type" className="max-h-48 object-contain" />
       </div>
     </div>
 

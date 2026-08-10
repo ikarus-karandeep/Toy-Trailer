@@ -107,6 +107,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
               price={270}
               // subtext="Matching diamond plate on the ramp surface"
             />
+            {rampType !== 'doublereardoors' && (
+              <p className="text-gray-400 text-xs tracking-wider mt-2 pl-2">
+                * Can only come with double rear doors.
+              </p>
+            )}
           </div>
         </OptionSection>
         </div>
@@ -276,50 +281,50 @@ export default function LoadingPanel({ activeSectionTitle }) {
         <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
         <OptionSection title="WINDOWS (MULTI-CHOICE)">
           {parseFloat(length) < 24 ? (
-            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+            <p className="mb-4 -mt-3">
               * Window options are hidden for trailers under 24ft length.
             </p>
           ) : (
             <>
               {concessionDoor === 'passenger' && (
-                <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+                  <p className="text-gray-400 text-xs tracking-wider">
                   * Windows are disabled when a Concession Door is on the Passenger side.
-                </p>
+                  </p>
               )}
               <div className="flex flex-col gap-6 mb-4">
-            {WINDOWS_OPTIONS.map((opt) => {
-              const qty = windows[opt.id]
-              return (
-                <div key={opt.id} className="flex flex-col gap-2">
-                  <OptionPill
-                    label={opt.label}
-                    price={opt.price} badge={opt.badge}
-                    isSelected={qty > 0}
-                    isLocked={concessionDoor === 'passenger'}
-                    onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
-                  />
-                  <div className="flex flex-wrap gap-2 pl-4">
-                    {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
-                      let isLocked = concessionDoor === 'passenger' || !qty;
-                      return (
-                        <OptionPill
-                          key={sizeOpt.id}
-                          label={sizeOpt.label}
-                          price={opt.price} badge={opt.badge}
-                          isSelected={qty > 0 && windowSizes[opt.id] === sizeOpt.id}
-                          isLocked={isLocked}
-                          onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
-                        />
-                      )
-                    })}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+                {WINDOWS_OPTIONS.map((opt) => {
+                  const qty = windows[opt.id]
+                  return (
+                    <div key={opt.id} className="flex flex-col gap-2">
+                      <OptionPill
+                        label={opt.label}
+                        price={opt.price} badge={opt.badge}
+                        isSelected={qty > 0}
+                        isLocked={concessionDoor === 'passenger'}
+                        onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
+                      />
+                      {qty > 0 && (
+                        <div className="flex flex-wrap gap-2 pl-4">
+                          {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
+                            let isLocked = concessionDoor === 'passenger';
+                            return (
+                              <OptionPill
+                                key={sizeOpt.id}
+                                label={sizeOpt.label}
+                                price={opt.price} badge={opt.badge}
+                                isSelected={windowSizes[opt.id] === sizeOpt.id}
+                                isLocked={isLocked}
+                                onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
+                              />
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
 
-          <div className="flex flex-col gap-6">
-            {WINDOWS_EGRESS_OPTIONS.map((opt) => {
+                {WINDOWS_EGRESS_OPTIONS.map((opt) => {
               const qty = windows[opt.id]
               return (
                 <div key={opt.id} className="flex flex-col gap-2">
@@ -330,21 +335,23 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     isLocked={concessionDoor === 'passenger'}
                     onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
                   />
-                  <div className="flex flex-wrap gap-2 pl-4">
-                    {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
-                      let isLocked = concessionDoor === 'passenger' || !qty;
-                      return (
-                        <OptionPill
-                          key={sizeOpt.id}
-                          label={sizeOpt.label}
-                          price={opt.price} badge={opt.badge}
-                          isSelected={qty > 0 && windowSizes[opt.id] === sizeOpt.id}
-                          isLocked={isLocked}
-                          onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
-                        />
-                      )
-                    })}
-                  </div>
+                  {qty > 0 && (
+                    <div className="flex flex-wrap gap-2 pl-4">
+                      {WINDOWS_SIZE_OPTIONS.map((sizeOpt) => {
+                        let isLocked = concessionDoor === 'passenger';
+                        return (
+                          <OptionPill
+                            key={sizeOpt.id}
+                            label={sizeOpt.label}
+                            price={opt.price} badge={opt.badge}
+                            isSelected={windowSizes[opt.id] === sizeOpt.id}
+                            isLocked={isLocked}
+                            onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
+                          />
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
               )
             })}

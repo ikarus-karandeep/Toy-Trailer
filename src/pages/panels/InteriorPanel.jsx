@@ -193,6 +193,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
+                  image={opt.image}
                   isSelected={floorOverlay === opt.id}
                   onClick={() => setFloorOverlay(opt.id === floorOverlay ? null : opt.id)}
                 />
@@ -215,7 +216,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
               ))}
             </div>
           </div>
-
+          <p className='border-t border-[#5D5E60]'></p>
           <div>
             <ToggleSwitch
               label="ATP Covered Wheel Wells (+$236 each)"

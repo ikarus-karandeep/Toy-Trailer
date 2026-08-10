@@ -217,10 +217,10 @@ export const FLOOR_MATERIAL_OPTIONS = [
 ];
 
 export const FLOOR_OVERLAY_OPTIONS = [
-  { id: 'atp', label: 'ATP', price: 35, badge: '+$35/LFT', subtext: 'Diamond plate over plywood', packageBadge: 'Race / Contractor' },
-  { id: 'rtp', label: 'RTP', price: 35, badge: '+$35/LFT', subtext: 'Rubber tread plate over plywood', packageBadge: 'Race / Contractor' },
-  { id: 'coin', label: 'COIN', price: 35, badge: '+$35/LFT', subtext: 'Coin pattern over plywood', packageBadge: 'Race / Contractor' },
-  { id: 'tile', label: 'TILE FLOOR', price: 440 },
+  { id: 'atp', label: 'ATP', price: 35, badge: '+$35/LFT', subtext: 'Diamond plate over plywood', packageBadge: 'Race / Contractor', image: '/ATP.png' },
+  { id: 'rtp', label: 'RTP', price: 35, badge: '+$35/LFT', subtext: 'Rubber tread plate over plywood', packageBadge: 'Race / Contractor', image: '/RTP.png' },
+  { id: 'coin', label: 'COIN', price: 35, badge: '+$35/LFT', subtext: 'Coin pattern over plywood', packageBadge: 'Race / Contractor', image: '/coin.png' },
+  { id: 'tile', label: 'TILE FLOOR', price: 440, image: '/Tile floor.png' },
 ];
 
 export const FLOOR_INSULATION_OPTIONS = [

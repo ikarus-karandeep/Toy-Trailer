@@ -16,6 +16,7 @@ export default function OptionPill({
   onQuantityChange,
   onClick,
   packageBadge = null,
+  image = null,
 }) {
   const [tooltipPos, setTooltipPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
 
@@ -53,7 +54,7 @@ export default function OptionPill({
         }
       }}
       onMouseEnter={handleMouseEnter}
-      className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
+      className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left overflow-hidden ${
         isLocked
           ? 'border-[#3a3a3a] text-gray-500 bg-[#2a2a2a] cursor-not-allowed opacity-70'
           : disabled
@@ -62,12 +63,20 @@ export default function OptionPill({
               ? 'border-[#DA634B] text-[#DA634B] bg-transparent cursor-pointer'
               : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white cursor-pointer'
       }`}
-      style={
-        isSelected && isInteractive
+      style={{
+        ...(isSelected && isInteractive
           ? { boxShadow: '0 0 20px -2px rgba(218, 99, 75, 0.5), inset 0 -8px 38.8px -7px rgba(218, 99, 75, 0.42)' }
-          : {}
-      }
+          : {}),
+      }}
     >
+      {/* Background Image Layer */}
+      {image && !isLocked && !disabled && (
+        <div 
+          className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-300 ${isSelected ? 'opacity-60' : 'opacity-40 group-hover:opacity-50'}`}
+          style={{ backgroundImage: `url("${image}")` }}
+        />
+      )}
+
       {/* Dynamic Package Tooltip */}
       {isSelected && packageBadge && packageBadge.badge && (
         <div 
@@ -82,7 +91,7 @@ export default function OptionPill({
         </div>
       )}
 
-      <span className="flex items-center justify-center gap-2 min-w-0">
+      <span className="relative z-10 flex items-center justify-center gap-2 min-w-0">
         <span className="leading-snug">{label}</span>
         {isSelected && packageBadge && packageBadge.badge && (
           <img src={packageBadge.badge} alt="package" className="h-5 w-5 object-contain flex-shrink-0 opacity-90" />
@@ -114,7 +123,7 @@ export default function OptionPill({
       {((hasSettings && isSelected && !isLocked) || 
         (quantity !== undefined && !isLocked) || 
         (isMulti && quantity === undefined && !isLocked)) && (
-        <div className="flex items-center gap-2">
+        <div className="relative z-10 flex items-center gap-2">
           {hasSettings && isSelected && !isLocked && (
             <button
               onClick={(e) => {

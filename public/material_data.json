@@ -171,18 +171,6 @@
       }
     },
     "2": {
-      "material_name": "MAT_Stripes",
-      "base_color": "#5D38AE",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Trailer Lights_Transmission",
       "base_color": "#E7E7E7",
       "roughness": 0.0937,
@@ -194,7 +182,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
@@ -206,7 +194,7 @@
         "strength": 25.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -333,18 +321,6 @@
   },
   "V-Nose": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
       "roughness": 0.8281,
@@ -356,7 +332,7 @@
         "strength": 0.0
       }
     },
-    "2": {
+    "1": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -368,7 +344,7 @@
         "strength": 0.0
       }
     },
-    "3": {
+    "2": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
       "roughness": 0.09,
@@ -380,7 +356,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "MAT_Stripes",
       "base_color": "#5D38AE",
       "roughness": 0.1178,
@@ -392,7 +368,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -404,7 +380,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "Metallic Grates_DECAL",
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
@@ -416,7 +392,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "6": {
       "material_name": "MAT_Shell_DECAL",
       "base_color": "#7B7D81",
       "roughness": 0.09,
@@ -428,7 +404,7 @@
         "strength": 0.0
       }
     },
-    "8": {
+    "7": {
       "material_name": "Roof_DECAL",
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
@@ -440,7 +416,7 @@
         "strength": 0.0
       }
     },
-    "9": {
+    "8": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -452,7 +428,7 @@
         "strength": 0.0
       }
     },
-    "10": {
+    "9": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -464,7 +440,7 @@
         "strength": 0.0
       }
     },
-    "11": {
+    "10": {
       "material_name": "Decals",
       "base_color": "#FFFFFF",
       "roughness": 1.0,
@@ -587,42 +563,6 @@
       }
     },
     "9": {
-      "material_name": "MAT_Interior_Flooring",
-      "base_color": "#D4BD67",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "10": {
-      "material_name": "MAT_Interior_Cealing",
-      "base_color": "#3A22D9",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "11": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "12": {
       "material_name": "Decals",
       "base_color": "#FFFFFF",
       "roughness": 1.0,
@@ -637,18 +577,6 @@
   },
   "Slant V-Nose": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
       "roughness": 0.8281,
@@ -660,7 +588,7 @@
         "strength": 0.0
       }
     },
-    "2": {
+    "1": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -672,7 +600,7 @@
         "strength": 0.0
       }
     },
-    "3": {
+    "2": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
       "roughness": 0.09,
@@ -684,7 +612,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "MAT_Stripes",
       "base_color": "#5D38AE",
       "roughness": 0.1178,
@@ -696,7 +624,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -708,7 +636,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "Metallic Grates_DECAL",
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
@@ -720,7 +648,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "6": {
       "material_name": "MAT_Shell_DECAL",
       "base_color": "#7B7D81",
       "roughness": 0.09,
@@ -732,7 +660,7 @@
         "strength": 0.0
       }
     },
-    "8": {
+    "7": {
       "material_name": "Roof_DECAL",
       "base_color": "#1D1E1F",
       "roughness": 0.3723,
@@ -744,7 +672,7 @@
         "strength": 0.0
       }
     },
-    "9": {
+    "8": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -756,7 +684,7 @@
         "strength": 0.0
       }
     },
-    "10": {
+    "9": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -768,7 +696,7 @@
         "strength": 0.0
       }
     },
-    "11": {
+    "10": {
       "material_name": "Decals",
       "base_color": "#FFFFFF",
       "roughness": 1.0,
@@ -783,18 +711,6 @@
   },
   "Extended V-Nose": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
       "roughness": 0.8281,
@@ -806,7 +722,7 @@
         "strength": 0.0
       }
     },
-    "2": {
+    "1": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -818,7 +734,7 @@
         "strength": 0.0
       }
     },
-    "3": {
+    "2": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
       "roughness": 0.09,
@@ -830,7 +746,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "MAT_Stripes",
       "base_color": "#5D38AE",
       "roughness": 0.1178,
@@ -842,7 +758,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -854,7 +770,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "MAT_Shell_DECAL",
       "base_color": "#7B7D81",
       "roughness": 0.09,
@@ -866,19 +782,7 @@
         "strength": 0.0
       }
     },
-    "7": {
-      "material_name": "Roof_DECAL",
-      "base_color": "#1D1E1F",
-      "roughness": 0.3723,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "8": {
+    "6": {
       "material_name": "Metallic Grates_DECAL",
       "base_color": "#B4B6BC",
       "roughness": 0.3242,
@@ -890,7 +794,7 @@
         "strength": 0.0
       }
     },
-    "9": {
+    "7": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -902,7 +806,7 @@
         "strength": 0.0
       }
     },
-    "10": {
+    "8": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -914,7 +818,7 @@
         "strength": 0.0
       }
     },
-    "11": {
+    "9": {
       "material_name": "Decals",
       "base_color": "#FFFFFF",
       "roughness": 1.0,
@@ -1439,18 +1343,6 @@
       }
     },
     "2": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -1462,7 +1354,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -1474,7 +1366,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -1486,7 +1378,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -1498,7 +1390,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "6": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -1537,18 +1429,6 @@
       }
     },
     "2": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -1560,7 +1440,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -1572,7 +1452,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -1584,7 +1464,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -1596,7 +1476,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "6": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -1635,18 +1515,6 @@
       }
     },
     "2": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -1658,7 +1526,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -1670,7 +1538,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -1682,7 +1550,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -1694,7 +1562,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "6": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -1733,18 +1601,6 @@
       }
     },
     "2": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -1756,7 +1612,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -1768,7 +1624,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -1780,7 +1636,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -1792,7 +1648,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "6": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -1833,18 +1689,6 @@
       }
     },
     "2": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "MAT_Stripes",
       "base_color": "#5D38AE",
       "roughness": 0.1178,
@@ -1856,7 +1700,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -1868,7 +1712,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -1880,7 +1724,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -1892,7 +1736,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "6": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -2377,11 +2221,11 @@
   },
   "Heavy Duty Ramp w/ Flap": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
       "metalness": 0.0,
-      "normal": false,
+      "normal": "//..\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2425,30 +2269,6 @@
       }
     },
     "4": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "5": {
-      "material_name": "MAT_Interior_Walls",
-      "base_color": "#D1AD94",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "6": {
       "material_name": "Rubber_Flooring",
       "base_color": "//..\\Textures\\Rubber Flooring_Basecolor.jpg",
       "roughness": "//..\\Textures\\Rubber Flooring_Roughness.jpg",
@@ -2460,12 +2280,24 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "5": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
       "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "6": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#898989",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2549,30 +2381,6 @@
       }
     },
     "4": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "5": {
-      "material_name": "MAT_Interior_Walls",
-      "base_color": "#D1AD94",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "6": {
       "material_name": "Standard Silver_Rim",
       "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
@@ -2584,7 +2392,7 @@
         "strength": 0.0
       }
     },
-    "7": {
+    "5": {
       "material_name": "Rubber_Flooring",
       "base_color": "//..\\Textures\\Rubber Flooring_Basecolor.jpg",
       "roughness": "//..\\Textures\\Rubber Flooring_Roughness.jpg",
@@ -2783,42 +2591,6 @@
   },
   "16in Spider Tire 5-Lug Inst": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Tyre_Rubber",
       "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
       "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
@@ -2830,7 +2602,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "1": {
       "material_name": "MAT_Rim",
       "base_color": "#888888",
       "roughness": 0.5,
@@ -4171,30 +3943,6 @@
       }
     },
     "1": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "MAT_Stripes",
-      "base_color": "#5D38AE",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Trailer Lights_Transmission",
       "base_color": "#E7E7E7",
       "roughness": 0.0937,
@@ -4206,7 +3954,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "2": {
       "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
@@ -4233,30 +3981,6 @@
       }
     },
     "1": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "MAT_Stripes",
-      "base_color": "#5D38AE",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Trailer Lights_Transmission",
       "base_color": "#E7E7E7",
       "roughness": 0.0937,
@@ -4268,7 +3992,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "2": {
       "material_name": "New plate",
       "base_color": "//..\\Textures\\Number_Plate.jpg",
       "roughness": 1.0,
@@ -4280,31 +4004,7 @@
         "strength": 25.0
       }
     },
-    "5": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "6": {
-      "material_name": "Emission",
-      "base_color": "#E7E7E7",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 10.0
-      }
-    },
-    "7": {
+    "3": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
@@ -4391,18 +4091,6 @@
       }
     },
     "6": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "7": {
       "material_name": "White_Ceremic_Textured",
       "base_color": "#DEDEDE",
       "roughness": "//..\\Textures\\Washroom Panel_Roughness.jpg",
@@ -4808,18 +4496,6 @@
       }
     },
     "9": {
-      "material_name": "MAT_Stripes",
-      "base_color": "#5D38AE",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "//..\\Textures\\ReflectiveStripes_Base_color.jpg",
-        "strength": 0.0
-      }
-    },
-    "10": {
       "material_name": "White_Shell",
       "base_color": "//..\\Textures\\White_BaseColor.jpg",
       "roughness": 0.15,
@@ -5432,18 +5108,6 @@
       }
     },
     "2": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "White_Shell",
       "base_color": "//..\\Textures\\White_BaseColor.jpg",
       "roughness": 0.15,
@@ -5455,7 +5119,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -5467,7 +5131,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -5780,18 +5444,6 @@
       }
     },
     "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "White_Ceremic",
       "base_color": "#E7E7E7",
       "roughness": 0.2144,
@@ -5880,18 +5532,6 @@
       }
     },
     "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "White_Ceremic",
       "base_color": "#E7E7E7",
       "roughness": 0.2144,
@@ -5956,18 +5596,6 @@
       }
     },
     "1": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -5979,7 +5607,7 @@
         "strength": 0.0
       }
     },
-    "3": {
+    "2": {
       "material_name": "White_Ceremic",
       "base_color": "#E7E7E7",
       "roughness": 0.2144,
@@ -6230,18 +5858,6 @@
   },
   "Winch System": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -6253,7 +5869,7 @@
         "strength": 0.0
       }
     },
-    "2": {
+    "1": {
       "material_name": "Grainy_Plastic",
       "base_color": "//..\\Textures\\Grainy_Plastic_BaseColor.jpg",
       "roughness": "//..\\Textures\\Grainy_Plastic_Roughness.jpg",
@@ -6265,7 +5881,7 @@
         "strength": 0.0
       }
     },
-    "3": {
+    "2": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
@@ -6277,7 +5893,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "Winch_Wire",
       "base_color": "//..\\Textures\\Winch_Wire_BaseColor.jpg",
       "roughness": "//..\\Textures\\Winch_Wire_Roughness.jpg",
@@ -6442,58 +6058,10 @@
   },
   "Spare Tire Mount": {
     "0": {
-      "material_name": "Material",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
-      "material_name": "Tyre_Rubber",
-      "base_color": "//..\\Textures\\Tyre_Rubber__Base_color.png",
-      "roughness": "//..\\Textures\\Tyre_Rubber__Roughness.png",
-      "metalness": "//..\\Textures\\Tyre_Rubber__Metallic.png",
-      "normal": "//..\\Textures\\Tyre_Rubber__Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "MAT_Rim",
-      "base_color": "#888888",
-      "roughness": 0.5,
-      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
