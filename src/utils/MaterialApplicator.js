@@ -236,7 +236,7 @@ export function applyMaterialDef(mat, def, textures) {
             if (normMatName(originalDef.material_name).includes('rim')) tex.repeat.set(50, 50)
             if (normMatName(originalDef.material_name) === 'wirecovers') tex.repeat.set(10, 10)
             if (normMatName(originalDef.material_name) === 'metallicsilverstripes') {
-                tex.repeat.set(10, 10)
+                tex.repeat.set(1, 1)
                 tex.rotation = Math.PI / 2
                 tex.center.set(0.5, 0.5)
             }
@@ -340,6 +340,16 @@ export function applyMaterialDef(mat, def, textures) {
         }
 
         next.emissiveIntensity = typeof def.emission.strength === 'number' ? def.emission.strength : 0.0
+
+        // Fix for iOS Quick Look / USDZ:
+        // Apple's AR engine often ignores the emissiveIntensity property (0.0).
+        // If a material has an emissive color of #FFFFFF but 0 intensity, Apple 
+        // will incorrectly render it as fully glowing white.
+        // We must manually force it to black if intensity is 0.
+        if (next.emissiveIntensity === 0) {
+            next.emissive.set('#000000')
+            next.emissiveMap = null
+        }
     }
 
     next.needsUpdate = true

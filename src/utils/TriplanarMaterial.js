@@ -30,6 +30,8 @@ export function patchTriplanarMaterial(material, scale = 1.0, swapYAxes = false)
     if (_cache.has(key)) return _cache.get(key)
 
     const patched = material.clone()
+    patched.userData = { ...(material.userData || {}) }
+    patched.userData.triplanarScale = typeof scale === 'number' ? scale : (scale.x?.x || scale.x || 1.0)
 
     patched.customProgramCacheKey = () => {
         return `triplanar_${sx.x}_${sx.y}_${sz.x}_${swapYAxes}_map:${!!patched.map}_norm:${!!patched.normalMap}_rough:${!!patched.roughnessMap}_metal:${!!patched.metalnessMap}`

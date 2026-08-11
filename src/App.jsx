@@ -10,8 +10,9 @@ import { PACKAGE_INITIAL_CONFIGS } from './constants/packageConfigs'
 
 function decodeArKey(search) {
   try {
-    const raw = new URLSearchParams(search).get('arKey')
-    if (!raw) return null
+    const match = search.match(/[?&]arKey=([^&]+)/)
+    if (!match) return null
+    const raw = match[1]
     const decoded = LZString.decompressFromEncodedURIComponent(decodeURIComponent(raw))
     return decoded ? JSON.parse(decoded) : null
   } catch {

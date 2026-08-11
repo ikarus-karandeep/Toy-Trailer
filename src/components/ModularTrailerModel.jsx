@@ -780,12 +780,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                 }
                             }
                         } else {
-                            normalMap.flipY = false
-                            normalMap.repeat.set(repeatScale, repeatScale)
-                            next.normalMap   = normalMap
-                            next.normalScale = new THREE.Vector2(1.0, 1.0)
-                            next.metalness   = 1
-                            next.roughness   = 0.1
+                            const scaledNormal = normalMap.clone();
+                            scaledNormal.flipY = false;
+                            scaledNormal.repeat.set(repeatScale, repeatScale);
+                            scaledNormal.needsUpdate = true;
+                            next.normalMap = scaledNormal;
+                            next.normalScale = new THREE.Vector2(1.0, 1.0);
+                            next.metalness   = 1;
+                            next.roughness   = 0.1;
                         }
                         next.needsUpdate = true
                         if (isArray) child.material[i] = next
