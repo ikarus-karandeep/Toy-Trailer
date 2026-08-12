@@ -937,6 +937,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             <Canvas
               shadows
               camera={{ fov: 35 }}
+              dpr={[0.75, 1.5]}
               style={{ width: '100%', height: '100%' }}
               gl={{
                 antialias: true,
