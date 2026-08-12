@@ -47,8 +47,8 @@ export function patchTriplanarMaterial(material, scale = 1.0, swapYAxes = false)
         shader.vertexShader = shader.vertexShader.replace(
             '#include <common>',
             `#include <common>
-varying vec3 vWorldPos;
-varying vec3 vWorldNormal;`
+varying highp vec3 vWorldPos;
+varying highp vec3 vWorldNormal;`
         )
 
         shader.vertexShader = shader.vertexShader.replace(
@@ -67,20 +67,20 @@ vWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;`
         shader.fragmentShader = shader.fragmentShader.replace(
             '#include <common>',
             `#include <common>
-varying vec3 vWorldPos;
-varying vec3 vWorldNormal;
+varying highp vec3 vWorldPos;
+varying highp vec3 vWorldNormal;
 uniform vec2 uScaleX;
 uniform vec2 uScaleY;
 uniform vec2 uScaleZ;
 
 vec2 getTriplanarUvX(vec3 pos, vec3 normal) {
-  return vec2(pos.z * -sign(normal.x), -pos.y);
+  return vec2(pos.z * -(normal.x >= 0.0 ? 1.0 : -1.0), -pos.y);
 }
 vec2 getTriplanarUvY(vec3 pos, vec3 normal) {
-  ${swapYAxes ? 'return vec2(pos.z * sign(normal.y), pos.x * sign(normal.y));' : 'return vec2(pos.x * sign(normal.y), pos.z * sign(normal.y));'}
+  ${swapYAxes ? 'return vec2(pos.z * (normal.y >= 0.0 ? 1.0 : -1.0), pos.x * (normal.y >= 0.0 ? 1.0 : -1.0));' : 'return vec2(pos.x * (normal.y >= 0.0 ? 1.0 : -1.0), pos.z * (normal.y >= 0.0 ? 1.0 : -1.0));'}
 }
 vec2 getTriplanarUvZ(vec3 pos, vec3 normal) {
-  return vec2(pos.x * sign(normal.z), -pos.y);
+  return vec2(pos.x * (normal.z >= 0.0 ? 1.0 : -1.0), -pos.y);
 }`
         )
 
@@ -173,9 +173,13 @@ vec2 getTriplanarUvZ(vec3 pos, vec3 normal) {
   _ts_y.xy *= normalScale;
   _ts_z.xy *= normalScale;
 
-  vec3 _wn_x = normalize(vec3(_ts_x.b * sign(vWorldNormal.x), _ts_x.g, _ts_x.r));
-  vec3 _wn_y = normalize(vec3(_ts_y.r, _ts_y.b * sign(vWorldNormal.y), -_ts_y.g));
-  vec3 _wn_z = normalize(vec3(_ts_z.r, _ts_z.g, _ts_z.b * sign(vWorldNormal.z)));
+  float snx = vWorldNormal.x >= 0.0 ? 1.0 : -1.0;
+  float sny = vWorldNormal.y >= 0.0 ? 1.0 : -1.0;
+  float snz = vWorldNormal.z >= 0.0 ? 1.0 : -1.0;
+  
+  vec3 _wn_x = normalize(vec3(_ts_x.b * snx, -_ts_x.g, -_ts_x.r * snx));
+  vec3 _wn_y = normalize(vec3(_ts_y.r * sny, _ts_y.b * sny, _ts_y.g * sny));
+  vec3 _wn_z = normalize(vec3(_ts_z.r * snz, -_ts_z.g, _ts_z.b * snz));
 
   vec3 _tp_worldN = normalize(_wn_x * _tn_blend.x + _wn_y * _tn_blend.y + _wn_z * _tn_blend.z);
   normal = normalize(mat3(viewMatrix) * _tp_worldN);

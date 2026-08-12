@@ -576,19 +576,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             const base = mat.clone()
             if (!isDecal) {
                 base.normalMap   = normalMap
-                base.normalScale = new THREE.Vector2(4.0, 4.0)
+                base.normalScale = new THREE.Vector2(1.0, -1.0)
                 base.metalness   = 1
                 base.roughness   = 0.1
                 
                 let finalMat = base;
-                // Only apply triplanar if it's NOT the uvscale material
                 if (!isUvScale) {
-                    finalMat = patchTriplanarMaterial(base, 10)
+                    finalMat = patchTriplanarMaterial(base, 10);
                 } else {
-                    const scaledNormal = normalMap.clone()
-                    scaledNormal.repeat.set(280, 280)
-                    scaledNormal.needsUpdate = true
-                    finalMat.normalMap = scaledNormal
+                    const scaledNormal = normalMap.clone();
+                    scaledNormal.repeat.set(280, 280);
+                    scaledNormal.needsUpdate = true;
+                    finalMat.normalMap = scaledNormal;
                 }
                 
                 finalMat.needsUpdate = true
@@ -670,10 +669,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                     }
 
                                     if (!isDecal) {
+                                        newMat.normalScale = new THREE.Vector2(1.0, -1.0);
+                                        const scaleFactor = isUvScale ? (normalized === 'matatpuvscale' ? 2 : 280) : 10;
                                         if (!isUvScale) {
                                             newMat = patchTriplanarMaterial(newMat, 10);
                                         } else {
-                                            const scaleFactor = normalized === 'matatpuvscale' ? 2 : 280;
                                             if (newMat.map) {
                                                 const scaledMap = newMat.map.clone();
                                                 scaledMap.repeat.set(scaleFactor, scaleFactor);
