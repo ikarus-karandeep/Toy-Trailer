@@ -11,6 +11,7 @@ import QRModal from './QRModal'
 import ModelReportPanel from './ModelReportPanel'
 import { isAndroidDevice } from '../utils/arPlatform'
 import { generateModelReport } from '../utils/modelReport'
+import { exportForAR } from '../utils/arExport'
 import { EffectComposer, Bloom, ToneMapping } from '@react-three/postprocessing'
 import { ToneMappingMode } from 'postprocessing'
 // Helper to compute stable bounding box that ignores exterior accessories (like awnings)
@@ -85,162 +86,6 @@ const HEIGHT_FEET_MAP = {
 function getHeightFt(id) {
   // Add 15 inches (1.25 ft) offset to interior height to account for trailer structure
   return (HEIGHT_FEET_MAP[id] ?? 7) + 1.25
-}
-
-async function parseGLB(mesh) {
-  const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
-
-  const exportGroup = new THREE.Group()
-  mesh.updateWorldMatrix(true, true)
-
-  const skipped = []
-  const included = []
-
-  const processMaterial = (mat) => {
-    if (!mat) return mat;
-    if (mat.alphaMap && !mat.map) {
-      const img = mat.alphaMap.image;
-      if (img) {
-        const nextPowerOfTwo = (v) => {
-          v--;
-          v |= v >> 1;
-          v |= v >> 2;
-          v |= v >> 4;
-          v |= v >> 8;
-          v |= v >> 16;
-          return v + 1;
-        };
-        const width = img.width || 512;
-        const height = img.height || 512;
-        const potWidth = nextPowerOfTwo(width);
-        const potHeight = nextPowerOfTwo(height);
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = potWidth;
-        canvas.height = potHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, potWidth, potHeight);
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imgData.data;
-        const c = mat.color;
-        const r = c.r * 255, g = c.g * 255, b = c.b * 255;
-        for (let i = 0; i < data.length; i += 4) {
-          const alpha = data[i]; // assuming grayscale alpha map
-          if (alpha > 0) {
-            data[i] = r;
-            data[i + 1] = g;
-            data[i + 2] = b;
-            data[i + 3] = alpha;
-          } else {
-            data[i] = 0;
-            data[i + 1] = 0;
-            data[i + 2] = 0;
-            data[i + 3] = 0;
-          }
-        }
-        ctx.putImageData(imgData, 0, 0);
-        
-        const mergedTex = new THREE.CanvasTexture(canvas);
-        mergedTex.colorSpace = THREE.SRGBColorSpace;
-        mergedTex.flipY = false;
-        mergedTex.wrapS = mat.alphaMap.wrapS;
-        mergedTex.wrapT = mat.alphaMap.wrapT;
-        
-        // Use MeshBasicMaterial for decals in AR to bypass Apple's lit shader transparency bugs
-        const newMat = new THREE.MeshBasicMaterial({
-          map: mergedTex,
-          color: 0xffffff,
-          transparent: true,
-          alphaTest: 0.05,
-          side: THREE.DoubleSide
-        });
-        
-        newMat.userData = { ...(mat.userData || {}), isDecal: true };
-        return newMat;
-      }
-    }
-    return mat;
-  };
-
-  mesh.traverse(child => {
-    if (!child.isMesh) return
-
-    // Walk the ancestor chain to determine effective visibility
-    let visible = true
-    let invisibleAncestor = null
-    let node = child
-    while (node) {
-      if (!node.visible) { visible = false; invisibleAncestor = node.name || node.type; break }
-      node = node.parent
-    }
-
-    if (!visible) {
-      skipped.push({ name: child.name, reason: `ancestor "${invisibleAncestor}" is hidden` })
-      return
-    }
-
-    child.updateWorldMatrix(true, false)
-
-    let processedMaterial = child.material;
-    if (Array.isArray(child.material)) {
-      processedMaterial = child.material.map(processMaterial);
-    } else {
-      processedMaterial = processMaterial(child.material);
-    }
-
-    if (child.isInstancedMesh) {
-      const cloned = new THREE.InstancedMesh(child.geometry.clone(), processedMaterial, child.count)
-      const m = new THREE.Matrix4()
-      for (let i = 0; i < child.count; i++) {
-        child.getMatrixAt(i, m)
-        m.premultiply(child.matrixWorld)
-        cloned.setMatrixAt(i, m)
-      }
-      cloned.instanceMatrix.needsUpdate = true
-      cloned.name = child.name
-      exportGroup.add(cloned)
-      included.push({ name: child.name, type: 'InstancedMesh', count: child.count })
-    } else {
-      const clonedGeo = child.geometry.clone()
-      
-      // Prevent AR Z-fighting by physically offsetting decals slightly along their normals
-      let isDecal = false;
-      if (Array.isArray(processedMaterial)) {
-        if (processedMaterial.some(m => m && m.userData && m.userData.isDecal)) isDecal = true;
-      } else if (processedMaterial && processedMaterial.userData && processedMaterial.userData.isDecal) {
-        isDecal = true;
-      }
-      
-      if (isDecal) {
-        const pos = clonedGeo.attributes.position;
-        const norm = clonedGeo.attributes.normal;
-        if (pos && norm) {
-          for (let i = 0; i < pos.count; i++) {
-            pos.setX(i, pos.getX(i) + norm.getX(i) * 0.005);
-            pos.setY(i, pos.getY(i) + norm.getY(i) * 0.005);
-            pos.setZ(i, pos.getZ(i) + norm.getZ(i) * 0.005);
-          }
-          pos.needsUpdate = true;
-        }
-      }
-
-      clonedGeo.applyMatrix4(child.matrixWorld)
-      const cloned = new THREE.Mesh(clonedGeo, processedMaterial)
-      cloned.name = child.name
-      exportGroup.add(cloned)
-      included.push({ name: child.name, type: 'Mesh' })
-    }
-  })
-
-  
-
-  if (included.length === 0) {
-    console.error('[AR Export] exportGroup is EMPTY — no visible meshes found. Check modelGroupRef is populated.')
-  }
-
-  return new Promise((resolve, reject) => {
-    new GLTFExporter().parse(exportGroup, resolve, reject, { binary: true })
-  })
 }
 
 // ── camera fit — model always stays in canvas on resize ───────────────────────
@@ -977,7 +822,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     })
     setArExporting(true)
     try {
-      const result = await parseGLB(modelGroupRef.current)
+      const result = await exportForAR(modelGroupRef.current)
       
       const blob = new Blob([result], { type: 'model/gltf-binary' })
       const url = URL.createObjectURL(blob)
@@ -1019,7 +864,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     if (!modelGroupRef.current || downloading) return
     setDownloading(true)
     try {
-      const result = await parseGLB(modelGroupRef.current)
+      const result = await exportForAR(modelGroupRef.current)
       const blob = new Blob([result], { type: 'model/gltf-binary' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -1042,7 +887,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
       if (!modelGroupRef.current) { console.warn('[gltfreport] Model not ready'); return }
       // console.log('[gltfreport] Generating report...')
       try {
-        const glbBuffer = await parseGLB(modelGroupRef.current)
+        const glbBuffer = await exportForAR(modelGroupRef.current)
         const report = await generateModelReport(glbBuffer, modelGroupRef.current, `trailer-${lengthFt}ft-${widthFt}ft.glb`)
         setModelReport(report)
         // console.log('[gltfreport] Done')
