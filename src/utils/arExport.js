@@ -46,6 +46,31 @@ function getTriplanarScale(mat) {
   return null
 }
 
+function bakeStripeUVs(geo, uScale = 1.5) {
+  const pos = geo.attributes.position
+  const nAttr = geo.attributes.normal
+  const uvAttr = geo.attributes.uv
+  if (!pos || !nAttr || !uvAttr) return
+
+  for (let i = 0; i < pos.count; i++) {
+    const px = pos.getX(i)
+    const pz = pos.getZ(i)
+    const nx = nAttr.getX(i)
+    const nz = nAttr.getZ(i)
+
+    const len = Math.sqrt(nz * nz + nx * nx)
+    let tx = 0, ty = 0
+    if (len > 0.0001) {
+      tx = -nz / len
+      ty = nx / len
+    }
+
+    const localU = px * tx + pz * ty
+    uvAttr.setX(i, localU * uScale)
+  }
+  uvAttr.needsUpdate = true
+}
+
 // Content-based signature so cloned materials with identical maps/values
 // hash to the same bucket — letting the post-merge pass consolidate them.
 function getMaterialSignature(mat) {
@@ -251,6 +276,11 @@ export async function exportForAR(mesh) {
           generateBoxProjectionUVs(
             new THREE.Mesh(instanceGeo, mat), 1.0 / triplanarScale, true
           )
+        } else {
+          // Check if any material is stripes
+          const mats = Array.isArray(mat) ? mat : [mat]
+          const isStripes = mats.some(m => m && (m.name || '').replace(/[\s_]+/g, '').toLowerCase().includes('stripes'))
+          if (isStripes) bakeStripeUVs(instanceGeo, 1.5)
         }
 
         const single = new THREE.Mesh(instanceGeo, mat)
@@ -316,6 +346,10 @@ export async function exportForAR(mesh) {
 
       if (triplanarScale !== null) {
         generateBoxProjectionUVs(new THREE.Mesh(geo, mat), 1.0 / triplanarScale, true)
+      } else {
+        const mats = Array.isArray(mat) ? mat : [mat]
+        const isStripes = mats.some(m => m && (m.name || '').replace(/[\s_]+/g, '').toLowerCase().includes('stripes'))
+        if (isStripes) bakeStripeUVs(geo, 1.5)
       }
 
       const cloned = new THREE.Mesh(geo, mat)
