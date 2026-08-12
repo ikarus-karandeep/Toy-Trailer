@@ -1989,11 +1989,18 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const pointsGeometry = new THREE.BufferGeometry()
         pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
 
-        // Create instances and apply the FULL transform of the original template
         const instanced = BlenderNodes.instanceOnPoints(pointsGeometry, rackTemplate)
         instanced.position.copy(rackTemplate.position)
         instanced.rotation.copy(rackTemplate.rotation)
         instanced.scale.copy(rackTemplate.scale)
+
+        // The template's material is replaced asynchronously in a useEffect.
+        // Link the instanced mesh's material to the template's material property 
+        // so it receives the textured material when it loads.
+        Object.defineProperty(instanced, 'material', {
+            get: () => rackTemplate.material,
+            set: (v) => { rackTemplate.material = v }
+        })
 
         return <primitive object={instanced} />
     }, [addons, lengthFt, config.ladderRacks])
@@ -2667,6 +2674,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 floorInstanced.position.copy(floorTemplate.position)
                 floorInstanced.rotation.copy(floorTemplate.rotation)
                 floorInstanced.scale.copy(floorTemplate.scale)
+
+                Object.defineProperty(floorInstanced, 'material', {
+                    get: () => floorTemplate.material,
+                    set: (v) => { floorTemplate.material = v }
+                })
                 // Apply clip transparency (alphaTest) to avoid OIT sorting issues on instanced mesh
                 const floorMats = Array.isArray(floorInstanced.material) ? floorInstanced.material : [floorInstanced.material]
                 floorMats.forEach(m => { 
@@ -2767,6 +2779,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 wallInstanced.position.copy(wallTemplate.position)
                 wallInstanced.rotation.copy(wallTemplate.rotation)
                 wallInstanced.scale.copy(wallTemplate.scale)
+
+                Object.defineProperty(wallInstanced, 'material', {
+                    get: () => wallTemplate.material,
+                    set: (v) => { wallTemplate.material = v }
+                })
                 // Apply clip transparency (alphaTest) to avoid OIT sorting issues on instanced mesh
                 const wallMats = Array.isArray(wallInstanced.material) ? wallInstanced.material : [wallInstanced.material]
                 wallMats.forEach(m => { 

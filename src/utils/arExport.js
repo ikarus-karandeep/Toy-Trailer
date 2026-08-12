@@ -46,6 +46,71 @@ function getTriplanarScale(mat) {
   return null
 }
 
+// Content-based signature so cloned materials with identical maps/values
+// hash to the same bucket — letting the post-merge pass consolidate them.
+function getMaterialSignature(mat) {
+  if (!mat || !mat.isMaterial) return null
+  return [
+    mat.constructor.name,
+    mat.color?.getHexString?.()     ?? '',
+    mat.map?.uuid                   ?? '-',
+    mat.normalMap?.uuid             ?? '-',
+    mat.roughnessMap?.uuid          ?? '-',
+    mat.metalnessMap?.uuid          ?? '-',
+    mat.alphaMap?.uuid              ?? '-',
+    mat.emissiveMap?.uuid           ?? '-',
+    mat.emissive?.getHexString?.()  ?? '-',
+    (mat.roughness  ?? 0).toFixed(3),
+    (mat.metalness  ?? 0).toFixed(3),
+    (mat.opacity    ?? 1).toFixed(3),
+    mat.transparent ? '1' : '0',
+    mat.side        ?? 0,
+    (mat.alphaTest  ?? 0).toFixed(3),
+    mat.userData?.isDecal        ? 'decal' : '',
+    mat.userData?.triplanarScale ?? '',
+  ].join('|')
+}
+
+// Extract the geometry for ONE material group from a BufferGeometry into a
+// new standalone BufferGeometry containing only the relevant vertices/indices.
+function extractGroupGeometry(geo, group) {
+  const { start, count } = group
+  if (!count) return null
+
+  const out = new THREE.BufferGeometry()
+
+  if (geo.index) {
+    const indexMap = new Map()
+    let nextV = 0
+    const newIdx = new Int32Array(count)
+
+    for (let i = 0; i < count; i++) {
+      const v = geo.index.getX(start + i)
+      if (!indexMap.has(v)) indexMap.set(v, nextV++)
+      newIdx[i] = indexMap.get(v)
+    }
+    out.setIndex(new THREE.BufferAttribute(newIdx, 1))
+
+    const nVerts = indexMap.size
+    for (const [name, attr] of Object.entries(geo.attributes)) {
+      const sz  = attr.itemSize
+      const arr = new Float32Array(nVerts * sz)
+      for (const [oldV, newV] of indexMap) {
+        for (let k = 0; k < sz; k++) arr[newV * sz + k] = attr.array[oldV * sz + k]
+      }
+      out.setAttribute(name, new THREE.BufferAttribute(arr, sz))
+    }
+  } else {
+    for (const [name, attr] of Object.entries(geo.attributes)) {
+      const sz    = attr.itemSize
+      const slice = attr.array.slice(start * sz, (start + count) * sz)
+      out.setAttribute(name, new THREE.BufferAttribute(new Float32Array(slice), sz))
+    }
+  }
+
+  return out
+}
+
 // ─── material sanitizer ───────────────────────────────────────────────────────
 
 function processMaterial(mat) {
@@ -122,7 +187,8 @@ function processMaterial(mat) {
 // ─── main export ──────────────────────────────────────────────────────────────
 
 export async function exportForAR(mesh) {
-  const { GLTFExporter } = await import('three/examples/jsm/exporters/GLTFExporter.js')
+  const { GLTFExporter }    = await import('three/examples/jsm/exporters/GLTFExporter.js')
+  const { mergeGeometries } = await import('three/examples/jsm/utils/BufferGeometryUtils.js')
 
   const exportGroup = new THREE.Group()
   mesh.updateWorldMatrix(true, true)
@@ -148,8 +214,10 @@ export async function exportForAR(mesh) {
     const triplanarScale = getTriplanarScale(sanitized)
 
     if (child.isInstancedMesh) {
-      // Flatten to individual Mesh nodes — iOS Quick Look ignores EXT_mesh_gpu_instancing.
-      // Negative-scale (mirrored) instances are handled by baking reflection into geometry.
+      // iOS Quick Look ignores EXT_mesh_gpu_instancing, so we flatten instances.
+      // We now BAKE each instance's world transform into its own geometry clone
+      // (rather than storing it as a node matrix) so the post-merge pass below
+      // can merge all instances sharing the same material into ONE draw call.
       const baseGeo = child.geometry.clone()
       baseGeo.deleteAttribute('color')
 
@@ -157,13 +225,7 @@ export async function exportForAR(mesh) {
         ? sanitized.map(m => m ? m.clone() : m)
         : (sanitized ? sanitized.clone() : undefined)
 
-      if (triplanarScale !== null) {
-        const tmp = new THREE.Mesh(baseGeo, mat)
-        tmp.applyMatrix4(child.matrixWorld)
-        generateBoxProjectionUVs(tmp, 1.0 / triplanarScale, true)
-      }
-
-      let negGeo = null
+      let negGeoBase = null
       const m4 = new THREE.Matrix4()
 
       for (let i = 0; i < child.count; i++) {
@@ -172,19 +234,27 @@ export async function exportForAR(mesh) {
 
         const isNeg = m4.determinant() < 0
         if (isNeg) {
-          if (!negGeo) {
-            negGeo = baseGeo.clone()
-            negGeo.applyMatrix4(reflectX)
-            reverseWinding(negGeo)
+          if (!negGeoBase) {
+            negGeoBase = baseGeo.clone()
+            negGeoBase.applyMatrix4(reflectX)
+            reverseWinding(negGeoBase)
           }
           m4.multiply(reflectX)
         }
 
-        const single = new THREE.Mesh(isNeg ? negGeo : baseGeo, mat)
+        // Clone + bake world transform so post-merge can group by material
+        const instanceGeo = (isNeg ? negGeoBase : baseGeo).clone()
+        instanceGeo.applyMatrix4(m4)
+
+        // Triplanar UVs in world space — positions are already world-space after bake
+        if (triplanarScale !== null) {
+          generateBoxProjectionUVs(
+            new THREE.Mesh(instanceGeo, mat), 1.0 / triplanarScale, true
+          )
+        }
+
+        const single = new THREE.Mesh(instanceGeo, mat)
         single.name = `${child.name}_${i}`
-        single.matrixAutoUpdate = false
-        single.matrix.copy(m4)
-        single.updateMatrixWorld(true)
         exportGroup.add(single)
       }
     } else {
@@ -256,7 +326,85 @@ export async function exportForAR(mesh) {
 
   if (exportGroup.children.length === 0) {
     console.error('[AR Export] exportGroup is EMPTY — no visible meshes found.')
+    return new Promise((resolve, reject) =>
+      new GLTFExporter().parse(exportGroup, resolve, reject, { binary: true })
+    )
   }
+
+  // ── Post-process: merge by material to minimise GLB draw calls ────────────
+  //
+  // getMaterialSignature() is content-based (map UUIDs, color, roughness…) so
+  // independently-cloned materials with the same properties hash identically.
+  // This lets meshes from different GLBs that share a visual material merge
+  // into a single draw call — including all flattened InstancedMesh instances.
+  //
+  // Multi-material meshes are split by group (extractGroupGeometry) so each
+  // sub-geometry enters the correct single-material bucket.
+
+  const buckets = new Map()  // signature → { mat, geos }
+  const unmergeable = []
+
+  const addToBucket = (geo, mat) => {
+    if (!geo || !mat) return false
+    const matSig = getMaterialSignature(mat)
+    if (!matSig) return false
+    // Include sorted attribute names in the key: two geometries that differ in
+    // which attributes they carry (e.g. one has 'uv', another doesn't) must NOT
+    // be merged — mergeGeometries would silently drop the missing attribute from
+    // the whole result, causing textures to disappear (the ladder rack issue).
+    const attrSig = Object.keys(geo.attributes).sort().join(',')
+    const sig = matSig + '::' + attrSig
+    if (!buckets.has(sig)) buckets.set(sig, { mat, geos: [] })
+    buckets.get(sig).geos.push(geo)
+    return true
+  }
+
+  for (const child of [...exportGroup.children]) {
+    if (!child.isMesh) { unmergeable.push(child); continue }
+
+    const { geometry: geo, material: mat } = child
+
+    if (Array.isArray(mat)) {
+      if (geo.groups.length === 0) {
+        if (!addToBucket(geo, mat[0])) unmergeable.push(child)
+      } else {
+        let allOk = true
+        for (const group of geo.groups) {
+          const subGeo = extractGroupGeometry(geo, group)
+          const subMat = mat[group.materialIndex]
+          if (!subGeo || !addToBucket(subGeo, subMat)) { allOk = false; break }
+        }
+        if (!allOk) unmergeable.push(child)
+      }
+    } else {
+      if (!addToBucket(geo, mat)) unmergeable.push(child)
+    }
+  }
+
+  exportGroup.clear()
+
+  let savedDrawCalls = 0
+  for (const { mat, geos } of buckets.values()) {
+    if (geos.length === 1) {
+      exportGroup.add(new THREE.Mesh(geos[0], mat))
+      continue
+    }
+    try {
+      const merged = mergeGeometries(geos, false)
+      exportGroup.add(new THREE.Mesh(merged, mat))
+      savedDrawCalls += geos.length - 1
+    } catch (e) {
+      console.warn('[AR Export] merge failed for a bucket, keeping separate:', e)
+      for (const g of geos) exportGroup.add(new THREE.Mesh(g, mat))
+    }
+  }
+
+  for (const child of unmergeable) exportGroup.add(child)
+
+  console.log(
+    `[AR Export] merged geometry: ${exportGroup.children.length + savedDrawCalls} primitives` +
+    ` → ${exportGroup.children.length} (saved ${savedDrawCalls} draw calls)`
+  )
 
   return new Promise((resolve, reject) =>
     new GLTFExporter().parse(exportGroup, resolve, reject, { binary: true })

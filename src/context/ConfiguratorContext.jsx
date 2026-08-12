@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo, useCallback,useEffect } from 'react'
+import { createContext, useContext, useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { usePricing } from '../hooks/usePricing'
 import { INTERIOR_HEIGHT_OPTIONS } from '../constants/configData'
 
@@ -27,7 +27,12 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [narrowTrackAxle, setNarrowTrackAxle] = useState(ic.narrowTrackAxle ?? false)
 
   // Automatically select 'torsion' suspension when spread axle is turned on
+  const isFirstSpreadAxle = useRef(true);
   useEffect(() => {
+    if (isFirstSpreadAxle.current) {
+      isFirstSpreadAxle.current = false;
+      return;
+    }
     if (spreadAxle) {
       setAxleSuspension('torsion');
     }
@@ -169,7 +174,12 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [winchSystem, setWinchSystem] = useState(ic.winchSystem ?? false)
 
   // Height auto assignments
+  const isFirstHeightRender = useRef(true);
   useEffect(() => {
+    if (isFirstHeightRender.current) {
+      isFirstHeightRender.current = false;
+      return;
+    }
     const heightIndex = INTERIOR_HEIGHT_OPTIONS.findIndex(o => o.id === interiorHeight);
     if (heightIndex >= 2) {
       setRampType('superduty');
