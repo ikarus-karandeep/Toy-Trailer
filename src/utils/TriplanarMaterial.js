@@ -32,6 +32,7 @@ export function patchTriplanarMaterial(material, scale = 1.0, swapYAxes = false)
     const patched = material.clone()
     patched.userData = { ...(material.userData || {}) }
     patched.userData.triplanarScale = typeof scale === 'number' ? scale : (scale.x?.x || scale.x || 1.0)
+    patched.userData.swapYAxes = swapYAxes
 
     patched.customProgramCacheKey = () => {
         return `triplanar_${sx.x}_${sx.y}_${sz.x}_${swapYAxes}_map:${!!patched.map}_norm:${!!patched.normalMap}_rough:${!!patched.roughnessMap}_metal:${!!patched.metalnessMap}`
@@ -283,13 +284,32 @@ export function generateBoxProjectionUVs(mesh, tileSize = 0.3, force = false) {
         const ay = Math.abs(n.y)
         const az = Math.abs(n.z)
 
+        const signX = n.x < 0 ? -1 : 1
+        const signY = n.y < 0 ? -1 : 1
+        const signZ = n.z < 0 ? -1 : 1
+
+        let swapYAxes = false
+        if (mesh.material) {
+            const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+            for (const m of mats) {
+                if (m && m.userData && m.userData.swapYAxes) {
+                    swapYAxes = true
+                    break
+                }
+            }
+        }
+
         let u, w
         if (ax >= ay && ax >= az) {
-            u = v.z / tileSize; w = v.y / tileSize  // side-facing  → YZ plane
+            u = (v.z * -signX) / tileSize; w = -v.y / tileSize  // side-facing  → YZ plane
         } else if (ay >= ax && ay >= az) {
-            u = v.x / tileSize; w = v.z / tileSize  // floor/roof   → XZ plane
+            if (swapYAxes) {
+                u = (v.z * signY) / tileSize; w = (v.x * signY) / tileSize   // floor/roof   → swapped XZ
+            } else {
+                u = (v.x * signY) / tileSize; w = (v.z * signY) / tileSize   // floor/roof   → XZ plane
+            }
         } else {
-            u = v.x / tileSize; w = v.y / tileSize  // front/rear   → XY plane
+            u = (v.x * signZ) / tileSize; w = -v.y / tileSize  // front/rear   → XY plane
         }
 
         uvs[i * 2]     = u

@@ -731,64 +731,6 @@ function SceneReadyNotifier({ meshRef, onReady }) {
   return null
 }
 
-// ── render stats logger ───────────────────────────────────────────────────────
-// Traverses ONLY the trailer model group to count scene-geometry draw calls
-// and triangles directly — no gl.info, no extra render passes, zero overhead.
-
-const RENDER_STATS_LOG_EVERY = 120 // frames (~2 s at 60 fps)
-
-function countModelStats(group) {
-  let calls = 0
-  let triangles = 0
-
-  group.traverse(obj => {
-    if (!obj.isMesh && !obj.isInstancedMesh) return
-
-    // Walk ancestor chain — skip if any ancestor is hidden
-    let visible = obj.visible
-    if (visible) {
-      let p = obj.parent
-      while (p) { if (!p.visible) { visible = false; break } p = p.parent }
-    }
-    if (!visible) return
-
-    const geo = obj.geometry
-    if (!geo) return
-
-    // 1 draw call per material group; ungrouped mesh = 1 draw call
-    calls += Math.max(1, geo.groups.length)
-
-    // Triangle count per mesh
-    const trisPerInstance = geo.index
-      ? geo.index.count / 3
-      : (geo.attributes.position?.count ?? 0) / 3
-
-    // InstancedMesh = 1 draw call but triangles × instance count
-    triangles += obj.isInstancedMesh
-      ? trisPerInstance * obj.count
-      : trisPerInstance
-  })
-
-  return { calls, triangles }
-}
-
-function RenderStats({ modelGroupRef }) {
-  const frameRef = useRef(0)
-
-  useFrame(() => {
-    if (++frameRef.current % RENDER_STATS_LOG_EVERY !== 0) return
-    if (!modelGroupRef?.current) return
-
-    const { calls, triangles } = countModelStats(modelGroupRef.current)
-    console.log(
-      `[TrailerStats] draw calls=${calls}` +
-      ` | triangles=${Math.round(triangles).toLocaleString()}`
-    )
-  })
-
-  return null
-}
-
 
 function ShaderPrecompiler({ modelGroupRef }) {
   const { gl, scene, camera } = useThree()
@@ -1066,7 +1008,6 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               />
               <CameraLayerSetup />
               <ShaderPrecompiler modelGroupRef={modelGroupRef} />
-              <RenderStats modelGroupRef={modelGroupRef} />
               <EffectComposer disableNormalPass alpha={true}>
                 <Bloom luminanceThreshold={5} intensity={0.5} />
                 <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
