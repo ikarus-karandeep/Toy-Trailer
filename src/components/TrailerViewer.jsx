@@ -571,10 +571,15 @@ function ShadowLightSetup({ modelRef }) {
 
 
 function DynamicContactShadow({ modelRef }) {
+  const { width, length } = useConfigurator()
   const shadowRef = useRef()
-  const boundsRef = useRef(new THREE.Box3())
   const centerRef = useRef(new THREE.Vector3())
-  const sizeRef = useRef(new THREE.Vector3())
+  const animCenterRef = useRef(new THREE.Vector3())
+  const initializedCenterRef = useRef(false)
+  
+  const targetLengthFt = getLengthFt(length) || 12
+  const targetWidthFt = WIDTH_FT[width] || 8.5
+  const animRef = useRef({ lengthFt: targetLengthFt, widthFt: targetWidthFt })
   
   useFrame(() => {
     if (!shadowRef.current || !modelRef?.current) return
@@ -583,16 +588,36 @@ function DynamicContactShadow({ modelRef }) {
     if (!hasMeshes) return
 
     const bbox = computeTrailerBounds(modelRef.current)
-    boundsRef.current.copy(bbox)
     const center = centerRef.current
-    const size = sizeRef.current
     bbox.getCenter(center)
-    bbox.getSize(size)
-    const shadowSpan = Math.max(size.x, size.z)
+
+    if (!initializedCenterRef.current) {
+        animCenterRef.current.copy(center)
+        initializedCenterRef.current = true
+    }
+
+    const curr = animRef.current;
+    const prevLength = curr.lengthFt;
+    curr.lengthFt += (targetLengthFt - curr.lengthFt) * 0.18;
+    curr.widthFt += (targetWidthFt - curr.widthFt) * 0.18;
+
+    const isAnimating = !!modelRef.current.userData.isAnimatingSize;
+    if (isAnimating) {
+        const deltaLengthFt = curr.lengthFt - prevLength;
+        animCenterRef.current.x += (deltaLengthFt * 0.305) / 2;
+        animCenterRef.current.y = center.y;
+        animCenterRef.current.z = center.z;
+    } else {
+        animCenterRef.current.copy(center);
+    }
+
+    const predictedSizeZ = (curr.lengthFt * 0.305) + 1.7;
+    const predictedSizeX = (curr.widthFt * 0.305) + 0.5;
+    const shadowSpan = Math.max(predictedSizeX, predictedSizeZ)
     
     // Position contact shadow slightly above the ground plane
-    shadowRef.current.position.set(center.x, bbox.min.y - 0.001, center.z)
-    shadowRef.current.scale.setScalar(Math.max(20, shadowSpan * 1.35))
+    shadowRef.current.position.set(animCenterRef.current.x, bbox.min.y - 0.001, animCenterRef.current.z)
+    shadowRef.current.scale.setScalar(Math.max(20, shadowSpan + 3.0))
   })
 
   return (
@@ -620,16 +645,21 @@ function CameraLayerSetup() {
 // ── ground model ───────────────────────────────────────────────────────────────
 
 function GroundModel({ modelRef }) {
+  const { width, length } = useConfigurator()
   const { scene } = useGLTF('/models/Ground.glb')
   const [colorMap, opacityMap] = useTexture([
     '/Ground Color.jpg',
     '/Ground Opacity.jpg'
   ])
   const groundRef = useRef()
-  const boundsRef = useRef(new THREE.Box3())
   const centerRef = useRef(new THREE.Vector3())
-  const sizeRef = useRef(new THREE.Vector3())
+  const animCenterRef = useRef(new THREE.Vector3())
+  const initializedCenterRef = useRef(false)
   const baseFootprintRef = useRef(0)
+
+  const targetLengthFt = getLengthFt(length) || 12
+  const targetWidthFt = WIDTH_FT[width] || 8.5
+  const animRef = useRef({ lengthFt: targetLengthFt, widthFt: targetWidthFt })
 
   useEffect(() => {
     if (!baseFootprintRef.current) {
@@ -689,19 +719,41 @@ function GroundModel({ modelRef }) {
     if (!hasMeshes) return
 
     const bbox = computeTrailerBounds(modelRef.current)
-    boundsRef.current.copy(bbox)
     const center = centerRef.current
-    const size = sizeRef.current
     bbox.getCenter(center)
-    bbox.getSize(size)
+
+    if (!initializedCenterRef.current) {
+        animCenterRef.current.copy(center)
+        initializedCenterRef.current = true
+    }
+
+    const curr = animRef.current;
+    const prevLength = curr.lengthFt;
+    curr.lengthFt += (targetLengthFt - curr.lengthFt) * 0.18;
+    curr.widthFt += (targetWidthFt - curr.widthFt) * 0.18;
+
+    const isAnimating = !!modelRef.current.userData.isAnimatingSize;
+    if (isAnimating) {
+        const deltaLengthFt = curr.lengthFt - prevLength;
+        animCenterRef.current.x += (deltaLengthFt * 0.305) / 2;
+        animCenterRef.current.y = center.y;
+        animCenterRef.current.z = center.z;
+    } else {
+        animCenterRef.current.copy(center);
+    }
 
     // Position ground slightly below the shadow material plane (which is at bbox.min.y - 0.001)
-    groundRef.current.position.set(center.x, bbox.min.y - 0.002, center.z)
+    groundRef.current.position.set(animCenterRef.current.x, bbox.min.y - 0.002, animCenterRef.current.z)
 
     // Scale the ground footprint so it always extends comfortably past the trailer's footprint.
     if (baseFootprintRef.current) {
-      const margin = 1.3 // keep ground just larger than the trailer footprint
-      const desired = Math.max(size.x, size.z) * margin
+      // Instead of a multiplier (which makes the extra space shrink on smaller trailers),
+      // we add a fixed physical amount of padding (in meters) so the margin is always consistent.
+      const marginPadding = 2.5; 
+      const predictedSizeZ = (curr.lengthFt * 0.305) + 1.7;
+      const predictedSizeX = (curr.widthFt * 0.305) + 0.5;
+      const desired = Math.max(predictedSizeX, predictedSizeZ) + marginPadding;
+
       const scale = desired / baseFootprintRef.current
       groundRef.current.scale.set(scale, 1, scale)
 
@@ -800,6 +852,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [environment, setEnvironment] = useState('/trailer_hdri.hdr')
   const [showEnvironment, setShowEnvironment] = useState(false)
   const [showGround, setShowGround] = useState(true)
+  const [aaEnabled, setAaEnabled] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
@@ -1022,7 +1075,12 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               />
               <CameraLayerSetup />
               <ShaderPrecompiler modelGroupRef={modelGroupRef} />
-              <EffectComposer disableNormalPass alpha={true}>
+              <EffectComposer 
+                key={`composer-${aaEnabled}`} 
+                disableNormalPass 
+                alpha={true}
+                multisampling={aaEnabled ? 8 : 0} 
+              >
                 <Bloom luminanceThreshold={5} intensity={0.5} />
                 <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
               </EffectComposer>
@@ -1069,6 +1127,13 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/Dimension.png" alt="" />
+          </button>
+          <button
+            aria-label="Toggle Anti-Aliasing"
+            onClick={() => setAaEnabled(prev => !prev)}
+            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${aaEnabled ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+          >
+            <span className="text-white text-[11px] font-bold">AA</span>
           </button>
           {/* <button
             aria-label="Toggle Ground"
