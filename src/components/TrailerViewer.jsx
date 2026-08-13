@@ -852,7 +852,6 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const [environment, setEnvironment] = useState('/trailer_hdri.hdr')
   const [showEnvironment, setShowEnvironment] = useState(false)
   const [showGround, setShowGround] = useState(true)
-  const [aaEnabled, setAaEnabled] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const nameTimerRef = useRef(null)
   const modelGroupRef = useRef()
@@ -1076,10 +1075,9 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               <CameraLayerSetup />
               <ShaderPrecompiler modelGroupRef={modelGroupRef} />
               <EffectComposer 
-                key={`composer-${aaEnabled}`} 
                 disableNormalPass 
                 alpha={true}
-                multisampling={aaEnabled ? 8 : 0} 
+                multisampling={8} 
               >
                 <Bloom luminanceThreshold={5} intensity={0.5} />
                 <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
@@ -1127,13 +1125,6 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/Dimension.png" alt="" />
-          </button>
-          <button
-            aria-label="Toggle Anti-Aliasing"
-            onClick={() => setAaEnabled(prev => !prev)}
-            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${aaEnabled ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
-          >
-            <span className="text-white text-[11px] font-bold">AA</span>
           </button>
           {/* <button
             aria-label="Toggle Ground"
