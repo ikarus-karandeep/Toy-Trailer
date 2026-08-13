@@ -19,6 +19,16 @@ import { ToneMappingMode } from 'postprocessing'
 let _cachedTrailerBounds = new THREE.Box3();
 let _lastTrailerBoundsUpdate = 0;
 
+function ResizeWakeup() {
+  const { invalidate } = useThree()
+  useEffect(() => {
+    const handleResize = () => invalidate()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [invalidate])
+  return null
+}
+
 function computeTrailerBounds(modelGroup) {
   const now = performance.now();
   if (now - _lastTrailerBoundsUpdate < 200 && !_cachedTrailerBounds.isEmpty()) {
@@ -935,6 +945,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
             }
           >
             <Canvas
+              frameloop="demand"
               shadows
               camera={{ fov: 35 }}
               dpr={[0.75, 1.5]}
@@ -946,6 +957,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 // toneMappingExposure: 1.0,
               }}
             >
+              <ResizeWakeup />
               <Stage
                 intensity={0.6}
                 environment={null}
