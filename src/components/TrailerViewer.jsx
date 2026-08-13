@@ -674,6 +674,7 @@ function GroundModel({ modelRef }) {
         if (!child.geometry.attributes.normal) {
            child.geometry.computeVertexNormals()
         }
+        child.geometry.center() // Center the geometry to fix off-center offset
         child.material = baseMaterial   // Use standard UV mapping, no triplanar needed for a flat plane
         child.receiveShadow = true      // Receive shadows for better realism
         child.renderOrder = 0   // draws first
@@ -699,7 +700,7 @@ function GroundModel({ modelRef }) {
 
     // Scale the ground footprint so it always extends comfortably past the trailer's footprint.
     if (baseFootprintRef.current) {
-      const margin = 1.08 // keep ground just larger than the trailer footprint
+      const margin = 1.3 // keep ground just larger than the trailer footprint
       const desired = Math.max(size.x, size.z) * margin
       const scale = desired / baseFootprintRef.current
       groundRef.current.scale.set(scale, 1, scale)
