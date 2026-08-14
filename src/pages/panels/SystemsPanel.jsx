@@ -233,7 +233,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
                 <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price} badge={opt.badge}
+                  price={opt.price}
                   badge={opt.badge}
                   subtext={opt.subtext}
                   isSelected={exteriorLights.includes(opt.id)}
