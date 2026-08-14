@@ -12,6 +12,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [viewMode, setViewMode] = useState('EXTERIOR')
   const [summaryOpen, setSummaryOpen] = useState(false)
   const [packageId, setPackageId] = useState(ic.packageId ?? null)
+  const [focusedCamera, setFocusedCamera] = useState(null)
 
 
 
@@ -275,6 +276,14 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [awning, concessionWidth, setConcessionWidth]);
 
+  // Jacks conflict resolution
+  useEffect(() => {
+    const isGooseneck = width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'));
+    if (isGooseneck && jacks.includes('5000relectric')) {
+      setJacksRaw(prev => prev.filter(j => j !== '5000relectric'));
+    }
+  }, [width, frontStyle, jacks, setJacksRaw]);
+
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = useCallback((tab) => setVisitedTabs(prev => new Set([...prev, tab])), [])
   const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
@@ -330,6 +339,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   const value = useMemo(() => ({
     packageId, setPackageId, applyPackage,
+    focusedCamera, setFocusedCamera,
     activeTab, setActiveTab,
     viewMode, setViewMode,
     summaryOpen, setSummaryOpen,
@@ -423,7 +433,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     totalPrice,
     completionPercent, markTabVisited,
   }), [
-    packageId, applyPackage, activeTab, viewMode, summaryOpen,
+    packageId, applyPackage, activeTab, viewMode, summaryOpen, focusedCamera,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,

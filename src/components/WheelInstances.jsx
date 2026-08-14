@@ -225,7 +225,7 @@ const WheelInstances = forwardRef(({ instMesh, sockets, relativeTo, allowDeforma
             {/* Invisible Proxy Mesh for Bounding Box / <Stage> calculations.
                 Older versions of Three.js Box3.setFromObject ignore InstancedMesh matrices.
                 This single box dynamically encompasses all tires so Stage sees the true floor height. */}
-            <mesh ref={proxyMeshRef} visible={false}>
+            <mesh ref={proxyMeshRef} visible={false} name="Wheel_Proxy">
                 <boxGeometry args={[1, 1, 1]} />
                 <meshBasicMaterial />
             </mesh>

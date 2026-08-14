@@ -39,7 +39,7 @@ function computeTrailerBounds(modelGroup) {
   const groundBox = new THREE.Box3();
   
   modelGroup.traverse((node) => {
-    if (node.isMesh && node.visible) {
+    if (node.isMesh && (node.visible || node.name.toLowerCase().includes('proxy'))) {
       let isIgnoredForBounds = false;
       let isIgnoredForGround = false;
       
@@ -127,10 +127,16 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       const isMobile = size.width < 768;
       cameraControlsRef.current.minDistance = maxDim * 0.1
       cameraControlsRef.current.maxDistance = maxDim * (isMobile ? 3.0 : 1.5)
+      
+      // Default polar limits (same as former declarative props)
+      cameraControlsRef.current.minPolarAngle = 0.2
+      cameraControlsRef.current.maxPolarAngle = Math.PI / 2
+
       if (groundYRef) groundYRef.current = bbox.min.y
       
       const padding = isMobile ? 2.0 : 1;
-      cameraControlsRef.current.fitToBox(modelGroupRef.current, false, { paddingLeft: padding, paddingRight: padding, paddingBottom: padding, paddingTop: padding })
+      cameraControlsRef.current.smoothTime = 0.5; // Ensure smooth transition
+      cameraControlsRef.current.fitToBox(modelGroupRef.current, true, { paddingLeft: padding, paddingRight: padding, paddingBottom: padding, paddingTop: padding })
       cameraInitRef.current = true
       
       const initCenter = new THREE.Vector3()
@@ -282,6 +288,8 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
     if (!hasMeshes) return
 
     let targetPosition, targetLookAt, targetFov
+    const skipMove = cameraControlsRef.current.skipDefaultMove;
+
 
     if (viewMode === 'INTERIOR') {
       const currentPos = new THREE.Vector3()
@@ -303,91 +311,93 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         minY: cameraControlsRef.current.minY,
       }
 
-      // Material swapping
-      modelGroupRef.current.traverse((node) => {
-        if (node.isMesh && node.material) {
-          if (node.material.userData.originalSide === undefined) {
-            node.material.userData.originalSide = node.material.side;
-          }
-          node.material.side = THREE.DoubleSide;
+      // Materials are now permanently DoubleSide to prevent shader recompilation lag
+
+      if (!skipMove) {
+        // Calculate bounding box excluding exterior accessories (like awnings) 
+        // and gooseneck jacks that artificially expand the bounds.
+        const box = computeTrailerBounds(modelGroupRef.current);
+
+        const center = box.getCenter(new THREE.Vector3())
+        const size = box.getSize(new THREE.Vector3())
+
+        const isLongX = size.x >= size.z
+        const eyeY = box.min.y + size.y * 0.55
+
+        if (isLongX) {
+          targetPosition = new THREE.Vector3(center.x - size.x * 0.15, eyeY, center.z)
+        } else {
+          targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.15)
         }
-      });
 
-      // Calculate bounding box excluding exterior accessories (like awnings) 
-      // and gooseneck jacks that artificially expand the bounds.
-      const box = computeTrailerBounds(modelGroupRef.current);
+        // ── Orbit Pivot ──────────────────────────────────────────────
+        // Place the orbit target at the center of the trailer. This allows 
+        // you to zoom in (dolly) towards the center of the room, though it means 
+        // dragging will now orbit around the center rather than turning your head in place.
+        targetLookAt = center.clone()
 
-      const center = box.getCenter(new THREE.Vector3())
-      const size = box.getSize(new THREE.Vector3())
+        targetFov = 75
 
-      const isLongX = size.x >= size.z
-      const eyeY = box.min.y + size.y * 0.55
+        const interiorLength = isLongX ? size.x : size.z
+        const interiorWidth = isLongX ? size.z : size.x
 
-      if (isLongX) {
-        targetPosition = new THREE.Vector3(center.x - size.x * 0.15, eyeY, center.z)
-      } else {
-        targetPosition = new THREE.Vector3(center.x, eyeY, center.z - size.z * 0.15)
+        // ── Distance limits ──────────────────────────────────────────────────────
+        // Very tight: user can zoom in/out within a small range around the pivot
+        cameraControlsRef.current.minDistance = 0.01
+        cameraControlsRef.current.maxDistance = interiorWidth * 0.45
+        cameraControlsRef.current.minY = -Infinity
+
+        // ── Polar angle clamp ────────────────────────────────────────────────────
+        // Prevent the camera from tilting through the floor or ceiling.
+        // Math.PI * 0.15  ≈ 27° from zenith  (can't look straight up past ceiling)
+        // Math.PI * 0.85  ≈ 27° from nadir   (can't look straight down through floor)
+        cameraControlsRef.current.minPolarAngle = Math.PI * 0.15
+        cameraControlsRef.current.maxPolarAngle = Math.PI * 0.85
+
+        // ── Azimuth clamp — no restriction ──────────────────────────────────────
+        // Full 360° horizontal look-around is fine inside the model.
+        cameraControlsRef.current.minAzimuthAngle = -Infinity
+        cameraControlsRef.current.maxAzimuthAngle = Infinity
       }
-
-      // ── Orbit Pivot ──────────────────────────────────────────────
-      // Place the orbit target at the center of the trailer. This allows 
-      // you to zoom in (dolly) towards the center of the room, though it means 
-      // dragging will now orbit around the center rather than turning your head in place.
-      targetLookAt = center.clone()
-
-      targetFov = 75
-
-      const interiorLength = isLongX ? size.x : size.z
-      const interiorWidth = isLongX ? size.z : size.x
-
-      // ── Distance limits ──────────────────────────────────────────────────────
-      // Very tight: user can zoom in/out within a small range around the pivot
-      cameraControlsRef.current.minDistance = 0.01
-      cameraControlsRef.current.maxDistance = interiorWidth * 0.45
-      cameraControlsRef.current.minY = -Infinity
-
-      // ── Polar angle clamp ────────────────────────────────────────────────────
-      // Prevent the camera from tilting through the floor or ceiling.
-      // Math.PI * 0.15  ≈ 27° from zenith  (can't look straight up past ceiling)
-      // Math.PI * 0.85  ≈ 27° from nadir   (can't look straight down through floor)
-      cameraControlsRef.current.minPolarAngle = Math.PI * 0.15
-      cameraControlsRef.current.maxPolarAngle = Math.PI * 0.85
-
-      // ── Azimuth clamp — no restriction ──────────────────────────────────────
-      // Full 360° horizontal look-around is fine inside the model.
-      cameraControlsRef.current.minAzimuthAngle = -Infinity
-      cameraControlsRef.current.maxAzimuthAngle = Infinity
     } else {
-      // Restore exterior materials
-      modelGroupRef.current.traverse((node) => {
-        if (node.isMesh && node.material && node.material.userData.originalSide !== undefined) {
-          node.material.side = node.material.userData.originalSide;
-        }
-      });
+      // No need to restore exterior materials, they remain DoubleSide for performance
 
-      const box = computeTrailerBounds(modelGroupRef.current);
-      const center = box.getCenter(new THREE.Vector3())
-      const size = box.getSize(new THREE.Vector3())
-      const maxDim = Math.max(size.x, size.y, size.z)
-      const distance = maxDim * 1.8
-      // Flat side view: align camera exactly on the Z-axis, centered on the trailer
-      targetPosition = new THREE.Vector3(center.x, center.y, center.z + distance)
-      targetLookAt = center.clone()
-      targetFov = 35
+      if (!skipMove) {
+        const box = computeTrailerBounds(modelGroupRef.current);
+        const center = box.getCenter(new THREE.Vector3())
+        const size = box.getSize(new THREE.Vector3())
+        const maxDim = Math.max(size.x, size.y, size.z)
 
-      // Restore zoom limits for exterior
-      cameraControlsRef.current.minDistance = maxDim * 0.1
-      cameraControlsRef.current.maxDistance = maxDim * 1.15
+        const distance = maxDim * 1.8
+        // Flat side view: align camera exactly on the Z-axis, centered on the trailer
+        targetPosition = new THREE.Vector3(center.x, center.y, center.z + distance)
+        targetLookAt = center.clone()
+        targetFov = 35
 
-      // Restore default angle constraints
-      cameraControlsRef.current.minPolarAngle   = 0
-      cameraControlsRef.current.maxPolarAngle   = Math.PI / 2
-      cameraControlsRef.current.minAzimuthAngle = -Infinity
-      cameraControlsRef.current.maxAzimuthAngle = Infinity
-      // minY intentionally NOT set — GroundClamp handles floor boundary
-      // smoothly via lerp. A hard minY here creates a snap "wall" that
-      // fights the lerp correction and causes jitter.
-      cameraControlsRef.current.minY            = -Infinity
+        // Restore zoom limits for exterior
+        cameraControlsRef.current.minDistance = maxDim * 0.1
+        cameraControlsRef.current.maxDistance = maxDim * 1.15
+
+        // Restore angle constraints to clean defaults, ignoring corrupted saved values
+        cameraControlsRef.current.minPolarAngle   = 0;
+        cameraControlsRef.current.maxPolarAngle   = Math.PI / 2; // Floor boundary
+        cameraControlsRef.current.minAzimuthAngle = -Infinity;
+        cameraControlsRef.current.maxAzimuthAngle = Infinity;
+        // minY intentionally NOT set — GroundClamp handles floor boundary
+        // smoothly via lerp. A hard minY here creates a snap "wall" that
+        // fights the lerp correction and causes jitter.
+        cameraControlsRef.current.minY            = -Infinity;
+        
+        // Clear saved ref so next switch captures fresh state
+        savedExteriorRef.current = null;
+      }
+    }
+
+    if (skipMove) {
+      cameraControlsRef.current.skipDefaultMove = false
+      // Don't call setIsTransitioning(false) here; let FocusedCameraListener handle it
+      // when its custom animation completes.
+      return
     }
 
     let cancelled = false
@@ -398,15 +408,18 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
     // current position synchronously (no animation), then immediately
     // animate to the new target. Without this step, accumulated rotation
     // deltas from manual orbiting would replay during the transition.
-    const snapPos = new THREE.Vector3()
-    const snapTarget = new THREE.Vector3()
-    cameraControlsRef.current.getPosition(snapPos)
-    cameraControlsRef.current.getTarget(snapTarget)
-    cameraControlsRef.current.setLookAt(
-      snapPos.x, snapPos.y, snapPos.z,
-      snapTarget.x, snapTarget.y, snapTarget.z,
-      false  // no animation — cancels any queued inertia
-    )
+    // Skip this if another controller (like FocusedCameraListener) is handling the move.
+    if (!cameraControlsRef.current.skipDefaultMove) {
+      const snapPos = new THREE.Vector3()
+      const snapTarget = new THREE.Vector3()
+      cameraControlsRef.current.getPosition(snapPos)
+      cameraControlsRef.current.getTarget(snapTarget)
+      cameraControlsRef.current.setLookAt(
+        snapPos.x, snapPos.y, snapPos.z,
+        snapTarget.x, snapTarget.y, snapTarget.z,
+        false  // no animation — cancels any queued inertia
+      )
+    }
 
     // Changing material sides (DoubleSide <-> FrontSide) forces Three.js to recompile shaders.
     // This blocks the main thread for several hundred milliseconds on the first switch.
@@ -419,6 +432,12 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         if (cancelled || !cameraControlsRef.current) return
 
         cameraControlsRef.current.smoothTime = 0.2
+        
+        // Normalize azimuth angle to prevent "unwinding" spins
+        let az = cameraControlsRef.current.azimuthAngle;
+        az = ((az + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+        cameraControlsRef.current.rotateTo(az, cameraControlsRef.current.polarAngle, false);
+
         cameraControlsRef.current.setLookAt(
           targetPosition.x, targetPosition.y, targetPosition.z,
           targetLookAt.x, targetLookAt.y, targetLookAt.z,
@@ -446,6 +465,114 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
       cancelled = true
     }
   }, [viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return null
+}
+
+function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransitioning }) {
+  const { focusedCamera, setFocusedCamera, viewMode, setViewMode } = useConfigurator()
+  const { camera } = useThree()
+
+  useEffect(() => {
+    if (focusedCamera && modelGroupRef.current && cameraControlsRef.current) {
+      console.log('FocusedCameraListener: Triggered for', focusedCamera)
+      let targetCamera = modelGroupRef.current.getObjectByName(focusedCamera)
+      
+      // Fallback for exported models where spaces are converted to underscores
+      if (!targetCamera) {
+        const underscoredName = focusedCamera.replace(/ /g, '_')
+        targetCamera = modelGroupRef.current.getObjectByName(underscoredName)
+      }
+
+      if (targetCamera) {
+        // ALWAYS skip the default camera move if we are doing a focused animation.
+        // This prevents the main CameraController from overriding our animation
+        // if ModularTrailerModel automatically triggers a viewMode switch.
+        cameraControlsRef.current.skipDefaultMove = true
+
+        console.log('FocusedCameraListener: Found camera object', targetCamera)
+        
+        // Auto-switch viewMode if the camera specifies it in Blender custom properties,
+        // or if it matches known interior cameras that might be missing the property.
+        const isForceInterior = targetCamera.userData.isInterior || 
+          targetCamera.name.includes('Recessed_Tire') || 
+          targetCamera.name.includes('Mini_Split');
+          
+        if (isForceInterior && viewMode !== 'INTERIOR') {
+          setViewMode('INTERIOR')
+        } else if (targetCamera.userData.isExterior && viewMode !== 'EXTERIOR') {
+          setViewMode('EXTERIOR')
+        }
+
+        // Force update the entire model hierarchy's world matrix to ensure parents are updated
+        modelGroupRef.current.updateMatrixWorld(true)
+
+        const cameraPosition = new THREE.Vector3()
+        targetCamera.getWorldPosition(cameraPosition)
+
+        const cameraDirection = new THREE.Vector3(0, 0, -1)
+        cameraDirection.applyQuaternion(targetCamera.getWorldQuaternion(new THREE.Quaternion()))
+        
+        const lookAtTarget = new THREE.Vector3().copy(cameraPosition).add(cameraDirection.multiplyScalar(5))
+        console.log('FocusedCameraListener: Moving to', cameraPosition, 'Looking at', lookAtTarget)
+
+        // Relax constraints so the custom camera can look from any angle and distance
+        cameraControlsRef.current.maxPolarAngle = Math.PI
+        cameraControlsRef.current.minDistance = 0.1
+        
+        cameraControlsRef.current.smoothTime = 0.5
+        
+        // We use setTimeout instead of requestAnimationFrame because shader recompilation
+        // can cause rAF to fire at unpredictable times during the freeze.
+        // 50ms ensures it queues after the blocking render completes.
+        setTimeout(() => {
+          if (!cameraControlsRef.current) return
+          cameraControlsRef.current.enabled = true; // Force it on so setLookAt isn't ignored!
+          
+          // Normalize azimuth angle to prevent "unwinding" spins
+          let az = cameraControlsRef.current.azimuthAngle;
+          az = ((az + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+          cameraControlsRef.current.rotateTo(az, cameraControlsRef.current.polarAngle, false);
+
+          cameraControlsRef.current.setLookAt(
+            cameraPosition.x, cameraPosition.y, cameraPosition.z,
+            lookAtTarget.x, lookAtTarget.y, lookAtTarget.z,
+            true
+          ).then(() => {
+             if (setIsTransitioning) setIsTransitioning(false)
+             if (cameraControlsRef.current) cameraControlsRef.current.skipDefaultMove = false
+          })
+        }, 50)
+        
+
+      if (targetCamera.fov) {
+          const targetFov = targetCamera.fov;
+          const animateFov = () => {
+            if (Math.abs(camera.fov - targetFov) > 0.3) {
+              camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 0.08)
+              camera.updateProjectionMatrix()
+              requestAnimationFrame(animateFov)
+            } else {
+              camera.fov = targetFov
+              camera.updateProjectionMatrix()
+            }
+          }
+          animateFov()
+        }
+      } else {
+        console.error('FocusedCameraListener: Camera object NOT FOUND in model:', focusedCamera)
+        // Log all available cameras to help debug
+        const availableCameras = []
+        modelGroupRef.current.traverse(node => {
+          if (node.isPerspectiveCamera || node.isOrthographicCamera || node.name.toLowerCase().includes('camera')) {
+            availableCameras.push(node.name)
+          }
+        })
+        console.log('FocusedCameraListener: Available cameras/objects containing "camera" in name:', availableCameras)
+      }
+      setFocusedCamera(null)
+    }
+  }, [focusedCamera, setFocusedCamera])
 
   return null
 }
@@ -795,42 +922,7 @@ function SceneReadyNotifier({ meshRef, onReady }) {
 }
 
 
-function ShaderPrecompiler({ modelGroupRef }) {
-  const { gl, scene, camera } = useThree()
-  const hasPrecompiled = useRef(false)
 
-  useFrame(() => {
-    if (hasPrecompiled.current || !modelGroupRef.current) return
-    let hasMeshes = false
-    modelGroupRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
-    if (!hasMeshes) return
-
-    hasPrecompiled.current = true
-
-    // Delay a bit to let the initial scene render
-    setTimeout(() => {
-      const originalSides = new Map()
-      modelGroupRef.current.traverse(node => {
-        if (node.isMesh && node.material) {
-          originalSides.set(node.uuid, node.material.side)
-          node.material.side = THREE.DoubleSide
-          node.material.needsUpdate = true
-        }
-      })
-
-      gl.compile(scene, camera)
-
-      modelGroupRef.current.traverse(node => {
-        if (node.isMesh && node.material && originalSides.has(node.uuid)) {
-          node.material.side = originalSides.get(node.uuid)
-          node.material.needsUpdate = true
-        }
-      })
-    }, 500)
-  })
-
-  return null
-}
 
 const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen }, ref) {
   const { width, length, interiorHeight, showDimensions, setShowDimensions, viewMode } = useConfigurator()
@@ -1064,16 +1156,19 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 cameraControlsRef={cameraControlsRef}
                 setIsTransitioning={setIsTransitioning}
               />
+              <FocusedCameraListener
+                modelGroupRef={modelGroupRef}
+                cameraControlsRef={cameraControlsRef}
+                setIsTransitioning={setIsTransitioning}
+              />
               <CameraControls
                 ref={cameraControlsRef}
                 enabled={!isTransitioning}
-                minPolarAngle={0.2}
-                maxPolarAngle={Math.PI / 2}
                 dollySpeed={1}
                 draggingSmoothTime={0.4}
               />
               <CameraLayerSetup />
-              <ShaderPrecompiler modelGroupRef={modelGroupRef} />
+
               <EffectComposer 
                 disableNormalPass 
                 alpha={true}

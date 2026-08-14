@@ -42,6 +42,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
     concessionWidth, setConcessionWidth,
     concessionHeight, setConcessionHeight,
     length, width, frontStyle, awning,
+    setFocusedCamera
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -79,7 +80,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
   return (
     <>
       {show('REAR ENTRANCE') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="REAR ENTRANCE">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Rear Doors replace ramp and removes beavertail (on 8.5ft wide)</p>
           <div className="flex flex-col gap-2">
@@ -118,7 +119,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
       )}
 
       {show('SIDE DOOR') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="SIDE DOOR">
           {parseFloat(length) < 24 ? (
             <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
@@ -180,7 +181,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
       )}
 
       {show('ESCAPE DOOR') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="ESCAPE DOOR">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Secondary Access/Emergency Egress</p>
 
@@ -219,7 +220,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
       )}
 
       {show('CONCESSION DOOR / WINDOW') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="CONCESSION DOOR / WINDOW">
           {escapeDoor !== 'none' && (
             <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
@@ -278,7 +279,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
       )}
 
       {show('WINDOWS (MULTI-CHOICE)') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="WINDOWS (MULTI-CHOICE)">
           {parseFloat(length) < 24 ? (
             <p className="mb-4 -mt-3">
@@ -363,7 +364,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
       )}
 
       {show('TIE DOWNS (MULTI-CHOICE)') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="TIE DOWNS (MULTI-CHOICE)">
           <div className="mb-6">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">D-RINGS</h4>
@@ -421,7 +422,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
       )}
 
       {show('JACKS (MULTI-CHOICE)') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="JACKS (MULTI-CHOICE)">
           {width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck')) ? (
             <p className="text-gray-400 text-xs mb-3"> Electric Tongue Jack is not compatible with gooseneck models</p>
@@ -435,7 +436,13 @@ export default function LoadingPanel({ activeSectionTitle }) {
               const FOLD_GROUP    = ['folddown', 'folddownjacks']
               const SCISSOR_GROUP = ['5kscissor', '5kscissorjacks']
 
+              const isGooseneck = width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'))
+              const isExtendedVNose = frontStyle === 'extendedvnose'
+              const isElectricDisabled = opt.id === '5000relectric' && isGooseneck
+
               const handleJack = (id) => {
+                if (isElectricDisabled && id === '5000relectric') return;
+                
                 const isSelected = jacks.includes(id)
                 if (isSelected) {
                   // Deselect: just remove this id
@@ -450,6 +457,14 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     // Electric — free toggle
                     toggleJack(id)
                   }
+                  
+                  if (id === '5000relectric') {
+                    if (isExtendedVNose) {
+                      setFocusedCamera("Electric Jack(Extended V-Nose) Camera")
+                    } else {
+                      setFocusedCamera("Electric Jack Camera")
+                    }
+                  }
                 }
               }
 
@@ -458,8 +473,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
-                  isSelected={jacks.includes(opt.id) && !(opt.id === '5000relectric' && (width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'))))}
-                  disabled={opt.id === '5000relectric' && (width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck')))}
+                  isSelected={jacks.includes(opt.id) && !isElectricDisabled}
+                  disabled={isElectricDisabled}
                   onClick={() => handleJack(opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />

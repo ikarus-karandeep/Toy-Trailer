@@ -58,7 +58,7 @@ export default function OptionPill({
         isLocked
           ? 'border-[#3a3a3a] text-gray-500 bg-[#2a2a2a] cursor-not-allowed opacity-70'
           : disabled
-            ? 'border-[#3a3a3a] text-[#7a7a7a] bg-transparent cursor-not-allowed opacity-50'
+            ? 'border-[#3a3a3a] text-[#7a7a7a] bg-[#282828] cursor-not-allowed opacity-50'
             : isSelected
               ? 'border-[#DA634B] text-[#DA634B] bg-transparent cursor-pointer'
               : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white cursor-pointer'

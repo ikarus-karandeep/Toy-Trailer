@@ -345,6 +345,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     child.visible = false;
                 }
 
+                // Force all materials to be DoubleSide to prevent shader recompilation lag 
+                // when viewMode changes in TrailerViewer.
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(m => { m.side = THREE.DoubleSide; });
+                    } else {
+                        child.material.side = THREE.DoubleSide;
+                    }
+                }
+
                 const mats = Array.isArray(child.material)
                     ? child.material.map(m => m.name || '(unnamed)')
                     : [child.material?.name || '(unnamed)']
@@ -1340,27 +1350,23 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const activeGullwingMeshes = []
         if (config.escapeDoor === 'gullwing') {
             const sideType = config.axleAngled ? 'Angled_Side' : 'Flat_Side'
+            const variantPrefix = config.axleCount === 'triple' ? '3X_' : '2X_'
             let panelPrefix = config.axleCount === 'triple' ? '3X_Axle' : '2X_Axle'
 
             if (config.spreadAxle) {
-                panelPrefix = 'Corvette_Fender'
+                panelPrefix = `${variantPrefix}Corvette_Fender`
             }
 
             const expectedPanel = `${panelPrefix}_${sideType}_For_GED`
 
             // ATP names use underscores (matching actual GLB mesh names):
-            //   Corvette → "ATP_Corvette_Fender_Angled_Side_GED_24in"  (no "For_" prefix, no "For_" before GED)
-            //   Axle     → "ATP_For_2X_Axle_Angled_Side_For_GED_24in"
             // NOTE: Some GLB meshes have spaces instead of underscores (e.g. "Corvette Fender").
             // Use normGlb() to collapse both to '_' before comparing.
             const normGlb = s => s.replace(/[\s_]+/g, '_')
             const atpSize = config.protectionSize || '24'
-            let expectedATP
-            if (config.spreadAxle) {
-                expectedATP = `ATP_Corvette_Fender_${sideType}_GED_${atpSize}in`
-            } else {
-                expectedATP = `ATP_For_${panelPrefix}_${sideType}_For_GED_${atpSize}in`
-            }
+            
+            // New unified ATP naming based on updated models:
+            const expectedATP = `ATP_${panelPrefix}_${sideType}_GED_${atpSize}in`
 
             // console.log('[GULLWING ATP DEBUG] Config:', {
             //     escapeDoor: config.escapeDoor,
@@ -1826,20 +1832,22 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             if (!hideStandardAxleTrim) {
                 if (config.spreadAxle) {
                     const sideName = config.axleAngled ? 'Angled' : 'Flat'
-                    activeAxleMeshes.push(`ATP_Corvette_Fender_${sideName}_Side_${atpSize}in`)
-                    activeAxleMeshes.push(`ATP Corvette Fender ${sideName} Side ${atpSize}in`)
+                    const prefixSpace = variant === '3x' ? '3X ' : '2X '
+                    activeAxleMeshes.push(`ATP_${prefix}Corvette_Fender_${sideName}_Side_${atpSize}in`)
+                    activeAxleMeshes.push(`ATP ${prefixSpace}Corvette Fender ${sideName} Side ${atpSize}in`)
                 } else {
                     const sideName = config.axleAngled ? 'Angled' : 'Flat'
                     activeAxleMeshes.push(`${prefix}ATP_${sideName}_Side_${atpSize}in`)
-                    activeAxleMeshes.push(`${prefix}ATP ${sideName} Side ${atpSize}in`)
+                    activeAxleMeshes.push(`${prefix.replace('_', ' ')}ATP ${sideName} Side ${atpSize}in`)
                 }
             }
         }
 
         if (config.spreadAxle && !hideStandardAxleTrim) {
             const sideName = config.axleAngled ? 'Angled' : 'Flat'
-            activeAxleMeshes.push(`Corvette_Fender_${sideName}_Side`)
-            activeAxleMeshes.push(`Corvette Fender ${sideName} Side`)
+            const prefixSpace = variant === '3x' ? '3X ' : '2X '
+            activeAxleMeshes.push(`${prefix}Corvette_Fender_${sideName}_Side`)
+            activeAxleMeshes.push(`${prefixSpace}Corvette Fender ${sideName} Side`)
         }
 
         BlenderNodes.switchMeshes(axle, activeAxleMeshes)

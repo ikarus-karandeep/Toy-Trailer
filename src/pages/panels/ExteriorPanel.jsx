@@ -42,6 +42,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     width, length,
     stairs, setStairs,
     viewMode, setViewMode,
+    setFocusedCamera
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -55,7 +56,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
   return (
-    <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+    <div className="contents">
       {show('EXTERIOR FINISH') && (
   <OptionSection title="EXTERIOR FINISH">
 
@@ -201,7 +202,12 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 isStandard={opt.isStandard}
                 isSelected={frontStyle === opt.id}
                 isLocked={width === '8.5ftgn'}
-                onClick={() => setFrontStyle(opt.id)}
+                onClick={() => {
+                  setFrontStyle(opt.id)
+                  if (opt.id === 'extendedvnose') {
+                    setFocusedCamera("Sidewind(Extended V-Nose) Camera")
+                  }
+                }}
               />
             ))}
           </div>
@@ -402,7 +408,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
       checked={spareTire}
       onChange={(val) => {
         setSpareTire(val);
-        setViewMode('INTERIOR');
+        if (val) setFocusedCamera("Spare Tire Mount Camera");
       }}
     />
 

@@ -701,10 +701,10 @@ export function applyObjectDeformations(child, { lengthFt, widthFt, heightFt, aw
       userData.originalPosition3D = child.position.clone();
   }
   
-  const FEET_TO_M = 0.3048;
+  const FEET_TO_M = 0.305;
   const BASE_WIDTH_FT = 8.5;
   const BASE_LENGTH_FT = 32;
-  const BASE_HEIGHT_FT = 6.5833;
+  const BASE_HEIGHT_FT = 8.5;
   const BASE_AWNING_FT = 18;
 
   const WIDTH_FACTOR = 0.500; // Must match applyDimensionDeformations (Factor=0.5 on Move nodes)

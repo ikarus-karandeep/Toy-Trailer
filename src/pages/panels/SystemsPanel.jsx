@@ -27,7 +27,10 @@ export default function SystemsPanel({ activeSectionTitle }) {
     interiorLights, setInteriorLights,
     exteriorLights, setExteriorLights,
     ledRope, setLedRope,
+    width, length,
+    stairs, setStairs,
     viewMode, setViewMode,
+    setFocusedCamera
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -144,7 +147,13 @@ export default function SystemsPanel({ activeSectionTitle }) {
                     isSelected={qty > 0}
                     quantity={qty > 0 ? qty : undefined}
                     onQuantityChange={(newQty) => updateQuantity(setReceptacles, opt.id, newQty)}
-                    onClick={() => updateQuantity(setReceptacles, opt.id, qty === 0 ? 1 : 0)}
+                    onClick={() => {
+                      updateQuantity(setReceptacles, opt.id, qty === 0 ? 1 : 0);
+                      if (qty === 0) {
+                        if (opt.id === '110vgfi') setFocusedCamera("110V GFI Receptacle (20 AMP) Camera");
+                        if (opt.id === '110vinterior') setFocusedCamera("110V Interior Receptacle (15 AMP) Camera");
+                      }
+                    }}
                   />
                 )
               })}
@@ -178,7 +187,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
 
       {show('LIGHTS') && (
         <OptionSection title="LIGHTS">
-          <div className="mb-6 contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+          <div className="mb-6 contents">
             <div className="mb-6">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">INTERIOR LIGHTING</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
@@ -215,7 +224,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
           </div>
           </div>
           <p className='border-t border-[#5D5E60]'></p>
-          <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+          <div className="contents">
           <div>
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">EXTERIOR LIGHTING</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Racing Style Exterior Light</p>
@@ -253,7 +262,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
             ))}
           </div>
 
-          <div className="mb-8 contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+          <div className="mb-8 contents">
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">PASSIVE VENTILATION</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
@@ -266,8 +275,12 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   isSelected={ventilation === opt.id}
                   onClick={() => {
                     const newValue = opt.id === ventilation ? null : opt.id;
-                    // console.warn(`[DEBUG UI] User clicked vent option: ${opt.label} | Setting ventilation state to:`, newValue);
                     setVentilation(newValue);
+                    if (newValue === 'nonpoweredvent' || newValue === 'smokenonpowered') {
+                      setFocusedCamera("Non-Powered Roof Vent Camera");
+                    } else if (newValue === '2waysidewall') {
+                      setFocusedCamera("Aluminum Sidewall Vents Camera");
+                    }
                   }}
                 />
               ))}
@@ -275,7 +288,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
           </div>
           </div>
 
-          <div className="mb-8 contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+          <div className="mb-8 contents">
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">AC PREP</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for any AC build now or prepping for later.</p>
@@ -287,7 +300,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
           </div>
           </div>
 
-          <div className="mb-8 contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+          <div className="mb-8 contents">
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">ROOFTOP AC</h4>
             {/* <p className="text-gray-400 text-xs tracking-wider mb-3">Interior insulation Required. 13.5K BTU best for 14-24ft build. 15K BTU best for 26-32ft build</p> */}
@@ -302,7 +315,13 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
                   isSelected={climateControl === opt.id}
-                  onClick={() => setClimateControl(opt.id === climateControl ? 'none' : opt.id)}
+                  onClick={() => {
+                    const newValue = opt.id === climateControl ? 'none' : opt.id;
+                    setClimateControl(newValue);
+                    if (newValue !== 'none') {
+                      setFocusedCamera("AC Unit Camera");
+                    }
+                  }}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}
@@ -310,7 +329,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
           </div>
           </div>
 
-          <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+          <div className="contents">
           <div>
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">MINI SPLIT</h4>
             {/* <p className="text-gray-400 text-xs tracking-wider mb-3">
@@ -330,7 +349,13 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
                   isSelected={climateControl === opt.id}
-                  onClick={() => setClimateControl(opt.id === climateControl ? 'none' : opt.id)}
+                  onClick={() => {
+                    const newValue = opt.id === climateControl ? 'none' : opt.id;
+                    setClimateControl(newValue);
+                    if (newValue !== 'none') {
+                      setFocusedCamera("Mini Split AC Camera");
+                    }
+                  }}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}

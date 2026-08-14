@@ -33,7 +33,8 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     length,
     cabinets,
     viewMode, setViewMode,
-    waterPackage, setWaterPackage
+    waterPackage, setWaterPackage,
+    setFocusedCamera
   } = useConfigurator()
 
   const [largeWaterOpen, setLargeWaterOpen] = useState(true)
@@ -178,7 +179,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
       {show('SINK PACKAGE') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="SINK PACKAGE">
           <div className="flex flex-col gap-2">
             {SINK_PACKAGE_OPTIONS.map((opt) => (
@@ -237,7 +238,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
       {show('BATHROOM PACKAGES') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="BATHROOM PACKAGES">
           {parseFloat(length) < 28 ? (
             <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
@@ -276,7 +277,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
       {show('AWNINGS') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="AWNINGS">
           {parseFloat(length) < 24 ? (
             <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
@@ -330,7 +331,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
       {show('WINCH') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="WINCH">
           <div className="flex flex-col gap-2">
             {WINCH_OPTIONS.map((opt) => (
@@ -348,7 +349,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
       {show('TONGUE MOUNTED GENERATOR BOX') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="TONGUE MOUNTED GENERATOR BOX">
           <div className="mb-8">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR BOX (34"H X 36"W X 26"D)</h4>
@@ -397,7 +398,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
       
       {show('ATP BATTERY BOX ON TONGUE') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="ATP BATTERY BOX ON TONGUE">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Requires extended TTT</p>
           {(frontStyle === 'flatfront' && generatorBox && generatorBox !== 'none') ? (
@@ -416,7 +417,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
       
       {show('L-SHAPE COUNTER/HIDDEN GENERATOR BOX') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+        <div className="contents">
         <OptionSection title="L-SHAPE COUNTER/HIDDEN GENERATOR BOX">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Custom build</p>
           {((sinkPackage && sinkPackage !== 'none') || (cabinets && cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c)))) ? (
@@ -435,36 +436,45 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
       {show('LADDER RACKS') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="LADDER RACKS">
           <ToggleSwitch
             label="INCLUDE LADDER RACKS"
             checked={ladderRacks}
-            onChange={setLadderRacks}
+            onChange={(val) => {
+              setLadderRacks(val);
+              if (val) setFocusedCamera("Top Supports Camera");
+            }}
           />
         </OptionSection>
         </div>
       )}
 
       {show('RECESSED TIRE BOX') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'INTERIOR') setViewMode('INTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="RECESSED TIRE BOX">
             <ToggleSwitch
               label="INCLUDE RECESSED TIRE BOX"
               checked={recessedTireBox}
-              onChange={setRecessedTireBox}
+              onChange={(val) => {
+                setRecessedTireBox(val);
+                if (val) setFocusedCamera("Recessed Tire Box Camera");
+              }}
             />
           </OptionSection>
         </div>
       )}
 
       {show('RADIO PACKAGE SPEAKER') && (
-        <div className="contents" onClickCapture={() => { if (viewMode !== 'EXTERIOR') setViewMode('EXTERIOR'); }}>
+        <div className="contents">
           <OptionSection title="RADIO PACKAGE SPEAKER">
             <ToggleSwitch
               label="INCLUDE RADIO PACKAGE SPEAKER"
               checked={radioPackageSpeaker}
-              onChange={setRadioPackageSpeaker}
+              onChange={(val) => {
+                setRadioPackageSpeaker(val);
+                if (val) setFocusedCamera("Radio Package Speaker Camera");
+              }}
             />
           </OptionSection>
         </div>
