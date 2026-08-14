@@ -7,7 +7,7 @@ export default function PanelActions() {
     <div className="flex-shrink-0 w-full lg:w-[500px] xl:w-[551px] flex items-center gap-2 lg:gap-3 lg:px-0 lg:pr-4 p-1">
       <button
         onClick={() => setSummaryOpen(true)}
-        className={`summary-btn flex-1 flex items-center justify-center gap-1.5 lg:gap-2 px-2 lg:px-4 py-6 rounded-lg hover:bg-[#2a2a2a] transition-colors ${completionPercent >= 100 ? 'summary-btn-complete animate-stroke-complete' : ''}`}
+        className={`summary-btn flex-1 flex items-center justify-center gap-1.5 lg:gap-2 px-2 lg:px-4 py-3 lg:py-6 rounded-lg hover:bg-[#2a2a2a] transition-colors ${completionPercent >= 100 ? 'summary-btn-complete animate-stroke-complete' : ''}`}
         style={{ '--stroke-angle': `${completionPercent * 3.6}deg` }}
       >
         <span className="text-[10px] sm:text-[14px] tracking-widest uppercase text-white whitespace-nowrap">
@@ -18,7 +18,7 @@ export default function PanelActions() {
         </svg>
       </button>
 
-      <button className="flex-1 flex items-center justify-center gap-1.5 lg:gap-2 px-2 lg:px-4 py-6 bg-[#404040] border border-[#555] rounded-lg transition-colors">
+      <button className="flex-1 flex items-center justify-center gap-1.5 lg:gap-2 px-2 lg:px-4 py-3 lg:py-6 bg-[#404040] border border-[#555] rounded-lg transition-colors">
         <span className="text-[10px] sm:text-[14px] tracking-widest uppercase text-white whitespace-nowrap">
           <span className="lg:hidden">CONNECT</span>
           <span className="hidden lg:inline">CONNECT WITH US</span>

@@ -3,10 +3,17 @@ import { TABS } from '../constants/configData'
 import { usePackageTabCounts } from '../hooks/usePackageTabCounts'
 
 export default function BottomNav({ onTabClick, fullWidth = false }) {
-  const { activeTab, setActiveTab, markTabVisited } = useConfigurator()
+  const { activeTab, setActiveTab, markTabVisited, viewMode, setViewMode, triggerCameraReset } = useConfigurator()
   const { counts, badge } = usePackageTabCounts()
 
   const handleClick = (tab) => {
+    if (tab === 'EXTERIOR' || tab === 'INTERIOR') {
+      if (viewMode === tab && activeTab === tab) {
+        if (triggerCameraReset) triggerCameraReset();
+      } else {
+        if (setViewMode) setViewMode(tab);
+      }
+    }
     setActiveTab(tab)
     markTabVisited(tab)
     onTabClick?.(tab)
@@ -21,7 +28,7 @@ export default function BottomNav({ onTabClick, fullWidth = false }) {
             <div key={tab} className="relative flex-shrink-0 lg:flex-1 flex">
               <button
                 onClick={() => handleClick(tab)}
-                className={`w-full text-center py-4 px-3 lg:py-5 lg:px-3 rounded-lg text-sm lg:text-base font-normal leading-4 tracking-normal transition-all duration-150 whitespace-nowrap ${
+                className={`w-full text-center py-2.5 sm:py-3 lg:py-5 px-2 sm:px-3 rounded-lg text-xs sm:text-sm lg:text-base font-normal leading-4 tracking-normal transition-all duration-150 whitespace-nowrap ${
                   activeTab === tab
                     ? 'border border-[#DA634B] text-[#DA634B] bg-[rgba(41,41,41,0.35)] shadow-[inset_0_-8px_38.8px_-7px_rgba(218,99,75,0.42)]'
                     : 'border border-transparent text-white'

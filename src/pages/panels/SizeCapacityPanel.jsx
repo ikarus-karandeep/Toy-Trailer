@@ -85,7 +85,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
     {/* Trailer SVG diagram */}
     <div className="flex justify-center my-2">
-      <img src="/Length.png"/>
+      <img src="/Length.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
     </div>
 
     <DotSlider
@@ -143,7 +143,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
               {/* Axle diagram */}
               <div className="flex justify-center mt-6">
-                <img src={axleCount === 'triple' ? "/triple.png" : "/Axle count.png"} alt="Axle Count"/>
+                <img src={axleCount === 'triple' ? "/triple.png" : "/Axle count.png"} alt="image" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
               </div>
             </div>
           )}

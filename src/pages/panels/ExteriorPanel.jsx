@@ -60,7 +60,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
       {show('EXTERIOR FINISH') && (
   <OptionSection title="EXTERIOR FINISH">
 
-    <div className="bg-[#1a1a1a] rounded-3xl border border-[#2a2a2a] p-5">
+    <div className="bg-[#1a1a1a] rounded-3xl border border-[#2a2a2a] p-4 lg:p-5">
       <div className="flex flex-wrap gap-2">
         {EXTERIOR_FINISH_OPTIONS.map((opt) => (
           <OptionPill
@@ -90,7 +90,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
       </div>
 
       {exteriorFinish === 'blackout' && (
-        <div className="mt-4 bg-[#111111] rounded-2xl p-5 border border-[#2a2a2a]">
+        <div className="mt-4 bg-[#111111] rounded-2xl p-4 lg:p-5 border border-[#2a2a2a]">
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-300 text-xs tracking-widest uppercase font-semibold">
               What's Included
@@ -137,7 +137,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
       )}
     </div>
 
-    <div className="mt-6 bg-[#1a1a1a] rounded-3xl border border-[#2a2a2a] p-6">
+    <div className="mt-6 bg-[#1a1a1a] rounded-3xl border border-[#2a2a2a] p-4 lg:p-6">
       <div className="flex justify-center mb-6">
         <span className="border border-gray-500 rounded-full px-6 py-2 text-gray-300 text-xs tracking-widest uppercase">
           Standard Exterior Colors
@@ -211,8 +211,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
-          <img
-            src="/Front Style.png"/>
+          <img src="/Front Style.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
         </OptionSection>
       )}
 
@@ -396,7 +395,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
       {/* Wheel preview image */}
       <div className="flex justify-center mt-6 mb-0">
-        <img src={wheelType === 'spideraluminum' ? "/spider wheel.webp" : "/standard wheel.webp"} alt="Wheel Type" className="max-h-48 object-contain" />
+        <img src={wheelType === 'spideraluminum' ? "/spider wheel.webp" : "/standard wheel.webp"} alt="image" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
       </div>
     </div>
 

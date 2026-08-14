@@ -271,7 +271,7 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
 
 // ── interior / exterior camera controller ─────────────────────────────────────
 
-function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTransitioning }) {
+function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraControlsRef, setIsTransitioning }) {
   const { camera } = useThree()
   const hasInitializedRef = useRef(false)
   const savedExteriorRef = useRef(null)
@@ -309,6 +309,12 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         minDistance: cameraControlsRef.current.minDistance,
         maxDistance: cameraControlsRef.current.maxDistance,
         minY: cameraControlsRef.current.minY,
+        // Save input defaults
+        mouseButtonsMiddle: cameraControlsRef.current.mouseButtons.middle,
+        mouseButtonsRight: cameraControlsRef.current.mouseButtons.right,
+        mouseButtonsWheel: cameraControlsRef.current.mouseButtons.wheel,
+        touchesTwo: cameraControlsRef.current.touches.two,
+        touchesThree: cameraControlsRef.current.touches.three,
       }
 
       // Materials are now permanently DoubleSide to prevent shader recompilation lag
@@ -342,10 +348,19 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         const interiorWidth = isLongX ? size.z : size.x
 
         // ── Distance limits ──────────────────────────────────────────────────────
-        // Very tight: user can zoom in/out within a small range around the pivot
-        cameraControlsRef.current.minDistance = 0.01
-        cameraControlsRef.current.maxDistance = interiorWidth * 0.45
+        // Lock distance to disable zoom
+        const targetDist = targetPosition.distanceTo(targetLookAt)
+        cameraControlsRef.current.minDistance = targetDist
+        cameraControlsRef.current.maxDistance = targetDist
         cameraControlsRef.current.minY = -Infinity
+
+        // ── Input overrides ──────────────────────────────────────────────────────
+        // Disable pan and zoom inputs (0 = ACTION.NONE)
+        cameraControlsRef.current.mouseButtons.middle = 0
+        cameraControlsRef.current.mouseButtons.right = 0
+        cameraControlsRef.current.mouseButtons.wheel = 0
+        cameraControlsRef.current.touches.two = 0
+        cameraControlsRef.current.touches.three = 0
 
         // ── Polar angle clamp ────────────────────────────────────────────────────
         // Prevent the camera from tilting through the floor or ceiling.
@@ -377,6 +392,15 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
         // Restore zoom limits for exterior
         cameraControlsRef.current.minDistance = maxDim * 0.1
         cameraControlsRef.current.maxDistance = maxDim * 1.15
+
+        // Restore input defaults if available
+        if (savedExteriorRef.current && savedExteriorRef.current.mouseButtonsRight !== undefined) {
+          cameraControlsRef.current.mouseButtons.middle = savedExteriorRef.current.mouseButtonsMiddle
+          cameraControlsRef.current.mouseButtons.right = savedExteriorRef.current.mouseButtonsRight
+          cameraControlsRef.current.mouseButtons.wheel = savedExteriorRef.current.mouseButtonsWheel
+          cameraControlsRef.current.touches.two = savedExteriorRef.current.touchesTwo
+          cameraControlsRef.current.touches.three = savedExteriorRef.current.touchesThree
+        }
 
         // Restore angle constraints to clean defaults, ignoring corrupted saved values
         cameraControlsRef.current.minPolarAngle   = 0;
@@ -464,7 +488,7 @@ function CameraController({ viewMode, modelGroupRef, cameraControlsRef, setIsTra
     return () => {
       cancelled = true
     }
-  }, [viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [viewMode, cameraResetTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null
 }
@@ -939,7 +963,7 @@ function SceneReadyNotifier({ meshRef, onReady }) {
 
 
 const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen, onARLoadingChange }, ref) {
-  const { width, length, interiorHeight, showDimensions, setShowDimensions, viewMode } = useConfigurator()
+  const { width, length, interiorHeight, showDimensions, setShowDimensions, viewMode, cameraResetTrigger } = useConfigurator()
 
   // Automatically turn off dimensions in the UI when the user changes the size
   useEffect(() => {
@@ -1169,6 +1193,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               />
               <CameraController
                 viewMode={viewMode}
+                cameraResetTrigger={cameraResetTrigger}
                 modelGroupRef={modelGroupRef}
                 cameraControlsRef={cameraControlsRef}
                 setIsTransitioning={setIsTransitioning}

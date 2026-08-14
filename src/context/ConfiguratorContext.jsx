@@ -13,7 +13,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [summaryOpen, setSummaryOpen] = useState(false)
   const [packageId, setPackageId] = useState(ic.packageId ?? null)
   const [focusedCamera, setFocusedCamera] = useState(null)
-
+  const [cameraResetTrigger, setCameraResetTrigger] = useState(0)
+  const triggerCameraReset = useCallback(() => setCameraResetTrigger(t => t + 1), [])
 
 
   // Size & Capacity
@@ -267,7 +268,10 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
         setWindows({ vertical: 0, horizontal: 0, egress: 0 });
       }
     }
-  }, [concessionDoor, escapeDoor, windows, setEscapeDoor, setConcessionDoor, setWindows]);
+    if (concessionDoor === 'none' && glassScreen) {
+      setGlassScreen(false);
+    }
+  }, [concessionDoor, escapeDoor, windows, glassScreen, setEscapeDoor, setConcessionDoor, setWindows, setGlassScreen]);
 
   // Awning vs Concession Width conflict resolution
   useEffect(() => {
@@ -340,6 +344,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const value = useMemo(() => ({
     packageId, setPackageId, applyPackage,
     focusedCamera, setFocusedCamera,
+    cameraResetTrigger, triggerCameraReset,
     activeTab, setActiveTab,
     viewMode, setViewMode,
     summaryOpen, setSummaryOpen,
@@ -433,7 +438,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     totalPrice,
     completionPercent, markTabVisited,
   }), [
-    packageId, applyPackage, activeTab, viewMode, summaryOpen, focusedCamera,
+    packageId, applyPackage, activeTab, viewMode, summaryOpen, focusedCamera, cameraResetTrigger, triggerCameraReset,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,

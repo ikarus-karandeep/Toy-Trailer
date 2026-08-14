@@ -96,7 +96,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
           </div>
 
           <div className="mt-6 flex justify-center">
-            <img src="/Rear Entrance.png" />
+            <img src="/Rear Entrance.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
           </div>
 
           <div className="mt-6">
@@ -172,7 +172,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               </div> */}
 
               <div className="mt-8 flex justify-center">
-                <img src="/Rear door.png" />
+                <img src="/Rear door.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
               </div>
             </>
           )}
@@ -205,7 +205,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <img src="/Escape door.png" />
+            <img src="/Escape door.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
           </div>
           
           <div className="mt-6">
@@ -247,7 +247,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
 
           <div className="mt-8 flex flex-col items-center">
             <div className="flex w-full items-center justify-between gap-2 px-2">
-              <img src="/concession door.png" className="flex-1 min-w-0 object-contain max-h-[150px]" />
+              <img src="/concession door.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
               <div className="h-[150px] flex-shrink-0 z-10">
                 <VerticalDotSlider
                   options={concessionHeightOptions}
@@ -272,6 +272,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               label="Glass Screen"
               checked={glassScreen}
               onChange={setGlassScreen}
+              disabled={concessionDoor === 'none'}
             />
           </div>
         </OptionSection>

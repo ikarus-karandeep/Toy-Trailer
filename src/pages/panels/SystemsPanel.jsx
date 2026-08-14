@@ -118,7 +118,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
             <div className="flex justify-center mb-4">
               <div className="rounded-xl p-4 inline-block">
-                <img src="/Panel capacity.png" />
+                <img src="/Panel capacity.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
               </div>
             </div>
             <ToggleSwitch
@@ -133,7 +133,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
             <div className="flex justify-center mb-4">
               <div className="rounded-xl p-4 inline-block">
-                <img src="/Receptacle.png" />
+                <img src="/Receptacle.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -165,7 +165,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
             <p className="text-gray-400 text-xs tracking-wider mb-4">12V Battery requires 7-Way Plug. Solar Charger keeps battery maintained.</p>
             <div className="flex justify-center mb-4">
               <div className="border border-[#3a3a3a] rounded-xl p-4 inline-block">
-                <img src="/grid power.png" />
+                <img src="/grid power.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -192,7 +192,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">INTERIOR LIGHTING</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
             <div className="flex justify-center mb-4">
-              <img src="/Light.png" />
+              <img src="/Light.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
             </div>
             <div className="flex flex-col gap-2">
               {INTERIOR_LIGHTING_OPTIONS.map((opt) => {
