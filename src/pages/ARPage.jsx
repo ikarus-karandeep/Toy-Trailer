@@ -25,8 +25,26 @@ function ARPageContent() {
   const { width, length, interiorHeight } = config
   const modelGroupRef = useRef()
   const [arUrl, setArUrl] = useState(null)
-  const [exporting, setExporting] = useState(false)
+  const [isPreparing, setIsPreparing] = useState(true)
+  const [arProgress, setArProgress] = useState(0)
   const hasTriggered = useRef(false)
+
+  useEffect(() => {
+    let interval;
+    if (isPreparing) {
+      setArProgress(0)
+      interval = setInterval(() => {
+        setArProgress(p => {
+          if (p >= 90) return p;
+          return p + Math.random() * 15;
+        })
+      }, 200)
+    } else {
+      setArProgress(100)
+      setTimeout(() => setArProgress(0), 300)
+    }
+    return () => clearInterval(interval)
+  }, [isPreparing])
 
   const widthFt = WIDTH_FT[width] ?? 7
   const lengthFt = parseInt(length, 10) || 32
@@ -34,17 +52,16 @@ function ARPageContent() {
   const shellHex = COLOR_OPTIONS.find(c => c.id === config.selectedColor)?.color || '#ffffff'
 
   const handleViewInAR = useCallback(async () => {
-    if (!modelGroupRef.current || exporting) return
-    setExporting(true)
+    if (!modelGroupRef.current) return
     try {
       const result = await exportForAR(modelGroupRef.current)
       const blob = new Blob([result], { type: 'model/gltf-binary' })
       setArUrl(URL.createObjectURL(blob))
     } catch (err) {
       console.error('[ARPage] export error:', err)
-      setExporting(false)
+      setIsPreparing(false)
     }
-  }, [exporting])
+  }, [])
 
   const handleModelReady = useCallback(() => {
     if (hasTriggered.current) return
@@ -99,11 +116,22 @@ function ARPageContent() {
         <ModelReadyTrigger onReady={handleModelReady} />
       </Suspense>
 
-      {exporting && (
-        <div className="absolute bottom-10 left-0 right-0 flex justify-center">
-          <span className="text-white text-sm font-semibold tracking-widest uppercase opacity-70">
-            Preparing AR...
-          </span>
+      {isPreparing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm px-4">
+          <div className="w-full max-w-sm rounded-[28px] bg-[#2a2a2a] border border-white/10 shadow-2xl px-6 pt-6 pb-8 flex flex-col items-center">
+            <h2 className="text-white text-[18px] leading-tight font-extrabold mb-4 text-center">
+              Preparing AR Model
+            </h2>
+            <div className="w-full h-2 bg-[#1a1a1a] rounded-full overflow-hidden relative">
+              <div 
+                className="absolute top-0 left-0 bottom-0 bg-[#DA634B] transition-all duration-300 ease-out" 
+                style={{ width: `${arProgress}%` }}
+              />
+            </div>
+            <p className="mt-3 text-white/50 text-[12px] font-medium tracking-wide uppercase">
+              Please wait...
+            </p>
+          </div>
         </div>
       )}
     </div>

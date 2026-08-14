@@ -6,6 +6,23 @@ export default function ARViewer({ url, onClose }) {
   const modelRef = useRef()
   const [status, setStatus] = useState('loading') // loading | ready | unsupported
   const [showPrompt, setShowPrompt] = useState(false)
+  const [arProgress, setArProgress] = useState(0)
+
+  useEffect(() => {
+    let interval;
+    if (status === 'loading') {
+      setArProgress(0)
+      interval = setInterval(() => {
+        setArProgress(p => {
+          if (p >= 90) return p;
+          return p + Math.random() * 15;
+        })
+      }, 200)
+    } else {
+      setArProgress(100)
+    }
+    return () => clearInterval(interval)
+  }, [status])
 
   useEffect(() => {
     const viewer = modelRef.current
@@ -55,8 +72,21 @@ export default function ARViewer({ url, onClose }) {
       />
 
       {status === 'loading' && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <img src="/loader.gif" alt="Loading" className="w-24 h-24" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm px-4">
+          <div className="w-full max-w-sm rounded-[28px] bg-[#2a2a2a] border border-white/10 shadow-2xl px-6 pt-6 pb-8 flex flex-col items-center">
+            <h2 className="text-white text-[18px] leading-tight font-extrabold mb-4 text-center">
+              Preparing AR Model
+            </h2>
+            <div className="w-full h-2 bg-[#1a1a1a] rounded-full overflow-hidden relative">
+              <div 
+                className="absolute top-0 left-0 bottom-0 bg-[#DA634B] transition-all duration-300 ease-out" 
+                style={{ width: `${arProgress}%` }}
+              />
+            </div>
+            <p className="mt-3 text-white/50 text-[12px] font-medium tracking-wide uppercase">
+              Please wait...
+            </p>
+          </div>
         </div>
       )}
 

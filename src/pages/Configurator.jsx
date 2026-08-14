@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import { PANEL_SECTIONS, TABS } from '../constants/configData'
 import ViewToggle from '../components/ViewToggle'
@@ -27,7 +27,26 @@ export default function Configurator({ onModelReady }) {
   const { activeTab, setActiveTab, viewMode, setViewMode, showDimensions, setShowDimensions } = useConfigurator()
   const [sectionIdx, setSectionIdx] = useState(0)
   const [fullscreen, setFullscreen] = useState(false)
+  const [isARLoading, setIsARLoading] = useState(false)
+  const [arProgress, setArProgress] = useState(0)
   const viewerRef = useRef()
+
+  useEffect(() => {
+    let interval;
+    if (isARLoading) {
+      setArProgress(0)
+      interval = setInterval(() => {
+        setArProgress(p => {
+          if (p >= 90) return p;
+          return p + Math.random() * 15;
+        })
+      }, 200)
+    } else {
+      setArProgress(100)
+      setTimeout(() => setArProgress(0), 300)
+    }
+    return () => clearInterval(interval)
+  }, [isARLoading])
 
   const handleMobileAR = () => viewerRef.current?.openARViewer()
   const ActivePanel = PANELS[activeTab]
@@ -84,7 +103,13 @@ export default function Configurator({ onModelReady }) {
 
           {/* Trailer Viewer */}
           <div className="flex-1 min-h-0 flex flex-col relative">
-            <TrailerViewer ref={viewerRef} onModelReady={onModelReady} fullscreen={fullscreen} onToggleFullscreen={() => setFullscreen(prev => !prev)} />
+            <TrailerViewer 
+              ref={viewerRef} 
+              onModelReady={onModelReady} 
+              fullscreen={fullscreen} 
+              onToggleFullscreen={() => setFullscreen(prev => !prev)} 
+              onARLoadingChange={setIsARLoading}
+            />
 
             {/* Mobile View controls — overlaid at bottom of canvas */}
             <div className="lg:hidden absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-2">
@@ -95,9 +120,6 @@ export default function Configurator({ onModelReady }) {
               >
                 <img src="/eyes.png" className="w-4 h-4 object-contain" />
               </button>
-              {/* <button aria-label="Scenic View" className="w-8 h-7 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors">
-                <img src="/view.png" className="w-4 h-4 object-contain" />
-              </button> */}
               <button
                 aria-label="Toggle Dimensions"
                 onClick={() => setShowDimensions(prev => !prev)}
@@ -107,7 +129,8 @@ export default function Configurator({ onModelReady }) {
               </button>
               <button
                 onClick={handleMobileAR}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
+                disabled={isARLoading}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sm:hidden">AR</span>
                 <span className="hidden sm:inline">VIEW IN YOUR DRIVEWAY</span>
@@ -161,6 +184,26 @@ export default function Configurator({ onModelReady }) {
 
       {/* Summary panel — works on both layouts */}
       <SummaryPanel />
+
+      {/* AR Loading Overlay */}
+      {isARLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm px-4">
+          <div className="w-full max-w-sm rounded-[28px] bg-[#2a2a2a] border border-white/10 shadow-2xl px-6 pt-6 pb-8 flex flex-col items-center">
+            <h2 className="text-white text-[18px] leading-tight font-extrabold mb-4 text-center">
+              Preparing AR Model
+            </h2>
+            <div className="w-full h-2 bg-[#1a1a1a] rounded-full overflow-hidden relative">
+              <div 
+                className="absolute top-0 left-0 bottom-0 bg-[#DA634B] transition-all duration-300 ease-out" 
+                style={{ width: `${arProgress}%` }}
+              />
+            </div>
+            <p className="mt-3 text-white/50 text-[12px] font-medium tracking-wide uppercase">
+              Please wait...
+            </p>
+          </div>
+        </div>
+      )}
     </>
   )
 }

@@ -938,7 +938,7 @@ function SceneReadyNotifier({ meshRef, onReady }) {
 
 
 
-const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen }, ref) {
+const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscreen, onToggleFullscreen, onARLoadingChange }, ref) {
   const { width, length, interiorHeight, showDimensions, setShowDimensions, viewMode } = useConfigurator()
 
   // Automatically turn off dimensions in the UI when the user changes the size
@@ -991,6 +991,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
       if (o.isMesh) console.log(`  mesh: ${o.name || '(unnamed)'}  visible=${o.visible}`)
     })
     setArExporting(true)
+    if (onARLoadingChange) onARLoadingChange(true)
     try {
       const result = await exportForAR(modelGroupRef.current)
       
@@ -1001,6 +1002,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
       setShowQR(false)
     } catch (err) {
       console.error('[AR Export] export error:', err)
+      if (onARLoadingChange) onARLoadingChange(false)
     } finally {
       setArExporting(false)
     }
@@ -1017,6 +1019,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     if (!viewer) return
     const handleLoad = () => {
       viewer.removeEventListener('load', handleLoad)
+      if (onARLoadingChange) onARLoadingChange(false)
       if (viewer.canActivateAR) {
         if (isAndroidDevice()) {
           setShowARPrompt(true)
@@ -1028,7 +1031,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     viewer.addEventListener('load', handleLoad)
     viewer.setAttribute('src', arUrl)
     return () => viewer.removeEventListener('load', handleLoad)
-  }, [arUrl])
+  }, [arUrl, onARLoadingChange])
 
   const handleDownload = async () => {
     if (!modelGroupRef.current || downloading) return
@@ -1261,23 +1264,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           >
             VIEW IN YOUR DRIVEWAY
           </button>
-          <button
-            onClick={handleDownload}
-            disabled={downloading}
-            aria-label="Download GLB"
-            className="w-11 h-9 flex items-center justify-center bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg hover:border-[#DA634B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {downloading ? (
-              <svg className="animate-spin w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
-              </svg>
-            )}
-          </button>
+
 
         </div>
       </div>
