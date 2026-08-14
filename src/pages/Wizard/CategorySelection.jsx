@@ -5,31 +5,31 @@ const CATEGORIES = [
     id: 'motorsports',
     title: 'Motorsports/ Racing',
     description: 'For hauling a race car to the track, running car shows, or transporting a project car. Leads to exterior styling, wheels, and race-day features',
-    image: '/motorspots.png'
+    image: '/motorspots.webp'
   },
   {
     id: 'car-hauling',
     title: 'Car Hauling',
     description: "For moving a daily driver, a project car, or a vehicle you're storing - no racing, just point A to B. Leads to a mix of styling and cargo options.",
-    image: '/car-hauling.png'
+    image: '/car-hauling.webp'
   },
   {
     id: 'livability',
     title: 'Livability / Toy Hauler',
     description: 'For hauling an ATV, side-by-side, or bikes, plus somewhere to sleep or hang out afterward. Leads to interior build-out, AC, and insulation/rm storage.',
-    image: '/livality.png'
+    image: '/livality.webp'
   },
   {
     id: 'contractor',
     title: 'Contractor / Work',
     description: 'For hauling tools, equipment, and materials to job sites. Leads to storage, cabinets, and tie-down options',
-    image: '/contractor.png'
+    image: '/contractor.webp'
   },
   {
     id: 'not-sure',
     title: 'Not Sure Yet',
     description: 'Skip this and see all packages — you can still build from scratch or pick one that fits.',
-    image: 'notsure.png'
+    image: 'notsure.webp'
   }
 ];
 

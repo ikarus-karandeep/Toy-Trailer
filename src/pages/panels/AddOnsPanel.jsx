@@ -286,7 +286,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           ) : (
             <>
               <img
-                src="/Awnings.png"
+                src="/Awnings.webp"
                 alt="Awning preview"
                 className="w-full rounded-xl object-cover mb-4"
                 onError={(e) => { e.currentTarget.style.display = 'none' }}

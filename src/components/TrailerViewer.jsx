@@ -1164,7 +1164,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               <CameraControls
                 ref={cameraControlsRef}
                 enabled={!isTransitioning}
-                dollySpeed={1}
+                dollySpeed={0.5}
                 draggingSmoothTime={0.4}
               />
               <CameraLayerSetup />

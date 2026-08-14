@@ -13,8 +13,8 @@ const PACKAGES = [
       '7000LB LEAF SPRING/ TORSION'
     ],
     priceRange: '$3,200- $3,600',
-    image: '/track-pack.png',
-    hoverImage: '/track-pack-hover.png'
+    image: '/track-pack.webp',
+    hoverImage: '/track-pack-hover.webp'
   },
   {
     id: 'job-site',
@@ -26,8 +26,8 @@ const PACKAGES = [
       '30 AMP ELECTRICAL', 'RECESSED TIRE BOX'
     ],
     priceRange: '$2,970- $3,510',
-    image: '/job-site.png',
-    hoverImage: '/jobsite-hover.png'
+    image: '/job-site.webp',
+    hoverImage: '/jobsite-hover.webp'
   },
   {
     id: 'base-camp',
