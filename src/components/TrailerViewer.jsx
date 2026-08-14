@@ -492,15 +492,29 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
 
         console.log('FocusedCameraListener: Found camera object', targetCamera)
         
+        let relatedObjectName = targetCamera.name.replace(' Camera', '').replace('_Camera', '');
+        let relatedObject = modelGroupRef.current.getObjectByName(relatedObjectName) || 
+                            modelGroupRef.current.getObjectByName(relatedObjectName.replace(/ /g, '_'));
+
         // Auto-switch viewMode if the camera specifies it in Blender custom properties,
         // or if it matches known interior cameras that might be missing the property.
-        const isForceInterior = targetCamera.userData.isInterior || 
+        let isForceInterior = targetCamera.userData.isInterior || 
+          (relatedObject && relatedObject.userData.isInterior) ||
           targetCamera.name.includes('Recessed_Tire') || 
-          targetCamera.name.includes('Mini_Split');
+          targetCamera.name.includes('Mini_Split') ||
+          targetCamera.name.includes('Interior');
+
+        if (!isForceInterior && relatedObject) {
+          relatedObject.traverse((child) => {
+            if (child.userData && child.userData.isInterior) {
+              isForceInterior = true;
+            }
+          });
+        }
           
         if (isForceInterior && viewMode !== 'INTERIOR') {
           setViewMode('INTERIOR')
-        } else if (targetCamera.userData.isExterior && viewMode !== 'EXTERIOR') {
+        } else if (!isForceInterior && viewMode !== 'EXTERIOR') {
           setViewMode('EXTERIOR')
         }
 
