@@ -494,21 +494,41 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
 }
 
 function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransitioning }) {
-  const { focusedCamera, setFocusedCamera, viewMode, setViewMode } = useConfigurator()
+  const { focusedCamera, focusedCameraTrigger, setFocusedCamera, viewMode, setViewMode } = useConfigurator()
   const { camera } = useThree()
 
   useEffect(() => {
     if (focusedCamera && modelGroupRef.current && cameraControlsRef.current) {
       console.log('FocusedCameraListener: Triggered for', focusedCamera)
-      let targetCamera = modelGroupRef.current.getObjectByName(focusedCamera)
 
-      // Fallback for exported models where spaces are converted to underscores
-      if (!targetCamera) {
-        const underscoredName = focusedCamera.replace(/ /g, '_')
-        targetCamera = modelGroupRef.current.getObjectByName(underscoredName)
+      const tryFindCamera = (attemptsLeft = 3) => {
+        let targetCamera = modelGroupRef.current.getObjectByName(focusedCamera)
+
+        // Fallback for exported models where spaces are converted to underscores
+        if (!targetCamera) {
+          const underscoredName = focusedCamera.replace(/ /g, '_')
+          targetCamera = modelGroupRef.current.getObjectByName(underscoredName)
+        }
+
+        if (targetCamera) {
+          handleCameraFound(targetCamera)
+        } else if (attemptsLeft > 0) {
+          console.log(`FocusedCameraListener: Camera not found yet, retrying in 100ms... (${attemptsLeft} attempts left)`)
+          setTimeout(() => tryFindCamera(attemptsLeft - 1), 100)
+        } else {
+          console.error('FocusedCameraListener: Camera object NOT FOUND in model:', focusedCamera)
+          // Log all available cameras to help debug
+          const availableCameras = []
+          modelGroupRef.current.traverse(node => {
+            if (node.isPerspectiveCamera || node.isOrthographicCamera || node.name.toLowerCase().includes('camera')) {
+              availableCameras.push(node.name)
+            }
+          })
+          console.log('FocusedCameraListener: Available cameras/objects containing "camera" in name:', availableCameras)
+        }
       }
 
-      if (targetCamera) {
+      const handleCameraFound = (targetCamera) => {
         // ALWAYS skip the default camera move if we are doing a focused animation.
         // This prevents the main CameraController from overriding our animation
         // if ModularTrailerModel automatically triggers a viewMode switch.
@@ -597,20 +617,12 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
           }
           animateFov()
         }
-      } else {
-        console.error('FocusedCameraListener: Camera object NOT FOUND in model:', focusedCamera)
-        // Log all available cameras to help debug
-        const availableCameras = []
-        modelGroupRef.current.traverse(node => {
-          if (node.isPerspectiveCamera || node.isOrthographicCamera || node.name.toLowerCase().includes('camera')) {
-            availableCameras.push(node.name)
-          }
-        })
-        console.log('FocusedCameraListener: Available cameras/objects containing "camera" in name:', availableCameras)
       }
-      setFocusedCamera(null)
+
+      // Start the search process
+      tryFindCamera()
     }
-  }, [focusedCamera, setFocusedCamera])
+  }, [focusedCameraTrigger]) // Trigger solely on the counter changing
 
   return null
 }

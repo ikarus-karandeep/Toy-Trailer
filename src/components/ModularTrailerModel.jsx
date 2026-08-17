@@ -1,5 +1,5 @@
 import { useRef, useEffect, useMemo, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import WheelInstances from './WheelInstances'
@@ -201,6 +201,7 @@ const TONGUE_MESH_MAP = {
 
 
 export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, environment }) {
+    const { invalidate } = useThree()
     const config = useConfigurator()
     const isFirstRender = useRef(true);
     const prevVisibleInteriorNodes = useRef(new Set());
@@ -565,6 +566,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
+        invalidate()
     }, [
         config.selectedColor, shellTextures, simpleNoise, isBlackout,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
@@ -730,6 +732,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
+        invalidate()
     }, [
         isMounted,
         config.protectionType,
@@ -816,6 +819,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
+        invalidate()
     }, [
         config.axleAtp, config.selectedColor, shellTextures, simpleNoise, normalMap, isBlackout,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
@@ -862,8 +866,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
+        invalidate()
         // console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
-    }, [config.wheelType, wheels, axleConfig, addons, staticTextures, isBlackout])
+    }, [config.wheelType, wheels, axleConfig, addons, staticTextures, isBlackout, invalidate])
 
     // ── Apply Floor Overlay material to MAT_Interior_Flooring ───────────────
     useEffect(() => {
@@ -910,7 +915,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
-    }, [config.floorOverlay, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures])
+        invalidate()
+    }, [config.floorOverlay, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures, invalidate])
 
     // ── Apply Ceiling material to MAT_Interior_Cealing ───────────────
     useEffect(() => {
@@ -952,7 +958,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
-    }, [config.ceiling, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures])
+        invalidate()
+    }, [config.ceiling, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures, invalidate])
 
     // ── Apply Wall material to MAT_Interior_Walls ───────────────
     useEffect(() => {
@@ -993,7 +1000,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
-    }, [config.walls, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures])
+        invalidate()
+    }, [config.walls, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures, invalidate])
 
     // ── Apply all standard materials driven by material_data.json ────────────
     // Only MAT_Shell, Metallic Grates, MAT_WheelCover, MAT_Rim remain special.
@@ -1088,6 +1096,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 })
             })
         })
+        invalidate()
     }, [
         config.frontStyle, staticTextures, isBlackout, config.blackoutCabinetDoors,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
@@ -1602,6 +1611,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         
         const activeSinkMeshes = [];
         if (config.sinkPackage === 'sink') {
+            const effectiveSinkFrontStyle = (config.width === '8.5ftgn' || (config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck'))) ? 'gooseneck' : config.frontStyle;
             const SINK_FRONT_STYLE_MAP = {
                 vnose24: 'V-Nose_Sink',
                 flatfront: 'Flat_Front_Sink',
@@ -1609,10 +1619,10 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 extendedvnose: 'Extended_V-Nose_Sink_',
                 gooseneck: 'Gooseneck_Sink_'
             };
-            const sinkMeshName = SINK_FRONT_STYLE_MAP[config.frontStyle] || 'V-Nose_Sink';
-            // console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
-            // console.log('[DEBUG SINK] config.frontStyle:', config.frontStyle);
-            // console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
+            const sinkMeshName = SINK_FRONT_STYLE_MAP[effectiveSinkFrontStyle] || 'V-Nose_Sink';
+            console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
+            console.log('[DEBUG SINK] effectiveSinkFrontStyle:', effectiveSinkFrontStyle);
+            console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
             activeSinkMeshes.push(sinkMeshName);
             
             // Also log if we can find this mesh across all scenes

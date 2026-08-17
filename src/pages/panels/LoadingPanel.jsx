@@ -90,7 +90,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 label={opt.label}
                 price={opt.price} badge={opt.badge}
                 isSelected={rampType === opt.id}
-                onClick={() => setRampType(opt.id)}
+                onClick={() => {
+                  setRampType(opt.id)
+                  setFocusedCamera("Rear Door Camera")
+                }}
               />
             ))}
           </div>
@@ -103,7 +106,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
             <ToggleSwitch
               label="ATP/RTP RAMP & FLAP"
               checked={atpRamp}
-              onChange={setAtpRamp}
+              onChange={(val) => {
+                setAtpRamp(val)
+                if (val) setFocusedCamera("Rear Door Camera")
+              }}
               disabled={rampType !== 'doublereardoors'}
               price={270}
               // subtext="Matching diamond plate on the ramp surface"
@@ -135,7 +141,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   <SegmentedControl
                     options={SIDE_DOOR_PLACEMENT_OPTIONS}
                     value={sideDoorPlacement}
-                    onChange={setSideDoorPlacement}
+                    onChange={(val) => {
+                      setSideDoorPlacement(val)
+                      if (currentSideDoor !== 'none') {
+                        setFocusedCamera(val === 'driver' ? 'Door L Camera' : 'Door R Camera')
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -157,7 +168,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
                       label={opt.label}
                       price={opt.id === 'none' ? undefined : price}
                       isSelected={currentSideDoor === opt.id}
-                      onClick={() => setCurrentSideDoor(opt.id)}
+                      onClick={() => {
+                        setCurrentSideDoor(opt.id)
+                        if (opt.id !== 'none') {
+                          setFocusedCamera(sideDoorPlacement === 'driver' ? 'Door L Camera' : 'Door R Camera')
+                        }
+                      }}
                     />
                   );
                 })}
@@ -199,7 +215,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 price={opt.price} badge={opt.badge}
                 isSelected={escapeDoor === opt.id}
                 isLocked={concessionDoor === 'driver' && opt.id !== 'none'}
-                onClick={() => setEscapeDoor(opt.id)}
+                onClick={() => {
+                  setEscapeDoor(opt.id)
+                  if (opt.id === '54x48') setFocusedCamera("Escape Door 54x48 Camera")
+                  else if (opt.id === 'gullwing') setFocusedCamera("Gullwing Escape Door Camera")
+                }}
               />
             ))}
           </div>
@@ -240,7 +260,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   }))
                 ]}
                 value={concessionDoor}
-                onChange={setConcessionDoor}
+                onChange={(val) => {
+                  setConcessionDoor(val)
+                  if (val !== 'none') {
+                    setFocusedCamera(val === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                  }
+                }}
               />
             </div>
           </div>
@@ -252,7 +277,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 <VerticalDotSlider
                   options={concessionHeightOptions}
                   value={concessionHeight}
-                  onChange={setConcessionHeight}
+                  onChange={(val) => {
+                    setConcessionHeight(val)
+                    if (concessionDoor !== 'none') {
+                      setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -261,7 +291,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
               <DotSlider
                 options={concessionWidthOptions}
                 value={concessionWidth}
-                onChange={setConcessionWidth}
+                onChange={(val) => {
+                  setConcessionWidth(val)
+                  if (concessionDoor !== 'none') {
+                    setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                  }
+                }}
                 badge={widthBadgeMap[concessionWidth]}
               />
             </div>
@@ -271,7 +306,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
             <ToggleSwitch
               label="Glass Screen"
               checked={glassScreen}
-              onChange={setGlassScreen}
+              onChange={(val) => {
+                setGlassScreen(val)
+                if (concessionDoor !== 'none') {
+                  setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                }
+              }}
               disabled={concessionDoor === 'none'}
             />
           </div>
@@ -295,7 +335,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
               )}
               <div className="flex flex-col gap-6 mb-4">
                 {WINDOWS_OPTIONS.map((opt) => {
-                  const qty = windows[opt.id]
+                  const qty = windows[opt.id] || 0;
                   return (
                     <div key={opt.id} className="flex flex-col gap-2">
                       <OptionPill
@@ -303,7 +343,14 @@ export default function LoadingPanel({ activeSectionTitle }) {
                         price={opt.price} badge={opt.badge}
                         isSelected={qty > 0}
                         isLocked={concessionDoor === 'passenger'}
-                        onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
+                        onClick={() => {
+                          const newQty = qty === 0 ? 1 : 0;
+                          updateQuantity(setWindows, opt.id, newQty);
+                          if (newQty > 0) {
+                            if (opt.id === 'vertical') setFocusedCamera("15×30 Vertical Slider Camera")
+                            else if (opt.id === 'horizontal') setFocusedCamera("50×30 Horizontal Slider Camera")
+                          }
+                        }}
                       />
                       {qty > 0 && (
                         <div className="flex flex-wrap gap-2 pl-4">
@@ -316,7 +363,11 @@ export default function LoadingPanel({ activeSectionTitle }) {
                                 price={opt.price} badge={opt.badge}
                                 isSelected={windowSizes[opt.id] === sizeOpt.id}
                                 isLocked={isLocked}
-                                onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
+                                onClick={() => {
+                                  setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))
+                                  if (opt.id === 'vertical') setFocusedCamera("15×30 Vertical Slider Camera")
+                                  else if (opt.id === 'horizontal') setFocusedCamera("50×30 Horizontal Slider Camera")
+                                }}
                               />
                             )
                           })}
@@ -327,7 +378,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 })}
 
                 {WINDOWS_EGRESS_OPTIONS.map((opt) => {
-              const qty = windows[opt.id]
+              const qty = windows[opt.id] || 0;
               return (
                 <div key={opt.id} className="flex flex-col gap-2">
                   <OptionPill
@@ -335,7 +386,13 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     isLocked={concessionDoor === 'passenger'}
-                    onClick={() => updateQuantity(setWindows, opt.id, qty === 0 ? 1 : 0)}
+                    onClick={() => {
+                      const newQty = qty === 0 ? 1 : 0;
+                      updateQuantity(setWindows, opt.id, newQty);
+                      if (newQty > 0) {
+                         setFocusedCamera("30×30 Egress Camera");
+                      }
+                    }}
                   />
                   {qty > 0 && (
                     <div className="flex flex-wrap gap-2 pl-4">
@@ -348,7 +405,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
                             price={opt.price} badge={opt.badge}
                             isSelected={windowSizes[opt.id] === sizeOpt.id}
                             isLocked={isLocked}
-                            onClick={() => setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))}
+                            onClick={() => {
+                              setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))
+                              setFocusedCamera("30×30 Egress Camera");
+                            }}
                           />
                         )
                       })}
@@ -375,7 +435,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   key={opt.id}
                   label={opt.label}
                   isSelected={tieDowns.includes(opt.id)}
-                  onClick={() => toggleTieDown(opt.id)}
+                  onClick={() => {
+                    toggleTieDown(opt.id)
+                    if (!tieDowns.includes(opt.id)) setFocusedCamera("D-Rings Camera")
+                  }}
                 />
               ))}
               
@@ -392,10 +455,13 @@ export default function LoadingPanel({ activeSectionTitle }) {
                       updateQuantity(setDRings, opt.id, val)
                       if (val === 0 && tieDowns.includes(opt.id)) toggleTieDown(opt.id)
                       if (val > 0 && !tieDowns.includes(opt.id)) toggleTieDown(opt.id)
+                      if (val > 0) setFocusedCamera("D-Rings Camera")
                     }}
                     onClick={() => {
-                      updateQuantity(setDRings, opt.id, qty === 0 ? 1 : 0)
+                      const newValue = qty === 0 ? 1 : 0
+                      updateQuantity(setDRings, opt.id, newValue)
                       toggleTieDown(opt.id)
+                      if (newValue > 0) setFocusedCamera("D-Rings Camera")
                     }}
                   />
                 )
@@ -412,7 +478,14 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
                   isSelected={tieDowns.includes(opt.id)}
-                  onClick={() => toggleTieDown(opt.id)}
+                  onClick={() => {
+                    toggleTieDown(opt.id)
+                    if (!tieDowns.includes(opt.id)) {
+                      if (opt.id === 'wall') setFocusedCamera("Wall E-Track Camera")
+                      else if (opt.id === 'floor') setFocusedCamera("Floor E-Track Camera")
+                      else if (opt.id === 'small') setFocusedCamera("Wall E-Track Small Section Camera")
+                    }
+                  }}
                   packageBadge={getBadge(opt.id)}
                 />
               ))}
@@ -465,6 +538,12 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     } else {
                       setFocusedCamera("Electric Jack Camera")
                     }
+                  } else if (id === 'folddown' || id === 'folddownjacks') {
+                    setFocusedCamera("Fold_Down_Stablizer_Jack_Inst_Camera")
+                  } else if (id === '5kscissorjacks') {
+                    setFocusedCamera("5K_Scissor_Jack_Inst_Camera")
+                  } else if (id === '5kscissor') {
+                    setFocusedCamera("5K_Scissor_Jack_w_Handle_Inst_Camera")
                   }
                 }
               }

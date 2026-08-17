@@ -203,7 +203,10 @@ export default function SystemsPanel({ activeSectionTitle }) {
                       label={opt.label}
                       price={opt.price} badge={opt.badge}
                       isSelected={ledRope}
-                      onClick={() => setLedRope(!ledRope)}
+                      onClick={() => {
+                        setLedRope(!ledRope)
+                        if (!ledRope) setFocusedCamera("LED Rope Light Camera")
+                      }}
                     />
                   )
                 }
@@ -215,8 +218,19 @@ export default function SystemsPanel({ activeSectionTitle }) {
                     price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     quantity={qty > 0 ? qty : undefined}
-                    onQuantityChange={(newQty) => updateQuantity(setInteriorLights, opt.id, newQty)}
-                    onClick={() => updateQuantity(setInteriorLights, opt.id, qty === 0 ? 1 : 0)}
+                    onQuantityChange={(newQty) => {
+                      updateQuantity(setInteriorLights, opt.id, newQty)
+                      if (newQty > 0) {
+                        setFocusedCamera(opt.id === '12vleddome' ? 'Dome Light Camera' : 'Flat Panel Light Camera')
+                      }
+                    }}
+                    onClick={() => {
+                      const newQty = qty === 0 ? 1 : 0
+                      updateQuantity(setInteriorLights, opt.id, newQty)
+                      if (newQty > 0) {
+                        setFocusedCamera(opt.id === '12vleddome' ? 'Dome Light Camera' : 'Flat Panel Light Camera')
+                      }
+                    }}
                   />
                 )
               })}

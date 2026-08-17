@@ -12,7 +12,14 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [viewMode, setViewMode] = useState('EXTERIOR')
   const [summaryOpen, setSummaryOpen] = useState(false)
   const [packageId, setPackageId] = useState(ic.packageId ?? null)
-  const [focusedCamera, setFocusedCamera] = useState(null)
+  const [focusedCamera, setFocusedCameraName] = useState(null)
+  const [focusedCameraTrigger, setFocusedCameraTrigger] = useState(0)
+
+  const setFocusedCamera = useCallback((val) => {
+    setFocusedCameraName(val)
+    if (val) setFocusedCameraTrigger(t => t + 1)
+  }, [])
+
   const [cameraResetTrigger, setCameraResetTrigger] = useState(0)
   const triggerCameraReset = useCallback(() => setCameraResetTrigger(t => t + 1), [])
 
@@ -339,7 +346,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   const value = useMemo(() => ({
     packageId, setPackageId, applyPackage,
-    focusedCamera, setFocusedCamera,
+    focusedCamera, setFocusedCamera, focusedCameraTrigger,
     cameraResetTrigger, triggerCameraReset,
     activeTab, setActiveTab,
     viewMode, setViewMode,

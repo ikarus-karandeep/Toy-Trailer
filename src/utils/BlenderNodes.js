@@ -239,19 +239,19 @@ export class BlenderNodes {
                 child.visible = false
             }
         })
-        // console.log(`[BlenderNodes] switchMeshes → active list: [${targetNames.join(', ')}]`)
+        console.log(`[BlenderNodes] switchMeshes → active list: [${targetNames.join(', ')}]`)
         let matched = 0
         for (const name of targetNames) {
             const target = scene.getObjectByName(name)
             if (target) {
-                // console.log(`[BlenderNodes] switchMeshes → showing "${name}"`)
+                console.log(`[BlenderNodes] switchMeshes → showing "${name}"`)
                 BlenderNodes._applyWithProxy(scene, target, true)
                 matched++
             } else {
-                // console.warn(`[BlenderNodes] switchMeshes → "${name}" NOT FOUND in scene`)
+                console.warn(`[BlenderNodes] switchMeshes → "${name}" NOT FOUND in scene`)
             }
         }
-        // console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length} | list: [${targetNames.join(', ')}]`)
+        console.log(`[BlenderNodes] switchMeshes → matched ${matched}/${targetNames.length} | list: [${targetNames.join(', ')}]`)
         return matched
     }
 

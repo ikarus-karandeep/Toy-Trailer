@@ -34,7 +34,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     cabinets,
     viewMode, setViewMode,
     waterPackage, setWaterPackage,
-    setFocusedCamera
+    focusedCamera, setFocusedCamera
   } = useConfigurator()
 
   const [largeWaterOpen, setLargeWaterOpen] = useState(true)
@@ -87,7 +87,15 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   }
 
   const handleBathroom = (id) => {
-    setBathroom(bathroom === id ? null : id)
+    if (bathroom === id && focusedCamera !== "Bathroom Camera") {
+      setFocusedCamera("Bathroom Camera");
+      return;
+    }
+    const newValue = bathroom === id ? null : id;
+    setBathroom(newValue);
+    if (newValue) {
+      setFocusedCamera("Bathroom Camera");
+    }
   }
 
   const awningLengthOptions = AWNING_OPTIONS.filter(opt => {
@@ -157,7 +165,11 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 label={opt.label}
                 price={opt.price} badge={opt.badge}
                 isSelected={sinkPackage === opt.id}
-                onClick={() => setSinkPackage(sinkPackage === opt.id ? null : opt.id)}
+                onClick={() => {
+                  const newValue = sinkPackage === opt.id ? null : opt.id;
+                  setSinkPackage(newValue)
+                  if (newValue) setFocusedCamera("Sink Camera")
+                }}
                 includedItems={[
                   'Front Base Cabinet',
                   '3-bowl stainless sink',
@@ -235,6 +247,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                   setAwningRaw([])
                 } else {
                   setAwningRaw([awningLength])
+                  setFocusedCamera("Electric Awning Camera")
                 }
               }}
             />
@@ -247,6 +260,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 onChange={(val) => {
                   setAwningLength(val)
                   setAwningRaw([val])
+                  setFocusedCamera("Electric Awning Camera")
                 }}
                 badge={getAwningBadge(awningLength)}
               />
@@ -300,6 +314,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                   onClick={() => {
                     if (frontStyle === 'flatfront') {
                       setGeneratorBox(opt.id)
+                      if (opt.id !== 'none') setFocusedCamera("Tongue Mounted Generator Box Camera")
                     }
                   }}
                 />
@@ -313,7 +328,10 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             <ToggleSwitch
               label="Add your own door separately"
               checked={genSlides}
-              onChange={setGenSlides}
+              onChange={(val) => {
+                setGenSlides(val)
+                if (val) setFocusedCamera("Standard Generator Box Camera")
+              }}
               disabled={frontStyle !== 'flatfront'}
             />
           </div>
@@ -324,7 +342,10 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             <ToggleSwitch
               label="Standard gen door"
               checked={genDoor}
-              onChange={setGenDoor}
+              onChange={(val) => {
+                setGenDoor(val)
+                if (val) setFocusedCamera("Standard Generator Box Camera")
+              }}
               disabled={frontStyle !== 'flatfront'}
             />
           </div>
@@ -344,7 +365,15 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             <ToggleSwitch
               label="Battery box on tongue"
               checked={batteryBox}
-              onChange={setBatteryBox}
+              onChange={(val) => {
+                setBatteryBox(val)
+                if (val) {
+                  const cameraName = frontStyle === 'extendedvnose' 
+                    ? 'ATP Battery Box(Extended V-Nose) Camera'
+                    : 'ATP Battery Box(Flat Front, V-Nose, Slant V-Nose) Camera';
+                  setFocusedCamera(cameraName)
+                }
+              }}
             />
           )}
         </OptionSection>

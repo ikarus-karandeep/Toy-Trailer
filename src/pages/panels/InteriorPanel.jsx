@@ -40,7 +40,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
     wallInsulation, setWallInsulation,
     ceilingInsulation, setCeilingInsulation,
     floorInsulation, setFloorInsulation,
-    atpWheelWells, setAtpWheelWells
+    atpWheelWells, setAtpWheelWells,
+    setFocusedCamera
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -301,6 +302,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
                         const toRemove = [...baseIds];
                         const newCabinets = cabinets.filter(c => !toRemove.includes(c));
                         setCabinetsRaw([...newCabinets, opt.id]);
+                        if (opt.id === 'wallrun36') setFocusedCamera("Wall_Run_Cabinet_Camera");
+                        if (opt.id === 'frontbase36') setFocusedCamera("Front_Cabinets_Camera");
                       } else {
                         // Toggle off - do not remove overhead automatically
                         const newCabinets = cabinets.filter(c => c !== opt.id);
@@ -341,6 +344,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
                         const overheadIds = OVERHEAD_CABINET_OPTIONS.map(o => o.id);
                         const newCabinets = cabinets.filter(c => !overheadIds.includes(c));
                         setCabinetsRaw([...newCabinets, opt.id]);
+                        if (opt.id === 'wallrun16') setFocusedCamera("Overhead_Wall_Run_Cabinet_Camera");
+                        if (opt.id === 'frontoverhead16') setFocusedCamera("Front_Cabinets_Camera");
                       } else {
                         // Toggle off
                         setCabinetsRaw(cabinets.filter(c => c !== opt.id));
@@ -403,7 +408,12 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={displayPrice}
                   isSelected={cabinets.includes(opt.id)}
-                  onClick={() => !hasWheelWallConflict && toggleCabinet(opt.id)}
+                  onClick={() => {
+                    if (!hasWheelWallConflict) {
+                      toggleCabinet(opt.id);
+                      if (!cabinets.includes(opt.id)) setFocusedCamera("Wheel_Wall_Cabinet_Camera");
+                    }
+                  }}
                   isMulti={true}
                   isLocked={hasWheelWallConflict}
                   packageBadge={getBadge(opt.id)}
