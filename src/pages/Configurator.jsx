@@ -116,21 +116,21 @@ export default function Configurator({ onModelReady }) {
               <button
                 aria-label="Toggle Fullscreen"
                 onClick={() => setFullscreen(prev => !prev)}
-                className={`w-8 h-7 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${fullscreen ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+                className={`w-8 h-7 flex items-center justify-center bg-[#383a3b] rounded-lg transition-colors border ${fullscreen ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
               >
-                <img src="/eyes.png" className="w-4 h-4 object-contain" />
+                <img src="/eyes.png" className="w-5 h-5 object-contain" />
               </button>
               <button
                 aria-label="Toggle Dimensions"
                 onClick={() => setShowDimensions(prev => !prev)}
-                className={`w-8 h-7 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+                className={`w-8 h-7 flex items-center justify-center bg-[#383a3b] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
               >
-                <img src="/Dimension.png" className="w-4 h-4 object-contain" />
+                <img src="/Dimension.png" className="w-5 h-5 object-contain" />
               </button>
               <button
                 onClick={handleMobileAR}
                 disabled={isARLoading}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#383a3b] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sm:hidden">AR</span>
                 <span className="hidden sm:inline">VIEW IN YOUR DRIVEWAY</span>

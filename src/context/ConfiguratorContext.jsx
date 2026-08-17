@@ -178,10 +178,6 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Height auto assignments
   const isFirstHeightRender = useRef(true);
   useEffect(() => {
-    if (isFirstHeightRender.current) {
-      isFirstHeightRender.current = false;
-      return;
-    }
     const heightIndex = INTERIOR_HEIGHT_OPTIONS.findIndex(o => o.id === interiorHeight);
     if (heightIndex >= 2) {
       setRampType('superduty');

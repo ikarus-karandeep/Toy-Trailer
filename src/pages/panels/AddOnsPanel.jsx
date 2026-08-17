@@ -119,60 +119,29 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       {show('WATER PACKAGE') && (
         <OptionSection title="WATER PACKAGE">
           <div className="flex flex-col gap-2">
-            {WATER_PACKAGE_OPTIONS.map((opt) => (
-              <div key={opt.id} className="w-full">
-                <OptionPill
+            {WATER_PACKAGE_OPTIONS.map((opt) => {
+              let includedItems = [];
+              if (opt.id === 'large') {
+                includedItems = [
+                  '42 gal fresh water',
+                  '32 gal waste',
+                  '6 gal heater',
+                  'water pump',
+                  'City gravity Water center'
+                ];
+              }
+              return (
+                <DetailedOptionCard
+                  key={opt.id}
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
                   isLocked={opt.locked}
                   isSelected={waterPackage === opt.id}
-                  hasSettings={opt.id === 'large'}
                   onClick={() => !opt.locked && setWaterPackage(waterPackage === opt.id ? null : opt.id)}
+                  includedItems={includedItems.length > 0 ? includedItems : undefined}
                 />
-                
-                {waterPackage === 'large' && opt.id === 'large' && (
-                  <div className="mt-4 bg-[#111111] rounded-2xl p-5 border border-[#DA634B]">
-                    <div 
-                      className="flex items-center justify-between mb-4 cursor-pointer"
-                      onClick={() => setLargeWaterOpen(!largeWaterOpen)}
-                    >
-                      <span className="text-gray-300 text-xs tracking-widest uppercase font-semibold">
-                        What's Included
-                      </span>
-                      <span className="w-5 h-5 rounded-full border border-gray-500 text-gray-400 text-[10px] flex items-center justify-center">
-                        <svg className={`w-3 h-3 transition-transform ${largeWaterOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                      </span>
-                    </div>
-                    {largeWaterOpen && (
-                      <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-white text-[12px] lg:text-sm">
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>42 gal fresh water</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>32 gal waste</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>6 gal heater</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>water pump</span>
-                        </div>
-                        <div className="flex items-start gap-2 col-span-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>City gravity Water center</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
           <AlertMessage message={'8" MF + ELECTRICAL REQUIRED'} />
         </OptionSection>
@@ -183,53 +152,19 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           <OptionSection title="SINK PACKAGE">
           <div className="flex flex-col gap-2">
             {SINK_PACKAGE_OPTIONS.map((opt) => (
-              <div key={opt.id} className="w-full">
-                <OptionPill
-                  label={opt.label}
-                  price={opt.price} badge={opt.badge}
-                  isSelected={sinkPackage === opt.id}
-                  hasSettings
-                  onClick={() => setSinkPackage(sinkPackage === opt.id ? null : opt.id)}
-                />
-                
-                {sinkPackage === opt.id && (
-                  <div className="mt-4 bg-[#111111] rounded-2xl p-5 border border-[#DA634B]">
-                    <div 
-                      className="flex items-center justify-between mb-4 cursor-pointer"
-                      onClick={() => setSinkPackageOpen(!sinkPackageOpen)}
-                    >
-                      <span className="text-gray-300 text-xs tracking-widest uppercase font-semibold">
-                        What's Included
-                      </span>
-                      <span className="w-5 h-5 rounded-full border border-gray-500 text-gray-400 text-[10px] flex items-center justify-center">
-                        <svg className={`w-3 h-3 transition-transform ${sinkPackageOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                      </span>
-                    </div>
-                    {sinkPackageOpen && (
-                      <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-white text-[12px] lg:text-sm">
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>Front Base Cabinet</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>3-bowl stainless sink</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>Hand wash sink</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>Large water package</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <DetailedOptionCard
+                key={opt.id}
+                label={opt.label}
+                price={opt.price} badge={opt.badge}
+                isSelected={sinkPackage === opt.id}
+                onClick={() => setSinkPackage(sinkPackage === opt.id ? null : opt.id)}
+                includedItems={[
+                  'Front Base Cabinet',
+                  '3-bowl stainless sink',
+                  'Hand wash sink',
+                  'Large water package'
+                ]}
+              />
             ))}
           </div>
           <AlertMessage message={'8" MF + ELECTRICAL REQUIRED'} />

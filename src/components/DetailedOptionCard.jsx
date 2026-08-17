@@ -6,6 +6,9 @@ export default function DetailedOptionCard({
   price,
   badge,
   isSelected,
+  isLocked,
+  disabled,
+  originalPrice,
   onClick,
   includedItems = [],
   children,
@@ -21,6 +24,9 @@ export default function DetailedOptionCard({
           price={price}
           badge={badge}
           isSelected={isSelected}
+          isLocked={isLocked}
+          disabled={disabled}
+          originalPrice={originalPrice}
           onClick={onClick}
           packageBadge={packageBadge}
         />
@@ -56,6 +62,9 @@ export default function DetailedOptionCard({
       price={price}
       badge={badge}
       isSelected={isSelected}
+      isLocked={isLocked}
+      disabled={disabled}
+      originalPrice={originalPrice}
       onClick={onClick}
       packageBadge={packageBadge}
     />

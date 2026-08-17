@@ -125,40 +125,37 @@ export default function OptionPill({
         (isMulti && quantity === undefined && !isLocked)) && (
         <div className="relative z-10 flex items-center gap-2">
           {hasSettings && isSelected && !isLocked && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onSettingsClick) onSettingsClick();
-              }}
-              className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all bg-[#DA634B] border-[#DA634B] text-white hover:bg-[#c5553e]`}
-            >
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
-            </button>
+            // <button
+            //   onClick={(e) => {
+            //     e.stopPropagation();
+            //     if (onSettingsClick) onSettingsClick();
+            //   }}
+            //   className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-all bg-[#DA634B] border-[#DA634B] text-white hover:bg-[#c5553e]`}
+            // >
+              <img src="/pitpack.png" alt="Settings" className="w-6 h-" />
+            // </button>
           )}
 
-          {quantity !== undefined && !isLocked && (
-            <div className="flex items-center gap-3 bg-[#1a1a1a] rounded-full px-2 py-1.5 border border-[#3a3a3a]">
+          {quantity !== undefined && quantity > 0 && !isLocked && (
+            <div className="flex items-center gap-2 md:gap-3 bg-[#111111] rounded-full px-1.5 py-1.5 border border-[#2a2a2a]/50">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   if (onQuantityChange) onQuantityChange(Math.max(0, quantity - 1));
                 }}
-                className="w-6 h-6 rounded-full flex items-center justify-center bg-[#2a2a2a] text-gray-300 hover:text-white hover:bg-[#444] text-lg leading-none pb-0.5"
+                className="w-7 h-7 md:w-8 md:h-8 shrink-0 rounded-full border border-[#DA634B] flex items-center justify-center text-white bg-[#DA634B]/20 hover:bg-[#DA634B]/40 text-xl font-light leading-none pb-1 transition-colors"
               >
                 -
               </button>
-              <span className="text-[13px] font-medium min-w-[3.5rem] text-center tracking-wide">
-                {quantity} · ${price != null ? price.toLocaleString() : '0'}
+              <span className="text-[14px] md:text-[15px] font-medium min-w-[3.5rem] text-center tracking-wide text-white whitespace-nowrap">
+                {quantity} · ${price != null ? price.toLocaleString() : '000'}
               </span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   if (onQuantityChange) onQuantityChange(quantity + 1);
                 }}
-                className="w-6 h-6 rounded-full flex items-center justify-center bg-[#2a2a2a] text-gray-300 hover:text-white hover:bg-[#444] text-lg leading-none pb-0.5"
+                className="w-7 h-7 md:w-8 md:h-8 shrink-0 rounded-full border border-[#DA634B] flex items-center justify-center text-white bg-[#DA634B]/20 hover:bg-[#DA634B]/40 text-xl font-light leading-none pb-1 transition-colors"
               >
                 +
               </button>

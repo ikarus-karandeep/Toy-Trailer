@@ -8,10 +8,27 @@ export default function DotSlider({ options, value, onChange, badge }) {
   const [pillWidth, setPillWidth] = useState(0)
   const [containerWidth, setContainerWidth] = useState(0)
 
-  // Measure pill and container whenever badge changes or on mount
+  // Measure pill and container
   useLayoutEffect(() => {
-    if (pillRef.current) setPillWidth(pillRef.current.offsetWidth)
-    if (containerRef.current) setContainerWidth(containerRef.current.offsetWidth)
+    if (!containerRef.current) return;
+    
+    const updateMeasurements = () => {
+      if (pillRef.current) setPillWidth(pillRef.current.offsetWidth)
+      if (containerRef.current) setContainerWidth(containerRef.current.offsetWidth)
+    };
+    
+    updateMeasurements();
+    
+    const observer = new ResizeObserver(() => {
+      updateMeasurements();
+    });
+    
+    observer.observe(containerRef.current);
+    if (pillRef.current) {
+      observer.observe(pillRef.current);
+    }
+    
+    return () => observer.disconnect();
   }, [badge])
 
   const getRatio = (clientX) => {
@@ -130,7 +147,7 @@ export default function DotSlider({ options, value, onChange, badge }) {
         {/* Static dots */}
         <div className="relative w-full flex justify-between items-center pointer-events-none">
           {options.map((opt, i) => {
-            const isActive = i === nearestIndex
+            const isActive = !isDragging && i === activeIndex;
             return (
               <span
                 key={opt.id}

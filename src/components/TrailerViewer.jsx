@@ -55,29 +55,29 @@ function computeTrailerBounds(modelGroup) {
         }
         curr = curr.parent;
       }
-      
+
       if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
       const nodeBox = node.geometry.boundingBox.clone();
       nodeBox.applyMatrix4(node.matrixWorld);
-      
+
       if (!isIgnoredForBounds) {
         if (box.isEmpty()) box.copy(nodeBox);
         else box.union(nodeBox);
       }
-      
+
       if (!isIgnoredForGround) {
         if (groundBox.isEmpty()) groundBox.copy(nodeBox);
         else groundBox.union(nodeBox);
       }
     }
   });
-  
+
   if (box.isEmpty()) box.setFromObject(modelGroup);
   if (!groundBox.isEmpty()) box.min.y = groundBox.min.y;
-  
+
   _cachedTrailerBounds.copy(box);
   _lastTrailerBoundsUpdate = now;
-  
+
   return box;
 }
 
@@ -107,7 +107,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
   const lastCenterRef = useRef(new THREE.Vector3())
   const viewModeRef = useRef(viewMode)
   const wasAnimatingRef = useRef(false)
-  
+
   useEffect(() => { viewModeRef.current = viewMode }, [viewMode])
 
   useFrame(() => {
@@ -133,12 +133,12 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       cameraControlsRef.current.maxPolarAngle = Math.PI / 2
 
       if (groundYRef) groundYRef.current = bbox.min.y
-      
+
       const padding = isMobile ? 2.0 : 1;
       cameraControlsRef.current.smoothTime = 0.5; // Ensure smooth transition
       cameraControlsRef.current.fitToBox(modelGroupRef.current, true, { paddingLeft: padding, paddingRight: padding, paddingBottom: padding, paddingTop: padding })
       cameraInitRef.current = true
-      
+
       const initCenter = new THREE.Vector3()
       bbox.getCenter(initCenter)
       lastCenterRef.current.copy(initCenter)
@@ -148,13 +148,13 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
 
     // React EXACTLY to the end of the size animation, no matter how long it takes.
     const isAnimating = !!modelGroupRef.current.userData.isAnimatingSize
-    
+
     if (wasAnimatingRef.current && !isAnimating) {
       // Animation JUST finished. The geometries have their new bounding boxes calculated.
       // Force cache clear to ensure we get the absolute latest bounds
       _lastTrailerBoundsUpdate = 0;
       const bbox = computeTrailerBounds(modelGroupRef.current)
-      
+
       const newCenter = new THREE.Vector3()
       bbox.getCenter(newCenter)
 
@@ -162,18 +162,18 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
       const dy = newCenter.y - lastCenterRef.current.y
       const dz = newCenter.z - lastCenterRef.current.z
       const moved = Math.abs(dx) + Math.abs(dy) + Math.abs(dz)
-      
+
       if (moved > 0.0001) {
         const currentTarget = new THREE.Vector3()
         cameraControlsRef.current.getTarget(currentTarget)
-        
+
         // Smoothly pan the camera over 0.5 seconds to perfectly center the new bounds, without zooming.
         cameraControlsRef.current.smoothTime = 0.5
         cameraControlsRef.current.moveTo(
           currentTarget.x + dx, currentTarget.y + dy, currentTarget.z + dz,
-          true 
+          true
         )
-        
+
         const bboxSize = new THREE.Vector3()
         bbox.getSize(bboxSize)
         const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
@@ -181,12 +181,12 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
         cameraControlsRef.current.minDistance = maxDim * 0.1
         cameraControlsRef.current.maxDistance = maxDim * (isMobile ? 3.0 : 1.5)
         if (groundYRef) groundYRef.current = bbox.min.y
-        
+
         lastCenterRef.current.copy(newCenter)
         lastBboxRef.current = bbox.clone()
       }
     }
-    
+
     wasAnimatingRef.current = isAnimating
   })
 
@@ -229,7 +229,7 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
     // renders. Zero fighting, zero oscillation — the target simply can't go below
     // floor+0.3, so panning stops cleanly at that height.
     boundary.current.min.set(-Infinity, floor + 0.3, -Infinity)
-    boundary.current.max.set(Infinity,  Infinity,     Infinity)
+    boundary.current.max.set(Infinity, Infinity, Infinity)
     cc.setBoundary(boundary.current)
     cc.minY = minCamY
 
@@ -258,7 +258,7 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
 
     const correctedCamY = THREE.MathUtils.lerp(pos.current.y, minCamY, 0.1)
 
-  
+
     cc.setLookAt(
       pos.current.x, correctedCamY, pos.current.z,
       target.current.x, target.current.y, target.current.z,
@@ -403,15 +403,15 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
         }
 
         // Restore angle constraints to clean defaults, ignoring corrupted saved values
-        cameraControlsRef.current.minPolarAngle   = 0;
-        cameraControlsRef.current.maxPolarAngle   = Math.PI / 2; // Floor boundary
+        cameraControlsRef.current.minPolarAngle = 0;
+        cameraControlsRef.current.maxPolarAngle = Math.PI / 2; // Floor boundary
         cameraControlsRef.current.minAzimuthAngle = -Infinity;
         cameraControlsRef.current.maxAzimuthAngle = Infinity;
         // minY intentionally NOT set — GroundClamp handles floor boundary
         // smoothly via lerp. A hard minY here creates a snap "wall" that
         // fights the lerp correction and causes jitter.
-        cameraControlsRef.current.minY            = -Infinity;
-        
+        cameraControlsRef.current.minY = -Infinity;
+
         // Clear saved ref so next switch captures fresh state
         savedExteriorRef.current = null;
       }
@@ -456,7 +456,7 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
         if (cancelled || !cameraControlsRef.current) return
 
         cameraControlsRef.current.smoothTime = 0.2
-        
+
         // Normalize azimuth angle to prevent "unwinding" spins
         let az = cameraControlsRef.current.azimuthAngle;
         az = ((az + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
@@ -501,7 +501,7 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
     if (focusedCamera && modelGroupRef.current && cameraControlsRef.current) {
       console.log('FocusedCameraListener: Triggered for', focusedCamera)
       let targetCamera = modelGroupRef.current.getObjectByName(focusedCamera)
-      
+
       // Fallback for exported models where spaces are converted to underscores
       if (!targetCamera) {
         const underscoredName = focusedCamera.replace(/ /g, '_')
@@ -515,16 +515,16 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
         cameraControlsRef.current.skipDefaultMove = true
 
         console.log('FocusedCameraListener: Found camera object', targetCamera)
-        
+
         let relatedObjectName = targetCamera.name.replace(' Camera', '').replace('_Camera', '');
-        let relatedObject = modelGroupRef.current.getObjectByName(relatedObjectName) || 
-                            modelGroupRef.current.getObjectByName(relatedObjectName.replace(/ /g, '_'));
+        let relatedObject = modelGroupRef.current.getObjectByName(relatedObjectName) ||
+          modelGroupRef.current.getObjectByName(relatedObjectName.replace(/ /g, '_'));
 
         // Auto-switch viewMode if the camera specifies it in Blender custom properties,
         // or if it matches known interior cameras that might be missing the property.
-        let isForceInterior = targetCamera.userData.isInterior || 
+        let isForceInterior = targetCamera.userData.isInterior ||
           (relatedObject && relatedObject.userData.isInterior) ||
-          targetCamera.name.includes('Recessed_Tire') || 
+          targetCamera.name.includes('Recessed_Tire') ||
           targetCamera.name.includes('Mini_Split') ||
           targetCamera.name.includes('Interior');
 
@@ -535,7 +535,7 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
             }
           });
         }
-          
+
         if (isForceInterior && viewMode !== 'INTERIOR') {
           setViewMode('INTERIOR')
         } else if (!isForceInterior && viewMode !== 'EXTERIOR') {
@@ -550,23 +550,23 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
 
         const cameraDirection = new THREE.Vector3(0, 0, -1)
         cameraDirection.applyQuaternion(targetCamera.getWorldQuaternion(new THREE.Quaternion()))
-        
+
         const lookAtTarget = new THREE.Vector3().copy(cameraPosition).add(cameraDirection.multiplyScalar(5))
         console.log('FocusedCameraListener: Moving to', cameraPosition, 'Looking at', lookAtTarget)
 
         // Relax constraints so the custom camera can look from any angle and distance
-        cameraControlsRef.current.maxPolarAngle = Math.PI
+        cameraControlsRef.current.maxPolarAngle = isForceInterior ? Math.PI * 0.85 : Math.PI / 2
         cameraControlsRef.current.minDistance = 0.1
-        
+
         cameraControlsRef.current.smoothTime = 0.5
-        
+
         // We use setTimeout instead of requestAnimationFrame because shader recompilation
         // can cause rAF to fire at unpredictable times during the freeze.
         // 50ms ensures it queues after the blocking render completes.
         setTimeout(() => {
           if (!cameraControlsRef.current) return
           cameraControlsRef.current.enabled = true; // Force it on so setLookAt isn't ignored!
-          
+
           // Normalize azimuth angle to prevent "unwinding" spins
           let az = cameraControlsRef.current.azimuthAngle;
           az = ((az + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
@@ -577,13 +577,13 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
             lookAtTarget.x, lookAtTarget.y, lookAtTarget.z,
             true
           ).then(() => {
-             if (setIsTransitioning) setIsTransitioning(false)
-             if (cameraControlsRef.current) cameraControlsRef.current.skipDefaultMove = false
+            if (setIsTransitioning) setIsTransitioning(false)
+            if (cameraControlsRef.current) cameraControlsRef.current.skipDefaultMove = false
           })
         }, 50)
-        
 
-      if (targetCamera.fov) {
+
+        if (targetCamera.fov) {
           const targetFov = targetCamera.fov;
           const animateFov = () => {
             if (Math.abs(camera.fov - targetFov) > 0.3) {
@@ -657,7 +657,7 @@ function ShadowLightSetup({ modelRef }) {
     if (!light || !modelRef.current) return
 
     // one-time diagnostic
-    
+
 
     let hasMeshes = false
     modelRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
@@ -670,12 +670,12 @@ function ShadowLightSetup({ modelRef }) {
     bbox.getCenter(center)
     bbox.getSize(size)
 
-   
+
     // position floor plane at model bottom each time it changes
     if (floorRef.current && lastMinY.current !== bbox.min.y) {
       lastMinY.current = bbox.min.y
       floorRef.current.position.set(center.x, bbox.min.y - 0.001, center.z)
-      
+
     }
 
     // Keep the shadow light centered so the front and rear halves of the
@@ -687,12 +687,12 @@ function ShadowLightSetup({ modelRef }) {
 
     // fit ortho frustum to model footprint + padding
     const pad = Math.max(size.x, size.z) * 0.6
-    light.shadow.camera.left   = -(size.x / 2 + pad)
-    light.shadow.camera.right  =   size.x / 2 + pad
-    light.shadow.camera.top    =   size.z / 2 + pad
+    light.shadow.camera.left = -(size.x / 2 + pad)
+    light.shadow.camera.right = size.x / 2 + pad
+    light.shadow.camera.top = size.z / 2 + pad
     light.shadow.camera.bottom = -(size.z / 2 + pad)
-    light.shadow.camera.near   = 0.1
-    light.shadow.camera.far    = lightHeight + Math.abs(bbox.min.y) + 5
+    light.shadow.camera.near = 0.1
+    light.shadow.camera.far = lightHeight + Math.abs(bbox.min.y) + 5
     light.shadow.camera.updateProjectionMatrix()
     light.shadow.needsUpdate = true
 
@@ -702,7 +702,7 @@ function ShadowLightSetup({ modelRef }) {
       //   light.shadow.camera.left.toFixed(2), light.shadow.camera.right.toFixed(2),
       //   light.shadow.camera.top.toFixed(2), light.shadow.camera.bottom.toFixed(2)
       // )
-      
+
     }
   })
 
@@ -726,7 +726,7 @@ function ShadowLightSetup({ modelRef }) {
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, -0.001, 0]}
       >
-  <planeGeometry args={[80, 80]} />
+        <planeGeometry args={[80, 80]} />
         <shadowMaterial transparent opacity={0.45} depthWrite={false} />
       </mesh>
     </>
@@ -741,11 +741,11 @@ function DynamicContactShadow({ modelRef }) {
   const centerRef = useRef(new THREE.Vector3())
   const animCenterRef = useRef(new THREE.Vector3())
   const initializedCenterRef = useRef(false)
-  
+
   const targetLengthFt = getLengthFt(length) || 12
   const targetWidthFt = WIDTH_FT[width] || 8.5
   const animRef = useRef({ lengthFt: targetLengthFt, widthFt: targetWidthFt })
-  
+
   useFrame(() => {
     if (!shadowRef.current || !modelRef?.current) return
     let hasMeshes = false
@@ -757,8 +757,8 @@ function DynamicContactShadow({ modelRef }) {
     bbox.getCenter(center)
 
     if (!initializedCenterRef.current) {
-        animCenterRef.current.copy(center)
-        initializedCenterRef.current = true
+      animCenterRef.current.copy(center)
+      initializedCenterRef.current = true
     }
 
     const curr = animRef.current;
@@ -768,18 +768,18 @@ function DynamicContactShadow({ modelRef }) {
 
     const isAnimating = !!modelRef.current.userData.isAnimatingSize;
     if (isAnimating) {
-        const deltaLengthFt = curr.lengthFt - prevLength;
-        animCenterRef.current.x += (deltaLengthFt * 0.305) / 2;
-        animCenterRef.current.y = center.y;
-        animCenterRef.current.z = center.z;
+      const deltaLengthFt = curr.lengthFt - prevLength;
+      animCenterRef.current.x += (deltaLengthFt * 0.305) / 2;
+      animCenterRef.current.y = center.y;
+      animCenterRef.current.z = center.z;
     } else {
-        animCenterRef.current.copy(center);
+      animCenterRef.current.copy(center);
     }
 
     const predictedSizeZ = (curr.lengthFt * 0.305) + 1.7;
     const predictedSizeX = (curr.widthFt * 0.305) + 0.5;
     const shadowSpan = Math.max(predictedSizeX, predictedSizeZ)
-    
+
     // Position contact shadow slightly above the ground plane
     shadowRef.current.position.set(animCenterRef.current.x, bbox.min.y - 0.001, animCenterRef.current.z)
     shadowRef.current.scale.setScalar(Math.max(20, shadowSpan + 3.0))
@@ -849,7 +849,7 @@ function GroundModel({ modelRef }) {
       opacityMap.wrapT = THREE.ClampToEdgeWrapping
       opacityMap.needsUpdate = true
     }
-    
+
     // console.log('[GroundModel] Textures loaded:', { 
     //   colorMap: !!colorMap, 
     //   opacityMap: !!opacityMap
@@ -867,7 +867,7 @@ function GroundModel({ modelRef }) {
     scene.traverse((child) => {
       if (child.isMesh) {
         if (!child.geometry.attributes.normal) {
-           child.geometry.computeVertexNormals()
+          child.geometry.computeVertexNormals()
         }
         child.geometry.center() // Center the geometry to fix off-center offset
         child.material = baseMaterial   // Use standard UV mapping, no triplanar needed for a flat plane
@@ -888,8 +888,8 @@ function GroundModel({ modelRef }) {
     bbox.getCenter(center)
 
     if (!initializedCenterRef.current) {
-        animCenterRef.current.copy(center)
-        initializedCenterRef.current = true
+      animCenterRef.current.copy(center)
+      initializedCenterRef.current = true
     }
 
     const curr = animRef.current;
@@ -899,12 +899,12 @@ function GroundModel({ modelRef }) {
 
     const isAnimating = !!modelRef.current.userData.isAnimatingSize;
     if (isAnimating) {
-        const deltaLengthFt = curr.lengthFt - prevLength;
-        animCenterRef.current.x += (deltaLengthFt * 0.305) / 2;
-        animCenterRef.current.y = center.y;
-        animCenterRef.current.z = center.z;
+      const deltaLengthFt = curr.lengthFt - prevLength;
+      animCenterRef.current.x += (deltaLengthFt * 0.305) / 2;
+      animCenterRef.current.y = center.y;
+      animCenterRef.current.z = center.z;
     } else {
-        animCenterRef.current.copy(center);
+      animCenterRef.current.copy(center);
     }
 
     // Position ground slightly below the shadow material plane (which is at bbox.min.y - 0.001)
@@ -914,7 +914,7 @@ function GroundModel({ modelRef }) {
     if (baseFootprintRef.current) {
       // Instead of a multiplier (which makes the extra space shrink on smaller trailers),
       // we add a fixed physical amount of padding (in meters) so the margin is always consistent.
-      const marginPadding = 2.5; 
+      const marginPadding = 2.5;
       const predictedSizeZ = (curr.lengthFt * 0.305) + 1.7;
       const predictedSizeX = (curr.widthFt * 0.305) + 0.5;
       const desired = Math.max(predictedSizeX, predictedSizeZ) + marginPadding;
@@ -1010,7 +1010,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     if (!modelGroupRef.current) { console.error('[AR Export] modelGroupRef.current is null — aborting'); return }
     if (arExporting) { console.warn('[AR Export] already exporting, skipping'); return }
     const childCount = modelGroupRef.current.children.length
-    
+
     modelGroupRef.current.traverse(o => {
       if (o.isMesh) console.log(`  mesh: ${o.name || '(unnamed)'}  visible=${o.visible}`)
     })
@@ -1018,10 +1018,10 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
     if (onARLoadingChange) onARLoadingChange(true)
     try {
       const result = await exportForAR(modelGroupRef.current)
-      
+
       const blob = new Blob([result], { type: 'model/gltf-binary' })
       const url = URL.createObjectURL(blob)
-      
+
       setArUrl(url)
       setShowQR(false)
     } catch (err) {
@@ -1111,13 +1111,13 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
   const isHdr = environment.endsWith('.hdr') || environment.endsWith('.exr')
   const stageEnvironment = isHdr
     ? {
-        files: environment,
-        background: false,
-      }
+      files: environment,
+      background: false,
+    }
     : {
-        preset: environment,
-        background: false,
-      }
+      preset: environment,
+      background: false,
+    }
 
   return (
     <div className="relative flex-1 flex flex-col min-h-0">
@@ -1211,10 +1211,10 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
               />
               <CameraLayerSetup />
 
-              <EffectComposer 
-                disableNormalPass 
+              <EffectComposer
+                disableNormalPass
                 alpha={true}
-                multisampling={8} 
+                multisampling={8}
               >
                 <Bloom luminanceThreshold={5} intensity={0.5} />
                 <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
@@ -1236,7 +1236,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           <button
             aria-label="Toggle Fullscreen"
             onClick={onToggleFullscreen}
-            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${fullscreen ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+            className={`w-11 h-9 flex items-center justify-center bg-[#383a3b] rounded-lg transition-colors border ${fullscreen ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/eyes.png" alt="" />
           </button>
@@ -1259,7 +1259,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           <button
             aria-label="Toggle Dimensions"
             onClick={() => setShowDimensions(prev => !prev)}
-            className={`w-11 h-9 flex items-center justify-center bg-[#2a2a2a] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
+            className={`w-11 h-9 flex items-center justify-center bg-[#383a3b] rounded-lg transition-colors border ${showDimensions ? 'border-[#DA634B]' : 'border-[#3a3a3a] hover:border-[#DA634B]'}`}
           >
             <img src="/Dimension.png" alt="" />
           </button>
@@ -1285,7 +1285,7 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
           </button> */}
           <button
             onClick={handleViewInDriveway}
-            className="flex items-center gap-2 px-5 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-sm font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
+            className="flex items-center gap-2 px-5 py-3 bg-[#383a3b] border border-[#3a3a3a] rounded-lg text-xs  tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
           >
             VIEW IN YOUR DRIVEWAY
           </button>

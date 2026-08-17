@@ -18,6 +18,7 @@ import {
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
+import DetailedOptionCard from '../../components/DetailedOptionCard'
 import ToggleSwitch from '../../components/ToggleSwitch'
 
 export default function InteriorPanel({ activeSectionTitle }) {
@@ -78,89 +79,40 @@ export default function InteriorPanel({ activeSectionTitle }) {
         <OptionSection title="PIT PACK">
           <div className="flex flex-col gap-2">
             {PIT_PACK_OPTIONS.map((opt) => (
-              <div key={opt.id} className="w-full">
-                <OptionPill
-                  label={opt.label}
-                  price={opt.price} badge={opt.badge}
-                  originalPrice={opt.originalPrice}
-                  isSelected={pitPack}
-                  hasSettings
-                  onClick={() => {
-                    const newValue = !pitPack
-                    setPitPack(newValue)
-                    if (newValue) {
-                      setCabinetsRaw(prev => [...new Set([...prev, 'frontbase36', 'frontoverhead16'])])
-                      setWalls('white_metal_walls')
-                      setCeiling('white_metal_ceiling')
-                      if (setExteriorFinish) setExteriorFinish('blackout')
-                      if (setBlackoutCabinetDoors) setBlackoutCabinetDoors(true)
-                      setFloorOverlay('atp')
-                      if (setAtpRamp) setAtpRamp(true)
-                      if (setAngledLights) setAngledLights(true)
-                      if (setElectrical) setElectrical('50amp')
-                      if (setBattery) setBattery('12vdeepcycle')
-                    }
-                  }}
-                />
-                
-                {pitPack && (
-                  <div className="mt-4 bg-[#111111] rounded-2xl p-5 border border-[#2a2a2a]">
-                    <div 
-                      className="flex items-center justify-between mb-4 cursor-pointer"
-                      onClick={() => setPitPackOpen(!pitPackOpen)}
-                    >
-                      <span className="text-gray-300 text-xs tracking-widest uppercase font-semibold">
-                        What's Included
-                      </span>
-                      <span className="w-5 h-5 rounded-full border border-gray-500 text-gray-400 text-[10px] flex items-center justify-center">
-                        <svg className={`w-3 h-3 transition-transform ${pitPackOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                      </span>
-                    </div>
-                    {pitPackOpen && (
-                      <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-white text-[12px] lg:text-sm">
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>Base & overhead Cabinet</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>ATP/RTP floor & Ramp</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>White metal walls & ceiling</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>(2) Angled racing Lights</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>2 rear loading lights</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>50 AMP electric</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>12v deep cycle battery</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>Solar Trickle Charger</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="mt-1.5 w-1 h-1 rounded-full bg-white shrink-0" />
-                          <span>Blackout interior</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <DetailedOptionCard
+                key={opt.id}
+                label={opt.label}
+                price={opt.price} badge={opt.badge}
+                originalPrice={opt.originalPrice}
+                isSelected={pitPack}
+                onClick={() => {
+                  const newValue = !pitPack
+                  setPitPack(newValue)
+                  if (newValue) {
+                    setCabinetsRaw(prev => [...new Set([...prev, 'frontbase36', 'frontoverhead16'])])
+                    setWalls('white_metal_walls')
+                    setCeiling('white_metal_ceiling')
+                    if (setExteriorFinish) setExteriorFinish('blackout')
+                    if (setBlackoutCabinetDoors) setBlackoutCabinetDoors(true)
+                    setFloorOverlay('atp')
+                    if (setAtpRamp) setAtpRamp(true)
+                    if (setAngledLights) setAngledLights(true)
+                    if (setElectrical) setElectrical('50amp')
+                    if (setBattery) setBattery('12vdeepcycle')
+                  }
+                }}
+                includedItems={[
+                  'Base & overhead Cabinet',
+                  'ATP/RTP floor & Ramp',
+                  'White metal walls & ceiling',
+                  '(2) Angled racing Lights',
+                  '2 rear loading lights',
+                  '50 AMP electric',
+                  '12v deep cycle battery',
+                  'Solar Trickle Charger',
+                  'Blackout interior'
+                ]}
+              />
             ))}
           </div>
         </OptionSection>
