@@ -501,7 +501,7 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
     if (focusedCamera && modelGroupRef.current && cameraControlsRef.current) {
       console.log('FocusedCameraListener: Triggered for', focusedCamera)
 
-      const tryFindCamera = (attemptsLeft = 3) => {
+      const tryFindCamera = (attemptsLeft = 20) => {
         let targetCamera = modelGroupRef.current.getObjectByName(focusedCamera)
 
         // Fallback for exported models where spaces are converted to underscores
@@ -546,7 +546,10 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
           (relatedObject && relatedObject.userData.isInterior) ||
           targetCamera.name.includes('Recessed_Tire') ||
           targetCamera.name.includes('Mini_Split') ||
-          targetCamera.name.includes('Interior');
+          targetCamera.name.includes('Interior') ||
+          targetCamera.name.toLowerCase().includes('cabinet') ||
+          targetCamera.name.toLowerCase().includes('e-track') ||
+          targetCamera.name.toLowerCase().includes('d-ring');
 
         if (!isForceInterior && relatedObject) {
           relatedObject.traverse((child) => {
@@ -571,26 +574,41 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
         const cameraDirection = new THREE.Vector3(0, 0, -1)
         cameraDirection.applyQuaternion(targetCamera.getWorldQuaternion(new THREE.Quaternion()))
 
-        const lookAtTarget = new THREE.Vector3().copy(cameraPosition).add(cameraDirection.multiplyScalar(5))
-        console.log('FocusedCameraListener: Moving to', cameraPosition, 'Looking at', lookAtTarget)
-
-        // Relax constraints so the custom camera can look from any angle and distance
-        cameraControlsRef.current.maxPolarAngle = isForceInterior ? Math.PI * 0.85 : Math.PI / 2
-        cameraControlsRef.current.minDistance = 0.1
+        const pivotDistance = isForceInterior ? 1.5 : 5.0;
+        const lookAtTarget = new THREE.Vector3().copy(cameraPosition).add(cameraDirection.multiplyScalar(pivotDistance))
 
         cameraControlsRef.current.smoothTime = 0.5
+        cameraControlsRef.current.minPolarAngle = 0
+        cameraControlsRef.current.minDistance = 0.1
+        cameraControlsRef.current.maxDistance = Infinity
 
-        // We use setTimeout instead of requestAnimationFrame because shader recompilation
-        // can cause rAF to fire at unpredictable times during the freeze.
-        // 50ms ensures it queues after the blocking render completes.
+        if (isForceInterior) {
+          cameraControlsRef.current.maxPolarAngle = Math.PI
+          cameraControlsRef.current.minY = -Infinity
+          
+          const noBoundary = new THREE.Box3();
+          noBoundary.min.set(-Infinity, -Infinity, -Infinity);
+          noBoundary.max.set(Infinity, Infinity, Infinity);
+          cameraControlsRef.current.setBoundary(noBoundary);
+
+          // Enable panning and boost truckSpeed so panning is fast despite the small pivot distance
+          cameraControlsRef.current.mouseButtons.right = 2 // TRUCK
+          cameraControlsRef.current.truckSpeed = 5.0 
+        } else {
+          cameraControlsRef.current.maxPolarAngle = Math.PI / 2
+          cameraControlsRef.current.truckSpeed = 2.0 // Default
+        }
+
         setTimeout(() => {
           if (!cameraControlsRef.current) return
-          cameraControlsRef.current.enabled = true; // Force it on so setLookAt isn't ignored!
+          cameraControlsRef.current.enabled = true; 
 
           // Normalize azimuth angle to prevent "unwinding" spins
           let az = cameraControlsRef.current.azimuthAngle;
           az = ((az + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
           cameraControlsRef.current.rotateTo(az, cameraControlsRef.current.polarAngle, false);
+
+          if (setIsTransitioning) setIsTransitioning(true)
 
           cameraControlsRef.current.setLookAt(
             cameraPosition.x, cameraPosition.y, cameraPosition.z,

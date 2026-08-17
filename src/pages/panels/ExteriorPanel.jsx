@@ -173,19 +173,35 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 price={opt.price} badge={opt.badge}
                 isStandard={opt.isStandard}
                 isSelected={exteriorAccessories === opt.id}
-                onClick={() => setExteriorAccessories(opt.id)}
+                onClick={() => {
+                  setExteriorAccessories(opt.id);
+                  if (opt.id === 'rearwings') {
+                    setFocusedCamera("Rear Spoiler Wing Camera");
+                  } else if (opt.id === 'rearwingspoiler') {
+                    setFocusedCamera("Rear Spoiler Wing w_ Angled Lights Camera");
+                  }
+                }}
               />
             ))}
           </div>
           <div className="border-t border-[#5D5E60] my-5" />
-          {width === '8.5ftgn' && (
-            <p className="text-gray-400 text-xs"> Cannot add stairs on gooseneck model</p>
+          {(width === '8.5ftgn' || frontStyle === 'extendedvnose') && (
+            <p className="text-gray-400 text-xs"> Cannot add stairs on {(width === '8.5ftgn') ? 'gooseneck model' : 'extended v-nose'}</p>
           )}
           <ToggleSwitch
             label="INCLUDE STAIRS"
             checked={stairs}
-            onChange={setStairs}
-            disabled={width === '8.5ftgn'}
+            onChange={(val) => {
+              setStairs(val);
+              if (val) {
+                if (frontStyle === 'flatfront') {
+                  setFocusedCamera("Stair (Flat Front) Camera");
+                } else {
+                  setFocusedCamera("Stair (V-Nose) Camera");
+                }
+              }
+            }}
+            disabled={width === '8.5ftgn' || frontStyle === 'extendedvnose'}
           />
         </OptionSection>
       )}
@@ -205,7 +221,9 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 onClick={() => {
                   setFrontStyle(opt.id)
                   if (opt.id === 'extendedvnose') {
-                    setFocusedCamera("Sidewind(Extended V-Nose) Camera")
+                    setFocusedCamera("Sidewind(Extended V - Nose) Camera.001")
+                  } else {
+                    setFocusedCamera("Front Style Camera")
                   }
                 }}
               />

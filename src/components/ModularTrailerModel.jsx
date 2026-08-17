@@ -1129,7 +1129,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     useEffect(() => {
         targetRef.current = { widthFt, lengthFt, heightFt }
         dirtyRef.current = true
-    }, [widthFt, lengthFt, heightFt])
+        invalidate()
+    }, [widthFt, lengthFt, heightFt, invalidate])
     // All mesh-visibility switches in one effect — mirrors Blender's Switch node
     useEffect(() => {
         let gnMeshes = [];
@@ -1223,19 +1224,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const uniqueAtpMeshes = []
 
         if (driverVariant) {
-            // Always add the flat panel for the driver side (covers non-door section)
-            uniqueAtpMeshes.push(`ATP_Flat_Panel_L${sizeSuffix}`)
-            // If there's a door, also add the door-cutout ATP panel
             if (driverVariant.atpL && driverVariant.atpL !== 'ATP_Flat_Panel_L') {
                 uniqueAtpMeshes.push(`${driverVariant.atpL}${sizeSuffix}`)
+            } else {
+                uniqueAtpMeshes.push(`ATP_Flat_Panel_L${sizeSuffix}`)
             }
         }
         if (passengerVariant) {
-            // Always add the flat panel for the passenger side (covers non-door section)
-            uniqueAtpMeshes.push(`ATP_Flat_Panel_R${sizeSuffix}`)
-            // If there's a door, also add the door-cutout ATP panel
             if (passengerVariant.atpR && passengerVariant.atpR !== 'ATP_Flat_Panel_R') {
                 uniqueAtpMeshes.push(`${passengerVariant.atpR}${sizeSuffix}`)
+            } else {
+                uniqueAtpMeshes.push(`ATP_Flat_Panel_R${sizeSuffix}`)
             }
         }
 
@@ -1912,6 +1911,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // Signal that mesh visibility has been updated. generatedETracks depends on
         // visibilityVersion so it will recompute on the next render with correct .visible values.
         setVisibilityVersion(v => v + 1)
+        invalidate()
     }, [
         config.width, config.frontStyle, config.rampType, config.rearDoor, config.sideDoorsType, config.length,
         config.wheelType, config.axleCount, config.axleAngled, config.axleAtp, config.axleRating, config.spreadAxle,
@@ -2855,6 +2855,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         jackMountsRefs.current.forEach(ref => {
             if (ref) ref.updateMatrices();
         });
+        
+        if (moved) invalidate();
     })
 
     const prevVisibleExteriorNodes = useRef(new Set());

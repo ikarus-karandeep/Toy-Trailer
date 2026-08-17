@@ -27,6 +27,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
     spreadAxle, setSpreadAxle,
     narrowTrackAxle, setNarrowTrackAxle,
     viewMode, setViewMode,
+    setFocusedCamera,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
@@ -69,7 +70,12 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                 price={opt.price} badge={opt.badge}
                 isSelected={width === opt.id}
                 isLocked={opt.locked}
-                onClick={() => setWidth(opt.id)}
+                onClick={() => {
+                  setWidth(opt.id);
+                  if (opt.id === '8.5ftgn') {
+                    setFocusedCamera("Front Style Camera");
+                  }
+                }}
               />
             ))}
           </div>
@@ -136,7 +142,10 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                     price={opt.price} badge={opt.badge}
                     isStandard={opt.isStandard}
                     isSelected={axleCount === opt.id}
-                    onClick={() => setAxleCount(opt.id)}
+                    onClick={() => {
+                      setAxleCount(opt.id);
+                      setViewMode('EXTERIOR');
+                    }}
                   />
                 ))}
               </div>
@@ -171,7 +180,10 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                     isLocked={
                       (opt.id === 'dropspring' && spreadAxle)
                     }
-                    onClick={() => setAxleSuspension(opt.id)}
+                    onClick={() => {
+                      setAxleSuspension(opt.id);
+                      setViewMode('EXTERIOR');
+                    }}
                     packageBadge={getBadge(opt.id)}
                   />
                 ))}
@@ -200,7 +212,10 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                     price={opt.price} badge={opt.badge}
                     isStandard={opt.isStandard}
                     isSelected={axleCapacity === opt.id}
-                    onClick={() => setAxleCapacity(opt.id)}
+                    onClick={() => {
+                      setAxleCapacity(opt.id);
+                      setViewMode('EXTERIOR');
+                    }}
                     packageBadge={getBadge(opt.id)}
                   />
                 ))}
@@ -234,7 +249,10 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
           <ToggleSwitch
             label="Wider stance, Corvette-style fenders"
             checked={spreadAxle}
-            onChange={setSpreadAxle}
+            onChange={(val) => {
+              setSpreadAxle(val);
+              setViewMode('EXTERIOR');
+            }}
             price={axleCount === 'triple' ? 505 : 338}
           />
         </OptionSection>
@@ -251,7 +269,10 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
           <ToggleSwitch
             label="Reduces track width."
             checked={narrowTrackAxle}
-            onChange={setNarrowTrackAxle}
+            onChange={(val) => {
+              setNarrowTrackAxle(val);
+              setViewMode('EXTERIOR');
+            }}
           />
         </OptionSection>
         </div>

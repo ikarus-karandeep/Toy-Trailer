@@ -380,7 +380,10 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
                   isSelected={cabinets.includes(opt.id)}
-                  onClick={() => toggleCabinet(opt.id)}
+                  onClick={() => {
+                    toggleCabinet(opt.id);
+                    if (!cabinets.includes(opt.id)) setFocusedCamera("Floor_to_Ceiling_Cabinet_Camera");
+                  }}
                   isMulti={true}
                   isLocked={hasFullHeightConflict}
                 />
@@ -425,7 +428,10 @@ export default function InteriorPanel({ activeSectionTitle }) {
             <ToggleSwitch
               label="Blackout Cabinet Doors"
               checked={blackoutCabinetDoors}
-              onChange={setBlackoutCabinetDoors}
+              onChange={(val) => {
+                setBlackoutCabinetDoors(val);
+                if (val) setFocusedCamera("Front_Cabinets_Camera");
+              }}
             />
           </div>
         </OptionSection>
@@ -436,7 +442,10 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <ToggleSwitch
             label="INCLUDE TOOL CABINET"
             checked={toolBox !== 'none' && toolBox !== false}
-            onChange={(checked) => setToolBox(checked ? 'frontbox' : 'none')}
+            onChange={(checked) => {
+              setToolBox(checked ? 'frontbox' : 'none');
+              if (checked) setFocusedCamera("Front_Cabinets_Camera");
+            }}
           />
         </OptionSection>
       )}

@@ -392,7 +392,10 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             <ToggleSwitch
               label="Dimensions and placement quoted per order"
               checked={lShapeCounter}
-              onChange={setLShapeCounter}
+              onChange={(val) => {
+                setLShapeCounter(val);
+                if (val) setFocusedCamera("L_Shape_Counter_Hidden_Generator_Box_Camera");
+              }}
             />
           )}
         </OptionSection>
