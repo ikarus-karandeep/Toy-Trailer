@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function OptionPill({
   label,
@@ -10,6 +10,7 @@ export default function OptionPill({
   isMulti = false,
   isLocked = false,
   disabled = false,
+  disabledReason = null,
   hasSettings = false,
   onSettingsClick,
   quantity,
@@ -19,6 +20,17 @@ export default function OptionPill({
   image = null,
 }) {
   const [tooltipPos, setTooltipPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
+  const [showMobileReason, setShowMobileReason] = useState(false);
+
+  useEffect(() => {
+    const handleClose = () => setShowMobileReason(false);
+    window.addEventListener('closeAllTooltips', handleClose);
+    window.addEventListener('click', handleClose);
+    return () => {
+      window.removeEventListener('closeAllTooltips', handleClose);
+      window.removeEventListener('click', handleClose);
+    };
+  }, []);
 
   const formatPrice = (p) => {
     if (p == null) return '';
@@ -26,7 +38,8 @@ export default function OptionPill({
   };
 
   const handleMouseEnter = (e) => {
-    if (!isSelected || !packageBadge || !packageBadge.badge) return;
+    if (!isSelected && !disabledReason) return;
+    if (isSelected && (!packageBadge || !packageBadge.badge) && !disabledReason) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const screenWidth = window.innerWidth;
     
@@ -47,6 +60,7 @@ export default function OptionPill({
       role="button"
       tabIndex={!isInteractive ? -1 : 0}
       onClick={!isInteractive ? undefined : onClick}
+      onMouseLeave={() => setShowMobileReason(false)}
       onKeyDown={(e) => {
         if (isInteractive && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault();
@@ -54,11 +68,11 @@ export default function OptionPill({
         }
       }}
       onMouseEnter={handleMouseEnter}
-      className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left overflow-hidden ${
+      className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
         isLocked
-          ? 'border-[#3a3a3a] text-gray-500 bg-[#2a2a2a] cursor-not-allowed opacity-70'
+          ? 'border-[#3a3a3a]/70 text-gray-500/70 bg-[#2a2a2a]/70 cursor-not-allowed'
           : disabled
-            ? 'border-[#3a3a3a] text-[#7a7a7a] bg-[#282828] cursor-not-allowed opacity-50'
+            ? 'border-[#3a3a3a]/50 text-[#7a7a7a]/50 bg-[#282828]/50 cursor-not-allowed'
             : isSelected
               ? 'border-[#DA634B] text-[#DA634B] bg-transparent cursor-pointer'
               : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white cursor-pointer'
@@ -72,7 +86,7 @@ export default function OptionPill({
       {/* Background Image Layer */}
       {image && !isLocked && !disabled && (
         <div 
-          className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-300 ${isSelected ? 'opacity-60' : 'opacity-40 group-hover:opacity-50'}`}
+          className={`absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-300 rounded-full overflow-hidden ${isSelected ? 'opacity-60' : 'opacity-40 group-hover:opacity-50'}`}
           style={{ backgroundImage: `url("${image}")` }}
         />
       )}
@@ -91,6 +105,20 @@ export default function OptionPill({
         </div>
       )}
 
+      {/* Disabled Reason Tooltip */}
+      {disabledReason && (isLocked || disabled) && (
+        <div 
+          className={`absolute bottom-full mb-2 ${showMobileReason ? 'flex' : 'hidden md:group-hover:flex'} items-center justify-center whitespace-normal text-center bg-[#DA634B] text-white text-[11px] font-medium px-3 py-2 rounded-md shadow-lg z-50 pointer-events-none w-[200px] leading-tight normal-case`}
+          style={{ left: tooltipPos.left, right: tooltipPos.right, transform: tooltipPos.transform }}
+        >
+          {disabledReason}
+          <div 
+            className="absolute top-full border-[5px] border-transparent border-t-[#DA634B]" 
+            style={{ left: tooltipPos.arrowLeft, transform: 'translateX(-50%)' }}
+          />
+        </div>
+      )}
+
       <span className="relative z-10 flex items-center justify-center gap-2 min-w-0">
         <span className="leading-snug">{label}</span>
         {isSelected && packageBadge && packageBadge.badge && (
@@ -101,8 +129,28 @@ export default function OptionPill({
             className="h-5 w-5 object-contain flex-shrink-0 opacity-90" 
           />
         )}
-        {isLocked && (
-          <img src="/Lock Icon.png" alt="Locked" className="w-3.5 h-3.5 flex-shrink-0 opacity-70" />
+        {(isLocked || (disabled && disabledReason)) && (
+          <div className="flex items-center gap-1">
+            {isLocked && <img src="/Lock Icon.png" alt="Locked" className="w-3.5 h-3.5 flex-shrink-0 opacity-70" />}
+            {disabledReason && (
+              <button
+                type="button"
+                className="md:hidden flex items-center justify-center w-4 h-4 rounded-full bg-[#222] text-gray-300 text-[10px] font-bold border border-gray-500 z-20 pointer-events-auto shrink-0 leading-none"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleMouseEnter(e); // Ensure position is calculated
+                  if (showMobileReason) {
+                    setShowMobileReason(false);
+                  } else {
+                    window.dispatchEvent(new CustomEvent('closeAllTooltips'));
+                    setShowMobileReason(true);
+                  }
+                }}
+              >
+                ?
+              </button>
+            )}
+          </div>
         )}
         {/* {isStandard && !isLocked && (
           <span className="flex-shrink-0 bg-[#DA634B] text-white text-[10px] font-bold tracking-widest px-2 py-0.5 rounded-full">

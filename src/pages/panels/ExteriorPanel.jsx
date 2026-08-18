@@ -185,9 +185,6 @@ export default function ExteriorPanel({ activeSectionTitle }) {
             ))}
           </div>
           <div className="border-t border-[#5D5E60] my-5" />
-          {(width === '8.5ftgn' || frontStyle === 'extendedvnose') && (
-            <p className="text-gray-400 text-xs"> Cannot add stairs on {(width === '8.5ftgn') ? 'gooseneck model' : 'extended v-nose'}</p>
-          )}
           <ToggleSwitch
             label="INCLUDE STAIRS"
             checked={stairs}
@@ -202,6 +199,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               }
             }}
             disabled={width === '8.5ftgn' || frontStyle === 'extendedvnose'}
+            disabledReason={(width === '8.5ftgn' || frontStyle === 'extendedvnose') ? `Cannot add stairs on ${(width === '8.5ftgn') ? 'gooseneck model' : 'extended v-nose'}` : null}
           />
         </OptionSection>
       )}
@@ -229,7 +227,16 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
-          <img src="/Front Style.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
+          <img 
+            src={{
+              'vnose24': '/vnose.png',
+              'flatfront': '/flatfront.png',
+              'slantvnose': '/slant.png',
+              'extendedvnose': '/extended.png'
+            }[frontStyle] || "/Front Style.png"} 
+            className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" 
+            alt="Front Style"
+          />
         </OptionSection>
       )}
 
@@ -302,6 +309,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               isStandard={opt.isStandard}
               isSelected={protectionType === opt.id}
               isLocked={exteriorFinish === 'blackout' && opt.id !== 'atp'}
+              disabledReason={exteriorFinish === 'blackout' && opt.id !== 'atp' ? "Not available with blackout package" : null}
               onClick={() => {
                 if (exteriorFinish === 'blackout' && opt.id !== 'atp') return;
                 setProtectionType(opt.id);
@@ -334,8 +342,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     {/* TRAILER PROTECTION (FRONT) */}
     {(show('TRAILER PROTECTION (FRONT)') || !activeSectionTitle) && (
       <div>
-        <h4 className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Trailer Protection (Front)</h4>
-        <p className="text-gray-400 text-xs tracking-wider mb-4">Requires Flat Front</p>
+        <h4 className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-4">Trailer Protection (Front)</h4>
         <div className="flex flex-wrap gap-2">
           {FRONT_PROTECTION_OPTIONS.map((opt) => (
             <OptionPill

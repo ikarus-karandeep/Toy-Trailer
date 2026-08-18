@@ -255,7 +255,12 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           {awning?.length > 0 && (
             <div className="mt-6 px-4">
               <DotSlider
-                options={awningLengthOptions}
+                options={awningLengthOptions.map(opt => ({
+                  ...opt,
+                  lockedReason: opt.locked 
+                    ? `Some larger awning sizes are disabled to fit your current trailer. ${opt.label} requires ${opt.label === '16ft' ? '28ft+' : opt.label === '24ft' ? '32ft+' : '30ft+'}` 
+                    : null
+                }))}
                 value={awningLength}
                 onChange={(val) => {
                   setAwningLength(val)
@@ -264,13 +269,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 }}
                 badge={getAwningBadge(awningLength)}
               />
-              {parseInt(length || '24') < 32 && (
-                <p className="text-gray-400/80 text-[10px] tracking-wider mt-5 text-center px-2 leading-relaxed">
-                  * Some larger awning sizes are disabled to fit your current trailer. 
-                  <br/>
-                  <span className="font-semibold text-gray-400">16ft</span> requires 28ft+ | <span className="font-semibold text-gray-400">18ft-22ft</span> requires 30ft+ | <span className="font-semibold text-gray-400">24ft</span> requires 32ft+
-                </p>
-              )}
             </div>
           )}
           </>
@@ -302,8 +300,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
           <OptionSection title="TONGUE MOUNTED GENERATOR BOX">
           <div className="mb-8">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR BOX (34"H X 36"W X 26"D)</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Requires flat front + Extended Tongue</p>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mt-4">
               {GENERATOR_BOX_OPTIONS.map((opt) => (
                 <OptionPill
                   key={opt.id}
@@ -311,6 +308,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                   price={opt.price} badge={opt.badge}
                   isSelected={generatorBox === opt.id}
                   isLocked={frontStyle !== 'flatfront'}
+                  disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
                   onClick={() => {
                     if (frontStyle === 'flatfront') {
                       setGeneratorBox(opt.id)
@@ -333,6 +331,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 if (val) setFocusedCamera("Standard Generator Box Camera")
               }}
               disabled={frontStyle !== 'flatfront'}
+              disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
             />
           </div>
 
@@ -347,6 +346,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
                 if (val) setFocusedCamera("Standard Generator Box Camera")
               }}
               disabled={frontStyle !== 'flatfront'}
+              disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
             />
           </div>
         </OptionSection>
@@ -384,20 +384,16 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         <div className="contents">
         <OptionSection title="L-SHAPE COUNTER/HIDDEN GENERATOR BOX">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Custom build</p>
-          {((sinkPackage && sinkPackage !== 'none') || (cabinets && cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c)))) ? (
-            <div className="mt-2">
-              <AlertMessage message="Hidden due to Sink/Cabinets selection" />
-            </div>
-          ) : (
-            <ToggleSwitch
-              label="Dimensions and placement quoted per order"
-              checked={lShapeCounter}
-              onChange={(val) => {
-                setLShapeCounter(val);
-                if (val) setFocusedCamera("L_Shape_Counter_Hidden_Generator_Box_Camera");
-              }}
-            />
-          )}
+          <ToggleSwitch
+            label="Dimensions and placement quoted per order"
+            checked={lShapeCounter}
+            onChange={(val) => {
+              setLShapeCounter(val);
+              if (val) setFocusedCamera("L_Shape_Counter_Hidden_Generator_Box_Camera");
+            }}
+            disabled={((sinkPackage && sinkPackage !== 'none') || (cabinets && cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c))))}
+            disabledReason={((sinkPackage && sinkPackage !== 'none') || (cabinets && cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c)))) ? "Hidden due to Sink/Cabinets selection" : null}
+          />
         </OptionSection>
         </div>
       )}

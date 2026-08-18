@@ -111,14 +111,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 if (val) setFocusedCamera("Rear Door Camera")
               }}
               disabled={rampType !== 'doublereardoors'}
+              disabledReason={rampType !== 'doublereardoors' ? "Can only come with double rear doors." : null}
               price={270}
               // subtext="Matching diamond plate on the ramp surface"
             />
-            {rampType !== 'doublereardoors' && (
-              <p className="text-gray-400 text-xs tracking-wider mt-2 pl-2">
-                * Can only come with double rear doors.
-              </p>
-            )}
           </div>
         </OptionSection>
         </div>
@@ -201,12 +197,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
         <OptionSection title="ESCAPE DOOR">
           <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">Secondary Access/Emergency Egress</p>
 
-          {concessionDoor === 'driver' && (
-            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
-              * Escape Door is disabled because a Concession Door is already on the Driver side.
-            </p>
-          )}
-
           <div className="flex flex-wrap gap-2">
             {ESCAPE_DOOR_SIZE_OPTIONS.map((opt) => (
               <OptionPill
@@ -215,6 +205,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 price={opt.price} badge={opt.badge}
                 isSelected={escapeDoor === opt.id}
                 isLocked={concessionDoor === 'driver' && opt.id !== 'none'}
+                disabledReason={(concessionDoor === 'driver' && opt.id !== 'none') ? "Escape Door is disabled because a Concession Door is already on the Driver side." : null}
                 onClick={() => {
                   setEscapeDoor(opt.id)
                   if (opt.id === '54x48') setFocusedCamera("Escape Door 54x48 Camera")
@@ -242,12 +233,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('CONCESSION DOOR / WINDOW') && (
         <div className="contents">
         <OptionSection title="CONCESSION DOOR / WINDOW">
-          {escapeDoor !== 'none' && (
-            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
-              * Driver side placement is disabled because an Escape Door is already on the Driver side.
-            </p>
-          )}
-
           <div className="mb-4">
             <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Concession door placement</p>
             <div className="w-full">
@@ -256,7 +241,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   { id: 'none', label: 'NONE' },
                   ...CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
                     ...o,
-                    disabled: escapeDoor !== 'none' && o.id === 'driver'
+                    disabled: escapeDoor !== 'none' && o.id === 'driver',
+                    disabledReason: escapeDoor !== 'none' && o.id === 'driver' ? "Driver side placement is disabled because an Escape Door is already on the Driver side." : null
                   }))
                 ]}
                 value={concessionDoor}
@@ -313,6 +299,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                 }
               }}
               disabled={concessionDoor === 'none'}
+              disabledReason={concessionDoor === 'none' ? "Requires a concession door" : null}
             />
           </div>
         </OptionSection>
@@ -328,11 +315,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
             </p>
           ) : (
             <>
-              {concessionDoor === 'passenger' && (
-                  <p className="text-gray-400 text-xs tracking-wider">
-                  * Windows are disabled when a Concession Door is on the Passenger side.
-                  </p>
-              )}
               <div className="flex flex-col gap-6 mb-4">
                 {WINDOWS_OPTIONS.map((opt) => {
                   const qty = windows[opt.id] || 0;
@@ -343,6 +325,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                         price={opt.price} badge={opt.badge}
                         isSelected={qty > 0}
                         isLocked={concessionDoor === 'passenger'}
+                        disabledReason={concessionDoor === 'passenger' ? "Windows are disabled when a Concession Door is on the Passenger side." : null}
                         onClick={() => {
                           const newQty = qty === 0 ? 1 : 0;
                           updateQuantity(setWindows, opt.id, newQty);
@@ -363,6 +346,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                                 price={opt.price} badge={opt.badge}
                                 isSelected={windowSizes[opt.id] === sizeOpt.id}
                                 isLocked={isLocked}
+                                disabledReason={isLocked ? "Windows are disabled when a Concession Door is on the Passenger side." : null}
                                 onClick={() => {
                                   setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))
                                   if (opt.id === 'vertical') setFocusedCamera("15×30 Vertical Slider Camera")
@@ -386,6 +370,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     price={opt.price} badge={opt.badge}
                     isSelected={qty > 0}
                     isLocked={concessionDoor === 'passenger'}
+                    disabledReason={concessionDoor === 'passenger' ? "Windows are disabled when a Concession Door is on the Passenger side." : null}
                     onClick={() => {
                       const newQty = qty === 0 ? 1 : 0;
                       updateQuantity(setWindows, opt.id, newQty);
@@ -405,6 +390,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                             price={opt.price} badge={opt.badge}
                             isSelected={windowSizes[opt.id] === sizeOpt.id}
                             isLocked={isLocked}
+                            disabledReason={isLocked ? "Windows are disabled when a Concession Door is on the Passenger side." : null}
                             onClick={() => {
                               setWindowSizes(prev => ({ ...prev, [opt.id]: sizeOpt.id }))
                               setFocusedCamera("30×30 Egress Camera");
@@ -498,9 +484,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
       {show('JACKS (MULTI-CHOICE)') && (
         <div className="contents">
         <OptionSection title="JACKS (MULTI-CHOICE)">
-          {width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck')) ? (
-            <p className="text-gray-400 text-xs mb-3"> Electric Tongue Jack is not compatible with gooseneck models</p>
-          ) : null}
           <div className="flex flex-col gap-2">
             {JACKS_OPTIONS.map((opt) => {
               // Radio-group logic:
@@ -555,6 +538,7 @@ export default function LoadingPanel({ activeSectionTitle }) {
                   price={opt.price} badge={opt.badge}
                   isSelected={jacks.includes(opt.id) && !isElectricDisabled}
                   disabled={isElectricDisabled}
+                  disabledReason={isElectricDisabled ? "Electric Tongue Jack is not compatible with gooseneck models" : null}
                   onClick={() => handleJack(opt.id)}
                   packageBadge={getBadge(opt.id)}
                 />

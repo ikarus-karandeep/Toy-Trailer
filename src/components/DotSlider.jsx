@@ -1,4 +1,4 @@
-import { useRef, useState, useLayoutEffect } from 'react'
+import { useRef, useState, useLayoutEffect, useEffect } from 'react'
 
 export default function DotSlider({ options, value, onChange, badge }) {
   const rowRef = useRef(null)
@@ -7,6 +7,17 @@ export default function DotSlider({ options, value, onChange, badge }) {
   const [dragRatio, setDragRatio] = useState(null)
   const [pillWidth, setPillWidth] = useState(0)
   const [containerWidth, setContainerWidth] = useState(0)
+  const [hoveredId, setHoveredId] = useState(null)
+
+  useEffect(() => {
+    const handleClose = () => setHoveredId(null);
+    window.addEventListener('closeAllTooltips', handleClose);
+    window.addEventListener('click', handleClose);
+    return () => {
+      window.removeEventListener('closeAllTooltips', handleClose);
+      window.removeEventListener('click', handleClose);
+    };
+  }, []);
 
   // Measure pill and container
   useLayoutEffect(() => {
@@ -151,15 +162,28 @@ export default function DotSlider({ options, value, onChange, badge }) {
             return (
               <span
                 key={opt.id}
-                className="relative z-10 flex items-center justify-center"
+                className="relative z-10 flex items-center justify-center pointer-events-auto"
                 style={{ width: isActive ? 26 : 14, height: isActive ? 26 : 14 }}
+                onMouseEnter={() => { if (opt.locked) setHoveredId(opt.id) }}
+                onMouseLeave={() => setHoveredId(null)}
               >
                 <span
                   className={`block rounded-full transition-all duration-150 ${
-                    isActive ? 'bg-white shadow-md' : opt.locked ? 'bg-gray-700' : 'bg-white'
+                    isActive ? 'bg-white shadow-md' : opt.locked ? 'bg-gray-700 cursor-not-allowed' : 'bg-white cursor-pointer'
                   }`}
                   style={{ width: '100%', height: '100%' }}
                 />
+                
+                {opt.locked && opt.lockedReason && (
+                  <div 
+                    className={`absolute bottom-full mb-2 ${hoveredId === opt.id ? 'flex' : 'hidden'} items-center justify-center whitespace-normal text-center bg-[#DA634B] text-white text-[9px] font-medium px-2 py-1.5 rounded-md shadow-lg pointer-events-none w-[120px] leading-tight normal-case left-1/2 -translate-x-1/2`}
+                  >
+                    {opt.lockedReason}
+                    <div 
+                      className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#DA634B]" 
+                    />
+                  </div>
+                )}
               </span>
             )
           })}
@@ -190,20 +214,46 @@ export default function DotSlider({ options, value, onChange, badge }) {
       {/* Labels */}
       <div className="flex justify-between mt-2 px-0">
         {options.map((opt, i) => (
-          <button
-            key={opt.id}
-            disabled={opt.locked}
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => {
-              if (!opt.locked) onChange(opt.id)
-            }}
-            className={`text-[9px] flex items-center justify-center font-semibold tracking-wider transition-colors ${
-              opt.locked ? 'text-gray-600 cursor-not-allowed' : i === nearestIndex ? 'text-[#DA634B]' : 'text-gray-500 hover:text-gray-300'
-            }`}
+          <div 
+            key={opt.id} 
+            className="relative flex items-center justify-center"
+            onMouseEnter={() => { if (opt.locked) setHoveredId(opt.id) }}
+            onMouseLeave={() => setHoveredId(null)}
           >
-            {opt.label}
-            {opt.locked && <img src="/Lock Icon.png" alt="Locked" className="w-2.5 h-2.5 ml-0.5 opacity-60" />}
-          </button>
+            <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                if (!opt.locked) onChange(opt.id)
+              }}
+              className={`text-[9px] flex items-center justify-center font-semibold tracking-wider transition-colors ${
+                opt.locked ? 'text-gray-600 cursor-not-allowed' : i === nearestIndex ? 'text-[#DA634B]' : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {opt.label}
+              {opt.locked && <img src="/Lock Icon.png" alt="Locked" className="w-2.5 h-2.5 ml-0.5 opacity-60" />}
+            </button>
+
+            {opt.locked && opt.lockedReason && (
+              <div className="flex items-center ml-0.5 relative z-30">
+                <button
+                  type="button"
+                  className="md:hidden flex items-center justify-center w-3 h-3 rounded-full bg-[#222] text-gray-300 text-[8px] font-bold border border-gray-500 pointer-events-auto leading-none"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (hoveredId === opt.id) {
+                      setHoveredId(null);
+                    } else {
+                      window.dispatchEvent(new CustomEvent('closeAllTooltips'));
+                      setHoveredId(opt.id);
+                    }
+                  }}
+                >
+                  ?
+                </button>
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
