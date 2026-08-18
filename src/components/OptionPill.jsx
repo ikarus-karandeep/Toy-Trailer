@@ -94,7 +94,12 @@ export default function OptionPill({
       <span className="relative z-10 flex items-center justify-center gap-2 min-w-0">
         <span className="leading-snug">{label}</span>
         {isSelected && packageBadge && packageBadge.badge && (
-          <img src={packageBadge.badge} alt="package" className="h-5 w-5 object-contain flex-shrink-0 opacity-90" />
+          <img 
+            src={packageBadge.badge} 
+            alt="package" 
+            title={`Included in ${packageBadge.name}`}
+            className="h-5 w-5 object-contain flex-shrink-0 opacity-90" 
+          />
         )}
         {isLocked && (
           <img src="/Lock Icon.png" alt="Locked" className="w-3.5 h-3.5 flex-shrink-0 opacity-70" />

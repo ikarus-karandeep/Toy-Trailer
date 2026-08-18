@@ -57,7 +57,7 @@ export const AXLE_SUSPENSION_OPTIONS = [
 export const AXLE_CAPACITY_OPTIONS = [
   { id: '3500lb',  label: '3500LB',  isStandard: true },
   { id: '6000lb',  label: '6000LB',  price: 999 },
-  { id: '7000lb',  label: '7000LB',  price: -1006 },
+  { id: '7000lb',  label: '7000LB',  price: 1006 },
 ];
 
 export const INTERIOR_HEIGHT_OPTIONS = [

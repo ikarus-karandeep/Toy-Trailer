@@ -42,7 +42,19 @@ function WizardRouter({ step, goToStep, selectedCategory, setSelectedCategory, s
       <CategorySelection
         key={selectedCategory}
         initialSelected={selectedCategory}
-        onSelect={(id) => { setSelectedCategory(id); goToStep(2) }}
+        onSelect={(id) => { 
+          setSelectedCategory(id);
+          if (id === 'motorsports') {
+            setSelectedPackage('track-pack');
+          } else if (id === 'contractor' || id === 'car-hauling') {
+            setSelectedPackage('job-site');
+          } else if (id === 'livability') {
+            setSelectedPackage('base-camp');
+          } else {
+            setSelectedPackage('no-package');
+          }
+          goToStep(2);
+        }}
       />
     )
   }

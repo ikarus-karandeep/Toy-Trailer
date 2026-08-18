@@ -127,7 +127,12 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
                   <div className="flex items-center gap-4 mb-6">
                     <h2 className="text-[32px] font-bold text-white leading-tight drop-shadow-lg tracking-wide">{pkg.title}</h2>
                     {pkg.badge && (
-                      <img src={pkg.badge} alt={`${pkg.title} badge`} className="h-10 w-10 object-contain drop-shadow-md" />
+                      <img 
+                        src={pkg.badge} 
+                        alt={`${pkg.title} badge`} 
+                        title={`${pkg.title} Package`}
+                        className="h-10 w-10 object-contain drop-shadow-md" 
+                      />
                     )}
                   </div>
 

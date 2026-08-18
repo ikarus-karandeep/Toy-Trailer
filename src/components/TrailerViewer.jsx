@@ -367,7 +367,9 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
         // Math.PI * 0.15  ≈ 27° from zenith  (can't look straight up past ceiling)
         // Math.PI * 0.85  ≈ 27° from nadir   (can't look straight down through floor)
         cameraControlsRef.current.minPolarAngle = Math.PI * 0.15
-        cameraControlsRef.current.maxPolarAngle = Math.PI * 0.85
+        let maxCos = (0.05 - targetLookAt.y) / targetDist;
+        maxCos = Math.max(-1, Math.min(1, maxCos));
+        cameraControlsRef.current.maxPolarAngle = Math.min(Math.PI * 0.85, Math.acos(maxCos));
 
         // ── Azimuth clamp — no restriction ──────────────────────────────────────
         // Full 360° horizontal look-around is fine inside the model.
@@ -501,7 +503,10 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
     if (focusedCamera && modelGroupRef.current && cameraControlsRef.current) {
       console.log('FocusedCameraListener: Triggered for', focusedCamera)
 
-      const tryFindCamera = (attemptsLeft = 20) => {
+      let lastPositionStr = null;
+      let stableCount = 0;
+
+      const tryFindCamera = (attemptsLeft = 40) => {
         let targetCamera = modelGroupRef.current.getObjectByName(focusedCamera)
 
         // Fallback for exported models where spaces are converted to underscores
@@ -510,11 +515,31 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
           targetCamera = modelGroupRef.current.getObjectByName(underscoredName)
         }
 
-        if (targetCamera) {
-          handleCameraFound(targetCamera)
-        } else if (attemptsLeft > 0) {
-          console.log(`FocusedCameraListener: Camera not found yet, retrying in 100ms... (${attemptsLeft} attempts left)`)
-          setTimeout(() => tryFindCamera(attemptsLeft - 1), 100)
+        if (targetCamera && !modelGroupRef.current.userData.isAnimatingSize) {
+          modelGroupRef.current.updateMatrixWorld(true)
+          const pos = new THREE.Vector3()
+          targetCamera.getWorldPosition(pos)
+          
+          // Use formatted string with precision to avoid float noise
+          const currentPosStr = `${pos.x.toFixed(3)},${pos.y.toFixed(3)},${pos.z.toFixed(3)}`
+
+          if (lastPositionStr === currentPosStr) {
+            stableCount++;
+          } else {
+            stableCount = 0;
+          }
+          lastPositionStr = currentPosStr;
+
+          // Require position to be completely stable for 2 consecutive checks
+          if (stableCount >= 2) {
+            handleCameraFound(targetCamera)
+            return;
+          }
+        }
+
+        if (attemptsLeft > 0) {
+          console.log(`FocusedCameraListener: Camera not found, animating, or stabilizing... (${attemptsLeft} attempts left)`)
+          setTimeout(() => tryFindCamera(attemptsLeft - 1), 50)
         } else {
           console.error('FocusedCameraListener: Camera object NOT FOUND in model:', focusedCamera)
           // Log all available cameras to help debug
@@ -529,6 +554,21 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
       }
 
       const handleCameraFound = (targetCamera) => {
+        // Force update the entire model hierarchy's world matrix to ensure parents are updated
+        modelGroupRef.current.updateMatrixWorld(true)
+
+        const cameraPosition = new THREE.Vector3()
+        targetCamera.getWorldPosition(cameraPosition)
+
+        const currentPos = new THREE.Vector3()
+        cameraControlsRef.current.getPosition(currentPos)
+
+        const distance = currentPos.distanceTo(cameraPosition)
+        if (distance < 1) {
+          console.log('FocusedCameraListener: Already nearby, skipping move. Distance:', distance)
+          return
+        }
+
         // ALWAYS skip the default camera move if we are doing a focused animation.
         // This prevents the main CameraController from overriding our animation
         // if ModularTrailerModel automatically triggers a viewMode switch.
@@ -565,14 +605,11 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
           setViewMode('EXTERIOR')
         }
 
-        // Force update the entire model hierarchy's world matrix to ensure parents are updated
-        modelGroupRef.current.updateMatrixWorld(true)
-
-        const cameraPosition = new THREE.Vector3()
-        targetCamera.getWorldPosition(cameraPosition)
-
-        const cameraDirection = new THREE.Vector3(0, 0, -1)
-        cameraDirection.applyQuaternion(targetCamera.getWorldQuaternion(new THREE.Quaternion()))
+        const cameraDirection = new THREE.Vector3()
+        // Extract the negative Z axis from the world matrix to ensure we get the -Z direction
+        // uniformly for both Cameras and Object3Ds, while being resilient to non-uniform scaling.
+        const e = targetCamera.matrixWorld.elements
+        cameraDirection.set(-e[8], -e[9], -e[10]).normalize()
 
         const pivotDistance = isForceInterior ? 1.5 : 5.0;
         const lookAtTarget = new THREE.Vector3().copy(cameraPosition).add(cameraDirection.multiplyScalar(pivotDistance))
@@ -583,11 +620,15 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
         cameraControlsRef.current.maxDistance = Infinity
 
         if (isForceInterior) {
-          cameraControlsRef.current.maxPolarAngle = Math.PI
+          // Compute maxPolarAngle dynamically to prevent camera from going below ground
+          let maxCos = (0.05 - lookAtTarget.y) / pivotDistance;
+          maxCos = Math.max(-1, Math.min(1, maxCos));
+          cameraControlsRef.current.maxPolarAngle = Math.acos(maxCos);
+          
           cameraControlsRef.current.minY = -Infinity
           
           const noBoundary = new THREE.Box3();
-          noBoundary.min.set(-Infinity, -Infinity, -Infinity);
+          noBoundary.min.set(-Infinity, 0.05, -Infinity); // Prevent panning target below ground
           noBoundary.max.set(Infinity, Infinity, Infinity);
           cameraControlsRef.current.setBoundary(noBoundary);
 
@@ -851,6 +892,9 @@ function GroundModel({ modelRef }) {
   const animCenterRef = useRef(new THREE.Vector3())
   const initializedCenterRef = useRef(false)
   const baseFootprintRef = useRef(0)
+  const smoothedDesiredRef = useRef(null)
+  const accessoryOvershootRef = useRef(0)
+  const frameCount = useRef(0)
 
   const targetLengthFt = getLengthFt(length) || 12
   const targetWidthFt = WIDTH_FT[width] || 8.5
@@ -944,12 +988,41 @@ function GroundModel({ modelRef }) {
     if (baseFootprintRef.current) {
       // Instead of a multiplier (which makes the extra space shrink on smaller trailers),
       // we add a fixed physical amount of padding (in meters) so the margin is always consistent.
-      const marginPadding = 2.5;
-      const predictedSizeZ = (curr.lengthFt * 0.305) + 1.7;
-      const predictedSizeX = (curr.widthFt * 0.305) + 0.5;
-      const desired = Math.max(predictedSizeX, predictedSizeZ) + marginPadding;
+      const marginPadding = 1.5;
+      const bboxSize = new THREE.Vector3();
+      bbox.getSize(bboxSize);
 
-      const scale = desired / baseFootprintRef.current
+      // Trailer is oriented along the X axis, so length maps to X and width maps to Z.
+      const predictedSizeX = (curr.lengthFt * 0.305) + 1.7;
+      const predictedSizeZ = (curr.widthFt * 0.305) + 0.5;
+      
+      const isAnimating = !!modelRef.current.userData.isAnimatingSize;
+      const isSizeStable = Math.abs(targetLengthFt - curr.lengthFt) < 0.1 && Math.abs(targetWidthFt - curr.widthFt) < 0.1;
+      
+      if (!isAnimating && isSizeStable) {
+        // Calculate how much the actual geometry extends beyond the FINAL target prediction.
+        // We only do this when both the 3D geometry AND our math lerping have fully settled.
+        // Otherwise, a mismatch between bboxSize and targetLengthFt will cause a wild overshoot spike.
+        const targetPredX = (targetLengthFt * 0.305) + 1.7;
+        const targetPredZ = (targetWidthFt * 0.305) + 0.5;
+        const overshootX = Math.max(0, bboxSize.x - targetPredX);
+        const overshootZ = Math.max(0, bboxSize.z - targetPredZ);
+        accessoryOvershootRef.current = Math.max(overshootX, overshootZ);
+      }
+
+      // Calculate target size taking into account the base prediction 
+      // PLUS the locked accessory overshoot to ensure smooth shrinking during animations.
+      const targetDesired = Math.max(predictedSizeX, predictedSizeZ) + accessoryOvershootRef.current + marginPadding;
+
+
+
+      if (smoothedDesiredRef.current === null) {
+        smoothedDesiredRef.current = targetDesired;
+      } else {
+        smoothedDesiredRef.current += (targetDesired - smoothedDesiredRef.current) * 0.1;
+      }
+
+      const scale = smoothedDesiredRef.current / baseFootprintRef.current
       groundRef.current.scale.set(scale, 1, scale)
 
       // Dynamically adjust tiling for textures that should tile in world space
