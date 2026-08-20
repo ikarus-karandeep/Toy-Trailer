@@ -79,8 +79,8 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
       </div>
 
       {/* Cards Grid */}
-      <div className="flex-1 flex items-center justify-center pt-24 lg:pt-32 px-8 lg:px-16 pb-8 lg:pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1600px] mx-auto w-full">
+      <div className="flex-1 flex items-center justify-center pt-24 lg:pt-32 px-4 md:px-8 lg:px-16 pb-8 lg:pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-[1600px] mx-auto w-full">
           {PACKAGES.map((pkg) => {
             const isSelected = selected === pkg.id;
             return (
@@ -97,12 +97,12 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
                 `}
               >
                 {/* Image Background */}
-                <div className="relative h-[22rem] w-full overflow-hidden shrink-0">
+                <div className="relative h-[14rem] sm:h-[18rem] md:h-[22rem] w-full overflow-hidden shrink-0">
                   {/* Default Image */}
                   <img 
                     src={pkg.image} 
                     alt={pkg.title} 
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out
+                    className={`absolute inset-0 w-full h-full object-cover object-[center_20%] md:object-center transition-all duration-700 ease-out
                       ${isSelected ? 'opacity-0 scale-105' : 'opacity-100 scale-100 grayscale-[0.2] group-hover:opacity-0 group-hover:scale-105'}
                     `} 
                   />
@@ -110,28 +110,28 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
                   <img 
                     src={pkg.hoverImage} 
                     alt={`${pkg.title} active`} 
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out
+                    className={`absolute inset-0 w-full h-full object-cover object-[center_20%] md:object-center transition-all duration-700 ease-out
                       ${isSelected ? 'opacity-100 scale-105' : 'opacity-0 scale-100 group-hover:opacity-100 group-hover:scale-105'}
                     `} 
                   />
                   {/* Glassy gradient overlay to blend into card background */}
-                  <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none">
+                  <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 pointer-events-none">
                     <div className="absolute inset-0 backdrop-blur-md [mask-image:linear-gradient(to_top,black_10%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_top,black_10%,transparent_100%)]" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent" />
                   </div>
                 </div>
 
                 {/* Content positioned to overlap the faded image */}
-                <div className="relative flex flex-col flex-1 px-6 pb-6 -mt-32 z-10">
+                <div className="relative flex flex-col flex-1 px-5 md:px-6 pb-5 md:pb-6 -mt-20 md:-mt-32 z-10">
                   {/* Title & Badge */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <h2 className="text-[32px] font-bold text-white leading-tight drop-shadow-lg tracking-wide">{pkg.title}</h2>
+                  <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                    <h2 className="text-[26px] md:text-[32px] font-bold text-white leading-tight drop-shadow-lg tracking-wide">{pkg.title}</h2>
                     {pkg.badge && (
                       <img 
                         src={pkg.badge} 
                         alt={`${pkg.title} badge`} 
                         title={`${pkg.title} Package`}
-                        className="h-10 w-10 object-contain drop-shadow-md" 
+                        className="h-8 w-8 md:h-10 md:w-10 object-contain drop-shadow-md" 
                       />
                     )}
                   </div>
@@ -140,13 +140,13 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
                   <div className="flex-1">
                     {pkg.features ? (
                       <>
-                        <p className="text-[13px] font-medium mb-3 flex items-center gap-1 text-white drop-shadow">
+                        <p className="text-[11px] md:text-[13px] font-medium mb-2 md:mb-3 flex items-center gap-1 text-white drop-shadow">
                           What get's added
                           <span className="w-3.5 h-3.5 rounded-full border border-gray-400 text-gray-300 flex items-center justify-center text-[9px] ml-1">i</span>
                         </p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           {pkg.features.map((feature, i) => (
-                            <span key={i} className="text-[10px] uppercase font-semibold tracking-wider bg-[#333]/80 backdrop-blur-sm border border-[#444] text-gray-300 px-2.5 py-1.5 rounded shadow-sm">
+                            <span key={i} className="text-[8.5px] sm:text-[9px] md:text-[10px] uppercase font-semibold tracking-wider bg-[#333]/80 backdrop-blur-sm border border-[#444] text-gray-300 px-2 py-1 md:px-2.5 md:py-1.5 rounded shadow-sm">
                               {feature}
                             </span>
                           ))}
@@ -161,13 +161,13 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
 
                   {/* Footer */}
                   <div className="mt-auto pt-4">
-                    {pkg.features && <p className="text-lg font-bold mb-4 text-white drop-shadow">Package Total: {pkg.priceRange}</p>}
-                    {!pkg.features && <p className="text-lg font-bold text-gray-400 mb-4 drop-shadow">{pkg.priceRange}</p>}
+                    {pkg.features && <p className="text-base md:text-lg font-bold mb-3 md:mb-4 text-white drop-shadow">Package Total: {pkg.priceRange}</p>}
+                    {!pkg.features && <p className="text-base md:text-lg font-bold text-gray-400 mb-3 md:mb-4 drop-shadow">{pkg.priceRange}</p>}
 
                     {isSelected ? (
                       <button
                         onClick={() => onSelect(pkg.id)}
-                        className="w-full py-3.5 bg-[#DA634B] hover:bg-[#c4553e] text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
+                        className="w-full py-2.5 md:py-3.5 bg-[#DA634B] hover:bg-[#c4553e] text-sm md:text-base text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
                       >
                         Continue
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -175,7 +175,7 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
                     ) : (
                       <button
                         onClick={() => setSelected(pkg.id)}
-                        className="w-full py-3.5 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white rounded-lg font-semibold transition-colors shadow-md group-hover:bg-[#4a4a4a]"
+                        className="w-full py-2.5 md:py-3.5 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-sm md:text-base text-white rounded-lg font-semibold transition-colors shadow-md group-hover:bg-[#4a4a4a]"
                       >
                         Choose
                       </button>
