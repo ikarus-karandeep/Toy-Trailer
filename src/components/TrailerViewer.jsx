@@ -196,6 +196,11 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
     const padding = isMobile ? 2.0 : 1;
     cameraControlsRef.current.maxDistance = 100 * (isMobile ? 3.0 : 1.5); // Temporarily lift maxDistance so fitToBox can work, just in case
     cameraControlsRef.current.fitToBox(modelGroupRef.current, true, { paddingLeft: padding, paddingRight: padding, paddingBottom: padding, paddingTop: padding })
+    
+    const bboxSize = new THREE.Vector3()
+    lastBboxRef.current.getSize(bboxSize)
+    const maxDim = Math.max(bboxSize.x, bboxSize.y, bboxSize.z)
+    cameraControlsRef.current.maxDistance = maxDim * (isMobile ? 3.0 : 1.5)
   }, [size.width, size.height]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return null

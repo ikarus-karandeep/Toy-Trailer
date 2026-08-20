@@ -10,8 +10,9 @@ export default function SectionSubNav({ sectionIdx, setSectionIdx }) {
   }
 
   return (
-    <div className="overflow-x-auto scrollbar-hide flex-shrink-0">
-    <div className="flex justify-center gap-2 px-4 py-2 min-w-full w-max">
+    <div className="px-4">
+      <div className="overflow-x-auto scrollbar-hide flex-shrink-0">
+        <div className="flex gap-2 py-2 min-w-max sm:justify-center">
       {sections.map((section, i) => (
         <button
           key={section}
@@ -28,7 +29,8 @@ export default function SectionSubNav({ sectionIdx, setSectionIdx }) {
           )}
         </button>
       ))}
-    </div>
+        </div>
+      </div>
     </div>
   )
 }
