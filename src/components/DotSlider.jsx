@@ -166,6 +166,8 @@ export default function DotSlider({ options, value, onChange, badge }) {
                 style={{ width: isActive ? 26 : 14, height: isActive ? 26 : 14 }}
                 onMouseEnter={() => { if (opt.locked) setHoveredId(opt.id) }}
                 onMouseLeave={() => setHoveredId(null)}
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleTouchStart}
               >
                 <span
                   className={`block rounded-full transition-all duration-150 ${
