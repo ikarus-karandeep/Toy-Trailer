@@ -139,7 +139,7 @@ export default function Configurator({ onModelReady }) {
                 onClick={() => setViewMode(viewMode === 'EXTERIOR' ? 'INTERIOR' : 'EXTERIOR')}
                 className="sm:hidden flex items-center gap-1.5 px-3 py-1.5 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-[10px] font-semibold tracking-widest uppercase text-gray-300 hover:border-[#DA634B] hover:text-white transition-all"
               >
-                VIEW {viewMode}
+                VIEW {viewMode === 'EXTERIOR' ? 'INTERIOR' : 'EXTERIOR'}
               </button>
             </div>
           </div>

@@ -3,12 +3,13 @@ import { TABS } from '../constants/configData'
 import { usePackageTabCounts } from '../hooks/usePackageTabCounts'
 
 export default function BottomNav({ onTabClick, fullWidth = false }) {
-  const { activeTab, setActiveTab, markTabVisited, viewMode, setViewMode, triggerCameraReset } = useConfigurator()
+  const { activeTab, setActiveTab, markTabVisited, viewMode, setViewMode, triggerCameraReset, setFocusedCamera } = useConfigurator()
   const { counts, badge } = usePackageTabCounts()
 
   const handleClick = (tab) => {
+    if (setFocusedCamera) setFocusedCamera(null);
     if (tab === 'EXTERIOR' || tab === 'INTERIOR') {
-      if (viewMode === tab && activeTab === tab) {
+      if (viewMode === tab) {
         if (triggerCameraReset) triggerCameraReset();
       } else {
         if (setViewMode) setViewMode(tab);

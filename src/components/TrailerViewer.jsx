@@ -102,10 +102,14 @@ function getHeightFt(id) {
 
 function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, groundYRef }) {
   const { camera, size } = useThree()
+  const { focusedCamera } = useConfigurator()
   const cameraInitRef = useRef(false)
   const lastBboxRef = useRef(null)
   const lastCenterRef = useRef(new THREE.Vector3())
   const viewModeRef = useRef(viewMode)
+  viewModeRef.current = viewMode
+  const focusedCameraRef = useRef(focusedCamera)
+  focusedCameraRef.current = focusedCamera
   const wasAnimatingRef = useRef(false)
 
   useEffect(() => { viewModeRef.current = viewMode }, [viewMode])
@@ -191,6 +195,7 @@ function CameraFit({ modelGroupRef, cameraControlsRef, configKey, viewMode, grou
   })
 
   useEffect(() => {
+    if (viewMode === 'INTERIOR' || viewModeRef.current === 'INTERIOR' || focusedCameraRef.current) return
     if (!lastBboxRef.current || !camera.isPerspectiveCamera || !cameraControlsRef.current) return
     const isMobile = size.width < 768;
     const padding = isMobile ? 2.0 : 1;
@@ -277,7 +282,8 @@ function GroundClamp({ cameraControlsRef, viewMode, groundYRef }) {
 // ── interior / exterior camera controller ─────────────────────────────────────
 
 function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraControlsRef, setIsTransitioning }) {
-  const { camera } = useThree()
+  const { camera, size: canvasSize } = useThree()
+  const { focusedCamera } = useConfigurator()
   const hasInitializedRef = useRef(false)
   const savedExteriorRef = useRef(null)
 
@@ -292,6 +298,10 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
     modelGroupRef.current.traverse(o => { if (o.isMesh) hasMeshes = true })
     if (!hasMeshes) return
 
+    if (!focusedCamera && cameraControlsRef.current) {
+      cameraControlsRef.current.skipDefaultMove = false
+    }
+
     let targetPosition, targetLookAt, targetFov
     const skipMove = cameraControlsRef.current.skipDefaultMove;
 
@@ -302,24 +312,26 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
       cameraControlsRef.current.getPosition(currentPos)
       cameraControlsRef.current.getTarget(currentTarget)
 
-      savedExteriorRef.current = {
-        position: currentPos,
-        target: currentTarget,
-        fov: camera.fov,
-        // Save existing angle/distance constraints so we can restore them on exit
-        minPolarAngle: cameraControlsRef.current.minPolarAngle,
-        maxPolarAngle: cameraControlsRef.current.maxPolarAngle,
-        minAzimuthAngle: cameraControlsRef.current.minAzimuthAngle,
-        maxAzimuthAngle: cameraControlsRef.current.maxAzimuthAngle,
-        minDistance: cameraControlsRef.current.minDistance,
-        maxDistance: cameraControlsRef.current.maxDistance,
-        minY: cameraControlsRef.current.minY,
-        // Save input defaults
-        mouseButtonsMiddle: cameraControlsRef.current.mouseButtons.middle,
-        mouseButtonsRight: cameraControlsRef.current.mouseButtons.right,
-        mouseButtonsWheel: cameraControlsRef.current.mouseButtons.wheel,
-        touchesTwo: cameraControlsRef.current.touches.two,
-        touchesThree: cameraControlsRef.current.touches.three,
+      if (!savedExteriorRef.current) {
+        savedExteriorRef.current = {
+          position: currentPos,
+          target: currentTarget,
+          fov: camera.fov,
+          // Save existing angle/distance constraints so we can restore them on exit
+          minPolarAngle: cameraControlsRef.current.minPolarAngle,
+          maxPolarAngle: cameraControlsRef.current.maxPolarAngle,
+          minAzimuthAngle: cameraControlsRef.current.minAzimuthAngle,
+          maxAzimuthAngle: cameraControlsRef.current.maxAzimuthAngle,
+          minDistance: cameraControlsRef.current.minDistance,
+          maxDistance: cameraControlsRef.current.maxDistance,
+          minY: cameraControlsRef.current.minY,
+          // Save input defaults
+          mouseButtonsMiddle: cameraControlsRef.current.mouseButtons.middle,
+          mouseButtonsRight: cameraControlsRef.current.mouseButtons.right,
+          mouseButtonsWheel: cameraControlsRef.current.mouseButtons.wheel,
+          touchesTwo: cameraControlsRef.current.touches.two,
+          touchesThree: cameraControlsRef.current.touches.three,
+        }
       }
 
       // Materials are now permanently DoubleSide to prevent shader recompilation lag
@@ -353,11 +365,12 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
         const interiorWidth = isLongX ? size.z : size.x
 
         // ── Distance limits ──────────────────────────────────────────────────────
-        // Lock distance to disable zoom
+        // Allow free distance during transition; will lock upon arrival
         const targetDist = targetPosition.distanceTo(targetLookAt)
-        cameraControlsRef.current.minDistance = targetDist
-        cameraControlsRef.current.maxDistance = targetDist
+        cameraControlsRef.current.minDistance = 0.1
+        cameraControlsRef.current.maxDistance = Infinity
         cameraControlsRef.current.minY = -Infinity
+        if (cameraControlsRef.current.resetBoundary) cameraControlsRef.current.resetBoundary()
 
         // ── Input overrides ──────────────────────────────────────────────────────
         // Disable pan and zoom inputs (0 = ACTION.NONE)
@@ -390,15 +403,31 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
         const size = box.getSize(new THREE.Vector3())
         const maxDim = Math.max(size.x, size.y, size.z)
 
-        const distance = maxDim * 1.8
+        const isMobile = canvasSize.width < 768;
+        const pad = isMobile ? 2.0 : 1.0;
+
+        const trailerWidth = size.x >= size.z ? size.x : size.z;
+        const trailerHeight = size.y;
+        const totalWidth = trailerWidth + pad * 2;
+        const totalHeight = trailerHeight + pad * 2;
+
+        targetFov = 35;
+        const vFovRad = THREE.MathUtils.degToRad(targetFov);
+        const aspect = canvasSize.width / Math.max(canvasSize.height, 1);
+        const tanVFov = Math.tan(vFovRad / 2);
+        const tanHFov = tanVFov * aspect;
+
+        const distW = (totalWidth / 2) / tanHFov;
+        const distH = (totalHeight / 2) / tanVFov;
+        const distance = Math.max(distW, distH);
+
         // Flat side view: align camera exactly on the Z-axis, centered on the trailer
         targetPosition = new THREE.Vector3(center.x, center.y, center.z + distance)
         targetLookAt = center.clone()
-        targetFov = 35
 
-        // Restore zoom limits for exterior
+        // Restore zoom limits for exterior (same as CameraFit)
         cameraControlsRef.current.minDistance = maxDim * 0.1
-        cameraControlsRef.current.maxDistance = maxDim * 1.15
+        cameraControlsRef.current.maxDistance = maxDim * (isMobile ? 3.0 : 1.5)
 
         // Restore input defaults if available
         if (savedExteriorRef.current && savedExteriorRef.current.mouseButtonsRight !== undefined) {
@@ -462,7 +491,7 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
       requestAnimationFrame(() => {
         if (cancelled || !cameraControlsRef.current) return
 
-        cameraControlsRef.current.smoothTime = 0.2
+        cameraControlsRef.current.smoothTime = 0.35
 
         // Normalize azimuth angle to prevent "unwinding" spins
         let az = cameraControlsRef.current.azimuthAngle;
@@ -474,11 +503,18 @@ function CameraController({ viewMode, cameraResetTrigger, modelGroupRef, cameraC
           targetLookAt.x, targetLookAt.y, targetLookAt.z,
           true
         ).then(() => {
-          if (!cancelled) setIsTransitioning(false)
+          if (!cancelled) {
+            setIsTransitioning(false)
+            if (viewMode === 'INTERIOR' && cameraControlsRef.current && targetPosition && targetLookAt) {
+              const targetDist = targetPosition.distanceTo(targetLookAt)
+              cameraControlsRef.current.minDistance = targetDist
+              cameraControlsRef.current.maxDistance = targetDist
+            }
+          }
         })
 
         const animateFov = () => {
-          if (cancelled) return
+          if (cancelled || !targetFov) return
           if (Math.abs(camera.fov - targetFov) > 0.3) {
             camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 0.08)
             camera.updateProjectionMatrix()
@@ -687,6 +723,41 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
       tryFindCamera()
     }
   }, [focusedCameraTrigger]) // Trigger solely on the counter changing
+
+  return null
+}
+
+function CanvasClickListener({ cameraControlsRef }) {
+  const { focusedCamera, setFocusedCamera, triggerCameraReset } = useConfigurator()
+  const { gl } = useThree()
+  const focusedCameraRef = useRef(focusedCamera)
+  focusedCameraRef.current = focusedCamera
+
+  useEffect(() => {
+    const dom = gl.domElement
+    if (!dom) return
+
+    const handlePointerAction = (e) => {
+      // Only track primary mouse button (left click) or touch/pen
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+
+      if (focusedCameraRef.current) {
+        if (cameraControlsRef.current) {
+          cameraControlsRef.current.skipDefaultMove = false
+        }
+        setFocusedCamera(null)
+        triggerCameraReset()
+      }
+    }
+
+    dom.addEventListener('pointerdown', handlePointerAction)
+    dom.addEventListener('pointerup', handlePointerAction)
+
+    return () => {
+      dom.removeEventListener('pointerdown', handlePointerAction)
+      dom.removeEventListener('pointerup', handlePointerAction)
+    }
+  }, [gl, setFocusedCamera, triggerCameraReset, cameraControlsRef])
 
   return null
 }
@@ -1310,6 +1381,9 @@ const TrailerViewer = forwardRef(function TrailerViewer({ onModelReady, fullscre
                 modelGroupRef={modelGroupRef}
                 cameraControlsRef={cameraControlsRef}
                 setIsTransitioning={setIsTransitioning}
+              />
+              <CanvasClickListener
+                cameraControlsRef={cameraControlsRef}
               />
               <CameraControls
                 ref={cameraControlsRef}

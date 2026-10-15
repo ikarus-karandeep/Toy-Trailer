@@ -13,7 +13,8 @@ import {
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import ToggleSwitch from '../../components/ToggleSwitch'
-import DotSlider from '../../components/DotSlider'
+import CarouselSlider from '../../components/CarouselSlider'
+import LengthSelector from '../../components/LengthSelector'
 import { getInteriorHeightPrice, getBaseTrailerPrice } from '../../hooks/usePricing'
 
 export default function SizeCapacityPanel({ activeSectionTitle }) {
@@ -59,7 +60,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 
   let interiorHeightBadge = null;
   if (heightIndex >= 2) {
-    interiorHeightBadge = `${formattedPrice} · Super Duty Ramp Required`;
+    interiorHeightBadge = `${formattedPrice}`;
   } else if (heightPrice > 0) {
     interiorHeightBadge = formattedPrice;
   }
@@ -98,25 +99,17 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
       )}
 
       {/* LENGTH */}
-{show('LENGTH') && (
-  <OptionSection title="LENGTH">
-    <p className="text-gray-400 text-xs tracking-wider -mt-4">
-      {isGooseneck ? '8" frame on 28–36ft gooseneck models' : '6" frame on 14–24ft, 8" frame on 26–36ft'}
-    </p>
-
-    {/* Trailer SVG diagram */}
-    <div className="flex justify-center my-2">
-      <img src="/Length.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
-    </div>
-
-    <DotSlider
-      options={lengthOptions}
-      value={length}
-      onChange={setLength}
-      badge={lengthBadge}
-    />
-  </OptionSection>
-)}
+      {show('LENGTH') && (
+        <OptionSection title="LENGTH (FT)">
+          <LengthSelector
+            options={lengthOptions}
+            value={length}
+            onChange={setLength}
+            badge={lengthBadge}
+            subtext={isGooseneck ? '8" frame on 28–36ft gooseneck models' : '6" frame on 14-24ft.  8" frame on 26-36ft'}
+          />
+        </OptionSection>
+      )}
 
       {/* FRAME SIZE (AUTO ASSIGNED) */}
       {show('FRAME SIZE') && (
@@ -142,12 +135,12 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
       {/* INTERIOR HEIGHT */}
       {show('INTERIOR HEIGHT') && (
         <OptionSection title="INTERIOR HEIGHT">
-          {/* Slider */}
-          <DotSlider
+          <CarouselSlider
             options={INTERIOR_HEIGHT_OPTIONS}
             value={interiorHeight}
             onChange={setInteriorHeight}
             badge={interiorHeightBadge}
+            formatLabel={(opt) => opt.label}
           />
         </OptionSection>
       )}
