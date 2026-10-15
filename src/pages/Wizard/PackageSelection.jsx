@@ -45,7 +45,7 @@ const PACKAGES = [
   },
   {
     id: 'no-package',
-    title: 'No Package',
+    title: 'Build From Scratch',
     badge: null,
     description: 'Skip the package and configure every item individually in the steps that follow.',
     priceRange: 'Final build cost depends on your choices',

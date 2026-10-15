@@ -4,15 +4,12 @@ import {
   WATER_PACKAGE_OPTIONS,
   SINK_PACKAGE_OPTIONS,
   BATHROOM_PACKAGE_OPTIONS,
-  WINCH_OPTIONS,
-  GENERATOR_BOX_OPTIONS,
-  AWNING_OPTIONS
+  GENERATOR_BOX_OPTIONS
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import ToggleSwitch from '../../components/ToggleSwitch'
 import AlertMessage from '../../components/AlertMessage'
-import DotSlider from '../../components/DotSlider'
 import DetailedOptionCard from '../../components/DetailedOptionCard'
 
 export default function AddOnsPanel({ activeSectionTitle }) {
@@ -20,20 +17,17 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     bathroom, setBathroom, 
     generatorBox, setGeneratorBox,
     toolBox, setToolBox,
-    ladderRacks, setLadderRacks,
-    recessedTireBox, setRecessedTireBox,
     radioPackageSpeaker, setRadioPackageSpeaker,
-    awning, setAwningRaw,
     sinkPackage, setSinkPackage,
     batteryBox, setBatteryBox,
     lShapeCounter, setLShapeCounter,
-    genSlides, setGenSlides,
     genDoor, setGenDoor,
     frontStyle,
     length,
     cabinets,
     viewMode, setViewMode,
     waterPackage, setWaterPackage,
+    spareTire, setSpareTire,
     focusedCamera, setFocusedCamera
   } = useConfigurator()
 
@@ -42,20 +36,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   const [sinkPackageOpen, setSinkPackageOpen] = useState(true)
 
   const [fullBathOpen, setFullBathOpen] = useState(true)
-
-  const [awningLength, setAwningLength] = useState(awning?.length > 0 ? awning[0] : '18ft')
-
-  const [winch, setWinch] = useState('winchsystem')
-
-
-  
-
-  // Sync local slider state with global awning state changes
-  useEffect(() => {
-    if (awning && awning.length > 0) {
-      setAwningLength(awning[0]);
-    }
-  }, [awning]);
 
   useEffect(() => {
     const hasGenBox = frontStyle === 'flatfront' && generatorBox && generatorBox !== 'none';
@@ -73,13 +53,10 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     }
     if (activeSectionTitle === 'BASE ADDONS') {
       return [
-        'WINCH', 
         'BUILT - IN TOOL CABINET', 
         'TONGUE MOUNTED GENERATOR BOX', 
         'ATP BATTERY BOX ON TONGUE', 
         'L-SHAPE COUNTER/HIDDEN GENERATOR BOX', 
-        'LADDER RACKS',
-        'RECESSED TIRE BOX',
         'RADIO PACKAGE SPEAKER'
       ].includes(title)
     }
@@ -98,32 +75,46 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     }
   }
 
-  const awningLengthOptions = AWNING_OPTIONS.filter(opt => {
-    const optLen = parseInt(opt.id);
-    const trailerLen = parseInt(length || '24');
-    return optLen <= trailerLen;
-  }).map(opt => {
-    const optLen = parseInt(opt.id);
-    const trailerLen = parseInt(length || '24');
-    let locked = false;
-    if (optLen >= 24 && trailerLen < 32) locked = true;
-    else if (optLen >= 18 && optLen <= 22 && trailerLen <= 28) locked = true;
-    else if (optLen === 16 && trailerLen <= 26) locked = true;
-
-    return {
-      ...opt,
-      locked
-    };
-  });
-
-  const getAwningBadge = (len) => {
-    const opt = AWNING_OPTIONS.find(o => o.id === len)
-    if (opt && opt.price > 0) return `+$${opt.price.toLocaleString()}`
-    return null
-  }
-
   return (
     <>
+    {show('BATHROOM PACKAGES') && (
+        <div className="contents">
+          <OptionSection title="BATHROOM PACKAGES">
+          {parseFloat(length) < 28 ? (
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+              * Bathroom options are hidden for trailers under 28ft length.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-2">
+            {BATHROOM_PACKAGE_OPTIONS.map((opt) => (
+              <DetailedOptionCard
+                key={opt.id}
+                label={opt.label}
+                price={opt.price} badge={opt.badge}
+                isSelected={bathroom === opt.id}
+                onClick={() => handleBathroom(opt.id)}
+                includedItems={
+                  opt.id === 'half'
+                    ? ['Half Bath + 32" x 32" shower w/surround']
+                    : [
+                        'Water pkg',
+                        'Hand wash sink',
+                        'Partition wall w/door',
+                        'Coin Floor',
+                        'Powered vent',
+                        'Toilet',
+                        'Base cabinet',
+                        'White metal',
+                        'LED'
+                      ]
+                }
+              />
+            ))}
+          </div>
+          )}
+        </OptionSection>
+        </div>
+      )}
       {show('WATER PACKAGE') && (
         <OptionSection title="WATER PACKAGE">
           <div className="flex flex-col gap-2">
@@ -184,114 +175,18 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         </div>
       )}
 
-      {show('BATHROOM PACKAGES') && (
+      {show('SPARE TIRE') && (
         <div className="contents">
-          <OptionSection title="BATHROOM PACKAGES">
-          {parseFloat(length) < 28 ? (
-            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
-              * Bathroom options are hidden for trailers under 28ft length.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-2">
-            {BATHROOM_PACKAGE_OPTIONS.map((opt) => (
-              <DetailedOptionCard
-                key={opt.id}
-                label={opt.label}
-                price={opt.price} badge={opt.badge}
-                isSelected={bathroom === opt.id}
-                onClick={() => handleBathroom(opt.id)}
-                includedItems={
-                  opt.id === 'half'
-                    ? ['Half Bath + 32" x 32" shower w/surround']
-                    : [
-                        'Water pkg',
-                        'Hand wash sink',
-                        'Partition wall w/door',
-                        'Coin Floor',
-                        'Powered vent',
-                        'Toilet',
-                        'Base cabinet',
-                        'White metal',
-                        'LED'
-                      ]
-                }
-              />
-            ))}
-          </div>
-          )}
-        </OptionSection>
-        </div>
-      )}
-
-      {show('AWNINGS') && (
-        <div className="contents">
-          <OptionSection title="AWNINGS">
-          {parseFloat(length) < 24 ? (
-            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
-              * Awning options are hidden for trailers under 24ft length.
-            </p>
-          ) : (
-            <>
-              <img
-                src="/Awnings.webp"
-                alt="Awning preview"
-                className="w-full rounded-xl object-cover mb-4"
-                onError={(e) => { e.currentTarget.style.display = 'none' }}
-              />
-              <div className="flex flex-col gap-2">
-            <OptionPill
-              label="Electric Awning"
-              isSelected={awning?.length > 0}
-              onClick={() => {
-                if (awning?.length > 0) {
-                  setAwningRaw([])
-                } else {
-                  setAwningRaw([awningLength])
-                  setFocusedCamera("Electric Awning Camera")
-                }
+          <OptionSection title="SPARE TIRE">
+            <ToggleSwitch
+              label="INCLUDE SPARE TIRE"
+              checked={spareTire}
+              onChange={(val) => {
+                setSpareTire(val);
+                if (val) setFocusedCamera("Spare Tire Mount Camera");
               }}
             />
-          </div>
-          {awning?.length > 0 && (
-            <div className="mt-6 px-4">
-              <DotSlider
-                options={awningLengthOptions.map(opt => ({
-                  ...opt,
-                  lockedReason: opt.locked 
-                    ? `Some larger awning sizes are disabled to fit your current trailer. ${opt.label} requires ${opt.label === '16ft' ? '28ft+' : opt.label === '24ft' ? '32ft+' : '30ft+'}` 
-                    : null
-                }))}
-                value={awningLength}
-                onChange={(val) => {
-                  setAwningLength(val)
-                  setAwningRaw([val])
-                  setFocusedCamera("Electric Awning Camera")
-                }}
-                badge={getAwningBadge(awningLength)}
-              />
-            </div>
-          )}
-          </>
-          )}
-        </OptionSection>
-        </div>
-      )}
-
-      {show('WINCH') && (
-        <div className="contents">
-          <OptionSection title="WINCH">
-          <div className="flex flex-col gap-2">
-            {WINCH_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price} badge={opt.badge}
-                isSelected={winch === opt.id}
-                onClick={() => setWinch(winch === opt.id ? null : opt.id)}
-              />
-            ))}
-          </div>
-        </OptionSection>
+          </OptionSection>
         </div>
       )}
 
@@ -320,20 +215,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             </div>
           </div>
 
-          <div className="mb-8">
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR SLIDES & TRAY ONLY</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Add door separately</p>
-            <ToggleSwitch
-              label="Add your own door separately"
-              checked={genSlides}
-              onChange={(val) => {
-                setGenSlides(val)
-                if (val) setFocusedCamera("Standard Generator Box Camera")
-              }}
-              disabled={frontStyle !== 'flatfront'}
-              disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
-            />
-          </div>
 
           <div>
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR DOOR 36"X36"</h4>
@@ -398,35 +279,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         </div>
       )}
 
-      {show('LADDER RACKS') && (
-        <div className="contents">
-          <OptionSection title="LADDER RACKS">
-          <ToggleSwitch
-            label="INCLUDE LADDER RACKS"
-            checked={ladderRacks}
-            onChange={(val) => {
-              setLadderRacks(val);
-              if (val) setFocusedCamera("Top Supports Camera");
-            }}
-          />
-        </OptionSection>
-        </div>
-      )}
-
-      {show('RECESSED TIRE BOX') && (
-        <div className="contents">
-          <OptionSection title="RECESSED TIRE BOX">
-            <ToggleSwitch
-              label="INCLUDE RECESSED TIRE BOX"
-              checked={recessedTireBox}
-              onChange={(val) => {
-                setRecessedTireBox(val);
-                if (val) setFocusedCamera("Recessed Tire Box Camera");
-              }}
-            />
-          </OptionSection>
-        </div>
-      )}
 
       {show('RADIO PACKAGE SPEAKER') && (
         <div className="contents">

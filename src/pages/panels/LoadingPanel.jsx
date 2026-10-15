@@ -469,7 +469,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
                     if (!tieDowns.includes(opt.id)) {
                       if (opt.id === 'wall') setFocusedCamera("Wall E-Track Camera")
                       else if (opt.id === 'floor') setFocusedCamera("Floor E-Track Camera")
-                      else if (opt.id === 'small') setFocusedCamera("Wall E-Track Small Section Camera")
                     }
                   }}
                   packageBadge={getBadge(opt.id)}

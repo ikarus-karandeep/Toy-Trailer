@@ -4,21 +4,21 @@ import {
   AXLE_SUSPENSION_OPTIONS, AXLE_CAPACITY_OPTIONS,
   ELECTRICAL_OPTIONS, OFF_GRID_POWER_OPTIONS, INTERIOR_LIGHTING_OPTIONS, EXTERIOR_LIGHTING_OPTIONS,
   RECEPTACLE_OPTIONS,
-  PASSIVE_VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
+  PASSIVE_VENTILATION_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
   REAR_ENTRANCE_OPTIONS, D_RINGS_OPTIONS, ADDITIONAL_D_RINGS_OPTIONS, E_TRACKS_OPTIONS, JACKS_OPTIONS,
   BATHROOM_PACKAGE_OPTIONS,
-  EXTERIOR_FINISH_OPTIONS, COLOR_OPTIONS, FRONT_STYLE_OPTIONS, EXTERIOR_BUILD_OPTIONS,
+  EXTERIOR_FINISH_OPTIONS, COLOR_OPTIONS, FRONT_STYLE_OPTIONS,
   PROTECTION_TYPE_OPTIONS, PROTECTION_SIZE_OPTIONS, FRONT_PROTECTION_OPTIONS,
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
-  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
+  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, WALL_RUN_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
   SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, SINK_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS,
   ESCAPE_DOOR_SIZE_OPTIONS, AWNING_OPTIONS
 } from '../constants/configData';
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
 const VENTILATION_OPTIONS = PASSIVE_VENTILATION_OPTIONS;
-const CLIMATE_OPTIONS = [...CLIMATE_CONTROL_OPTIONS, ...ROOFTOP_AC_OPTIONS, ...MINI_SPLIT_OPTIONS];
+const CLIMATE_OPTIONS = [...ROOFTOP_AC_OPTIONS, ...MINI_SPLIT_OPTIONS];
 const RAMP_OPTIONS = REAR_ENTRANCE_OPTIONS;
 const TIE_DOWN_OPTIONS = [...D_RINGS_OPTIONS, ...ADDITIONAL_D_RINGS_OPTIONS, ...E_TRACKS_OPTIONS];
 const PROTECTION_OPTIONS = [...PROTECTION_TYPE_OPTIONS, ...PROTECTION_SIZE_OPTIONS, ...FRONT_PROTECTION_OPTIONS];
@@ -26,7 +26,7 @@ const WHEEL_OPTIONS = WHEEL_TYPE_OPTIONS;
 const FLOOR_OPTIONS = [...FLOOR_MATERIAL_OPTIONS, ...FLOOR_OVERLAY_OPTIONS, ...FLOOR_INSULATION_OPTIONS];
 const WALL_OPTIONS = [...WALL_MATERIAL_OPTIONS, ...WALL_INSULATION_OPTIONS];
 const CEILING_OPTIONS = [...CEILING_MATERIAL_OPTIONS, ...CEILING_INSULATION_OPTIONS];
-const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS, ...WHEEL_WALL_CABINET_OPTIONS];
+const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...WALL_RUN_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS, ...WHEEL_WALL_CABINET_OPTIONS];
 const BATTERY_OPTIONS = OFF_GRID_POWER_OPTIONS;
 const BATHROOM_OPTIONS = BATHROOM_PACKAGE_OPTIONS;
 
@@ -181,10 +181,6 @@ export function usePricing(ctx) {
 
 
     // Add-ons
-    if (ctx.awning && ctx.awning.length > 0) {
-      const awningLen = ctx.awning[0];
-      configurations += findPrice(AWNING_OPTIONS, awningLen);
-    }
     configurations += findPrice(WATER_PACKAGE_OPTIONS, ctx.waterPackage);
     configurations += findPrice(SINK_PACKAGE_OPTIONS, ctx.sinkPackage);
     configurations += findPrice(BATHROOM_OPTIONS, ctx.bathroom);
@@ -200,8 +196,16 @@ export function usePricing(ctx) {
     if (isConcessionPriced) configurations += 1250;
     
     if (ctx.generatorBox && ctx.generatorBox !== 'none') configurations += 500;
-    if (ctx.ladderRacks) configurations += 250;
     if (ctx.recessedTireBox) configurations += 200;
+    if (ctx.spareTire) {
+      if (ctx.lugType === '6lug') {
+        configurations += 200;
+      } else if (ctx.lugType === '8lug') {
+        configurations += 0;
+      } else {
+        configurations += 160;
+      }
+    }
 
 
     // APPEARANCE
@@ -211,8 +215,12 @@ export function usePricing(ctx) {
     }
     appearance += exteriorFinishPrice;
     appearance += findPrice(EXTERIOR_ACCESSORIES_OPTIONS, ctx.exteriorAccessories);
+    if (ctx.awning && ctx.awning.length > 0) {
+      const awningLen = ctx.awning[0];
+      appearance += findPrice(AWNING_OPTIONS, awningLen);
+    }
+    if (ctx.ladderRacks) appearance += 250;
     appearance += findPrice(FRONT_STYLE_OPTIONS, ctx.frontStyle);
-    appearance += findPrice(EXTERIOR_BUILD_OPTIONS, ctx.exteriorBuild);
     let roofBuildPrice = findPrice(ROOF_BUILD_OPTIONS, ctx.roofBuild);
     if (ctx.roofBuild === 'onepieceroof') roofBuildPrice *= parseInt(ctx.length) || 0;
     appearance += roofBuildPrice;
@@ -220,21 +228,12 @@ export function usePricing(ctx) {
     appearance += findPrice(PROTECTION_OPTIONS, ctx.protectionType);
 
     let protectionSizePrice = findPrice(PROTECTION_OPTIONS, ctx.protectionSize);
-    if (ctx.protectionSize === '24') protectionSizePrice *= parseInt(ctx.length) || 0;
+    if (ctx.protectionSize === '24' || ctx.protectionSize === '12') protectionSizePrice *= parseInt(ctx.length) || 0;
     appearance += protectionSizePrice;
     appearance += findPrice(PROTECTION_OPTIONS, ctx.frontProtection);
     appearance += findPrice(LUG_OPTIONS, ctx.lugType);
     appearance += findPrice(TIRE_SIZE_OPTIONS, ctx.tireSize);
     appearance += findPrice(WHEEL_OPTIONS, ctx.wheelType);
-    if (ctx.spareTire) {
-      if (ctx.lugType === '6lug') {
-        appearance += 200;
-      } else if (ctx.lugType === '8lug') {
-        appearance += 0;
-      } else {
-        appearance += 160;
-      }
-    }
     let baseFloorPrice = findPrice(FLOOR_OPTIONS, ctx.floor);
     if (ctx.floor === 'double34') {
       baseFloorPrice *= (parseInt(ctx.length) || 0);
@@ -298,7 +297,7 @@ export function usePricing(ctx) {
     ctx.waterPackage, ctx.bathroom, ctx.stairs, ctx.angledLights, ctx.vNoseETrack, ctx.batteryBox, ctx.sinkPackage, ctx.awning,
     ctx.escapeDoor, ctx.generatorBox, ctx.winchSystem, ctx.extendedTripleTongue, ctx.radioPackageSpeaker,
     ctx.rearSpoiler, ctx.ladderRacks, ctx.sidewallVents, ctx.recessedTireBox, ctx.interiorTireMount,
-    ctx.exteriorFinish, ctx.exteriorAccessories, ctx.frontStyle, ctx.exteriorBuild, ctx.roofBuild,
+    ctx.exteriorFinish, ctx.exteriorAccessories, ctx.frontStyle, ctx.roofBuild,
     ctx.protectionType, ctx.protectionSize, ctx.frontProtection, ctx.lugType, ctx.tireSize, ctx.wheelType,
     ctx.spareTire, ctx.floor, ctx.floorOverlay, ctx.walls, ctx.ceiling, ctx.wallInsulation, ctx.ceilingInsulation, ctx.atpWheelWells, ctx.cabinets, ctx.toolBox, ctx.dRings,
     ctx.driverSideDoor, ctx.passengerSideDoor, ctx.sideDoorBarLock, ctx.concessionDoor,

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
 import { usePackageBadge } from '../../hooks/usePackageBadge'
 import {
@@ -25,17 +26,26 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
     axleCapacity, setAxleCapacity,
     interiorHeight, setInteriorHeight,
     spreadAxle, setSpreadAxle,
-    narrowTrackAxle, setNarrowTrackAxle,
     viewMode, setViewMode,
     setFocusedCamera,
+    frontStyle,
   } = useConfigurator()
 
   const getBadge = usePackageBadge()
 
   const show = (title) => !activeSectionTitle || activeSectionTitle === title
 
-  const lengthIndex = LENGTH_OPTIONS.findIndex((o) => o.id === length)
-  const selectedLength = LENGTH_OPTIONS[lengthIndex] ?? LENGTH_OPTIONS[0]
+  const isGooseneck = width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'))
+
+  const lengthOptions = useMemo(() => {
+    if (isGooseneck) {
+      return LENGTH_OPTIONS.filter((opt) => parseInt(opt.id, 10) >= 28)
+    }
+    return LENGTH_OPTIONS
+  }, [isGooseneck])
+
+  const lengthIndex = lengthOptions.findIndex((o) => o.id === length)
+  const selectedLength = lengthOptions[lengthIndex] ?? lengthOptions[0]
   const heightIndex = INTERIOR_HEIGHT_OPTIONS.findIndex((o) => o.id === interiorHeight)
   const selectedHeight = INTERIOR_HEIGHT_OPTIONS[heightIndex] ?? INTERIOR_HEIGHT_OPTIONS[0]
 
@@ -48,9 +58,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
   const formattedPrice = heightPrice > 0 ? `+$${heightPrice.toLocaleString()}` : '';
 
   let interiorHeightBadge = null;
-  if (heightIndex >= 3) {
-    interiorHeightBadge = `${formattedPrice} · Ramp + Winch Required`;
-  } else if (heightIndex >= 2) {
+  if (heightIndex >= 2) {
     interiorHeightBadge = `${formattedPrice} · Super Duty Ramp Required`;
   } else if (heightPrice > 0) {
     interiorHeightBadge = formattedPrice;
@@ -74,6 +82,13 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
                   setWidth(opt.id);
                   if (opt.id === '8.5ftgn') {
                     setFocusedCamera("Front Style Camera");
+                    if (parseInt(length, 10) < 28) {
+                      setLength('28');
+                    }
+                  } else if (opt.id === '7ft') {
+                    if (axleCount === 'triple') {
+                      setAxleCount('tandem');
+                    }
                   }
                 }}
               />
@@ -86,7 +101,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
 {show('LENGTH') && (
   <OptionSection title="LENGTH">
     <p className="text-gray-400 text-xs tracking-wider -mt-4">
-      6&quot; frame on 14–24ft, 8&quot; frame on 26–36ft
+      {isGooseneck ? '8" frame on 28–36ft gooseneck models' : '6" frame on 14–24ft, 8" frame on 26–36ft'}
     </p>
 
     {/* Trailer SVG diagram */}
@@ -95,7 +110,7 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
     </div>
 
     <DotSlider
-      options={LENGTH_OPTIONS}
+      options={lengthOptions}
       value={length}
       onChange={setLength}
       badge={lengthBadge}
@@ -121,108 +136,6 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
               />
             ))}
           </div>
-        </OptionSection>
-      )}
-
-      {/* AXLES COMBINED */}
-      {(show('AXLE COUNT') || show('AXLE SUSPENSION') || show('AXLE CAPACITY')) && (
-        <OptionSection>
-          {/* AXLE COUNT */}
-          {(show('AXLE COUNT') || !activeSectionTitle) && (
-            <div>
-              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE COUNT</h2>
-              <p className="text-gray-400 text-xs tracking-wider mb-6">
-                Tandem Axle default for builds under 34ft.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {AXLE_COUNT_OPTIONS.map((opt) => (
-                  <OptionPill
-                    key={opt.id}
-                    label={opt.label}
-                    price={opt.price} badge={opt.badge}
-                    isStandard={opt.isStandard}
-                    isSelected={axleCount === opt.id}
-                    onClick={() => {
-                      setAxleCount(opt.id);
-                      setViewMode('EXTERIOR');
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Axle diagram */}
-              <div className="flex justify-center mt-6">
-                <img src={axleCount === 'triple' ? "/triple.png" : "/Axle count.png"} alt="image" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
-              </div>
-            </div>
-          )}
-
-          {/* DIVIDER */}
-          {(!activeSectionTitle || (show('AXLE COUNT') && show('AXLE SUSPENSION'))) && (
-            <div className="border-t border-[#5D5E60]"></div>
-          )}
-
-          {/* AXLE SUSPENSION */}
-          {(show('AXLE SUSPENSION') || !activeSectionTitle) && (
-            <div>
-              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE SUSPENSION</h2>
-              <p className="text-gray-400 text-xs tracking-wider mb-6">
-                Torsion Required For Spread Axle
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {AXLE_SUSPENSION_OPTIONS.map((opt) => (
-                  <OptionPill
-                    key={opt.id}
-                    label={opt.label}
-                    price={opt.price} badge={opt.badge}
-                    isStandard={opt.isStandard}
-                    isSelected={axleSuspension === opt.id}
-                    isLocked={
-                      (opt.id === 'dropspring' && spreadAxle)
-                    }
-                    onClick={() => {
-                      setAxleSuspension(opt.id);
-                      setViewMode('EXTERIOR');
-                    }}
-                    packageBadge={getBadge(opt.id)}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* DIVIDER */}
-          {(!activeSectionTitle || (show('AXLE SUSPENSION') && show('AXLE CAPACITY'))) && (
-            <div className="border-t border-[#5D5E60]"></div>
-          )}
-
-          {/* AXLE CAPACITY */}
-          {(show('AXLE CAPACITY') || !activeSectionTitle) && (
-            <div className="contents">
-            <div>
-              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE CAPACITY</h2>
-              <p className="text-gray-400 text-xs tracking-wider mb-6">
-                6000lbs axle capacity for 26ft+.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {AXLE_CAPACITY_OPTIONS.map((opt) => (
-                  <OptionPill
-                    key={opt.id}
-                    label={opt.label}
-                    price={opt.price} badge={opt.badge}
-                    isStandard={opt.isStandard}
-                    isSelected={axleCapacity === opt.id}
-                    onClick={() => {
-                      setAxleCapacity(opt.id);
-                      setViewMode('EXTERIOR');
-                    }}
-                    packageBadge={getBadge(opt.id)}
-                  />
-                ))}
-              </div>
-            </div>
-            </div>
-          )}
         </OptionSection>
       )}
 
@@ -259,24 +172,115 @@ export default function SizeCapacityPanel({ activeSectionTitle }) {
         </div>
       )}
 
-      {/* NARROW TRACK AXLE */}
-      {show('NARROW TRACK AXLE') && (
-        <div className="contents">
-        <OptionSection title="NARROW TRACK AXLE">
-          <p className="text-gray-400 text-xs tracking-wider -mt-4">
-            Applicable on 7ft wide trailer
-          </p>
-          <ToggleSwitch
-            label="Reduces track width."
-            checked={narrowTrackAxle}
-            onChange={(val) => {
-              setNarrowTrackAxle(val);
-              setViewMode('EXTERIOR');
-            }}
-          />
+      {/* AXLES COMBINED */}
+      {(show('AXLE COUNT') || show('AXLE SUSPENSION') || show('AXLE CAPACITY')) && (
+        <OptionSection>
+          {/* AXLE SUSPENSION */}
+          {(show('AXLE SUSPENSION') || !activeSectionTitle) && (
+            <div>
+              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE SUSPENSION</h2>
+              <p className="text-gray-400 text-xs tracking-wider mb-6">
+                Torsion Required For Spread Axle
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {AXLE_SUSPENSION_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price} badge={opt.badge}
+                    isStandard={opt.isStandard}
+                    isSelected={axleSuspension === opt.id}
+                    isLocked={
+                      (opt.id === 'dropspring' && spreadAxle)
+                    }
+                    onClick={() => {
+                      setAxleSuspension(opt.id);
+                      setViewMode('EXTERIOR');
+                    }}
+                    packageBadge={getBadge(opt.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* DIVIDER */}
+          {(!activeSectionTitle || (show('AXLE SUSPENSION') && show('AXLE COUNT'))) && (
+            <div className="border-t border-[#5D5E60]"></div>
+          )}
+
+          {/* AXLE COUNT */}
+          {(show('AXLE COUNT') || !activeSectionTitle) && (
+            <div>
+              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE COUNT</h2>
+              <p className="text-gray-400 text-xs tracking-wider mb-6">
+                Tandem Axle default for builds under 34ft.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {AXLE_COUNT_OPTIONS.map((opt) => {
+                  const isTripleDisabled = width === '7ft' && opt.id === 'triple';
+                  return (
+                    <OptionPill
+                      key={opt.id}
+                      label={opt.label}
+                      price={opt.price} badge={opt.badge}
+                      isStandard={opt.isStandard}
+                      isSelected={axleCount === opt.id}
+                      disabled={isTripleDisabled}
+                      disabledReason={isTripleDisabled ? "Triple Axle is not available on 7ft models" : null}
+                      onClick={() => {
+                        if (isTripleDisabled) return;
+                        setAxleCount(opt.id);
+                        setViewMode('EXTERIOR');
+                      }}
+                    />
+                  );
+                })}
+              </div>
+
+              {/* Axle diagram */}
+              <div className="flex justify-center mt-6">
+                <img src={axleCount === 'triple' ? "/triple.png" : "/Axle count.png"} alt="image" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
+              </div>
+            </div>
+          )}
+
+          {/* DIVIDER */}
+          {(!activeSectionTitle || (show('AXLE COUNT') && show('AXLE CAPACITY'))) && (
+            <div className="border-t border-[#5D5E60]"></div>
+          )}
+
+          {/* AXLE CAPACITY */}
+          {(show('AXLE CAPACITY') || !activeSectionTitle) && (
+            <div className="contents">
+            <div>
+              <h2 className="text-white font-medium text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">AXLE CAPACITY</h2>
+              <p className="text-gray-400 text-xs tracking-wider mb-6">
+                6000lbs axle capacity for 26ft+.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {AXLE_CAPACITY_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price} badge={opt.badge}
+                    isStandard={opt.isStandard}
+                    isSelected={axleCapacity === opt.id}
+                    onClick={() => {
+                      setAxleCapacity(opt.id);
+                      setViewMode('EXTERIOR');
+                    }}
+                    packageBadge={getBadge(opt.id)}
+                  />
+                ))}
+              </div>
+            </div>
+            </div>
+          )}
         </OptionSection>
-        </div>
       )}
+
+
     </>
   )
 }

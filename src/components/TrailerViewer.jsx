@@ -569,7 +569,7 @@ function FocusedCameraListener({ modelGroupRef, cameraControlsRef, setIsTransiti
         cameraControlsRef.current.getPosition(currentPos)
 
         const distance = currentPos.distanceTo(cameraPosition)
-        if (distance < 1) {
+        if (distance < 0.01) {
           console.log('FocusedCameraListener: Already nearby, skipping move. Distance:', distance)
           return
         }

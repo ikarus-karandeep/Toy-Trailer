@@ -8,7 +8,7 @@ export const PACKAGE_BADGES = {
   'track-pack':  { badge: '/track-badge.png',    name: 'Track Pack' },
   'job-site':    { badge: '/jobsite-badge.png',  name: 'Job Site' },
   'base-camp':   { badge: '/basecamp-badge.png', name: 'Base Camp' },
-  'no-package':  { badge: null,                  name: 'No Package' },
+  'no-package':  { badge: null,                  name: 'Build From Scratch' },
 }
 
 /**
@@ -17,16 +17,16 @@ export const PACKAGE_BADGES = {
  * Used by panels to show the package badge on pre-selected options.
  */
 export const PACKAGE_OPTION_IDS = {
-  'track-pack': new Set(['rearwingspoiler', 'spideraluminum', 'blackout', 'dropspring', '7000lb', 'drings', 'wall', 'floor']),
-  'job-site':   new Set(['30amp', 'drings', 'wall', 'floor', '5000relectric', 'frontbase36', 'wallrun36', 'wallrun16']),
-  'base-camp':  new Set(['50amp', '18kminisplit', '5000relectric', 'frontbase36', 'wallrun36', 'wallrun16', 'white_metal_walls', 'white_metal_ceiling']),
+  'track-pack': new Set(['rearwings', 'spideraluminum', 'blackout', 'torsion', '7000lb', 'drings', 'wall', 'floor']),
+  'job-site':   new Set(['30amp', 'drings', 'wall', 'floor', '5000relectric', 'frontbase36', 'frontoverhead16']),
+  'base-camp':  new Set(['50amp', '18kminisplit', '5000relectric', 'frontbase36', 'frontoverhead16', 'white_metal_walls', 'white_metal_ceiling']),
   'no-package': new Set(),
 }
 
 export const PACKAGE_INITIAL_CONFIGS = {
   'track-pack': {
-    // REAR WING SPOILER
-    exteriorAccessories: 'rearwingspoiler',
+    // REAR WINGS
+    exteriorAccessories: 'rearwings',
     rearSpoiler: true,
     // SPIDER ALUMINUM MAGS
     wheelType: 'spideraluminum',
@@ -39,14 +39,14 @@ export const PACKAGE_INITIAL_CONFIGS = {
     tieDowns: ['drings', 'wall', 'floor'],
     // SPREAD AXLES W/CORVETTE FENDERS
     spreadAxle: false,
-    // 7000LB LEAF SPRING / TORSION
+    // 7000LB TORSION
     axleCapacity: '7000lb',
-    axleSuspension: 'dropspring',
+    axleSuspension: 'torsion',
   },
 
   'job-site': {
     // BASE & OVERHEAD CABINETS
-    cabinets: ['frontbase36', 'wallrun36', 'wallrun16'],
+    cabinets: ['frontbase36', 'frontoverhead16'],
     // ELECTRIC JACKS
     jacks: ['5000relectric'],
     // FLOOR + WALL E-TRACK + D-RINGS
@@ -59,7 +59,7 @@ export const PACKAGE_INITIAL_CONFIGS = {
 
   'base-camp': {
     // BASE & OVERHEAD CABINETS
-    cabinets: ['frontbase36', 'wallrun36', 'wallrun16'],
+    cabinets: ['frontbase36', 'frontoverhead16'],
     // ELECTRIC JACK
     jacks: ['5000relectric'],
     // 18K MINI SPLIT AC W/200V WIRE

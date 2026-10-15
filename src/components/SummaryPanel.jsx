@@ -5,21 +5,21 @@ import {
   AXLE_SUSPENSION_OPTIONS, AXLE_CAPACITY_OPTIONS,
   ELECTRICAL_OPTIONS, OFF_GRID_POWER_OPTIONS, INTERIOR_LIGHTING_OPTIONS, EXTERIOR_LIGHTING_OPTIONS,
   RECEPTACLE_OPTIONS,
-  PASSIVE_VENTILATION_OPTIONS, CLIMATE_CONTROL_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
+  PASSIVE_VENTILATION_OPTIONS, ROOFTOP_AC_OPTIONS, MINI_SPLIT_OPTIONS,
   REAR_ENTRANCE_OPTIONS, D_RINGS_OPTIONS, ADDITIONAL_D_RINGS_OPTIONS, E_TRACKS_OPTIONS, JACKS_OPTIONS,
   BATHROOM_PACKAGE_OPTIONS,
-  EXTERIOR_FINISH_OPTIONS, COLOR_OPTIONS, FRONT_STYLE_OPTIONS, EXTERIOR_BUILD_OPTIONS,
+  EXTERIOR_FINISH_OPTIONS, COLOR_OPTIONS, FRONT_STYLE_OPTIONS,
   PROTECTION_TYPE_OPTIONS, PROTECTION_SIZE_OPTIONS, FRONT_PROTECTION_OPTIONS,
   WHEEL_TYPE_OPTIONS, FLOOR_MATERIAL_OPTIONS, FLOOR_OVERLAY_OPTIONS, FLOOR_INSULATION_OPTIONS,
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
-  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
+  BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, WALL_RUN_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
   SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, SINK_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS, WINCH_OPTIONS, GENERATOR_BOX_OPTIONS, ESCAPE_DOOR_SIZE_OPTIONS, AWNING_OPTIONS
 } from '../constants/configData'
 import { getBaseTrailerPrice, getInteriorHeightPrice, getAxleConfigurationPrice } from '../hooks/usePricing'
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
 const VENTILATION_OPTIONS = PASSIVE_VENTILATION_OPTIONS;
-const CLIMATE_OPTIONS = [...CLIMATE_CONTROL_OPTIONS, ...ROOFTOP_AC_OPTIONS, ...MINI_SPLIT_OPTIONS];
+const CLIMATE_OPTIONS = [...ROOFTOP_AC_OPTIONS, ...MINI_SPLIT_OPTIONS];
 const RAMP_OPTIONS = REAR_ENTRANCE_OPTIONS;
 const TIE_DOWN_OPTIONS = [...D_RINGS_OPTIONS, ...ADDITIONAL_D_RINGS_OPTIONS, ...E_TRACKS_OPTIONS];
 const PROTECTION_OPTIONS = [...PROTECTION_TYPE_OPTIONS, ...PROTECTION_SIZE_OPTIONS, ...FRONT_PROTECTION_OPTIONS];
@@ -27,7 +27,7 @@ const WHEEL_OPTIONS = WHEEL_TYPE_OPTIONS;
 const FLOOR_OPTIONS = [...FLOOR_MATERIAL_OPTIONS, ...FLOOR_OVERLAY_OPTIONS, ...FLOOR_INSULATION_OPTIONS];
 const WALL_OPTIONS = [...WALL_MATERIAL_OPTIONS, ...WALL_INSULATION_OPTIONS];
 const CEILING_OPTIONS = [...CEILING_MATERIAL_OPTIONS, ...CEILING_INSULATION_OPTIONS];
-const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS, ...WHEEL_WALL_CABINET_OPTIONS];
+const CABINET_OPTIONS = [...BASE_CABINET_OPTIONS, ...OVERHEAD_CABINET_OPTIONS, ...WALL_RUN_OPTIONS, ...FULL_HEIGHT_CABINET_OPTIONS, ...WHEEL_WALL_CABINET_OPTIONS];
 const BATTERY_OPTIONS = OFF_GRID_POWER_OPTIONS;
 const BATHROOM_OPTIONS = BATHROOM_PACKAGE_OPTIONS;
 const RECEPTACLE_OPTIONS_ALL = RECEPTACLE_OPTIONS;
@@ -77,7 +77,7 @@ export default function SummaryPanel() {
       electrical, battery, lights, toggleLight, ventilation, climateControl,
       rampType, atpRamp, rearDoor, tieDowns, toggleTieDown, jacks, toggleJack,
       waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning, sinkPackage,
-      exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire, setSpareTire,
+      exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire, setSpareTire,
       floor, walls, ceiling, cabinets, toggleCabinet, toolBox, stairs, setStairs,
       angledLights, setAngledLights, vNoseETrack, setVNoseETrack, batteryBox, setBatteryBox,
       escapeDoor, setEscapeDoor, generatorBox, setGeneratorBox, winchSystem, setWinchSystem,
@@ -92,10 +92,10 @@ export default function SummaryPanel() {
       const w = find(WIDTH_OPTIONS, width);
       const l = find(LENGTH_OPTIONS, length);
       if (w && l) {
-        const wFormatted = w.label.replace('FT', '').replace(' GN', '');
+        const wFormatted = w.label.replace('FT', '').replace(/ GN| GOOSENECK/gi, '').trim();
         const lFormatted = l.label.replace("'", '');
         const comboLabel = w.id === '8.5ftgn' 
-          ? `${wFormatted} x ${lFormatted} ft GN`
+          ? `${wFormatted} x ${lFormatted} ft Gooseneck`
           : `${wFormatted} x ${lFormatted} ft`;
         items.push({ label: comboLabel, price: getBaseTrailerPrice(width, length) });
       }
@@ -203,14 +203,6 @@ export default function SummaryPanel() {
     }
     if (activeTab === 'ADD-ONS') {
       const items = []
-      
-      if (ctx.awning && ctx.awning.length > 0) {
-        const awningLen = ctx.awning[0];
-        const aOpt = find(AWNING_OPTIONS, awningLen);
-        if (aOpt) {
-          items.push({ label: `ELECTRIC AWNING ${aOpt.label}`, price: aOpt.price || 0, subtext: 'Solera electric retractable awning', onRemove: () => ctx.setAwningRaw([]) });
-        }
-      }
 
       const wp = find(WATER_PACKAGE_OPTIONS, waterPackage); if (wp && wp.id !== 'none') items.push({ label: wp.label, price: wp.price })
       if (sinkPackage) { const sp = find(SINK_PACKAGE_OPTIONS, sinkPackage); if (sp) items.push({ label: sp.label, price: sp.price, onRemove: () => ctx.setSinkPackage(null) }) }
@@ -234,43 +226,8 @@ export default function SummaryPanel() {
       }
       if (generatorBox && generatorBox !== 'none') { items.push({ label: 'GENERATOR BOX', price: 500, onRemove: () => setGeneratorBox('none') }) }
 
-      if (ladderRacks) { items.push({ label: 'LADDER RACKS', price: 250, onRemove: () => setLadderRacks(false) }) }
-
       if (recessedTireBox) { items.push({ label: 'RECESSED TIRE BOX', price: 200, onRemove: () => setRecessedTireBox(false) }) }
 
-      return items
-    }
-    if (activeTab === 'APPEARANCE') {
-      const items = []
-      const ef = find(EXTERIOR_FINISH_OPTIONS, exteriorFinish); 
-      if (ef && !ef.isStandard) {
-        let price = ef.price;
-        if (exteriorFinish === 'blackout') {
-          price *= parseInt(ctx.length) || 0;
-        }
-        items.push({ label: ef.label, price });
-      }
-      const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
-      const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && ea.id !== 'none') items.push({ label: ea.label, price: ea.price, subtext: ea.subtext })
-      const fs = find(FRONT_STYLE_OPTIONS, frontStyle); if (fs && !fs.isStandard) items.push({ label: fs.label, price: fs.price })
-      const eb = find(EXTERIOR_BUILD_OPTIONS, exteriorBuild); if (eb && !eb.isStandard) items.push({ label: eb.label, price: eb.price })
-      const rb = find(ROOF_BUILD_OPTIONS, roofBuild); 
-      if (rb && !rb.isStandard) {
-        let price = rb.price;
-        if (roofBuild === 'onepieceroof') price *= parseInt(ctx.length) || 0;
-        items.push({ label: rb.label, price });
-      }
-      const pt = find(PROTECTION_OPTIONS, protectionType); if (pt && !pt.isStandard) items.push({ label: pt.label, price: pt.price })
-      const ps = find(PROTECTION_OPTIONS, protectionSize); 
-      if (ps && !ps.isStandard) {
-        let price = ps.price;
-        if (protectionSize === '24') price *= parseInt(ctx.length) || 0;
-        items.push({ label: ps.label, price });
-      }
-      const fp = find(PROTECTION_OPTIONS, frontProtection); if (fp && !fp.isStandard) items.push({ label: fp.label, price: fp.price })
-      const lt = find(LUG_OPTIONS, lugType); if (lt && !lt.isStandard) items.push({ label: lt.label, price: lt.price })
-      const ts = find(TIRE_SIZE_OPTIONS, tireSize); if (ts && !ts.isStandard) items.push({ label: ts.label, price: ts.price })
-      const wh = find(WHEEL_OPTIONS, wheelType); if (wh && !wh.isStandard) items.push({ label: wh.label, price: wh.price })
       if (spareTire) { 
         let stPrice = 160;
         let stLabelExt = '5-lug';
@@ -288,6 +245,48 @@ export default function SummaryPanel() {
           onRemove: () => setSpareTire(false) 
         });
       }
+
+      return items
+    }
+    if (activeTab === 'APPEARANCE') {
+      const items = []
+      const ef = find(EXTERIOR_FINISH_OPTIONS, exteriorFinish); 
+      if (ef && !ef.isStandard) {
+        let price = ef.price;
+        if (exteriorFinish === 'blackout') {
+          price *= parseInt(ctx.length) || 0;
+        }
+        items.push({ label: ef.label, price });
+      }
+      const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
+      const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && !ea.isStandard) items.push({ label: ea.label, price: ea.price, subtext: ea.subtext, onRemove: () => setExteriorAccessories('rearwings') })
+      if (ctx.awning && ctx.awning.length > 0) {
+        const awningLen = ctx.awning[0];
+        const aOpt = find(AWNING_OPTIONS, awningLen);
+        if (aOpt) {
+          items.push({ label: `ELECTRIC AWNING ${aOpt.label}`, price: aOpt.price || 0, subtext: 'Solera electric retractable awning', onRemove: () => ctx.setAwningRaw([]) });
+        }
+      }
+      if (ladderRacks) { items.push({ label: 'LADDER RACKS', price: 250, onRemove: () => setLadderRacks(false) }) }
+      const fs = find(FRONT_STYLE_OPTIONS, frontStyle); if (fs && !fs.isStandard) items.push({ label: fs.label, price: fs.price })
+
+      const rb = find(ROOF_BUILD_OPTIONS, roofBuild); 
+      if (rb && !rb.isStandard) {
+        let price = rb.price;
+        if (roofBuild === 'onepieceroof') price *= parseInt(ctx.length) || 0;
+        items.push({ label: rb.label, price });
+      }
+      const pt = find(PROTECTION_OPTIONS, protectionType); if (pt && !pt.isStandard) items.push({ label: pt.label, price: pt.price })
+      const ps = find(PROTECTION_OPTIONS, protectionSize); 
+      if (ps && !ps.isStandard) {
+        let price = ps.price;
+        if (protectionSize === '24' || protectionSize === '12') price *= parseInt(ctx.length) || 0;
+        items.push({ label: ps.label, price });
+      }
+      const fp = find(PROTECTION_OPTIONS, frontProtection); if (fp && !fp.isStandard) items.push({ label: fp.label, price: fp.price })
+      const lt = find(LUG_OPTIONS, lugType); if (lt && !lt.isStandard) items.push({ label: lt.label, price: lt.price })
+      const ts = find(TIRE_SIZE_OPTIONS, tireSize); if (ts && !ts.isStandard) items.push({ label: ts.label, price: ts.price })
+      const wh = find(WHEEL_OPTIONS, wheelType); if (wh && !wh.isStandard) items.push({ label: wh.label, price: wh.price })
       const fl = find(FLOOR_OPTIONS, floor); 
       if (fl && !fl.isStandard) {
         let flPrice = fl.price;

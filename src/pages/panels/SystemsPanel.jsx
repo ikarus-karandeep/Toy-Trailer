@@ -7,7 +7,6 @@ import {
   OFF_GRID_POWER_OPTIONS,
   INTERIOR_LIGHTING_OPTIONS,
   EXTERIOR_LIGHTING_OPTIONS,
-  CLIMATE_CONTROL_OPTIONS,
   PASSIVE_VENTILATION_OPTIONS,
   ROOFTOP_AC_OPTIONS,
   MINI_SPLIT_OPTIONS
@@ -263,19 +262,6 @@ export default function SystemsPanel({ activeSectionTitle }) {
 
       {show('CLIMATE CONTROL') && (
         <OptionSection title="CLIMATE CONTROL">
-          <div className="flex flex-col gap-2 mb-8">
-            {CLIMATE_CONTROL_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price} badge={opt.badge}
-                isSelected={climateControl === opt.id}
-                onClick={() => setClimateControl(opt.id)}
-                packageBadge={getBadge(opt.id)}
-              />
-            ))}
-          </div>
-
           <div className="mb-8 contents">
           <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">PASSIVE VENTILATION</h4>

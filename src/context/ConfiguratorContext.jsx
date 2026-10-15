@@ -26,14 +26,18 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Size & Capacity
   const [width, setWidth] = useState(ic.width ?? '8.5ft')
-  const [length, setLength] = useState(ic.length ?? '32')
+  const [length, setLength] = useState(() => {
+    const initLen = ic.length ?? '32'
+    const isGN = (ic.width === '8.5ftgn') || (ic.frontStyle && ic.frontStyle.toLowerCase().includes('gooseneck'))
+    if (isGN && parseInt(initLen, 10) < 28) return '28'
+    return initLen
+  })
   const [frameSize, setFrameSize] = useState(ic.frameSize ?? '6in')
   const [axleCount, setAxleCount] = useState(ic.axleCount ?? 'tandem')
   const [axleSuspension, setAxleSuspension] = useState(ic.axleSuspension ?? 'torsion')
   const [axleCapacity, setAxleCapacity] = useState(ic.axleCapacity ?? '7000lb')
   const [interiorHeight, setInteriorHeight] = useState(ic.interiorHeight ?? '8ft6')
   const [spreadAxle, setSpreadAxle] = useState(ic.spreadAxle ?? false)
-  const [narrowTrackAxle, setNarrowTrackAxle] = useState(ic.narrowTrackAxle ?? false)
 
   // Automatically select 'torsion' suspension when spread axle is turned on
   const isFirstSpreadAxle = useRef(true);
@@ -57,9 +61,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? null)
   const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'brandywine')
-  const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'none')
+  const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'rearwings')
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
-  const [exteriorBuild, setExteriorBuild] = useState(ic.exteriorBuild ?? 'semiscrewed')
   const [roofBuild, setRoofBuild] = useState(ic.roofBuild ?? 'onepieceroof')
   const [protectionType, setProtectionType] = useState(ic.protectionType ?? 'atp')
   const [protectionSize, setProtectionSize] = useState(ic.protectionSize ?? '24')
@@ -158,7 +161,6 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [vNoseETrack, setVNoseETrack] = useState(ic.vNoseETrack ?? false)
   const [batteryBox, setBatteryBox] = useState(ic.batteryBox ?? false)
   const [lShapeCounter, setLShapeCounter] = useState(ic.lShapeCounter ?? false)
-  const [genSlides, setGenSlides] = useState(ic.genSlides ?? false)
   const [genDoor, setGenDoor] = useState(ic.genDoor ?? false)
 
   // Base addons (Base node graph)
@@ -189,10 +191,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     if (heightIndex >= 2) {
       setRampType('superduty');
     }
-    if (heightIndex >= 3) {
-      setWinchSystem(true);
-    }
-  }, [interiorHeight, setRampType, setWinchSystem]);
+
+  }, [interiorHeight, setRampType]);
 
   // Awning length clamping based on trailer length
   useEffect(() => {
@@ -291,6 +291,21 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [width, frontStyle, jacks, setJacksRaw]);
 
+  // Gooseneck minimum length enforcement (shortest length is 28)
+  useEffect(() => {
+    const isGooseneck = width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'));
+    if (isGooseneck && parseInt(length, 10) < 28) {
+      setLength('28');
+    }
+  }, [width, frontStyle, length]);
+
+  // Triple axle is not available on 7ft trailers
+  useEffect(() => {
+    if (width === '7ft' && axleCount === 'triple') {
+      setAxleCount('tandem');
+    }
+  }, [width, axleCount]);
+
   const [visitedTabs, setVisitedTabs] = useState(new Set(['SIZE & CAPACITY']))
   const markTabVisited = useCallback((tab) => setVisitedTabs(prev => new Set([...prev, tab])), [])
   const completionPercent = useMemo(() => Math.round((visitedTabs.size / 6) * 100), [visitedTabs])
@@ -302,7 +317,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     waterPackage, bathroom, stairs, angledLights, vNoseETrack, batteryBox, sinkPackage,
     escapeDoor, generatorBox, winchSystem, extendedTripleTongue, radioPackageSpeaker,
     rearSpoiler, ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,
-    exteriorFinish, exteriorAccessories, frontStyle, exteriorBuild, roofBuild,
+    exteriorFinish, exteriorAccessories, frontStyle, roofBuild,
     protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType,
     spareTire, floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, toolBox, dRings,
     windows, dRings, acPrep, sideDoorBarLock, driverSideDoor, passengerSideDoor,
@@ -319,7 +334,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   const applyPackage = useCallback((pkgId, pkgConfig) => {
     setPackageId(pkgId);
-    setExteriorAccessories(pkgConfig.exteriorAccessories ?? 'none');
+    setExteriorAccessories(pkgConfig.exteriorAccessories ?? 'rearwings');
     setRearSpoiler(pkgConfig.rearSpoiler ?? false);
     setWheelType(pkgConfig.wheelType ?? 'standardsilver');
     setAngledLights(pkgConfig.angledLights ?? false);
@@ -359,7 +374,6 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     axleCapacity, setAxleCapacity,
     interiorHeight, setInteriorHeight,
     spreadAxle, setSpreadAxle,
-    narrowTrackAxle, setNarrowTrackAxle,
     axleAngled, setAxleAngled,
     axleAtp, setAxleAtp,
     axleRating,
@@ -367,7 +381,6 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     selectedColor, setSelectedColor,
     exteriorAccessories, setExteriorAccessories,
     frontStyle, setFrontStyle,
-    exteriorBuild, setExteriorBuild,
     roofBuild, setRoofBuild,
     protectionType, setProtectionType,
     protectionSize, setProtectionSize,
@@ -424,7 +437,6 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     concessionWidth, setConcessionWidth,
     concessionHeight, setConcessionHeight,
     lShapeCounter, setLShapeCounter,
-    genSlides, setGenSlides,
     genDoor, setGenDoor,
     windows, setWindows,
     windowSizes, setWindowSizes,
@@ -443,14 +455,14 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   }), [
     packageId, applyPackage, activeTab, viewMode, summaryOpen, focusedCamera, cameraResetTrigger, triggerCameraReset,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
-    spreadAxle, narrowTrackAxle, axleAngled, axleAtp, axleRating,
-    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, exteriorBuild, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
+    spreadAxle, axleAngled, axleAtp, axleRating,
+    exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
     electrical, battery, lights, interiorLights, exteriorLights, ledRope, ventilation, climateControl, acPrep, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, dRings, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,
-    escapeDoor, concessionDoor, glassScreen, generatorBox, concessionWidth, concessionHeight, lShapeCounter, genSlides, genDoor, winchSystem,
+    escapeDoor, concessionDoor, glassScreen, generatorBox, concessionWidth, concessionHeight, lShapeCounter, genDoor, winchSystem,
     windows, windowSizes,
     extendedTripleTongue, radioPackageSpeaker, rearSpoiler,
     ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,

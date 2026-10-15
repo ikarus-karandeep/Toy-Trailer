@@ -53,13 +53,33 @@ export default function DotSlider({ options, value, onChange, badge }) {
 
   const handleMouseDown = (e) => {
     e.preventDefault()
+    const startX = e.clientX
+    let isMoving = false
     setDragRatio(getRatio(e.clientX))
 
-    const onMove = (ev) => setDragRatio(getRatio(ev.clientX))
+    const onMove = (ev) => {
+      if (Math.abs(ev.clientX - startX) > 3) isMoving = true
+      setDragRatio(getRatio(ev.clientX))
+    }
     const onUp = (ev) => {
       const idx = ratioToIndex(getRatio(ev.clientX))
-      if (!options[idx].locked) {
+      if (!options[idx]?.locked) {
         onChange(options[idx].id)
+      } else if (isMoving) {
+        let closestUnlocked = -1
+        let minDistance = Infinity
+        options.forEach((opt, i) => {
+          if (!opt.locked) {
+            const dist = Math.abs(i - idx)
+            if (dist < minDistance) {
+              minDistance = dist
+              closestUnlocked = i
+            }
+          }
+        })
+        if (closestUnlocked !== -1) {
+          onChange(options[closestUnlocked].id)
+        }
       }
       setDragRatio(null)
       window.removeEventListener('mousemove', onMove)
@@ -70,14 +90,34 @@ export default function DotSlider({ options, value, onChange, badge }) {
   }
 
   const handleTouchStart = (e) => {
+    const startX = e.touches[0].clientX
+    let isMoving = false
     setDragRatio(getRatio(e.touches[0].clientX))
 
-    const onMove = (ev) => setDragRatio(getRatio(ev.touches[0].clientX))
+    const onMove = (ev) => {
+      if (Math.abs(ev.touches[0].clientX - startX) > 3) isMoving = true
+      setDragRatio(getRatio(ev.touches[0].clientX))
+    }
     const onEnd = (ev) => {
       const touch = ev.changedTouches[0]
       const idx = ratioToIndex(getRatio(touch.clientX))
-      if (!options[idx].locked) {
+      if (!options[idx]?.locked) {
         onChange(options[idx].id)
+      } else if (isMoving) {
+        let closestUnlocked = -1
+        let minDistance = Infinity
+        options.forEach((opt, i) => {
+          if (!opt.locked) {
+            const dist = Math.abs(i - idx)
+            if (dist < minDistance) {
+              minDistance = dist
+              closestUnlocked = i
+            }
+          }
+        })
+        if (closestUnlocked !== -1) {
+          onChange(options[closestUnlocked].id)
+        }
       }
       setDragRatio(null)
       window.removeEventListener('touchmove', onMove)

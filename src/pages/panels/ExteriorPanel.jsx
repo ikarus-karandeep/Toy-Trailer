@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useConfigurator } from '../../context/ConfiguratorContext'
 import { usePackageBadge } from '../../hooks/usePackageBadge'
 import {
@@ -6,7 +6,6 @@ import {
   COLOR_OPTIONS,
   EXTERIOR_ACCESSORIES_OPTIONS,
   FRONT_STYLE_OPTIONS,
-  EXTERIOR_BUILD_OPTIONS,
   ROOF_BUILD_OPTIONS,
   PROTECTION_TYPE_OPTIONS,
   PROTECTION_SIZE_OPTIONS,
@@ -15,11 +14,13 @@ import {
   TIRE_SIZE_OPTIONS,
   LUG_OPTIONS,
   SIDE_DOOR_OPTIONS,
+  AWNING_OPTIONS,
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import ColorSwatch from '../../components/ColorSwatch'
 import ToggleSwitch from '../../components/ToggleSwitch'
+import DotSlider from '../../components/DotSlider'
 
 export default function ExteriorPanel({ activeSectionTitle }) {
   const {
@@ -28,7 +29,6 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     preBlackoutColor, setPreBlackoutColor,
     exteriorAccessories, setExteriorAccessories,
     frontStyle, setFrontStyle,
-    exteriorBuild, setExteriorBuild,
     roofBuild, setRoofBuild,
     protectionType, setProtectionType,
     protectionSize, setProtectionSize,
@@ -36,14 +36,48 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     lugType, setLugType,
     tireSize, setTireSize,
     wheelType, setWheelType,
-    spareTire, setSpareTire,
     sideDoorsType, setSideDoorsType,
     blackoutCabinetDoors, setBlackoutCabinetDoors,
     width, length,
     stairs, setStairs,
+    ladderRacks, setLadderRacks,
+    awning, setAwningRaw,
     viewMode, setViewMode,
     setFocusedCamera
   } = useConfigurator()
+
+  const [awningLength, setAwningLength] = useState(awning?.length > 0 ? awning[0] : '18ft')
+
+  // Sync local slider state with global awning state changes
+  useEffect(() => {
+    if (awning && awning.length > 0) {
+      setAwningLength(awning[0]);
+    }
+  }, [awning]);
+
+  const awningLengthOptions = AWNING_OPTIONS.filter(opt => {
+    const optLen = parseInt(opt.id);
+    const trailerLen = parseInt(length || '24');
+    return optLen <= trailerLen;
+  }).map(opt => {
+    const optLen = parseInt(opt.id);
+    const trailerLen = parseInt(length || '24');
+    let locked = false;
+    if (optLen >= 24 && trailerLen < 32) locked = true;
+    else if (optLen >= 18 && optLen <= 22 && trailerLen <= 28) locked = true;
+    else if (optLen === 16 && trailerLen <= 26) locked = true;
+
+    return {
+      ...opt,
+      locked
+    };
+  });
+
+  const getAwningBadge = (len) => {
+    const opt = AWNING_OPTIONS.find(o => o.id === len)
+    if (opt && opt.price > 0) return `+$${opt.price.toLocaleString()}`
+    return null
+  }
 
   const getBadge = usePackageBadge()
 
@@ -53,7 +87,11 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     if (isShortTrailer) setSideDoorsType('flatpanel')
   }, [isShortTrailer])
 
-  const show = (title) => !activeSectionTitle || activeSectionTitle === title
+  const show = (title) => {
+    if (!activeSectionTitle) return true
+    if (activeSectionTitle === 'EXTERIOR ACCESSORIES' && (title === 'LADDER RACKS' || title === 'AWNINGS')) return true
+    return activeSectionTitle === title
+  }
 
   return (
     <div className="contents">
@@ -204,9 +242,61 @@ export default function ExteriorPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
+      {show('AWNINGS') && (
+        <OptionSection title="AWNINGS">
+          {parseFloat(length) < 24 ? (
+            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+              * Awning options are hidden for trailers under 24ft length.
+            </p>
+          ) : (
+            <>
+              <img
+                src="/Awnings.webp"
+                alt="Awning preview"
+                className="w-full rounded-xl object-cover mb-4"
+                onError={(e) => { e.currentTarget.style.display = 'none' }}
+              />
+              <div className="flex flex-col gap-2">
+                <OptionPill
+                  label="Electric Awning"
+                  isSelected={awning?.length > 0}
+                  onClick={() => {
+                    if (awning?.length > 0) {
+                      setAwningRaw([])
+                    } else {
+                      setAwningRaw([awningLength])
+                      setFocusedCamera("Electric Awning Camera")
+                    }
+                  }}
+                />
+              </div>
+              {awning?.length > 0 && (
+                <div className="mt-6 px-4">
+                  <DotSlider
+                    options={awningLengthOptions.map(opt => ({
+                      ...opt,
+                      lockedReason: opt.locked 
+                        ? `Some larger awning sizes are disabled to fit your current trailer. ${opt.label} requires ${opt.label === '16ft' ? '28ft+' : opt.label === '24ft' ? '32ft+' : '30ft+'}` 
+                        : null
+                    }))}
+                    value={awningLength}
+                    onChange={(val) => {
+                      setAwningLength(val)
+                      setAwningRaw([val])
+                      setFocusedCamera("Electric Awning Camera")
+                    }}
+                    badge={getAwningBadge(awningLength)}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </OptionSection>
+      )}
+
       {show('FRONT STYLE') && (
         <OptionSection title="FRONT STYLE">
-          <p className="text-gray-400 text-xs mb-3">V-nose adds 3ft of nose storage. Flat front maximizes cargo floor length</p>
+          <p className="text-gray-400 text-xs mb-3">V-nose adds 3ft of nose storage</p>
           <div className="flex flex-wrap gap-2">
             {FRONT_STYLE_OPTIONS.map((opt) => (
               <OptionPill
@@ -240,35 +330,8 @@ export default function ExteriorPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
-      {(show('EXTERIOR BUILD') || show('ROOF BUILD')) && (
+      {(show('ROOF BUILD')) && (
   <OptionSection>
-    {/* EXTERIOR BUILD */}
-    {(show('EXTERIOR BUILD') || !activeSectionTitle) && (
-      <div>
-        <h2 className="text-white font-medium text-[13px] md:text-[18px] lg:text-[20px] tracking-widest uppercase mb-2">EXTERIOR BUILD</h2>
-        <p className="text-gray-400 text-xs tracking-wider mb-6">
-          Conceals fasteners on major panels
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {EXTERIOR_BUILD_OPTIONS.map((opt) => (
-            <OptionPill
-              key={opt.id}
-              label={opt.label}
-              price={opt.price} badge={opt.badge}
-              isStandard={opt.isStandard}
-              isSelected={exteriorBuild === opt.id}
-              onClick={() => setExteriorBuild(exteriorBuild === opt.id ? null : opt.id)}
-            />
-          ))}
-        </div>
-      </div>
-    )}
-
-    {/* DIVIDER */}
-    {(!activeSectionTitle || (show('EXTERIOR BUILD') && show('ROOF BUILD'))) && (
-      <div className="border-t border-[#5D5E60]"></div>
-    )}
-
     {/* ROOF BUILD */}
     {(show('ROOF BUILD') || !activeSectionTitle) && (
       <div>
@@ -292,6 +355,20 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     )}
   </OptionSection>
 )}
+
+      {show('LADDER RACKS') && (
+        <OptionSection title="LADDER RACKS">
+          <ToggleSwitch
+            label="INCLUDE LADDER RACKS"
+            checked={ladderRacks}
+            onChange={(val) => {
+              setLadderRacks(val);
+              if (val) setFocusedCamera("Top Supports Camera");
+            }}
+          />
+        </OptionSection>
+      )}
+
 
       {(show('TRAILER PROTECTION (SIDES & REAR)') || show('TRAILER PROTECTION (FRONT)')) && (
   <OptionSection title="TRAILER PROTECTION (SIDES & REAR)">
@@ -423,18 +500,6 @@ export default function ExteriorPanel({ activeSectionTitle }) {
         <img src={wheelType === 'spideraluminum' ? "/spider wheel.webp" : "/standard wheel.webp"} alt="image" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
       </div>
     </div>
-
-    <div className="border-t border-[#5D5E60] my-5" />
-
-    {/* SPARE TIRE TOGGLE */}
-    <ToggleSwitch
-      label="INCLUDE SPARE TIRE"
-      checked={spareTire}
-      onChange={(val) => {
-        setSpareTire(val);
-        if (val) setFocusedCamera("Spare Tire Mount Camera");
-      }}
-    />
 
   </OptionSection>
 )}

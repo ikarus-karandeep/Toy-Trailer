@@ -1,10 +1,10 @@
 export const PANEL_SECTIONS = {
-  'SIZE & CAPACITY': ['WIDTH', 'LENGTH', 'FRAME SIZE', 'AXLE COUNT', 'AXLE SUSPENSION', 'AXLE CAPACITY', 'INTERIOR HEIGHT', 'SPREAD AXLE W/ CORVETTE FENDERS', 'NARROW TRACK AXLE'],
-  'EXTERIOR': ['EXTERIOR FINISH', 'EXTERIOR ACCESSORIES', 'FRONT STYLE', 'EXTERIOR BUILD', 'ROOF BUILD', 'TRAILER PROTECTION (SIDES & REAR)', 'TRAILER PROTECTION (FRONT)', 'WHEELS AND FINISHING'],
-  'INTERIOR': ['PIT PACK', 'FLOOR', 'WALLS', 'CEILING', 'CABINETS'],
+  'SIZE & CAPACITY': ['WIDTH', 'LENGTH', 'FRAME SIZE', 'INTERIOR HEIGHT', 'SPREAD AXLE W/ CORVETTE FENDERS', 'AXLE SUSPENSION', 'AXLE COUNT', 'AXLE CAPACITY'],
+  'EXTERIOR': ['EXTERIOR FINISH', 'EXTERIOR ACCESSORIES', 'AWNINGS', 'FRONT STYLE', 'ROOF BUILD', 'LADDER RACKS', 'TRAILER PROTECTION (SIDES & REAR)', 'TRAILER PROTECTION (FRONT)', 'WHEELS AND FINISHING'],
+  'INTERIOR': ['PIT PACK', 'FLOOR', 'WALLS', 'CEILING', 'CABINETS', 'WALL RUN'],
   'SYSTEMS': ['ELECTRICAL', 'LIGHTS', 'CLIMATE CONTROL'],
   'LOADING': ['REAR ENTRANCE', 'SIDE DOOR', 'ESCAPE DOOR', 'CONCESSION DOOR', 'WINDOWS', 'TIE DOWNS (MULTI-CHOICE)', 'JACKS (MULTI-CHOICE)'],
-  'ADD-ONS': ['WATER PACKAGE & SINK', 'BATHROOM PACKAGES', 'AWNINGS', 'BASE ADDONS'],
+  'ADD-ONS': ['BATHROOM PACKAGES', 'WATER PACKAGE & SINK', 'SPARE TIRE', 'BASE ADDONS'],
 }
 
 export const TABS = [
@@ -20,7 +20,7 @@ export const TABS = [
 export const WIDTH_OPTIONS = [
   { id: '7ft',    label: '7FT',     price: null,  note: "7' wide trailer" },
   { id: '8.5ft',  label: '8.5FT',  price: null,  note: "8.5' wide trailer" },
-  { id: '8.5ftgn', label: '8.5FT GN', price: 9999, note: "8.5' gooseneck wide" },
+  { id: '8.5ftgn', label: '8.5FT GOOSENECK', price: 9999, note: "8.5' gooseneck wide" },
 ];
 
 export const LENGTH_OPTIONS = [
@@ -100,8 +100,7 @@ export const EXTERIOR_FINISH_OPTIONS = [
 ];
 
 export const EXTERIOR_ACCESSORIES_OPTIONS = [
-  { id: 'none', label: 'NONE', isStandard: true },
-  { id: 'rearwings', label: 'REAR WINGS' },
+  { id: 'rearwings', label: 'REAR WINGS', isStandard: true },
   { id: 'rearwingspoiler', label: 'REAR SPOILER WING W/ (2) RACING LIGHTS (STANDALONE)', price: 540, subtext: 'Rear wing — included in Race Package, available separately on any build' },
 ];
 
@@ -150,18 +149,15 @@ export const FRONT_STYLE_OPTIONS = [
 ];
 
 export const FRONT_STYLE_NOTES = [
-  'V-NOSE ADDS 3FT OF NOSE STORAGE',
-  'FLAT FRONT MAXIMIZES CARGO FLOOR LENGTH',
+  'V-NOSE ADDS 3FT OF NOSE STORAGE'
 ];
 
-export const EXTERIOR_BUILD_OPTIONS = [
-  { id: 'semiscrewed', label: 'SEMI-SCREWED' },
-];
+
 
 export const ROOF_BUILD_OPTIONS = [
   { 
     id: 'onepieceroof', 
-    label: 'ONE PIECE ALUMINUM ROOF - SDYNAMIC',
+    label: 'ONE PIECE ALUMINUM ROOF',
     price: 18,
     badge: '+$18/LFT',
     subtext: 'Seamless aluminum roof vs standard galvalume'
@@ -170,18 +166,22 @@ export const ROOF_BUILD_OPTIONS = [
 
 export const PROTECTION_TYPE_OPTIONS = [
   { id: 'atp', label: 'ATP' },
-  { id: 'anodized', label: 'ANODIZED' },
-  { id: 'coloredmetal', label: 'COLORED METAL' },
 ];
 
 export const PROTECTION_SIZE_OPTIONS = [
-  { id: '12', label: '12"', price: 320 },
+  { 
+    id: '12', 
+    label: '12"', 
+    price: 16,
+    badge: '+$16/LFT',
+    subtext: '12" ATP or colored metal band, sides and rear'
+  },
   { 
     id: '24', 
     label: '24"', 
-    price: 22,
-    badge: '+$22/LFT',
-    subtext: 'Diamond plate protection on lower panels, sides and rear'
+    price: 20,
+    badge: '+$20/LFT',
+    subtext: '24" ATP or colored metal band, sides and rear'
   },
 ];
 
@@ -192,7 +192,7 @@ export const FRONT_PROTECTION_OPTIONS = [
 export const WHEEL_TYPE_OPTIONS = [
   { id: 'standardsilver', label: 'STANDARD SILVER' },
   { id: 'blacksteel', label: 'BLACK STEEL' },
-  { id: 'spideraluminum', label: 'SPIDER ALUMINUM MAGS - SDYNAMIC' },
+  { id: 'spideraluminum', label: 'SPIDER ALUMINUM MAGS' },
 ];
 
 export const TIRE_SIZE_OPTIONS = [
@@ -240,7 +240,7 @@ export const WALL_INSULATION_OPTIONS = [
 export const CEILING_MATERIAL_OPTIONS = [
   { id: 'thermaply', label: 'THERMA-PLY', isStandard: true },
   { id: 'white_metal_ceiling', label: 'ALUMINUM INTERIOR CEILING', price: 30, badge: '+$30/LFT', subtext: 'White metal ceiling liner' },
-  { id: 'atp_ceiling', label: 'ATP CEILING (DIAMOND PLATE CEILING) - $DYNAMIC', price: null },
+  { id: 'atp_ceiling', label: 'ATP CEILING (DIAMOND PLATE CEILING)', price: null },
 ];
 
 export const CEILING_INSULATION_OPTIONS = [
@@ -248,17 +248,20 @@ export const CEILING_INSULATION_OPTIONS = [
 ];
 
 export const BASE_CABINET_OPTIONS = [
-  { id: 'wallrun36', label: 'WALL RUN 36"H - $DYNAMIC', price: 115, badge: '+$115/LFT' },
   { id: 'frontbase36', label: 'FRONT BASE 36"H', price: 878 },
 ];
 
 export const OVERHEAD_CABINET_OPTIONS = [
-  { id: 'wallrun16', label: 'WALL RUN 16"H', price: 122, badge: '+$122/LFT' },
   { id: 'frontoverhead16', label: 'FRONT OVERHEAD 16"H', price: 945 },
 ];
 
+export const WALL_RUN_OPTIONS = [
+  { id: 'wallrun36', label: 'WALL RUN 36"H', price: 115, badge: '+$115/LFT' },
+  { id: 'wallrun16', label: 'WALL RUN 16"H', price: 122, badge: '+$122/LFT' },
+];
+
 export const FULL_HEIGHT_CABINET_OPTIONS = [
-  { id: 'fullheight', label: 'FULL HEIGHT CABINET - $DYNAMIC', price: null },
+  { id: 'fullheight', label: 'FULL HEIGHT CABINET', price: null },
 ];
 
 export const WHEEL_WALL_CABINET_OPTIONS = [
@@ -290,7 +293,7 @@ export const OFF_GRID_POWER_OPTIONS = [
 export const INTERIOR_LIGHTING_OPTIONS = [
   { id: '12vleddome',   label: '12V LED DOME LIGHT',                 price: 20  },
   { id: '12vflatpanel', label: '12V 24" FLAT PANEL LED (2 INCLUDED)', price: 135 },
-  { id: 'ledrope',      label: 'LED ROPE LIGHTING - $DYNAMIC',        price: null },
+  { id: 'ledrope',      label: 'LED ROPE LIGHTING',                   price: null },
 ];
 
 export const EXTERIOR_LIGHTING_OPTIONS = [
@@ -307,10 +310,6 @@ export const PASSIVE_VENTILATION_OPTIONS = [
   { id: 'nonpoweredvent', label: 'NON-POWERED ROOF VENT', price: 40 },
   { id: 'smokenonpowered', label: 'SMOKE COLORED NON-POWERED VENT', price: 40 },
   { id: '2waysidewall', label: '2-WAY SIDEWALL VENTS (SET OF 2)', price: 100 },
-];
-
-export const CLIMATE_CONTROL_OPTIONS = [
-  { id: 'none', label: 'NO CLIMATE CONTROL' },
 ];
 
 export const ROOFTOP_AC_OPTIONS = [
@@ -386,9 +385,8 @@ export const ADDITIONAL_D_RINGS_OPTIONS = [
 ];
 
 export const E_TRACKS_OPTIONS = [
-  { id: 'wall', label: 'WALL E-TRACK (CONTINUOUS ALUMINUM TRACK ALONG WALL) - $DYNAMIC', price: 11, badge: '+$11/LFT' },
-  { id: 'floor', label: 'FLOOR E-TRACK + STEEL BACKER - $DYNAMIC', price: 14, badge: '+$14/LFT' },
-  { id: 'small', label: 'SMALL SECTION E-TRACK - $DYNAMIC' },
+  { id: 'wall', label: 'WALL E-TRACK (CONTINUOUS ALUMINUM TRACK ALONG WALL)', price: 11, badge: '+$11/LFT' },
+  { id: 'floor', label: 'FLOOR E-TRACK + STEEL BACKER', price: 14, badge: '+$14/LFT' },
 ];
 
 export const JACKS_OPTIONS = [

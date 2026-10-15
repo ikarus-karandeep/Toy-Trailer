@@ -12,6 +12,7 @@ import {
   CEILING_INSULATION_OPTIONS,
   BASE_CABINET_OPTIONS,
   OVERHEAD_CABINET_OPTIONS,
+  WALL_RUN_OPTIONS,
   FULL_HEIGHT_CABINET_OPTIONS,
   WHEEL_WALL_CABINET_OPTIONS,
   TOOL_BOX_OPTIONS
@@ -41,6 +42,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     ceilingInsulation, setCeilingInsulation,
     floorInsulation, setFloorInsulation,
     atpWheelWells, setAtpWheelWells,
+    recessedTireBox, setRecessedTireBox,
     setFocusedCamera
   } = useConfigurator()
 
@@ -66,7 +68,19 @@ export default function InteriorPanel({ activeSectionTitle }) {
 
 
   useEffect(() => {
-    // Removed automatic overhead cabinet removal when base cabinet is not selected
+    let changed = false;
+    let next = [...cabinets];
+    if (next.includes('frontbase36') && next.includes('wallrun36')) {
+      next = next.filter(c => c !== 'wallrun36');
+      changed = true;
+    }
+    if (next.includes('frontoverhead16') && next.includes('wallrun16')) {
+      next = next.filter(c => c !== 'wallrun16');
+      changed = true;
+    }
+    if (changed) {
+      setCabinetsRaw(next);
+    }
   }, [cabinets])
 
   return (
@@ -90,7 +104,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   const newValue = !pitPack
                   setPitPack(newValue)
                   if (newValue) {
-                    setCabinetsRaw(prev => [...new Set([...prev, 'frontbase36', 'frontoverhead16'])])
+                    setCabinetsRaw(prev => [...new Set([...prev.filter(c => c !== 'wallrun36' && c !== 'wallrun16'), 'frontbase36', 'frontoverhead16'])])
                     setWalls('white_metal_walls')
                     setCeiling('white_metal_ceiling')
                     if (setExteriorFinish) setExteriorFinish('blackout')
@@ -259,19 +273,13 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">BASE CABINETS</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">ATP Diamond Plate Finish. Countertop Included.</p>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Wall cabinet runs require a specified run length — price updates live as the slider moves.</p>
             <div className="flex flex-col gap-2">
               {BASE_CABINET_OPTIONS.map((opt) => {
                 let isLocked = hasSinkConflict;
                 let reason = hasSinkConflict ? "Base cabinets are disabled because the Sink Package is currently applied." : null;
-                if (opt.id === 'wallrun36') {
-                  if (parseFloat(length) < 24) {
-                    isLocked = true;
-                    reason = "Wall Run 36\"H cabinet is disabled for trailers under 24ft length.";
-                  } else if (hasWallRunConflict) {
-                    isLocked = true;
-                    reason = "Wall Run 36\"H cabinet is disabled because a driver side door is currently applied.";
-                  }
+                if (!isLocked && opt.id === 'frontbase36' && cabinets.includes('wallrun36')) {
+                  isLocked = true;
+                  reason = "Front Base Cabinet is disabled because Wall Run 36\"H is applied.";
                 }
                 let displayPrice = opt.price;
                 if ((opt.id === 'frontbase36' || opt.id === 'frontoverhead16') && frontStyle === 'flatfront') {
@@ -291,10 +299,9 @@ export default function InteriorPanel({ activeSectionTitle }) {
                       if (isLocked) return;
                       if (!cabinets.includes(opt.id)) {
                         const baseIds = BASE_CABINET_OPTIONS.map(o => o.id);
-                        const toRemove = [...baseIds];
+                        const toRemove = [...baseIds, 'wallrun36'];
                         const newCabinets = cabinets.filter(c => !toRemove.includes(c));
                         setCabinetsRaw([...newCabinets, opt.id]);
-                        if (opt.id === 'wallrun36') setFocusedCamera("Wall_Run_Cabinet_Camera");
                         if (opt.id === 'frontbase36') setFocusedCamera("Front_Cabinets_Camera");
                       } else {
                         // Toggle off - do not remove overhead automatically
@@ -313,19 +320,13 @@ export default function InteriorPanel({ activeSectionTitle }) {
           <div className="mb-4">
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">OVERHEAD CABINETS</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">N/A with Slant/ Slant V-Nose.</p>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Wall cabinet runs require a specified run length — price updates live as the slider moves.</p>
             <div className="flex flex-col gap-2">
               {OVERHEAD_CABINET_OPTIONS.map((opt) => {
                 let isLocked = false;
                 let reason = null;
-                if (opt.id === 'wallrun16') {
-                  if (parseFloat(length) < 24) {
-                    isLocked = true;
-                    reason = "Wall Run 16\"H cabinet is disabled for trailers under 24ft length.";
-                  } else if (hasWallRunConflict) {
-                    isLocked = true;
-                    reason = "Wall Run 16\"H cabinet is disabled because a driver side door is currently applied.";
-                  }
+                if (opt.id === 'frontoverhead16' && cabinets.includes('wallrun16')) {
+                  isLocked = true;
+                  reason = "Front Overhead Cabinet is disabled because Wall Run 16\"H is applied.";
                 }
                 
                 return (
@@ -341,9 +342,9 @@ export default function InteriorPanel({ activeSectionTitle }) {
                       if (!cabinets.includes(opt.id)) {
                         // Remove other overhead cabinets when selecting one
                         const overheadIds = OVERHEAD_CABINET_OPTIONS.map(o => o.id);
-                        const newCabinets = cabinets.filter(c => !overheadIds.includes(c));
+                        const toRemove = [...overheadIds, 'wallrun16'];
+                        const newCabinets = cabinets.filter(c => !toRemove.includes(c));
                         setCabinetsRaw([...newCabinets, opt.id]);
-                        if (opt.id === 'wallrun16') setFocusedCamera("Overhead_Wall_Run_Cabinet_Camera");
                         if (opt.id === 'frontoverhead16') setFocusedCamera("Front_Cabinets_Camera");
                       } else {
                         // Toggle off
@@ -355,6 +356,16 @@ export default function InteriorPanel({ activeSectionTitle }) {
                 );
               })}
             </div>
+          </div>
+          <div>
+            <ToggleSwitch
+              label="Blackout Cabinet Doors"
+              checked={blackoutCabinetDoors}
+              onChange={(val) => {
+                setBlackoutCabinetDoors(val);
+                if (val) setFocusedCamera("Front_Cabinets_Camera");
+              }}
+            />
           </div>
           <p className='border-t border-[#5D5E60]'></p>
 
@@ -392,7 +403,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
           </div>
           <p className='border-t border-[#5D5E60]'></p>
 
-          <div className="mb-4">
+          <div>
             <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">WHEEL WALL CABINET</h4>
             <div className="flex flex-col gap-2">
               {WHEEL_WALL_CABINET_OPTIONS.map((opt) => {
@@ -420,15 +431,100 @@ export default function InteriorPanel({ activeSectionTitle }) {
               )})}
             </div>
           </div>
+        </OptionSection>
+      )}
+
+      {show('WALL RUN') && (
+        <OptionSection title="WALL RUN">
+          <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
+            Wall cabinet runs require a specified run length — price updates live as the slider moves.
+          </p>
           <div>
-            <ToggleSwitch
-              label="Blackout Cabinet Doors"
-              checked={blackoutCabinetDoors}
-              onChange={(val) => {
-                setBlackoutCabinetDoors(val);
-                if (val) setFocusedCamera("Front_Cabinets_Camera");
-              }}
-            />
+            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">BASE CABINETS</h4>
+            <div className="flex flex-col gap-2">
+              {WALL_RUN_OPTIONS.filter((opt) => opt.id === 'wallrun36').map((opt) => {
+                let isLocked = false;
+                let reason = null;
+                if (parseFloat(length) < 24) {
+                  isLocked = true;
+                  reason = `${opt.label} cabinet is disabled for trailers under 24ft length.`;
+                } else if (hasWallRunConflict) {
+                  isLocked = true;
+                  reason = `${opt.label} cabinet is disabled because a driver side door is currently applied.`;
+                } else if (cabinets.includes('frontbase36')) {
+                  isLocked = true;
+                  reason = `${opt.label} cabinet is disabled because Front Base Cabinet is applied.`;
+                }
+                
+                return (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    badge={opt.badge}
+                    isLocked={isLocked}
+                    disabledReason={reason}
+                    isSelected={cabinets.includes(opt.id)}
+                    onClick={() => {
+                      if (isLocked) return;
+                      if (!cabinets.includes(opt.id)) {
+                        const newCabinets = cabinets.filter(c => c !== 'frontbase36');
+                        setCabinetsRaw([...newCabinets, opt.id]);
+                        setFocusedCamera("Wall_Run_Cabinet_Camera");
+                      } else {
+                        setCabinetsRaw(cabinets.filter(c => c !== opt.id));
+                      }
+                    }}
+                    isMulti={true}
+                    packageBadge={getBadge(opt.id)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <p className='border-t border-[#5D5E60]'></p>
+          <div>
+            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">OVERHEAD CABINETS</h4>
+            <div className="flex flex-col gap-2">
+              {WALL_RUN_OPTIONS.filter((opt) => opt.id === 'wallrun16').map((opt) => {
+                let isLocked = false;
+                let reason = null;
+                if (parseFloat(length) < 24) {
+                  isLocked = true;
+                  reason = `${opt.label} cabinet is disabled for trailers under 24ft length.`;
+                } else if (hasWallRunConflict) {
+                  isLocked = true;
+                  reason = `${opt.label} cabinet is disabled because a driver side door is currently applied.`;
+                } else if (cabinets.includes('frontoverhead16')) {
+                  isLocked = true;
+                  reason = `${opt.label} cabinet is disabled because Front Overhead Cabinet is applied.`;
+                }
+                
+                return (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price}
+                    badge={opt.badge}
+                    isLocked={isLocked}
+                    disabledReason={reason}
+                    isSelected={cabinets.includes(opt.id)}
+                    onClick={() => {
+                      if (isLocked) return;
+                      if (!cabinets.includes(opt.id)) {
+                        const newCabinets = cabinets.filter(c => c !== 'frontoverhead16');
+                        setCabinetsRaw([...newCabinets, opt.id]);
+                        setFocusedCamera("Overhead_Wall_Run_Cabinet_Camera");
+                      } else {
+                        setCabinetsRaw(cabinets.filter(c => c !== opt.id));
+                      }
+                    }}
+                    isMulti={true}
+                    packageBadge={getBadge(opt.id)}
+                  />
+                );
+              })}
+            </div>
           </div>
         </OptionSection>
       )}
@@ -441,6 +537,19 @@ export default function InteriorPanel({ activeSectionTitle }) {
             onChange={(checked) => {
               setToolBox(checked ? 'frontbox' : 'none');
               if (checked) setFocusedCamera("Front_Cabinets_Camera");
+            }}
+          />
+        </OptionSection>
+      )}
+
+      {show('CABINETS') && (
+        <OptionSection title="RECESSED TIRE BOX">
+          <ToggleSwitch
+            label="INCLUDE RECESSED TIRE BOX"
+            checked={recessedTireBox}
+            onChange={(val) => {
+              setRecessedTireBox(val);
+              if (val) setFocusedCamera("Recessed Tire Box Camera");
             }}
           />
         </OptionSection>

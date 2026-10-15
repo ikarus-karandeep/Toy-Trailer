@@ -207,15 +207,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const prevVisibleInteriorNodes = useRef(new Set());
     // console.log('[DEBUG RENDER] ModularTrailerModel rendering. sinkPackage is:', config.sinkPackage);
 
-    const hasSinkForLShape = config.sinkPackage && config.sinkPackage !== 'none';
-    const hasBaseCabinetForLShape = config.cabinets && config.cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c));
-    const hideLShape = hasSinkForLShape || hasBaseCabinetForLShape;
-    const lShapeActive = config.lShapeCounter && !hideLShape;
-
-    let hasCabinet = config.cabinets?.includes('frontbase36') 
-    if (config.sinkPackage === 'sink' || lShapeActive || config.genDoor) {
-        hasCabinet = false;
-    }
+    const isShortTrailer = parseFloat(config.length) < 24;
+    const isShortTrailerForBathroom = parseFloat(config.length) < 28;
+    const effectiveBathroom = isShortTrailerForBathroom ? 'none' : (config.bathroom || 'none');
 
     let effectiveDriverDoor = config.driverSideDoor || 'none'
     let effectivePassengerDoor = config.passengerSideDoor || 'none'
@@ -228,9 +222,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (effectivePassengerDoor !== 'none' && effectivePassengerDoor !== '36x72') effectivePassengerDoor = '36x72'
     }
 
-    const isShortTrailer = parseFloat(config.length) < 24;
-    const isShortTrailerForBathroom = parseFloat(config.length) < 28;
-    const effectiveBathroom = isShortTrailerForBathroom ? 'none' : (config.bathroom || 'none');
+    const hasSinkForLShape = config.sinkPackage && config.sinkPackage !== 'none';
+    const hasBaseCabinetForLShape = config.cabinets && config.cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c));
+    const hideLShape = hasSinkForLShape || hasBaseCabinetForLShape;
+    const lShapeActive = config.lShapeCounter && !hideLShape;
+
+    let hasCabinet = config.cabinets?.includes('frontbase36') 
+    if (config.sinkPackage === 'sink' || lShapeActive || config.genDoor || (config.cabinets?.includes('wallrun36') && !isShortTrailer && effectiveDriverDoor === 'none')) {
+        hasCabinet = false;
+    }
 
     const isBlackout = config.exteriorFinish === 'blackout';
     const isCabinetBlackout = config.blackoutCabinetDoors;
@@ -1664,14 +1664,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const activeCabinetMeshes = []
 
         // Boolean inputs (mapping the array states to the node graph booleans)
-        const hasOverhead = config.cabinets?.includes('frontoverhead16') 
+        const hasOverhead = config.cabinets?.includes('frontoverhead16') && !(config.cabinets?.includes('wallrun16') && !isShortTrailer && effectiveDriverDoor === 'none')
         const hasToolbox = config.toolBox && config.toolBox !== 'none'
         const hasWinch = config.winchSystem
 
         let hasWallRun = config.cabinets?.includes('wallrun36')
-        if (config.sinkPackage === 'sink' || isShortTrailer || effectiveDriverDoor !== 'none') hasWallRun = false;
+        if (config.sinkPackage === 'sink' || isShortTrailer || effectiveDriverDoor !== 'none' || hasCabinet) hasWallRun = false;
         let hasWallRunOverhead = config.cabinets?.includes('wallrun16')
-        if (isShortTrailer || effectiveDriverDoor !== 'none') hasWallRunOverhead = false;
+        if (isShortTrailer || effectiveDriverDoor !== 'none' || hasOverhead) hasWallRunOverhead = false;
         const hasWheelWallCabinet = config.cabinets?.includes('wheelwallcabinet')
 
         // 1. Main Cabinet (front base) — hidden when lShapeCounter or genDoor is on
@@ -1919,7 +1919,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.cabinets, config.toolBox,
         config.driverSideDoor, config.passengerSideDoor,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
-        config.escapeDoor, config.concessionDoor, config.glassScreen, config.generatorBox, config.lShapeCounter, config.genSlides, config.genDoor, config.winchSystem, config.tieDowns,
+        config.escapeDoor, config.concessionDoor, config.glassScreen, config.generatorBox, config.lShapeCounter, config.genDoor, config.winchSystem, config.tieDowns,
         config.windows, config.windowSizes,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights, config.ventilation, config.receptacles,
@@ -2231,7 +2231,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     useEffect(() => {
         dirtyRef.current = true
-    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.narrowTrackAxle, config.windows, config.windowSizes])
+    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.windows, config.windowSizes])
 
     useFrame(() => {
         if (!store.current.has('_globalZCenter')) return
@@ -2410,9 +2410,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const ie = child.userData._invMat.elements
 
                 let narrowTrackOffset = 0
-                if (config.narrowTrackAxle && (scene === wheels || scene === axleConfig)) {
-                    narrowTrackOffset = 0.1 // Shift inward by ~2.4 inches per side
-                }
 
                 if (child.geometry) {
                     applyDimensionDeformations({
