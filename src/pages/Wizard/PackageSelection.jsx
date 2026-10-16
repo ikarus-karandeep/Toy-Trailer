@@ -86,13 +86,13 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
             return (
               <div
                 key={pkg.id}
-                onClick={() => setSelected(pkg.id)}
+                onClick={() => onSelect(pkg.id)}
                 className={`
                   group relative bg-[#1a1a1a] rounded-[24px] overflow-hidden flex flex-col h-full
                   transition-all duration-300 border cursor-pointer
                   ${isSelected
                     ? 'border-[#DA634B] shadow-[0_0_20px_rgba(218,99,75,0.35)]'
-                    : 'border-[#3a3a3a] hover:border-[#5a5a5a]'
+                    : 'border-[#3a3a3a] hover:border-[#DA634B] hover:shadow-[0_0_20px_rgba(218,99,75,0.25)]'
                   }
                 `}
               >
@@ -164,22 +164,20 @@ export default function PackageSelection({ onSelect, onBack, initialSelected }) 
                     {pkg.features && <p className="text-base md:text-lg font-bold mb-3 md:mb-4 text-white drop-shadow">Package Total: {pkg.priceRange}</p>}
                     {!pkg.features && <p className="text-base md:text-lg font-bold text-gray-400 mb-3 md:mb-4 drop-shadow">{pkg.priceRange}</p>}
 
-                    {isSelected ? (
-                      <button
-                        onClick={() => onSelect(pkg.id)}
-                        className="w-full py-2.5 md:py-3.5 bg-[#DA634B] hover:bg-[#c4553e] text-sm md:text-base text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
-                      >
-                        Continue
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setSelected(pkg.id)}
-                        className="w-full py-2.5 md:py-3.5 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-sm md:text-base text-white rounded-lg font-semibold transition-colors shadow-md group-hover:bg-[#4a4a4a]"
-                      >
-                        Choose
-                      </button>
-                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelect(pkg.id);
+                      }}
+                      className={`w-full py-2.5 md:py-3.5 text-sm md:text-base text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 ${
+                        isSelected
+                          ? 'bg-[#DA634B] hover:bg-[#c4553e] shadow-lg'
+                          : 'bg-[#3a3a3a] hover:bg-[#4a4a4a] group-hover:bg-[#4a4a4a] shadow-md'
+                      }`}
+                    >
+                      Continue
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </button>
                   </div>
                 </div>
               </div>
