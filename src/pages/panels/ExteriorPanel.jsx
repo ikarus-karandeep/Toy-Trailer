@@ -20,7 +20,7 @@ import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import ColorSwatch from '../../components/ColorSwatch'
 import ToggleSwitch from '../../components/ToggleSwitch'
-import DotSlider from '../../components/DotSlider'
+import CarouselSlider from '../../components/CarouselSlider'
 
 export default function ExteriorPanel({ activeSectionTitle }) {
   const {
@@ -271,8 +271,8 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 />
               </div>
               {awning?.length > 0 && (
-                <div className="mt-6 px-4">
-                  <DotSlider
+                <div className="mt-4">
+                  <CarouselSlider
                     options={awningLengthOptions.map(opt => ({
                       ...opt,
                       lockedReason: opt.locked 
@@ -286,6 +286,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                       setFocusedCamera("Electric Awning Camera")
                     }}
                     badge={getAwningBadge(awningLength)}
+                    formatLabel={(opt) => opt.label}
                   />
                 </div>
               )}

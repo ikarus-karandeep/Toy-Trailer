@@ -19,10 +19,11 @@ export default function CarouselSlider({
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
+  const [isOverflowing, setIsOverflowing] = useState(false)
 
   const activeIndex = options.findIndex((opt) => opt.id === value)
-  const canPrev = activeIndex > 0
-  const canNext = activeIndex < options.length - 1
+  const canPrev = options.slice(0, Math.max(0, activeIndex)).some((opt) => !opt.locked)
+  const canNext = activeIndex >= 0 && options.slice(activeIndex + 1).some((opt) => !opt.locked)
 
   // Update floating badge position directly over selected item
   const updateBadgePosition = () => {
@@ -41,22 +42,44 @@ export default function CarouselSlider({
     setArrowLeft(arrowOffset)
   }
 
-  // Keep selected item centered in the carousel
+  // Detect whether content overflows the scroll container
+  useLayoutEffect(() => {
+    if (!scrollRef.current) return
+
+    const checkOverflow = () => {
+      if (scrollRef.current) {
+        const hasOverflow = scrollRef.current.scrollWidth > scrollRef.current.clientWidth + 4
+        setIsOverflowing(hasOverflow)
+        updateBadgePosition()
+      }
+    }
+
+    checkOverflow()
+    const timer = setTimeout(checkOverflow, 50)
+    const observer = new ResizeObserver(checkOverflow)
+    observer.observe(scrollRef.current)
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
+  }, [options])
+
+  // Keep selected item centered in the carousel if overflowing
   useEffect(() => {
-    if (selectedRef.current && scrollRef.current) {
+    if (selectedRef.current && scrollRef.current && isOverflowing) {
       selectedRef.current.scrollIntoView({
         behavior: 'smooth',
         inline: 'center',
         block: 'nearest'
       })
     }
-  }, [value, options])
+  }, [value, options, isOverflowing])
 
   useLayoutEffect(() => {
     updateBadgePosition()
     const timer = setTimeout(updateBadgePosition, 60)
     return () => clearTimeout(timer)
-  }, [value, badge, options])
+  }, [value, badge, options, isOverflowing])
 
   useEffect(() => {
     const handleResize = () => updateBadgePosition()
@@ -167,7 +190,9 @@ export default function CarouselSlider({
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          className="flex-1 overflow-x-auto scrollbar-hide flex items-center gap-1.5 sm:gap-2 px-2 py-0.5 scroll-smooth cursor-grab active:cursor-grabbing"
+          className={`flex-1 overflow-x-auto scrollbar-hide flex items-center ${
+            !isOverflowing ? 'justify-center' : 'justify-start'
+          } gap-1.5 sm:gap-2 px-2 py-0.5 scroll-smooth cursor-grab active:cursor-grabbing`}
         >
           {options.map((opt) => {
             const isSelected = opt.id === value
@@ -194,13 +219,17 @@ export default function CarouselSlider({
                   if (!opt.locked) onChange(opt.id)
                 }}
                 disabled={opt.locked}
-                className={`flex-shrink-0 min-w-[30px] sm:min-w-[34px] px-2 h-7 sm:h-8 rounded-full font-medium text-xs sm:text-sm flex items-center justify-center transition-all whitespace-nowrap ${
+                title={opt.lockedReason || undefined}
+                className={`flex-shrink-0 min-w-[30px] sm:min-w-[34px] px-2 h-7 sm:h-8 rounded-full font-medium text-xs sm:text-sm flex items-center justify-center gap-1 transition-all whitespace-nowrap ${
                   opt.locked
                     ? 'text-gray-600 cursor-not-allowed opacity-40'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                {labelText}
+                <span>{labelText}</span>
+                {opt.locked && (
+                  <img src="/Lock Icon.png" alt="Locked" className="w-2.5 h-2.5 opacity-60 flex-shrink-0" />
+                )}
               </button>
             )
           })}
