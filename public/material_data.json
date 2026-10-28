@@ -1909,11 +1909,11 @@
   "48x78 Door Panel R Proxy": {},
   "48x78 Door Panel R": {
     "0": {
-      "material_name": "Black Rubber_Membranes",
-      "base_color": "//..\\Textures\\Roof_BaseColor.png",
-      "roughness": "//..\\Textures\\Roof_Roughness.png",
-      "metalness": "//..\\Textures\\Roof_Metallic.png",
-      "normal": "//..\\Textures\\Roof_Normal.png",
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1933,11 +1933,11 @@
       }
     },
     "2": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
-      "normal": false,
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -1945,10 +1945,10 @@
       }
     },
     "3": {
-      "material_name": "MAT_Interior_Walls",
-      "base_color": "#D1AD94",
-      "roughness": 0.5,
-      "metalness": 0.0,
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -1969,6 +1969,18 @@
       }
     },
     "5": {
+      "material_name": "MAT_Interior_Walls",
+      "base_color": "#D1AD94",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "6": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
       "roughness": 0.5,
@@ -1980,7 +1992,7 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "7": {
       "material_name": "LED_Lights",
       "base_color": "#E7E7E7",
       "roughness": 0.5,
@@ -1992,7 +2004,7 @@
         "strength": 10.0
       }
     },
-    "7": {
+    "8": {
       "material_name": "White",
       "base_color": "#E7E7E7",
       "roughness": 0.5,
@@ -2363,7 +2375,7 @@
       }
     },
     "4": {
-      "material_name": "MAT_Interior_Walls",
+      "material_name": "MAT_Rear_Door_ATP",
       "base_color": "#D1AD94",
       "roughness": 0.5,
       "metalness": 0.0,
@@ -2454,6 +2466,18 @@
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "7": {
+      "material_name": "MAT_Rear_Door_ATP",
+      "base_color": "#D1AD94",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2554,6 +2578,18 @@
       "roughness": "//..\\Textures\\Rubber Flooring_Roughness.jpg",
       "metalness": 0.6571,
       "normal": "//..\\Textures\\Rubber Flooring_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "6": {
+      "material_name": "MAT_Rear_Door_ATP",
+      "base_color": "#D1AD94",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -2901,6 +2937,48 @@
       }
     }
   },
+  "Side Panel ATP 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Side Panel Bottom Strip": {
+    "0": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Side Panel ATP 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
   "2X Spread Axle Flat Side": {
     "0": {
       "material_name": "MAT_Shell",
@@ -3197,48 +3275,6 @@
       "base_color": "#9EC65E",
       "roughness": 0.7284,
       "metalness": 0.1343,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Side Panel ATP 24in": {
-    "0": {
-      "material_name": "MAT_ATP",
-      "base_color": "#97B8C8",
-      "roughness": 0.8281,
-      "metalness": 0.1403,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Side Panel Bottom Strip": {
-    "0": {
-      "material_name": "MAT_Stripes",
-      "base_color": "#5D38AE",
-      "roughness": 0.1178,
-      "metalness": 0.4773,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Side Panel ATP 12in": {
-    "0": {
-      "material_name": "MAT_ATP",
-      "base_color": "#97B8C8",
-      "roughness": 0.8281,
-      "metalness": 0.1403,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4169,7 +4205,7 @@
       }
     }
   },
-  "Left Floor E-Track": {
+  "Left Floor Pair 1 E-Track": {
     "0": {
       "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
@@ -4183,7 +4219,7 @@
       }
     }
   },
-  "Left Wall E-Track": {
+  "Left Wall Pair 1 E-Track": {
     "0": {
       "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
@@ -4197,7 +4233,7 @@
       }
     }
   },
-  "Right Floor E-Track": {
+  "Right Floor Pair 1 E-Track": {
     "0": {
       "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
@@ -4211,7 +4247,7 @@
       }
     }
   },
-  "Right Wall E-Track": {
+  "Right Wall Pair 1 E-Track": {
     "0": {
       "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
@@ -4240,6 +4276,62 @@
     }
   },
   "V-Nose E-Track": {
+    "0": {
+      "material_name": "Interior decal",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Right Floor Pair 2 E-Track": {
+    "0": {
+      "material_name": "Interior decal",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Left Floor Pair 2 E-Track": {
+    "0": {
+      "material_name": "Interior decal",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Left Wall Pair 2 E-Track": {
+    "0": {
+      "material_name": "Interior decal",
+      "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
+      "roughness": "//..\\Textures\\Interior decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Interior decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Right Wall Pair 2 E-Track": {
     "0": {
       "material_name": "Interior decal",
       "base_color": "//..\\Textures\\Interior decals_BaseColor.jpg",
@@ -5170,32 +5262,6 @@
       "roughness": "//..\\Textures\\Roof_Roughness.png",
       "metalness": "//..\\Textures\\Roof_Metallic.png",
       "normal": "//..\\Textures\\Roof_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Interior Speakers": {
-    "0": {
-      "material_name": "Interior_Speakers_Mesh",
-      "base_color": "//..\\Textures\\Interior_Speakers_Opacity.jpg",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Interior_Speakers_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Interior_Speakers",
-      "base_color": "//..\\Textures\\White_BaseColor.jpg",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -7200,20 +7266,6 @@
       }
     }
   },
-  "Mini Split AC Flat Front": {
-    "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "Sidewind(Extended V-Nose)": {
     "0": {
       "material_name": "Standard Silver_Rim",
@@ -7444,38 +7496,24 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
-    }
-  },
-  "AC Unit": {
-    "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
-      "normal": false,
+    },
+    "5": {
+      "material_name": "Interior_Speakers_Mesh",
+      "base_color": "//..\\Textures\\Interior_Speakers_Opacity.jpg",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Interior_Speakers_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
       }
     },
-    "1": {
-      "material_name": "Detailed _Decals",
-      "base_color": "//..\\Textures\\Detailed_Decals_Base_color.jpg",
-      "roughness": "//..\\Textures\\Detailed_Decals_Roughness.jpg",
-      "metalness": "//..\\Textures\\Detailed_Decals_Metallic.jpg",
-      "normal": "//..\\Textures\\Detailed_Decals_Normal.jpg",
-      "alpha": "//..\\Textures\\Detailed_Decals_Base_color.jpg",
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+    "6": {
+      "material_name": "Interior_Speakers",
+      "base_color": "//..\\Textures\\White_BaseColor.jpg",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -7555,62 +7593,6 @@
       "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
       "metalness": 0.0,
       "normal": "//..\\Textures\\Steel_Painted_Normal.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Mini Split AC V-Nose": {
-    "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Mini Split AC Gooseneck 8_5\u00d728.001": {
-    "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Mini Split AC Slant V-Nose": {
-    "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Mini Split AC Extended V-Nose": {
-    "0": {
-      "material_name": "White_Ceremic",
-      "base_color": "#E7E7E7",
-      "roughness": 0.2144,
-      "metalness": 0.0744,
-      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -8076,6 +8058,114 @@
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
       "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
       "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "AC Unit": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Detailed _Decals",
+      "base_color": "//..\\Textures\\Detailed_Decals_Base_color.jpg",
+      "roughness": "//..\\Textures\\Detailed_Decals_Roughness.jpg",
+      "metalness": "//..\\Textures\\Detailed_Decals_Metallic.jpg",
+      "normal": "//..\\Textures\\Detailed_Decals_Normal.jpg",
+      "alpha": "//..\\Textures\\Detailed_Decals_Base_color.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC Extended V-Nose": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC Flat Front": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC Gooseneck 8_5\u00d728": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC Slant V-Nose": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC V-Nose": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",

@@ -1415,18 +1415,46 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     activeGullwingMeshes.push(name);
                 }
                 
-                // 2. Side Panel (handles suffixes like _1, _2)
-                if (normGlb(name).startsWith(normGlb(expectedPanel))) {
-                    // console.log('[GULLWING ATP DEBUG] ✅ Panel matched:', name)
-                    activeGullwingMeshes.push(name);
+                // 2. Side Panel (handles suffixes like _1, _2 and exact Outliner names)
+                // e.g., "2X Non Spread Axle Angled Side For GED", "2X Spread Axle Corvette Fender Angled Side For GED", etc.
+                const cleanMesh = normGlb(name).toLowerCase();
+                const countToken = config.axleCount === 'triple' ? '3x' : '2x';
+                const isSpreadConfig = !!config.spreadAxle;
+                const meshHasNonSpread = cleanMesh.includes('non_spread') || cleanMesh.includes('nonspread') || cleanMesh.includes('non spread');
+                const meshMatchesSpread = isSpreadConfig ? (!meshHasNonSpread && cleanMesh.includes('spread')) : meshHasNonSpread;
+                const isCorvette = !!config.spreadAxle;
+                const sideToken = config.axleAngled ? 'angled' : 'flat';
+                const isAtp = cleanMesh.startsWith('atp');
+
+                if (!isAtp && cleanMesh.includes('ged')) {
+                    const matchesPanelTokens = cleanMesh.includes(countToken) &&
+                        meshMatchesSpread &&
+                        cleanMesh.includes(sideToken) &&
+                        (isCorvette ? cleanMesh.includes('corvette') : !cleanMesh.includes('corvette'));
+
+                    if (normGlb(name).startsWith(normGlb(expectedPanel)) || matchesPanelTokens) {
+                        // console.log('[GULLWING PANEL DEBUG] ✅ Panel matched:', name)
+                        activeGullwingMeshes.push(name);
+                    }
                 }
                 
-                // 3. ATP (if enabled) — normalize spaces/underscores to handle GLB inconsistencies
-                if (normGlb(name).startsWith(normGlb(expectedATP))) {
-                    // console.log('[GULLWING ATP DEBUG] ✅ ATP matched:', name)
-                    activeGullwingMeshes.push(name);
-                } else if (name.toLowerCase().includes('atp')) {
-                    // console.log('[GULLWING ATP DEBUG] ⚠️ ATP mesh in GLB (not matched):', name)
+                // 3. ATP (if enabled via config.axleAtp) — match against expectedATP or token matching for GED ATP
+                // Handles: "ATP 2X Non Spread Axle Angled Side GED 12in", "ATP 2X Spread Axle Corvette Fender Flat Side GED 24in",
+                // "ATP 2X Non Spread Axle Corvette Fender Flat Side 24in", etc.
+                if (config.axleAtp && isAtp && (cleanMesh.includes('ged') || cleanMesh.includes('side'))) {
+                    const sizeToken = `${atpSize}in`.toLowerCase();
+                    const expectedClean = normGlb(expectedATP).toLowerCase();
+
+                    const matchesAtpTokens = cleanMesh.includes(countToken) &&
+                        meshMatchesSpread &&
+                        cleanMesh.includes(sideToken) &&
+                        cleanMesh.includes(sizeToken) &&
+                        (isCorvette ? cleanMesh.includes('corvette') : !cleanMesh.includes('corvette'));
+
+                    if (cleanMesh.startsWith(expectedClean) || matchesAtpTokens) {
+                        // console.log('[GULLWING ATP DEBUG] ✅ ATP matched:', name)
+                        activeGullwingMeshes.push(name);
+                    }
                 }
             });
 
@@ -1629,9 +1657,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 gooseneck: 'Gooseneck_Sink_'
             };
             const sinkMeshName = SINK_FRONT_STYLE_MAP[effectiveSinkFrontStyle] || 'V-Nose_Sink';
-            console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
-            console.log('[DEBUG SINK] effectiveSinkFrontStyle:', effectiveSinkFrontStyle);
-            console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
+            // console.log('[DEBUG SINK] sinkPackage is selected:', config.sinkPackage);
+            // console.log('[DEBUG SINK] effectiveSinkFrontStyle:', effectiveSinkFrontStyle);
+            // console.log('[DEBUG SINK] mapped sinkMeshName:', sinkMeshName);
             activeSinkMeshes.push(sinkMeshName);
             
             // Also log if we can find this mesh across all scenes
@@ -1641,7 +1669,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     scene.traverse(child => {
                         const nameLower = child.name.toLowerCase();
                         if (nameLower.includes('sink') || nameLower.includes('water')) {
-                            console.log(`[DEBUG SINK FINDER] Found potential sink/water mesh in ${sceneName}:`, child.name);
+                            // console.log(`[DEBUG SINK FINDER] Found potential sink/water mesh in ${sceneName}:`, child.name);
                         }
                     });
                 }
@@ -1824,55 +1852,45 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // Pass empty array so BlenderNodes.switchMeshes hides everything
         BlenderNodes.switchMeshes(wheels, []);
 
-        const variant = config.axleCount === 'triple' ? '3x' : '2x';
-        const prefix = variant === '3x' ? '3X_' : '2X_';
-
-        // Emulate the Geometry Node graph for Wheels — Blender "Wheels" node group
-        // ── Side Panels section (no ATP gate — structural, always shown) ──────────
-        const activeAxleMeshes = []
-
-        // Base structural skirt — always visible regardless of ATP or angle
-        activeAxleMeshes.push('Side_Panel_Bottom_Strip')
-
+        const axleCountToken = config.axleCount === 'triple' ? '3X' : '2X';
+        const spreadToken = config.spreadAxle ? 'Spread Axle' : 'Non Spread Axle';
+        const sideToken = config.axleAngled ? 'Angled Side' : 'Flat Side';
+        const atpSizeToken = `${config.protectionSize || '24'}in`;
         const hideStandardAxleTrim = config.escapeDoor === 'gullwing';
 
-        // Cover panel — always shown, angled or flat based on toggle, unless spread axle is on
-        if (!config.spreadAxle && !hideStandardAxleTrim) {
-            activeAxleMeshes.push(`${prefix}Axle_${config.axleAngled ? 'Angled' : 'Flat'}_Side`)
+        const activeAxleMeshes = [];
+
+        // Base structural skirt / strip
+        activeAxleMeshes.push('Side Panel Bottom Strip');
+
+        // Panel: Flat Side or Angled Side
+        // Spread Axle uses Corvette Fender (e.g. "2X Spread Axle Corvette Fender Flat Side")
+        // Non-Spread Axle uses standard panel (e.g. "2X Non Spread Axle Flat Side")
+        if (!hideStandardAxleTrim) {
+            if (config.spreadAxle) {
+                activeAxleMeshes.push(`${axleCountToken} ${spreadToken} Corvette Fender ${sideToken}`);
+            } else {
+                activeAxleMeshes.push(`${axleCountToken} ${spreadToken} ${sideToken}`);
+            }
         }
 
-        // ── Finishes section (gated by ATP Super Toggle in Blender graph) ─────────
+        // ATP Trims (gated by config.axleAtp)
         if (config.axleAtp) {
-            // Base ATP strip — now size-driven (12in or 24in)
-            const atpSize = config.protectionSize || '24'
-            activeAxleMeshes.push(`Side Panel ATP ${atpSize}in`)
-            activeAxleMeshes.push(`Side_Panel_ATP_${atpSize}in`)
-            // ATP directional trim — follows same angled/flat toggle
+            activeAxleMeshes.push(`Side Panel ATP ${atpSizeToken}`);
+
             if (!hideStandardAxleTrim) {
                 if (config.spreadAxle) {
-                    const sideName = config.axleAngled ? 'Angled' : 'Flat'
-                    const prefixSpace = variant === '3x' ? '3X ' : '2X '
-                    activeAxleMeshes.push(`ATP_${prefix}Corvette_Fender_${sideName}_Side_${atpSize}in`)
-                    activeAxleMeshes.push(`ATP ${prefixSpace}Corvette Fender ${sideName} Side ${atpSize}in`)
+                    activeAxleMeshes.push(`ATP ${axleCountToken} ${spreadToken} Corvette Fender ${sideToken} ${atpSizeToken}`);
                 } else {
-                    const sideName = config.axleAngled ? 'Angled' : 'Flat'
-                    activeAxleMeshes.push(`${prefix}ATP_${sideName}_Side_${atpSize}in`)
-                    activeAxleMeshes.push(`${prefix.replace('_', ' ')}ATP ${sideName} Side ${atpSize}in`)
+                    activeAxleMeshes.push(`${axleCountToken} ${spreadToken} ATP ${sideToken} ${atpSizeToken}`);
                 }
             }
         }
 
-        if (config.spreadAxle && !hideStandardAxleTrim) {
-            const sideName = config.axleAngled ? 'Angled' : 'Flat'
-            const prefixSpace = variant === '3x' ? '3X ' : '2X '
-            activeAxleMeshes.push(`${prefix}Corvette_Fender_${sideName}_Side`)
-            activeAxleMeshes.push(`${prefixSpace}Corvette Fender ${sideName} Side`)
-        }
-
-        BlenderNodes.switchMeshes(axle, activeAxleMeshes)
+        BlenderNodes.switchMeshes(axle, activeAxleMeshes);
         axleConfig.traverse(child => {
             if (child.isMesh) child.visible = false;
-        })
+        });
 
         // ── Spoiler ──────────────────────────────────────────────────────────
         // First hide everything
@@ -2100,23 +2118,42 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
         // console.log(`[WheelMount] Found instMesh: "${instMesh.name}", type: ${instMesh.type}, children: ${instMesh.children?.length}`);
 
-        // Find all sockets matching the current size + axle count
-        // Pattern: "16-2_L1_Socket", "16-2_R1_Socket", "15-3_L1_Socket" etc.
-        const socketPrefix = `${tireSizeStr}-${axleCountStr}_`;
+        // Find all sockets matching the current size + axle count + spreadAxle
+        // Sockets in wheels.glb:
+        // Spread on:  "15-2 L1 Spread Socket", "16-3 R2 Spread Socket", etc.
+        // Spread off: "15-2 L1 Non Spread Socket", "16-3 R2 Non Spread Socket", etc.
+        // Also supports legacy formats like "16-2_L1_Socket"
+        const isSpread = !!config.spreadAxle;
+        const prefixA = `${tireSizeStr}-${axleCountStr} `;
+        const prefixB = `${tireSizeStr}-${axleCountStr}_`;
         const sockets = [];
         wheels.traverse(child => {
-            if (child.name.startsWith(socketPrefix) && child.name.endsWith('_Socket')) {
+            if (!child.name.endsWith('Socket')) return;
+            const name = child.name;
+            if (!name.startsWith(prefixA) && !name.startsWith(prefixB)) return;
+
+            const nameLower = name.toLowerCase();
+            const hasSpreadInName = nameLower.includes('spread');
+            if (hasSpreadInName) {
+                const isNonSpread = nameLower.includes('non spread') || nameLower.includes('nonspread') || nameLower.includes('non_spread');
+                if (isSpread && !isNonSpread) {
+                    sockets.push(child);
+                } else if (!isSpread && isNonSpread) {
+                    sockets.push(child);
+                }
+            } else {
+                // Legacy socket with no spread designation
                 sockets.push(child);
             }
         });
 
         if (sockets.length === 0) {
-            console.warn(`[WheelMount] No sockets found with prefix "${socketPrefix}"`);
+            console.warn(`[WheelMount] No sockets found for tireSize=${tireSizeStr}, axleCount=${axleCountStr}, spreadAxle=${isSpread}`);
         }
-        // console.log(`[WheelMount] Found ${sockets.length} sockets for prefix "${socketPrefix}":`, sockets.map(s => s.name));
+        console.log(`[WheelMount DEBUG] isSpread: ${isSpread}, tireSize: ${tireSizeStr}, axleCount: ${axleCountStr}, sockets found: ${sockets.length}`, sockets.map(s => s.name));
 
         return { instMesh, sockets };
-    }, [config.tireSize, config.lugType, config.wheelType, config.axleCount, wheels]);
+    }, [config.tireSize, config.lugType, config.wheelType, config.axleCount, config.spreadAxle, wheels]);
 
     // ── Socket-based Axle Rendering ────────────────────────────────────────────
     const axleMountsData = useMemo(() => {
@@ -2147,22 +2184,36 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             return null;
         }
 
-        const socketPrefix = `Axle-${axleCountStr}_`;
+        // Sockets in axleConfig:
+        // "Axle - 2 M1 Non Spread Socket", "Axle - 2 M1 Spread Socket", etc.
+        // Also supports legacy formats like "Axle-2_M1_Socket"
+        const isSpread = !!config.spreadAxle;
+        const normAxlePrefixA = `axle-${axleCountStr}`;
+        const normAxlePrefixB = `axle${axleCountStr}`;
         const sockets = [];
         axleConfig.traverse(child => {
-            if (child.name.startsWith(socketPrefix) && child.name.endsWith('Socket')) {
+            if (!child.name.endsWith('Socket')) return;
+            const clean = child.name.toLowerCase().replace(/[\s_]+/g, '-');
+            if (!clean.startsWith(normAxlePrefixA) && !clean.startsWith(normAxlePrefixB)) return;
+
+            const nameLower = child.name.toLowerCase();
+            const hasSpreadInName = nameLower.includes('spread');
+            if (hasSpreadInName) {
+                const isNonSpread = nameLower.includes('non spread') || nameLower.includes('nonspread') || nameLower.includes('non_spread');
+                if (isSpread && !isNonSpread) {
+                    sockets.push(child);
+                } else if (!isSpread && isNonSpread) {
+                    sockets.push(child);
+                }
+            } else {
                 sockets.push(child);
             }
         });
 
-        // if (sockets.length === 0) {
-        //     console.warn(`[AxleMount] No sockets found with prefix "${socketPrefix}"`);
-        // } else {
-        //     console.log(`[AxleMount] Found ${sockets.length} sockets:`, sockets.map(s => s.name));
-        // }
+        console.log(`[AxleMount DEBUG] isSpread: ${isSpread}, axleCount: ${axleCountStr}, sockets found: ${sockets.length}`, sockets.map(s => s.name));
 
         return { instMesh, sockets };
-    }, [config.axleRating, config.axleCount, axleConfig]);
+    }, [config.axleRating, config.axleCount, config.spreadAxle, axleConfig]);
 
     // 🛠️ Socket-based Jack Rendering 🛠️
     const jackMountsRefs = useRef([]);
@@ -2385,12 +2436,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 const newCenter = (activeGroups[0].targetCenterX + activeGroups[activeGroups.length - 1].targetCenterX) / 2;
                 const centerShift = newCenter - origCenter;
                 
-                console.log(`[DEBUG WINDOWS] -- Layout for Side --`);
+                // console.log(`[DEBUG WINDOWS] -- Layout for Side --`);
                 activeGroups.forEach(g => {
                     g.targetCenterX -= centerShift;
                     // The shift required is the difference between target center and original center
                     const shift = g.targetCenterX - g.trueOrigCenterX;
-                    console.log(`[DEBUG WINDOWS] Type: ${g.type}, Width: ${g.widthM.toFixed(3)}m, origCenter: ${g.trueOrigCenterX.toFixed(3)}, targetCenter: ${g.targetCenterX.toFixed(3)}, shift: ${shift.toFixed(3)}`);
+                    // console.log(`[DEBUG WINDOWS] Type: ${g.type}, Width: ${g.widthM.toFixed(3)}m, origCenter: ${g.trueOrigCenterX.toFixed(3)}, targetCenter: ${g.targetCenterX.toFixed(3)}, shift: ${shift.toFixed(3)}`);
                     g.children.forEach(child => {
                         child.position.x = child.userData.origX + shift;
                     });
@@ -2433,12 +2484,20 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 } else if (child.isObject3D) {
                     // Skip wheel sockets that don't belong to the current tire size + axle config.
                     // Socket names follow pattern: "16-2_L1_Socket", "15-3_R2_Socket" etc.
-                    if (scene === wheels && child.name.endsWith('_Socket') && child.name !== 'Spare_Tire_Mount_Socket') {
+                    if (scene === wheels && child.name.endsWith('Socket') && child.name !== 'Spare_Tire_Mount_Socket') {
                         const axleCountStr = config.axleCount === 'triple' ? '3' : '2';
                         const tireSizeStr = config.tireSize || '15';
-                        const relevantPrefix = `${tireSizeStr}-${axleCountStr}_`;
-                        if (!child.name.startsWith(relevantPrefix)) {
+                        const prefixA = `${tireSizeStr}-${axleCountStr} `;
+                        const prefixB = `${tireSizeStr}-${axleCountStr}_`;
+                        if (!child.name.startsWith(prefixA) && !child.name.startsWith(prefixB)) {
                             return; // Skip sockets for other sizes/configs
+                        }
+                        const isSpread = !!config.spreadAxle;
+                        const nameLower = child.name.toLowerCase();
+                        if (nameLower.includes('spread')) {
+                            const isNonSpread = nameLower.includes('non spread') || nameLower.includes('nonspread') || nameLower.includes('non_spread');
+                            if (isSpread && isNonSpread) return;
+                            if (!isSpread && !isNonSpread) return;
                         }
                     }
                     applyObjectDeformations(child, {
@@ -2497,18 +2556,71 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // ── Dynamically Generate E-Track ────────────────────────
         eTrackGroupRef.current.clear()
         
-        // Find the base template meshes (we assume they are the original single-piece objects)
+        // E-Track quantity determines whether to show Pair 1 (qty === 1) or Pair 2 (qty > 1)
+        const floorQty = (config.eTracks && typeof config.eTracks.floor === 'number') ? config.eTracks.floor : (config.tieDowns?.includes('floor') ? 1 : 0);
+        const wallQty = (config.eTracks && typeof config.eTracks.wall === 'number') ? config.eTracks.wall : (config.tieDowns?.includes('wall') ? 1 : 0);
+
         const floorTemplates = []
         const wallTemplates = []   // collect ALL wall templates (one per side of trailer)
         const smallTemplates = []
         if (cargo) {
+            if (!window.__hasLoggedAllTrackMeshes) {
+                window.__hasLoggedAllTrackMeshes = true;
+                const allScenesMap = { base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, axleConfig, axle, wheels, addons, cargo, sinkScene, windowsScene };
+                Object.entries(allScenesMap).forEach(([sName, sObj]) => {
+                    if (!sObj) return;
+                    const found = [];
+                    sObj.traverse(c => {
+                        if (c.name.toLowerCase().includes('track') || c.name.toLowerCase().includes('pair')) {
+                            found.push(`${c.isMesh ? '[MESH]' : '[OBJ]'} "${c.name}"`);
+                        }
+                    });
+                    if (found.length > 0) {
+                        console.log(`[ETRACK LOCATOR] In scene "${sName}": ` + JSON.stringify(found));
+                    }
+                });
+            }
             cargo.traverse(child => {
                 if (!child.isMesh) return
                 const isProxy = child.name.toLowerCase().includes('proxy')
-            
-                if (child.name.includes('Floor_E-Track') && !isProxy) floorTemplates.push(child)
-                if (child.name.includes('Wall_E-Track') && !isProxy) {
-                    const targetArray = child.name.includes('Small') ? smallTemplates : wallTemplates;
+                if (isProxy) return
+
+                const rawName = child.name;
+                // Clean name: remove all spaces, underscores, hyphens
+                const clean = rawName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+                // Floor E-Track:
+                // qty === 1: Pair 1 only
+                // qty >= 2: Pair 1 AND Pair 2
+                const isFloor = clean.includes('floor') && clean.includes('track');
+                if (isFloor) {
+                    const isPair1 = clean.includes('pair1') || clean.includes('1pair');
+                    const isPair2 = clean.includes('pair2') || clean.includes('2pair');
+                    console.log(`[ETRACK DEBUG] Found floor mesh: "${rawName}" | clean: "${clean}" | isPair1: ${isPair1} | isPair2: ${isPair2} | floorQty: ${floorQty}`);
+                    if (isPair1 || isPair2) {
+                        if (floorQty === 1 && isPair1) floorTemplates.push(child);
+                        else if (floorQty >= 2 && (isPair1 || isPair2)) floorTemplates.push(child);
+                    } else {
+                        // Fallback if mesh has no pair designation
+                        floorTemplates.push(child);
+                    }
+                }
+
+                // Wall E-Track:
+                // qty === 1: Pair 1 only
+                // qty >= 2: Pair 1 AND Pair 2
+                const isWall = clean.includes('wall') && clean.includes('track');
+                if (isWall) {
+                    const isPair1 = clean.includes('pair1') || clean.includes('1pair');
+                    const isPair2 = clean.includes('pair2') || clean.includes('2pair');
+                    console.log(`[ETRACK DEBUG] Found wall mesh: "${rawName}" | clean: "${clean}" | isPair1: ${isPair1} | isPair2: ${isPair2} | wallQty: ${wallQty}`);
+
+                    if (isPair1 || isPair2) {
+                        if (wallQty === 1 && !isPair1) return;
+                        if (wallQty >= 2 && !isPair1 && !isPair2) return;
+                    }
+
+                    const targetArray = clean.includes('small') ? smallTemplates : wallTemplates;
                     child.geometry.computeBoundingBox();
                     const box = child.geometry.boundingBox;
                     if (box.min.z < -1 && box.max.z > 1) {
@@ -2535,6 +2647,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     }
                 }
             })
+            console.log(`[ETRACK DEBUG SUMMARY] floorQty: ${floorQty}, wallQty: ${wallQty}, floorTemplates: ${floorTemplates.map(t => t.name)}, wallTemplates: ${wallTemplates.map(t => t.name)}`);
         }
 
         // The true rear X coordinate of the trailer uses the same clamped delta logic from GeometryUtils
@@ -2828,6 +2941,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         }
         
+        console.log(`[ETRACK DEBUG FINAL] Total meshes in eTrackGroupRef: ${eTrackGroupRef.current.children.length}`, eTrackGroupRef.current.children);
+
         // Clean up unneeded geometries to prevent memory leaks over time since this runs every frame during resize
         pointsGeometry.dispose()
         smallPointsGeometry.dispose()
