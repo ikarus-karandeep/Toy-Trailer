@@ -1299,7 +1299,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     activeAddonMeshes.push(n);
                 } else if (config.generatorBox === 'venteddoor' && lower.includes('vented_door_only')) {
                     activeAddonMeshes.push(n);
-                } else if (config.generatorBox === 'venteddoorslides' && (lower.includes('vented_door_only') || lower.includes('slides+tray'))) {
+                } else if ((config.generatorBox === 'complete' || config.generatorBox === 'venteddoorslides') && (lower.includes('vented_door_only') || lower.includes('slides+tray'))) {
                     activeAddonMeshes.push(n);
                 } else if (config.generatorBox === 'insulated' && lower.includes('slides+tray')) {
                     activeAddonMeshes.push(n);
@@ -1897,7 +1897,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     // ── Awning ───────────────────────────────────────────────────────────
     if (awning) {
-        const showAwning = !isShortTrailer && config.awning?.length > 0;
+        const showAwning = config.awning?.length > 0;
         awning.traverse(child => {
             if (!child.isMesh) return;
             if (child.name.toLowerCase().includes('proxy')) {
@@ -1946,7 +1946,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             sinkScene
         ]
         if (config.cabinets?.length > 0) scenes.push(cabinetsGLB)
-        if (!isShortTrailer && config.awning?.length > 0) scenes.push(awning)
+        if (config.awning?.length > 0) scenes.push(awning)
         if (effectiveBathroom !== 'none') scenes.push(bathroom)
         if (config.exteriorAccessories === 'rearwingspoiler' || config.exteriorAccessories === 'rearwings') scenes.push(spoiler)
         if (config.escapeDoor === 'gullwing') scenes.push(gullwingDoor)

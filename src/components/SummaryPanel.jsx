@@ -32,7 +32,7 @@ const BATTERY_OPTIONS = OFF_GRID_POWER_OPTIONS;
 const BATHROOM_OPTIONS = BATHROOM_PACKAGE_OPTIONS;
 const RECEPTACLE_OPTIONS_ALL = RECEPTACLE_OPTIONS;
 
-const TABS = ['TRAILER BUILD', 'CONFIGURATIONS', 'ADD-ONS', 'APPEARANCE']
+const TABS = ['TRAILER BUILD', 'CONFIGURATIONS', 'INTERIOR', 'ADD-ONS', 'APPEARANCE']
 const find = (opts, id) => opts.find(o => o.id === id)
 
 function LineItem({ label, price, unitPrice, qty, onRemove, subtext }) {
@@ -65,7 +65,7 @@ function LineItem({ label, price, unitPrice, qty, onRemove, subtext }) {
 
 export default function SummaryPanel() {
   const ctx = useConfigurator()
-  const { summaryOpen, setSummaryOpen, totalPrice } = ctx
+  const { summaryOpen, setSummaryOpen, totalPrice, setQuoteModalOpen } = ctx
   const [activeTab, setActiveTab] = useState('TRAILER BUILD')
   const [instructions, setInstructions] = useState('')
 
@@ -201,6 +201,74 @@ export default function SummaryPanel() {
       jacks.forEach(id => { const o = find(JACKS_OPTIONS, id); if (o) items.push({ label: o.label, price: o.price, onRemove: () => toggleJack(id) }) })
       return items
     }
+    if (activeTab === 'INTERIOR') {
+      const items = []
+      const fl = find(FLOOR_OPTIONS, floor);
+      if (fl && !fl.isStandard) {
+        let flPrice = fl.price;
+        if (floor === 'double34') flPrice *= (parseInt(length) || 0);
+        items.push({ label: fl.label, price: flPrice, subtext: fl.subtext });
+      }
+      if (ctx.floorOverlay) {
+        const fo = find(FLOOR_OPTIONS, ctx.floorOverlay);
+        if (fo && !fo.isStandard) {
+          let foPrice = fo.price || 0;
+          if (['atp', 'rtp', 'coin'].includes(ctx.floorOverlay)) foPrice *= (parseInt(ctx.length) || 0);
+          items.push({ label: `FLOOR OVERLAY: ${fo.label}`, price: foPrice, onRemove: () => ctx.setFloorOverlay(null) });
+        }
+      }
+      if (ctx.floorInsulation) {
+        const fi = find(FLOOR_OPTIONS, ctx.floorInsulation);
+        if (fi) items.push({ label: `FLOOR INSULATION: ${fi.label}`, price: fi.price || 0, onRemove: () => ctx.setFloorInsulation(null) });
+      }
+      if (ctx.atpWheelWells) {
+        items.push({ label: 'ATP COVERED WHEEL WELLS', price: 472, subtext: 'Diamond plate over axle humps', onRemove: () => ctx.setAtpWheelWells(false) });
+      }
+      const wa = find(WALL_OPTIONS, walls);
+      if (wa && !wa.isStandard) {
+        let waPrice = wa.price;
+        if (['34plywood', 'white_metal_walls'].includes(walls)) waPrice *= (parseInt(length) || 0);
+        items.push({ label: wa.label, price: waPrice, subtext: wa.subtext });
+      }
+      if (ctx.wallInsulation) {
+        const wi = find(WALL_OPTIONS, ctx.wallInsulation);
+        if (wi) items.push({ label: `WALL INSULATION: ${wi.label}`, price: (wi.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setWallInsulation(null) });
+      }
+      const ce = find(CEILING_OPTIONS, ceiling);
+      if (ce && !ce.isStandard) {
+        let cePrice = ce.price;
+        if (['white_metal_ceiling'].includes(ceiling)) cePrice *= (parseInt(length) || 0);
+        items.push({ label: ce.label, price: cePrice, subtext: ce.subtext });
+      }
+      if (ctx.ceilingInsulation) {
+        const ci = find(CEILING_OPTIONS, ctx.ceilingInsulation);
+        if (ci) items.push({ label: `CEILING INSULATION: ${ci.label}`, price: (ci.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setCeilingInsulation(null) });
+      }
+      cabinets.forEach(id => {
+        const o = find(CABINET_OPTIONS, id);
+        if (o) {
+          let price = o.price || 0;
+          if (id === 'wallrun36' || id === 'wallrun16') price *= parseInt(ctx.length) || 0;
+          else if (id === 'wheelwallcabinet') price = (ctx.axleCount === 'triple') ? 1890 : 1620;
+          else if (id === 'frontbase36' || id === 'frontoverhead16') {
+            const isVNose = ctx.frontStyle && ctx.frontStyle !== 'flatfront';
+            if (!isVNose) price = 0;
+          }
+          items.push({ label: o.label, price, onRemove: () => toggleCabinet(id) });
+        }
+      })
+      const tb = find(TOOL_BOX_OPTIONS, toolBox); if (tb && tb.id !== 'none') items.push({ label: `TOOL BOX: ${tb.label}`, price: tb.price })
+      // Spare Tire / Recessed Tire Box
+      if (spareTire) {
+        let stPrice = 160;
+        let stLabelExt = '5-lug';
+        if (lugType === '6lug') { stPrice = 200; stLabelExt = '6-lug'; }
+        else if (lugType === '8lug') { stPrice = 0; stLabelExt = '8-lug'; }
+        items.push({ label: `SPARE TIRE (${stLabelExt})`, price: stPrice, subtext: 'Interior wall mounted', onRemove: () => setSpareTire(false) });
+      }
+      if (recessedTireBox) { items.push({ label: 'RECESSED TIRE BOX', price: 200, onRemove: () => setRecessedTireBox(false) }) }
+      return items
+    }
     if (activeTab === 'ADD-ONS') {
       const items = []
 
@@ -224,26 +292,11 @@ export default function SummaryPanel() {
           items.push({ label: "CONCESSION DOOR / WINDOW", price: 0, onRemove: () => ctx.setConcessionDoor('none') })
         }
       }
-      if (generatorBox && generatorBox !== 'none') { items.push({ label: 'GENERATOR BOX', price: 500, onRemove: () => setGeneratorBox('none') }) }
-
-      if (recessedTireBox) { items.push({ label: 'RECESSED TIRE BOX', price: 200, onRemove: () => setRecessedTireBox(false) }) }
-
-      if (spareTire) { 
-        let stPrice = 160;
-        let stLabelExt = '5-lug';
-        if (lugType === '6lug') {
-          stPrice = 200;
-          stLabelExt = '6-lug';
-        } else if (lugType === '8lug') {
-          stPrice = 0;
-          stLabelExt = '8-lug';
-        }
-        items.push({ 
-          label: `SPARE TIRE (${stLabelExt})`, 
-          price: stPrice, 
-          subtext: 'Mounted on tongue',
-          onRemove: () => setSpareTire(false) 
-        });
+      if (generatorBox && generatorBox !== 'none') {
+        const genOpt = GENERATOR_BOX_OPTIONS.find(o => o.id === generatorBox);
+        const genLabel = genOpt ? genOpt.label : 'GENERATOR BOX';
+        const genPrice = genOpt && typeof genOpt.price === 'number' ? genOpt.price : 1114;
+        items.push({ label: genLabel, price: genPrice, onRemove: () => setGeneratorBox('none') });
       }
 
       return items
@@ -259,7 +312,7 @@ export default function SummaryPanel() {
         items.push({ label: ef.label, price });
       }
       const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
-      const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && !ea.isStandard) items.push({ label: ea.label, price: ea.price, subtext: ea.subtext, onRemove: () => setExteriorAccessories('rearwings') })
+      const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && !ea.isStandard) items.push({ label: ea.label, price: ea.price, subtext: ea.subtext, onRemove: () => setExteriorAccessories(null) })
       if (ctx.awning && ctx.awning.length > 0) {
         const awningLen = ctx.awning[0];
         const aOpt = find(AWNING_OPTIONS, awningLen);
@@ -287,65 +340,6 @@ export default function SummaryPanel() {
       const lt = find(LUG_OPTIONS, lugType); if (lt && !lt.isStandard) items.push({ label: lt.label, price: lt.price })
       const ts = find(TIRE_SIZE_OPTIONS, tireSize); if (ts && !ts.isStandard) items.push({ label: ts.label, price: ts.price })
       const wh = find(WHEEL_OPTIONS, wheelType); if (wh && !wh.isStandard) items.push({ label: wh.label, price: wh.price })
-      const fl = find(FLOOR_OPTIONS, floor); 
-      if (fl && !fl.isStandard) {
-        let flPrice = fl.price;
-        if (floor === 'double34') {
-          flPrice *= (parseInt(length) || 0);
-        }
-        items.push({ label: fl.label, price: flPrice, subtext: fl.subtext })
-      }
-      if (ctx.floorOverlay) {
-        const fo = find(FLOOR_OPTIONS, ctx.floorOverlay);
-        if (fo && !fo.isStandard) {
-          let foPrice = fo.price || 0;
-          if (['atp', 'rtp', 'coin'].includes(ctx.floorOverlay)) foPrice *= (parseInt(ctx.length) || 0);
-          items.push({ label: `FLOOR OVERLAY: ${fo.label}`, price: foPrice, onRemove: () => ctx.setFloorOverlay(null) });
-        }
-      }
-      const wa = find(WALL_OPTIONS, walls); 
-      if (wa && !wa.isStandard) {
-        let waPrice = wa.price;
-        if (['34plywood', 'white_metal_walls'].includes(walls)) {
-          waPrice *= (parseInt(length) || 0);
-        }
-        items.push({ label: wa.label, price: waPrice, subtext: wa.subtext, packageBadge: wa.packageBadge })
-      }
-      if (ctx.wallInsulation) {
-        const wi = find(WALL_OPTIONS, ctx.wallInsulation);
-        if (wi) items.push({ label: `WALL INSULATION: ${wi.label}`, price: (wi.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setWallInsulation(null) });
-      }
-      const ce = find(CEILING_OPTIONS, ceiling); 
-      if (ce && !ce.isStandard) {
-        let cePrice = ce.price;
-        if (['white_metal_ceiling'].includes(ceiling)) {
-          cePrice *= (parseInt(length) || 0);
-        }
-        items.push({ label: ce.label, price: cePrice, subtext: ce.subtext })
-      }
-      if (ctx.ceilingInsulation) {
-        const ci = find(CEILING_OPTIONS, ctx.ceilingInsulation);
-        if (ci) items.push({ label: `CEILING INSULATION: ${ci.label}`, price: (ci.price || 0) * (parseInt(ctx.length) || 0), onRemove: () => ctx.setCeilingInsulation(null) });
-      }
-      if (ctx.atpWheelWells) {
-        items.push({ label: 'ATP COVERED WHEEL WELLS', price: 472, subtext: 'Diamond plate over axle humps — clean floor look', onRemove: () => ctx.setAtpWheelWells(false) });
-      }
-      cabinets.forEach(id => {
-        const o = find(CABINET_OPTIONS, id);
-        if (o) {
-          let price = o.price || 0;
-          if (id === 'wallrun36' || id === 'wallrun16') {
-            price *= parseInt(ctx.length) || 0;
-          } else if (id === 'wheelwallcabinet') {
-            price = (ctx.axleCount === 'triple') ? 1890 : 1620;
-          } else if (id === 'frontbase36' || id === 'frontoverhead16') {
-            const isVNose = ctx.frontStyle && ctx.frontStyle !== 'flatfront';
-            if (!isVNose) price = 0;
-          }
-          items.push({ label: o.label, price, onRemove: () => toggleCabinet(id) });
-        }
-      })
-      const tb = find(TOOL_BOX_OPTIONS, toolBox); if (tb && tb.id !== 'none') items.push({ label: `TOOL BOX: ${tb.label}`, price: tb.price })
       return items
     }
     return []
@@ -421,17 +415,16 @@ export default function SummaryPanel() {
         </div>
 
         <div className="px-6 pb-6">
-          <button className="w-full py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-bold tracking-widest uppercase text-white transition-all"
-            style={{
-              border: '1px solid transparent',
-              backgroundImage: 'linear-gradient(#252525, #252525), linear-gradient(135deg, #F05637, #FFCDC0, #F05637)',
-              backgroundOrigin: 'border-box',
-              backgroundClip: 'padding-box, border-box',
+          <button
+            onClick={() => {
+              setSummaryOpen(false)
+              setQuoteModalOpen(true)
             }}
+            className="w-full py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-bold tracking-widest uppercase text-white transition-all bg-[#DA634B] hover:bg-[#c5573f] shadow-lg active:scale-[0.98]"
           >
-            CONNECT WITH US
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            CHECKOUT
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
           </button>
         </div>

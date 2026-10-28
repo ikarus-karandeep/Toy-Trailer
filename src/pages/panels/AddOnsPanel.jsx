@@ -4,13 +4,17 @@ import {
   WATER_PACKAGE_OPTIONS,
   SINK_PACKAGE_OPTIONS,
   BATHROOM_PACKAGE_OPTIONS,
-  GENERATOR_BOX_OPTIONS
+  GENERATOR_BOX_OPTIONS,
+  CONCESSION_DOOR_PLACEMENT_OPTIONS
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import ToggleSwitch from '../../components/ToggleSwitch'
 import AlertMessage from '../../components/AlertMessage'
 import DetailedOptionCard from '../../components/DetailedOptionCard'
+import DotSlider from '../../components/DotSlider'
+import VerticalDotSlider from '../../components/VerticalDotSlider'
+import SegmentedControl from '../../components/SegmentedControl'
 
 export default function AddOnsPanel({ activeSectionTitle }) {
   const { 
@@ -21,13 +25,18 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     sinkPackage, setSinkPackage,
     batteryBox, setBatteryBox,
     lShapeCounter, setLShapeCounter,
-    genDoor, setGenDoor,
     frontStyle,
     length,
     cabinets,
     viewMode, setViewMode,
     waterPackage, setWaterPackage,
     spareTire, setSpareTire,
+    concessionDoor, setConcessionDoor,
+    glassScreen, setGlassScreen,
+    concessionWidth, setConcessionWidth,
+    concessionHeight, setConcessionHeight,
+    escapeDoor,
+    awning,
     focusedCamera, setFocusedCamera
   } = useConfigurator()
 
@@ -51,6 +60,9 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     if (activeSectionTitle === 'WATER PACKAGE & SINK') {
       return title === 'WATER PACKAGE' || title === 'SINK PACKAGE'
     }
+    if (activeSectionTitle === 'CONCESSION DOOR' || activeSectionTitle === 'CONCESSION' || activeSectionTitle === 'CONCESSION DOOR / WINDOW') {
+      return title === 'CONCESSION DOOR' || title === 'CONCESSION DOOR / WINDOW'
+    }
     if (activeSectionTitle === 'BASE ADDONS') {
       return [
         'BUILT - IN TOOL CABINET', 
@@ -61,6 +73,21 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       ].includes(title)
     }
     return activeSectionTitle === title
+  }
+
+  const concessionWidthOptions = [
+    { id: '48in', label: '48in' },
+    { id: '60in', label: '60in' },
+    { id: '72in', label: '72in' },
+    { id: '96in', label: '96in', locked: awning?.length > 0 && awning[0] === '8ft' },
+  ]
+  const concessionHeightOptions = [
+    { id: '48in', label: '48in' },
+    { id: '36in', label: '36in' },
+  ]
+
+  const widthBadgeMap = {
+    '60in': '+$320',
   }
 
   const handleBathroom = (id) => {
@@ -175,62 +202,108 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         </div>
       )}
 
-      {show('SPARE TIRE') && (
+      {show('CONCESSION DOOR') && (
         <div className="contents">
-          <OptionSection title="SPARE TIRE">
+        <OptionSection title="CONCESSION DOOR / WINDOW">
+          <div className="mb-4">
+            <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Concession door placement</p>
+            <div className="w-full">
+              <SegmentedControl
+                options={[
+                  { id: 'none', label: 'NONE' },
+                  ...CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
+                    ...o,
+                    disabled: escapeDoor !== 'none' && o.id === 'driver',
+                    disabledReason: escapeDoor !== 'none' && o.id === 'driver' ? "Driver side placement is disabled because an Escape Door is already on the Driver side." : null
+                  }))
+                ]}
+                value={concessionDoor}
+                onChange={(val) => {
+                  setConcessionDoor(val)
+                  if (val !== 'none') {
+                    setFocusedCamera(val === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col items-center">
+            <div className="flex w-full items-center justify-between gap-2 px-2">
+              <img src="/concession door.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
+              <div className="h-[150px] flex-shrink-0 z-10">
+                <VerticalDotSlider
+                  options={concessionHeightOptions}
+                  value={concessionHeight}
+                  onChange={(val) => {
+                    setConcessionHeight(val)
+                    if (concessionDoor !== 'none') {
+                      setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                    }
+                  }}
+                />
+              </div>
+            </div>
+            
+            <div className="w-[200px] mt-6 ml-[-40px]">
+              <DotSlider
+                options={concessionWidthOptions}
+                value={concessionWidth}
+                onChange={(val) => {
+                  setConcessionWidth(val)
+                  if (concessionDoor !== 'none') {
+                    setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                  }
+                }}
+                badge={widthBadgeMap[concessionWidth]}
+              />
+            </div>
+          </div>
+
+          <div className="mt-8">
             <ToggleSwitch
-              label="INCLUDE SPARE TIRE"
-              checked={spareTire}
+              label="Glass Screen"
+              checked={glassScreen}
               onChange={(val) => {
-                setSpareTire(val);
-                if (val) setFocusedCamera("Spare Tire Mount Camera");
+                setGlassScreen(val)
+                if (concessionDoor !== 'none') {
+                  setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
+                }
               }}
+              disabled={concessionDoor === 'none'}
+              disabledReason={concessionDoor === 'none' ? "Requires a concession door" : null}
             />
-          </OptionSection>
+          </div>
+        </OptionSection>
         </div>
       )}
+
 
       {show('TONGUE MOUNTED GENERATOR BOX') && (
         <div className="contents">
           <OptionSection title="TONGUE MOUNTED GENERATOR BOX">
-          <div className="mb-8">
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR BOX (34"H X 36"W X 26"D)</h4>
-            <div className="flex flex-col gap-2 mt-4">
-              {GENERATOR_BOX_OPTIONS.map((opt) => (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price} badge={opt.badge}
-                  isSelected={generatorBox === opt.id}
-                  isLocked={frontStyle !== 'flatfront'}
-                  disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
-                  onClick={() => {
-                    if (frontStyle === 'flatfront') {
-                      setGeneratorBox(opt.id)
-                      if (opt.id !== 'none') setFocusedCamera("Tongue Mounted Generator Box Camera")
-                    }
-                  }}
-                />
-              ))}
+            <div>
+              <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR BOX (34"H X 36"W X 26"D)</h4>
+              <div className="flex flex-col gap-2 mt-4">
+                {GENERATOR_BOX_OPTIONS.map((opt) => (
+                  <OptionPill
+                    key={opt.id}
+                    label={opt.label}
+                    price={opt.price} badge={opt.badge}
+                    isSelected={generatorBox === opt.id}
+                    isLocked={frontStyle !== 'flatfront'}
+                    disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
+                    onClick={() => {
+                      if (frontStyle === 'flatfront') {
+                        setGeneratorBox(opt.id)
+                        if (opt.id !== 'none') setFocusedCamera("Tongue Mounted Generator Box Camera")
+                      }
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-
-
-          <div>
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR DOOR 36"X36"</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">w/ Vent & Flush Lock</p>
-            <ToggleSwitch
-              label="Standard gen door"
-              checked={genDoor}
-              onChange={(val) => {
-                setGenDoor(val)
-                if (val) setFocusedCamera("Standard Generator Box Camera")
-              }}
-              disabled={frontStyle !== 'flatfront'}
-              disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
-            />
-          </div>
-        </OptionSection>
+          </OptionSection>
         </div>
       )}
       

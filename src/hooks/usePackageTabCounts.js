@@ -11,7 +11,6 @@ export function usePackageTabCounts() {
   
   const isSelected = (opt) => {
     switch(opt) {
-      case 'rearwings': return ctx.exteriorAccessories === 'rearwings'
       case 'rearwingspoiler': return ctx.exteriorAccessories === 'rearwingspoiler'
       case 'spideraluminum': return ctx.wheelType === 'spideraluminum'
       case 'blackout': return ctx.exteriorFinish === 'blackout'

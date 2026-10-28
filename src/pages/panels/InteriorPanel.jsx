@@ -43,6 +43,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
     floorInsulation, setFloorInsulation,
     atpWheelWells, setAtpWheelWells,
     recessedTireBox, setRecessedTireBox,
+    spareTire, setSpareTire,
+    lugType,
     setFocusedCamera
   } = useConfigurator()
 
@@ -109,7 +111,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                     setCeiling('white_metal_ceiling')
                     if (setExteriorFinish) setExteriorFinish('blackout')
                     if (setBlackoutCabinetDoors) setBlackoutCabinetDoors(true)
-                    setFloorOverlay('atp')
+                    setFloorOverlay('rtp')
                     if (setAtpRamp) setAtpRamp(true)
                     if (setAngledLights) setAngledLights(true)
                     if (setElectrical) setElectrical('50amp')
@@ -168,22 +170,6 @@ export default function InteriorPanel({ activeSectionTitle }) {
             </div>
           </div>
           <p className='border-t border-[#5D5E60]'></p>
-          <div className="mb-6">
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">FLOOR INSULATION</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Thermal Floor Insulation</p>
-            <div className="flex flex-wrap gap-2">
-              {FLOOR_INSULATION_OPTIONS.map((opt) => (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price} badge={opt.badge}
-                  isSelected={floorInsulation === opt.id}
-                  onClick={() => setFloorInsulation(opt.id === floorInsulation ? null : opt.id)}
-                />
-              ))}
-            </div>
-          </div>
-          <p className='border-t border-[#5D5E60]'></p>
           <div>
             <ToggleSwitch
               label="ATP Covered Wheel Wells (+$236 each)"
@@ -191,6 +177,22 @@ export default function InteriorPanel({ activeSectionTitle }) {
               onChange={setAtpWheelWells}
             />
             <p className="text-gray-400 text-[11px] mt-1 ml-14">Diamond plate over axle humps — clean floor look</p>
+          </div>
+        </OptionSection>
+      )}
+
+      {show('FLOOR INSULATION') && (
+        <OptionSection title="FLOOR INSULATION">
+          <div className="flex flex-wrap gap-2">
+            {FLOOR_INSULATION_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price} badge={opt.badge}
+                isSelected={floorInsulation === opt.id}
+                onClick={() => setFloorInsulation(opt.id === floorInsulation ? null : opt.id)}
+              />
+            ))}
           </div>
         </OptionSection>
       )}
@@ -213,21 +215,21 @@ export default function InteriorPanel({ activeSectionTitle }) {
               ))}
             </div>
           </div>
-          <p className='border-t border-[#5D5E60]'></p>
-          <div>
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">WALL INSULATION</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Thermal + Acoustic Wall Insulation. Pair with AC</p>
-            <div className="flex flex-wrap gap-2">
-              {WALL_INSULATION_OPTIONS.map((opt) => (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price} badge={opt.badge}
-                  isSelected={wallInsulation === opt.id}
-                  onClick={() => setWallInsulation(opt.id === wallInsulation ? null : opt.id)}
-                />
-              ))}
-            </div>
+        </OptionSection>
+      )}
+
+      {show('WALL INSULATION') && (
+        <OptionSection title="WALL INSULATION">
+          <div className="flex flex-wrap gap-2">
+            {WALL_INSULATION_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price} badge={opt.badge}
+                isSelected={wallInsulation === opt.id}
+                onClick={() => setWallInsulation(opt.id === wallInsulation ? null : opt.id)}
+              />
+            ))}
           </div>
         </OptionSection>
       )}
@@ -542,16 +544,40 @@ export default function InteriorPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
-      {show('CABINETS') && (
-        <OptionSection title="RECESSED TIRE BOX">
-          <ToggleSwitch
-            label="INCLUDE RECESSED TIRE BOX"
-            checked={recessedTireBox}
-            onChange={(val) => {
-              setRecessedTireBox(val);
-              if (val) setFocusedCamera("Recessed Tire Box Camera");
-            }}
-          />
+      {show('SPARE TIRE') && (
+        <OptionSection title="SPARE TIRE">
+          <div className="flex flex-col gap-2">
+            <OptionPill
+              label="SPARE TIRE"
+              price={lugType === '6lug' ? 200 : lugType === '8lug' ? null : 160}
+              isSelected={spareTire}
+              packageBadge={getBadge('sparetire') || (spareTire ? getBadge('spareTire') : null)}
+              onClick={() => {
+                if (spareTire) {
+                  setSpareTire(false);
+                } else {
+                  setSpareTire(true);
+                  setRecessedTireBox(false);
+                  setFocusedCamera("Spare Tire Mount Camera");
+                }
+              }}
+            />
+            <OptionPill
+              label="RECESSED TIRE BOX"
+              price={200}
+              isSelected={recessedTireBox}
+              packageBadge={getBadge('recessedTireBox')}
+              onClick={() => {
+                if (recessedTireBox) {
+                  setRecessedTireBox(false);
+                } else {
+                  setRecessedTireBox(true);
+                  setSpareTire(false);
+                  setFocusedCamera("Recessed Tire Box Camera");
+                }
+              }}
+            />
+          </div>
         </OptionSection>
       )}
     </div>

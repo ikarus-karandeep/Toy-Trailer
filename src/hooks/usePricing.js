@@ -13,7 +13,7 @@ import {
   WALL_MATERIAL_OPTIONS, WALL_INSULATION_OPTIONS, CEILING_MATERIAL_OPTIONS, CEILING_INSULATION_OPTIONS,
   BASE_CABINET_OPTIONS, OVERHEAD_CABINET_OPTIONS, WALL_RUN_OPTIONS, FULL_HEIGHT_CABINET_OPTIONS, WHEEL_WALL_CABINET_OPTIONS, TOOL_BOX_OPTIONS,
   SIDE_DOOR_OPTIONS, ROOF_BUILD_OPTIONS, LUG_OPTIONS, TIRE_SIZE_OPTIONS, WATER_PACKAGE_OPTIONS, SINK_PACKAGE_OPTIONS, EXTERIOR_ACCESSORIES_OPTIONS,
-  ESCAPE_DOOR_SIZE_OPTIONS, AWNING_OPTIONS
+  ESCAPE_DOOR_SIZE_OPTIONS, AWNING_OPTIONS, GENERATOR_BOX_OPTIONS
 } from '../constants/configData';
 
 const LIGHT_OPTIONS = [...INTERIOR_LIGHTING_OPTIONS, ...EXTERIOR_LIGHTING_OPTIONS];
@@ -195,7 +195,7 @@ export function usePricing(ctx) {
                             && ctx.concessionHeight === '36in';
     if (isConcessionPriced) configurations += 1250;
     
-    if (ctx.generatorBox && ctx.generatorBox !== 'none') configurations += 500;
+    configurations += findPrice(GENERATOR_BOX_OPTIONS, ctx.generatorBox);
     if (ctx.recessedTireBox) configurations += 200;
     if (ctx.spareTire) {
       if (ctx.lugType === '6lug') {
@@ -245,6 +245,9 @@ export function usePricing(ctx) {
         floorOverlayPrice *= (parseInt(ctx.length) || 0);
       }
       appearance += floorOverlayPrice;
+    }
+    if (ctx.floorInsulation) {
+      appearance += findPrice(FLOOR_OPTIONS, ctx.floorInsulation);
     }
     let baseWallPrice = findPrice(WALL_OPTIONS, ctx.walls);
     if (['34plywood', 'white_metal_walls'].includes(ctx.walls)) {
@@ -299,7 +302,7 @@ export function usePricing(ctx) {
     ctx.rearSpoiler, ctx.ladderRacks, ctx.sidewallVents, ctx.recessedTireBox, ctx.interiorTireMount,
     ctx.exteriorFinish, ctx.exteriorAccessories, ctx.frontStyle, ctx.roofBuild,
     ctx.protectionType, ctx.protectionSize, ctx.frontProtection, ctx.lugType, ctx.tireSize, ctx.wheelType,
-    ctx.spareTire, ctx.floor, ctx.floorOverlay, ctx.walls, ctx.ceiling, ctx.wallInsulation, ctx.ceilingInsulation, ctx.atpWheelWells, ctx.cabinets, ctx.toolBox, ctx.dRings,
+    ctx.spareTire, ctx.floor, ctx.floorOverlay, ctx.floorInsulation, ctx.walls, ctx.ceiling, ctx.wallInsulation, ctx.ceilingInsulation, ctx.atpWheelWells, ctx.cabinets, ctx.toolBox, ctx.dRings,
     ctx.driverSideDoor, ctx.passengerSideDoor, ctx.sideDoorBarLock, ctx.concessionDoor,
     ctx.glassScreen, ctx.concessionWidth, ctx.concessionHeight
   ]);

@@ -1,10 +1,10 @@
 export const PANEL_SECTIONS = {
   'SIZE & CAPACITY': ['WIDTH', 'LENGTH', 'FRAME SIZE', 'INTERIOR HEIGHT', 'SPREAD AXLE W/ CORVETTE FENDERS', 'AXLE SUSPENSION', 'AXLE COUNT', 'AXLE CAPACITY'],
   'EXTERIOR': ['EXTERIOR FINISH', 'EXTERIOR ACCESSORIES', 'AWNINGS', 'FRONT STYLE', 'ROOF BUILD', 'LADDER RACKS', 'TRAILER PROTECTION (SIDES & REAR)', 'TRAILER PROTECTION (FRONT)', 'WHEELS AND FINISHING'],
-  'INTERIOR': ['PIT PACK', 'FLOOR', 'WALLS', 'CEILING', 'CABINETS', 'WALL RUN'],
+  'INTERIOR': ['PIT PACK', 'FLOOR', 'FLOOR INSULATION', 'WALLS', 'WALL INSULATION', 'CEILING', 'CABINETS', 'WALL RUN', 'SPARE TIRE'],
   'SYSTEMS': ['ELECTRICAL', 'LIGHTS', 'CLIMATE CONTROL'],
-  'LOADING': ['REAR ENTRANCE', 'SIDE DOOR', 'ESCAPE DOOR', 'CONCESSION DOOR', 'WINDOWS', 'TIE DOWNS (MULTI-CHOICE)', 'JACKS (MULTI-CHOICE)'],
-  'ADD-ONS': ['BATHROOM PACKAGES', 'WATER PACKAGE & SINK', 'SPARE TIRE', 'BASE ADDONS'],
+  'LOADING': ['REAR ENTRANCE', 'SIDE DOOR', 'ESCAPE DOOR', 'WINDOWS', 'TIE DOWNS (MULTI-CHOICE)', 'ELECTRIC TONGUE JACK', 'STABILIZERS'],
+  'ADD-ONS': ['BATHROOM PACKAGES', 'WATER PACKAGE & SINK', 'CONCESSION DOOR', 'BASE ADDONS'],
 }
 
 export const TABS = [
@@ -100,7 +100,6 @@ export const EXTERIOR_FINISH_OPTIONS = [
 ];
 
 export const EXTERIOR_ACCESSORIES_OPTIONS = [
-  { id: 'rearwings', label: 'REAR WINGS', isStandard: true },
   { id: 'rearwingspoiler', label: 'REAR SPOILER WING W/ (2) RACING LIGHTS (STANDALONE)', price: 540, subtext: 'Rear wing — included in Race Package, available separately on any build' },
 ];
 
@@ -113,7 +112,6 @@ export const AWNING_OPTIONS = [
   { id: '18ft', label: '18ft', price: 1820 },
   { id: '20ft', label: '20ft', price: 1955 },
   { id: '22ft', label: '22ft', price: 2090 },
-  // { id: '24ft', label: '24ft', price: 2430 },
 ];
 
 export const COLOR_OPTIONS = [
@@ -217,7 +215,6 @@ export const FLOOR_MATERIAL_OPTIONS = [
 ];
 
 export const FLOOR_OVERLAY_OPTIONS = [
-  { id: 'atp', label: 'ATP', price: 35, badge: '+$35/LFT', subtext: 'Diamond plate over plywood', packageBadge: 'Race / Contractor', image: '/ATP.png' },
   { id: 'rtp', label: 'RTP', price: 35, badge: '+$35/LFT', subtext: 'Rubber tread plate over plywood', packageBadge: 'Race / Contractor', image: '/RTP.png' },
   { id: 'coin', label: 'COIN', price: 35, badge: '+$35/LFT', subtext: 'Coin pattern over plywood', packageBadge: 'Race / Contractor', image: '/coin.png' },
   { id: 'tile', label: 'TILE FLOOR', price: 440, image: '/Tile floor.png' },
@@ -296,15 +293,7 @@ export const INTERIOR_LIGHTING_OPTIONS = [
   { id: 'ledrope',      label: 'LED ROPE LIGHTING',                   price: null },
 ];
 
-export const EXTERIOR_LIGHTING_OPTIONS = [
-  { 
-    id: '12vangledracing', 
-    label: '12v Angled Racing Lights (exterior)', 
-    price: 100,
-    badge: 'Race builds',
-    subtext: 'Race-style exterior lighting'
-  },
-];
+export const EXTERIOR_LIGHTING_OPTIONS = [];
 
 export const PASSIVE_VENTILATION_OPTIONS = [
   { id: 'nonpoweredvent', label: 'NON-POWERED ROOF VENT', price: 40 },
@@ -380,7 +369,6 @@ export const D_RINGS_OPTIONS = [
 ];
 
 export const ADDITIONAL_D_RINGS_OPTIONS = [
-  { id: 'walldrings', label: 'ADDITIONAL WALL D-RINGS (6000LBS)', price: 20 },
   { id: 'floordrings', label: 'ADDITIONAL FLOOR D-RINGS + BACKER', price: 23 },
 ];
 
@@ -389,12 +377,20 @@ export const E_TRACKS_OPTIONS = [
   { id: 'floor', label: 'FLOOR E-TRACK + STEEL BACKER', price: 14, badge: '+$14/LFT' },
 ];
 
-export const JACKS_OPTIONS = [
+export const ELECTRIC_JACK_OPTIONS = [
+  { id: '5000relectric', label: '5000LB ELECTRIC TONGUE JACK W/ DEEP CYCLE BATTERY', price: 540 },
+];
+
+export const STABILIZER_OPTIONS = [
   { id: 'folddownjacks', label: 'FOLD DOWN STABILIZER JACKS' },
   { id: 'folddown', label: 'FOLD DOWN STABILIZER JACK (PAIR) (REAR CORNER STABILIZER)', price: 110 },
   { id: '5kscissorjacks', label: '5K SCISSOR JACKS' },
-  { id: '5kscissor', label: '5K SCISSOR JACK W/ HANDLE (PAIR) (HEAVY DUTY SIDE STABILIZER)', price: 160 },
-  { id: '5000relectric', label: '5000R ELECTRIC TONGUE JACK W/DEEP CYCLE BATTERY', price: 540 },
+  { id: '5kscissor', label: '5K SCISSOR JACK W/ HANDLE (PAIR) (HEAVY DUTY SIDE STABILIZER)', price: 180 },
+];
+
+export const JACKS_OPTIONS = [
+  ...ELECTRIC_JACK_OPTIONS,
+  ...STABILIZER_OPTIONS,
 ];
 
 
@@ -421,8 +417,5 @@ export const WINCH_OPTIONS = [
 
 export const GENERATOR_BOX_OPTIONS = [
   { id: 'none', label: 'NONE' },
-  { id: 'lidonly', label: 'LID ONLY (NO DOOR, SLIDES OR TRAY)', price: 432 },
-  { id: 'venteddoor', label: 'VENTED DOOR ONLY', price: 776 },
-  { id: 'venteddoorslides', label: 'VENTED DOOR + SLIDES + TRAY', price: 1114 },
-  { id: 'insulated', label: 'INSULATED INTERIOR COMPARTMENT W/DOOR, SLIDES & TRAY', price: 1114 },
+  { id: 'complete', label: 'COMPLETE (VENTED DOOR + SLIDE-OUT TRAY)', price: 1114 },
 ];

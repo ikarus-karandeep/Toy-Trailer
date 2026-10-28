@@ -13,6 +13,7 @@ import InteriorPanel from './panels/InteriorPanel'
 import SystemsPanel from './panels/SystemsPanel'
 import LoadingPanel from './panels/LoadingPanel'
 import AddOnsPanel from './panels/AddOnsPanel'
+import QuoteModal from '../components/QuoteModal'
 
 const PANELS = {
   'SIZE & CAPACITY': SizeCapacityPanel,
@@ -24,12 +25,23 @@ const PANELS = {
 }
 
 export default function Configurator({ onModelReady }) {
-  const { activeTab, setActiveTab, viewMode, setViewMode, showDimensions, setShowDimensions } = useConfigurator()
+  const {
+    activeTab, setActiveTab,
+    viewMode, setViewMode,
+    showDimensions, setShowDimensions,
+    quoteModalOpen, setQuoteModalOpen
+  } = useConfigurator()
   const [sectionIdx, setSectionIdx] = useState(0)
   const [fullscreen, setFullscreen] = useState(false)
   const [isARLoading, setIsARLoading] = useState(false)
   const [arProgress, setArProgress] = useState(0)
   const viewerRef = useRef()
+
+  useEffect(() => {
+    if (window.location.hash === '#quote') {
+      setQuoteModalOpen(true)
+    }
+  }, [setQuoteModalOpen])
 
   useEffect(() => {
     let interval;
@@ -184,6 +196,9 @@ export default function Configurator({ onModelReady }) {
 
       {/* Summary panel — works on both layouts */}
       <SummaryPanel />
+
+      {/* Interactive Itemized Quote Modal */}
+      <QuoteModal isOpen={quoteModalOpen} onClose={() => setQuoteModalOpen(false)} />
 
       {/* AR Loading Overlay */}
       {isARLoading && (

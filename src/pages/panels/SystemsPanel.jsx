@@ -54,29 +54,14 @@ export default function SystemsPanel({ activeSectionTitle }) {
         <OptionSection title="ELECTRICAL">
           <div className="flex flex-col gap-2">
             {ELECTRICAL_OPTIONS.map((opt) => {
-              let includedItems = [];
-              if (opt.id === '30amp') {
-                includedItems = [
-                  '(2) Receptacles',
-                  '(1) Switch',
-                  '(2) 110V 24" Flat Panel LEDs',
-                  '125 AMP 8-Space panel box w/ 30 AMP motorbase plug & cord'
-                ];
-              } else if (opt.id === '50amp') {
-                includedItems = [
-                  '(2) Receptacles',
-                  '(1) Switch',
-                  '(2) 110V 24" Flat Panel LEDs',
-                  '125 AMP 8-Space panel box w/ 50 AMP motorbase plug & cord'
-                ];
-              }
-
               return (
-                <DetailedOptionCard
+                <OptionPill
                   key={opt.id}
                   label={opt.label}
-                  price={opt.price} badge={opt.badge}
+                  price={opt.price}
+                  badge={opt.badge}
                   isSelected={electrical === opt.id}
+                  isStandard={opt.id === 'none'}
                   onClick={() => {
                     const prevElectrical = electrical;
                     setElectrical(opt.id);
@@ -105,7 +90,6 @@ export default function SystemsPanel({ activeSectionTitle }) {
                       }
                     }
                   }}
-                  includedItems={includedItems}
                   packageBadge={getBadge(opt.id)}
                 />
               );
@@ -236,27 +220,31 @@ export default function SystemsPanel({ activeSectionTitle }) {
             </div>
           </div>
           </div>
-          <p className='border-t border-[#5D5E60]'></p>
-          <div className="contents">
-          <div>
-            <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">EXTERIOR LIGHTING</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Racing Style Exterior Light</p>
-            <div className="flex flex-col gap-2">
-              {EXTERIOR_LIGHTING_OPTIONS.map((opt) => (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price}
-                  badge={opt.badge}
-                  subtext={opt.subtext}
-                  isSelected={exteriorLights.includes(opt.id)}
-                  onClick={() => toggleArrayItem(setExteriorLights, opt.id)}
-                  isMulti={true}
-                />
-              ))}
-            </div>
-          </div>
-          </div>
+          {EXTERIOR_LIGHTING_OPTIONS.length > 0 && (
+            <>
+              <p className='border-t border-[#5D5E60]'></p>
+              <div className="contents">
+                <div>
+                  <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">EXTERIOR LIGHTING</h4>
+                  <p className="text-gray-400 text-xs tracking-wider mb-4">Racing Style Exterior Light</p>
+                  <div className="flex flex-col gap-2">
+                    {EXTERIOR_LIGHTING_OPTIONS.map((opt) => (
+                      <OptionPill
+                        key={opt.id}
+                        label={opt.label}
+                        price={opt.price}
+                        badge={opt.badge}
+                        subtext={opt.subtext}
+                        isSelected={exteriorLights.includes(opt.id)}
+                        onClick={() => toggleArrayItem(setExteriorLights, opt.id)}
+                        isMulti={true}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </OptionSection>
       )}
 
@@ -289,7 +277,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
           </div>
 
           <div className="mb-8 contents">
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">AC PREP</h4>
             <p className="text-gray-400 text-xs tracking-wider mb-4">Required for any AC build now or prepping for later.</p>
             <ToggleSwitch
@@ -297,7 +285,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
               checked={acPrep}
               onChange={setAcPrep}
             />
-          </div>
+          </div> */}
           </div>
 
           <div className="mb-8 contents">

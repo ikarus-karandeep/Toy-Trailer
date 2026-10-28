@@ -17,7 +17,7 @@ export const PACKAGE_BADGES = {
  * Used by panels to show the package badge on pre-selected options.
  */
 export const PACKAGE_OPTION_IDS = {
-  'track-pack': new Set(['rearwings', 'spideraluminum', 'blackout', 'torsion', '7000lb', 'drings', 'wall', 'floor']),
+  'track-pack': new Set(['rearwingspoiler', 'spideraluminum', 'blackout', 'torsion', '7000lb', 'drings', 'wall', 'floor']),
   'job-site':   new Set(['30amp', 'drings', 'wall', 'floor', '5000relectric', 'frontbase36', 'frontoverhead16']),
   'base-camp':  new Set(['50amp', '18kminisplit', '5000relectric', 'frontbase36', 'frontoverhead16', 'white_metal_walls', 'white_metal_ceiling']),
   'no-package': new Set(),
@@ -25,8 +25,8 @@ export const PACKAGE_OPTION_IDS = {
 
 export const PACKAGE_INITIAL_CONFIGS = {
   'track-pack': {
-    // REAR WINGS
-    exteriorAccessories: 'rearwings',
+    // REAR SPOILER WING
+    exteriorAccessories: 'rearwingspoiler',
     rearSpoiler: true,
     // SPIDER ALUMINUM MAGS
     wheelType: 'spideraluminum',

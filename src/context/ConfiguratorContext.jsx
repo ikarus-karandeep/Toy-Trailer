@@ -11,6 +11,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [activeTab, setActiveTab] = useState('SIZE & CAPACITY')
   const [viewMode, setViewMode] = useState('EXTERIOR')
   const [summaryOpen, setSummaryOpen] = useState(false)
+  const [quoteModalOpen, setQuoteModalOpen] = useState(false)
   const [packageId, setPackageId] = useState(ic.packageId ?? null)
   const [focusedCamera, setFocusedCameraName] = useState(null)
   const [focusedCameraTrigger, setFocusedCameraTrigger] = useState(0)
@@ -61,7 +62,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? null)
   const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'brandywine')
-  const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories ?? 'rearwings')
+  const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories && ic.exteriorAccessories !== 'rearwings' ? ic.exteriorAccessories : null)
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
   const [roofBuild, setRoofBuild] = useState(ic.roofBuild ?? 'onepieceroof')
   const [protectionType, setProtectionType] = useState(ic.protectionType ?? 'atp')
@@ -70,7 +71,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [lugType, setLugType] = useState(ic.lugType ?? '5lug')
   const [tireSize, setTireSize] = useState(ic.tireSize ?? '15')
   const [wheelType, setWheelType] = useState(ic.wheelType ?? 'standardsilver')
-  const [spareTire, setSpareTire] = useState(ic.spareTire ?? true)
+  const [spareTire, setSpareTire] = useState(ic.spareTire ?? false)
   const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
   const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? '36x78')
   const [passengerSideDoor, setPassengerSideDoor] = useState(ic.passengerSideDoor ?? 'none')
@@ -78,7 +79,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
-  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay ?? 'atp')
+  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay && ic.floorOverlay !== 'atp' ? ic.floorOverlay : 'rtp')
   const [floorInsulation, setFloorInsulation] = useState(ic.floorInsulation ?? null)
   const [walls, setWalls] = useState(ic.walls ?? 'white_metal_walls')
   const [ceiling, setCeiling] = useState(ic.ceiling ?? 'white_metal_ceiling')
@@ -147,7 +148,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     walldrings: 0,
     floordrings: 0,
   })
-  const [jacks, setJacksRaw] = useState(ic.jacks ?? [''])
+  const [jacks, setJacksRaw] = useState(ic.jacks ?? [])
 
   // Add-Ons
   const [waterPackage, setWaterPackage] = useState(ic.waterPackage ?? 'largewater')
@@ -228,7 +229,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   // Structural / Exterior Addons
   const [ladderRacks, setLadderRacks] = useState(ic.ladderRacks ?? false)
   const [sidewallVents, setSidewallVents] = useState(ic.sidewallVents ?? false)
-  const [recessedTireBox, setRecessedTireBox] = useState(ic.recessedTireBox ?? false)
+  const [recessedTireBox, setRecessedTireBox] = useState(ic.recessedTireBox ?? true)
   const [interiorTireMount, setInteriorTireMount] = useState(ic.interiorTireMount ?? false)
 
   const [showDimensions, setShowDimensions] = useState(false)
@@ -334,7 +335,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   const applyPackage = useCallback((pkgId, pkgConfig) => {
     setPackageId(pkgId);
-    setExteriorAccessories(pkgConfig.exteriorAccessories ?? 'rearwings');
+    setExteriorAccessories(pkgConfig.exteriorAccessories ?? null);
     setRearSpoiler(pkgConfig.rearSpoiler ?? false);
     setWheelType(pkgConfig.wheelType ?? 'standardsilver');
     setAngledLights(pkgConfig.angledLights ?? false);
@@ -351,7 +352,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
     setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
     setCabinetsRaw(pkgConfig.cabinets ?? ['frontbase36']);
-    setJacksRaw(pkgConfig.jacks ?? ['folddown']);
+    setJacksRaw(pkgConfig.jacks ?? []);
     setElectrical(pkgConfig.electrical ?? '110v8space');
     setRecessedTireBox(pkgConfig.recessedTireBox ?? false);
     setClimateControl(pkgConfig.climateControl ?? 'wirebrace');
@@ -452,8 +453,9 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     pricing,
     totalPrice,
     completionPercent, markTabVisited,
+    quoteModalOpen, setQuoteModalOpen,
   }), [
-    packageId, applyPackage, activeTab, viewMode, summaryOpen, focusedCamera, cameraResetTrigger, triggerCameraReset,
+    packageId, applyPackage, activeTab, viewMode, summaryOpen, quoteModalOpen, focusedCamera, cameraResetTrigger, triggerCameraReset,
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,

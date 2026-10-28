@@ -6,20 +6,18 @@ import {
   SIDE_DOOR_PLACEMENT_OPTIONS,
   SIDE_DOOR_SIZE_OPTIONS,
   ESCAPE_DOOR_SIZE_OPTIONS,
-  CONCESSION_DOOR_PLACEMENT_OPTIONS,
   WINDOWS_OPTIONS,
   WINDOWS_SIZE_OPTIONS,
   WINDOWS_EGRESS_OPTIONS,
   D_RINGS_OPTIONS,
   ADDITIONAL_D_RINGS_OPTIONS,
   E_TRACKS_OPTIONS,
-  JACKS_OPTIONS
+  JACKS_OPTIONS,
+  STABILIZER_OPTIONS
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import ToggleSwitch from '../../components/ToggleSwitch'
-import DotSlider from '../../components/DotSlider'
-import VerticalDotSlider from '../../components/VerticalDotSlider'
 import SegmentedControl from '../../components/SegmentedControl'
 
 export default function LoadingPanel({ activeSectionTitle }) {
@@ -34,13 +32,10 @@ export default function LoadingPanel({ activeSectionTitle }) {
     sideDoorBarLock, setSideDoorBarLock,
     escapeDoor, setEscapeDoor,
     atpRamp, setAtpRamp,
-    concessionDoor, setConcessionDoor,
-    glassScreen, setGlassScreen,
+    concessionDoor,
     windows, setWindows,
     windowSizes, setWindowSizes,
     viewMode, setViewMode,
-    concessionWidth, setConcessionWidth,
-    concessionHeight, setConcessionHeight,
     length, width, frontStyle, awning,
     setFocusedCamera
   } = useConfigurator()
@@ -52,29 +47,70 @@ export default function LoadingPanel({ activeSectionTitle }) {
   const currentSideDoor = sideDoorPlacement === 'driver' ? driverSideDoor : passengerSideDoor
   const setCurrentSideDoor = sideDoorPlacement === 'driver' ? setDriverSideDoor : setPassengerSideDoor
 
-  const [blackoutFrame, setBlackoutFrame] = useState(false)
-
   // concessionDoor comes from context ('none' | 'driver' | 'passenger')
 
-  const show = (title) => !activeSectionTitle || activeSectionTitle === title
+  const show = (title) => {
+    if (!activeSectionTitle) return true
+    if (activeSectionTitle === 'JACKS' || activeSectionTitle === 'JACKS (MULTI-CHOICE)') {
+      return title === 'ELECTRIC TONGUE JACK' || title === 'STABILIZERS' || title === 'STABILIZER JACKS' || title === 'JACKS (MULTI-CHOICE)'
+    }
+    if (activeSectionTitle === 'STABILIZERS' || activeSectionTitle === 'STABILIZER JACKS') {
+      return title === 'STABILIZERS' || title === 'STABILIZER JACKS'
+    }
+    if (activeSectionTitle === 'ELECTRIC TONGUE JACK' || activeSectionTitle === 'TONGUE JACK') {
+      return title === 'ELECTRIC TONGUE JACK' || title === 'TONGUE JACK'
+    }
+    return activeSectionTitle === title
+  }
 
   const updateQuantity = (setter, key, val) => {
     setter(prev => ({ ...prev, [key]: Math.max(0, val) }))
   }
 
-  const concessionWidthOptions = [
-    { id: '48in', label: '48in' },
-    { id: '60in', label: '60in' },
-    { id: '72in', label: '72in' },
-    { id: '96in', label: '96in', locked: awning?.length > 0 && awning[0] === '8ft' },
-  ]
-  const concessionHeightOptions = [
-    { id: '48in', label: '48in' },
-    { id: '36in', label: '36in' },
-  ]
+  const isGooseneck = width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'))
+  const isExtendedVNose = frontStyle === 'extendedvnose'
+  const isElectricSelected = jacks.includes('5000relectric')
+  const isElectricDisabled = isGooseneck
 
-  const widthBadgeMap = {
-    '60in': '+$320',
+  const handleToggleElectric = (val) => {
+    if (isElectricDisabled) return
+    if (val) {
+      if (!jacks.includes('5000relectric')) {
+        setJacksRaw(prev => [...prev, '5000relectric'])
+      }
+      if (isExtendedVNose) {
+        setFocusedCamera("Electric Jack(Extended V-Nose) Camera")
+      } else {
+        setFocusedCamera("Electric Jack Camera")
+      }
+    } else {
+      setJacksRaw(prev => prev.filter(j => j !== '5000relectric'))
+    }
+  }
+
+  const handleStabilizer = (id) => {
+    const FOLD_GROUP = ['folddown', 'folddownjacks']
+    const SCISSOR_GROUP = ['5kscissor', '5kscissorjacks']
+    const isSelected = jacks.includes(id)
+    if (isSelected) {
+      setJacksRaw(jacks.filter(j => j !== id))
+    } else {
+      if (FOLD_GROUP.includes(id)) {
+        setJacksRaw([...jacks.filter(j => !FOLD_GROUP.includes(j)), id])
+      } else if (SCISSOR_GROUP.includes(id)) {
+        setJacksRaw([...jacks.filter(j => !SCISSOR_GROUP.includes(j)), id])
+      } else {
+        toggleJack(id)
+      }
+
+      if (id === 'folddown' || id === 'folddownjacks') {
+        setFocusedCamera("Fold_Down_Stablizer_Jack_Inst_Camera")
+      } else if (id === '5kscissorjacks') {
+        setFocusedCamera("5K_Scissor_Jack_Inst_Camera")
+      } else if (id === '5kscissor') {
+        setFocusedCamera("5K_Scissor_Jack_w_Handle_Inst_Camera")
+      }
+    }
   }
 
   return (
@@ -219,89 +255,6 @@ export default function LoadingPanel({ activeSectionTitle }) {
             <img src="/Escape door.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
           </div>
           
-          <div className="mt-6">
-            <ToggleSwitch
-              label="Blackout Frame"
-              checked={blackoutFrame}
-              onChange={setBlackoutFrame}
-            />
-          </div>
-        </OptionSection>
-        </div>
-      )}
-
-      {show('CONCESSION DOOR / WINDOW') && (
-        <div className="contents">
-        <OptionSection title="CONCESSION DOOR / WINDOW">
-          <div className="mb-4">
-            <p className="text-gray-400 text-[10px] tracking-wider mb-2 uppercase">Concession door placement</p>
-            <div className="w-full">
-              <SegmentedControl
-                options={[
-                  { id: 'none', label: 'NONE' },
-                  ...CONCESSION_DOOR_PLACEMENT_OPTIONS.map(o => ({
-                    ...o,
-                    disabled: escapeDoor !== 'none' && o.id === 'driver',
-                    disabledReason: escapeDoor !== 'none' && o.id === 'driver' ? "Driver side placement is disabled because an Escape Door is already on the Driver side." : null
-                  }))
-                ]}
-                value={concessionDoor}
-                onChange={(val) => {
-                  setConcessionDoor(val)
-                  if (val !== 'none') {
-                    setFocusedCamera(val === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
-                  }
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-col items-center">
-            <div className="flex w-full items-center justify-between gap-2 px-2">
-              <img src="/concession door.png" className="w-[120px] sm:w-[150px] md:w-full md:max-w-[200px] lg:max-w-[300px] mx-auto object-contain my-4" />
-              <div className="h-[150px] flex-shrink-0 z-10">
-                <VerticalDotSlider
-                  options={concessionHeightOptions}
-                  value={concessionHeight}
-                  onChange={(val) => {
-                    setConcessionHeight(val)
-                    if (concessionDoor !== 'none') {
-                      setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
-                    }
-                  }}
-                />
-              </div>
-            </div>
-            
-            <div className="w-[200px] mt-6 ml-[-40px]">
-              <DotSlider
-                options={concessionWidthOptions}
-                value={concessionWidth}
-                onChange={(val) => {
-                  setConcessionWidth(val)
-                  if (concessionDoor !== 'none') {
-                    setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
-                  }
-                }}
-                badge={widthBadgeMap[concessionWidth]}
-              />
-            </div>
-          </div>
-
-          <div className="mt-8">
-            <ToggleSwitch
-              label="Glass Screen"
-              checked={glassScreen}
-              onChange={(val) => {
-                setGlassScreen(val)
-                if (concessionDoor !== 'none') {
-                  setFocusedCamera(concessionDoor === 'driver' ? 'Concession Door L Camera' : 'Concession Door R Camera')
-                }
-              }}
-              disabled={concessionDoor === 'none'}
-              disabledReason={concessionDoor === 'none' ? "Requires a concession door" : null}
-            />
-          </div>
         </OptionSection>
         </div>
       )}
@@ -480,69 +433,36 @@ export default function LoadingPanel({ activeSectionTitle }) {
         </div>
       )}
 
-      {show('JACKS (MULTI-CHOICE)') && (
+      {show('ELECTRIC TONGUE JACK') && (
         <div className="contents">
-        <OptionSection title="JACKS (MULTI-CHOICE)">
+        <OptionSection title="ELECTRIC TONGUE JACK">
+          <ToggleSwitch
+            label="5000lb Electric Tongue Jack w/ Deep Cycle Battery"
+            // subtext="Includes deep-cycle battery"
+            checked={isElectricSelected}
+            onChange={handleToggleElectric}
+            disabled={isElectricDisabled}
+            disabledReason={isElectricDisabled ? "Electric Tongue Jack is not compatible with gooseneck models" : null}
+            price={540}
+          />
+        </OptionSection>
+        </div>
+      )}
+
+      {show('STABILIZERS') && (
+        <div className="contents">
+        <OptionSection title="STABILIZERS">
           <div className="flex flex-col gap-2">
-            {JACKS_OPTIONS.map((opt) => {
-              // Radio-group logic:
-              //  Fold Down group  → 'folddown' and 'folddownjacks' are mutually exclusive
-              //  Scissor group    → '5kscissor' and '5kscissorjacks' are mutually exclusive
-              //  Electric         → free multi-toggle
-              const FOLD_GROUP    = ['folddown', 'folddownjacks']
-              const SCISSOR_GROUP = ['5kscissor', '5kscissorjacks']
-
-              const isGooseneck = width === '8.5ftgn' || (frontStyle && frontStyle.toLowerCase().includes('gooseneck'))
-              const isExtendedVNose = frontStyle === 'extendedvnose'
-              const isElectricDisabled = opt.id === '5000relectric' && isGooseneck
-
-              const handleJack = (id) => {
-                if (isElectricDisabled && id === '5000relectric') return;
-                
-                const isSelected = jacks.includes(id)
-                if (isSelected) {
-                  // Deselect: just remove this id
-                  setJacksRaw(jacks.filter(j => j !== id))
-                } else {
-                  // Select: remove sibling in same group first, then add
-                  if (FOLD_GROUP.includes(id)) {
-                    setJacksRaw([...jacks.filter(j => !FOLD_GROUP.includes(j)), id])
-                  } else if (SCISSOR_GROUP.includes(id)) {
-                    setJacksRaw([...jacks.filter(j => !SCISSOR_GROUP.includes(j)), id])
-                  } else {
-                    // Electric — free toggle
-                    toggleJack(id)
-                  }
-                  
-                  if (id === '5000relectric') {
-                    if (isExtendedVNose) {
-                      setFocusedCamera("Electric Jack(Extended V-Nose) Camera")
-                    } else {
-                      setFocusedCamera("Electric Jack Camera")
-                    }
-                  } else if (id === 'folddown' || id === 'folddownjacks') {
-                    setFocusedCamera("Fold_Down_Stablizer_Jack_Inst_Camera")
-                  } else if (id === '5kscissorjacks') {
-                    setFocusedCamera("5K_Scissor_Jack_Inst_Camera")
-                  } else if (id === '5kscissor') {
-                    setFocusedCamera("5K_Scissor_Jack_w_Handle_Inst_Camera")
-                  }
-                }
-              }
-
-              return (
-                <OptionPill
-                  key={opt.id}
-                  label={opt.label}
-                  price={opt.price} badge={opt.badge}
-                  isSelected={jacks.includes(opt.id) && !isElectricDisabled}
-                  disabled={isElectricDisabled}
-                  disabledReason={isElectricDisabled ? "Electric Tongue Jack is not compatible with gooseneck models" : null}
-                  onClick={() => handleJack(opt.id)}
-                  packageBadge={getBadge(opt.id)}
-                />
-              )
-            })}
+            {STABILIZER_OPTIONS.map((opt) => (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price} badge={opt.badge}
+                isSelected={jacks.includes(opt.id)}
+                onClick={() => handleStabilizer(opt.id)}
+                packageBadge={getBadge(opt.id)}
+              />
+            ))}
           </div>
         </OptionSection>
         </div>

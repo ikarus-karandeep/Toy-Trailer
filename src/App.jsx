@@ -8,9 +8,9 @@ import CategorySelection from './pages/Wizard/CategorySelection'
 import PackageSelection from './pages/Wizard/PackageSelection'
 import { PACKAGE_INITIAL_CONFIGS } from './constants/packageConfigs'
 
-function decodeArKey(search) {
+function decodeSavedConfig(search) {
   try {
-    const match = search.match(/[?&]arKey=([^&]+)/)
+    const match = search.match(/[?&](?:configKey|arKey|quoteKey)=([^&]+)/)
     if (!match) return null
     const raw = match[1]
     const decoded = LZString.decompressFromEncodedURIComponent(decodeURIComponent(raw))
@@ -22,7 +22,7 @@ function decodeArKey(search) {
 
 function getStepFromHash(hash) {
   if (hash === '#package') return 2
-  if (hash === '#configurator') return 3
+  if (hash === '#configurator' || hash === '#quote') return 3
   return 1
 }
 
@@ -86,15 +86,17 @@ function WizardRouter({ step, goToStep, selectedCategory, setSelectedCategory, s
 
 export default function App() {
   const [hash, setHash] = useState(window.location.hash)
-  const arConfig = useMemo(() => decodeArKey(window.location.search), [])
+  const savedConfig = useMemo(() => decodeSavedConfig(window.location.search), [])
+  const isArMode = useMemo(() => Boolean(window.location.search.match(/[?&]arKey=/)), [])
+  const arConfig = isArMode ? savedConfig : null
   const [modelMesh, setModelMesh] = useState(null)
 
   // Persist selections across wizard steps
   const [selectedCategory, setSelectedCategory] = useState(DEFAULT_CATEGORY)
   const [selectedPackage,  setSelectedPackage]  = useState(DEFAULT_PACKAGE)
 
-  // Derive step purely from hash (unless AR config skips to step 3)
-  const step = arConfig ? 3 : getStepFromHash(hash)
+  // Derive step purely from hash (unless AR config or savedConfig skips to step 3)
+  const step = (arConfig || savedConfig || hash === '#quote') ? 3 : getStepFromHash(hash)
 
   // Navigate forward — step 1 = clean URL, step 2+ = hash
   const goToStep = (newStep) => {
@@ -122,10 +124,15 @@ export default function App() {
   const handleModelReady = useCallback((mesh) => setModelMesh(mesh), [])
 
   // The config that will be passed to ConfiguratorProvider ONLY ONCE
-  // Merge package config with any AR config, and include the package ID for badge display
+  // Merge package config with any saved/AR config, and include the package ID for badge display
   const mergedConfig = useMemo(() => {
-    return { packageId: selectedPackage, ...(PACKAGE_INITIAL_CONFIGS[selectedPackage] ?? {}), ...(arConfig ?? {}) }
-  }, [arConfig]) // only run initially or when arConfig changes
+    const effectivePackage = savedConfig?.packageId || selectedPackage
+    return {
+      packageId: effectivePackage,
+      ...(PACKAGE_INITIAL_CONFIGS[effectivePackage] ?? {}),
+      ...(savedConfig ?? {})
+    }
+  }, [savedConfig]) // only run initially or when savedConfig changes
 
   return (
     <ConfiguratorProvider initialConfig={mergedConfig}>

@@ -48,29 +48,29 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
   const [awningLength, setAwningLength] = useState(awning?.length > 0 ? awning[0] : '18ft')
 
-  // Sync local slider state with global awning state changes
+  const trailerLen = parseInt(length || '24');
+  const maxAwningLen = Math.min(22, trailerLen - 2);
+
+  // Sync local slider state with global awning state changes and auto-clamp to (trailer length - 2)
   useEffect(() => {
     if (awning && awning.length > 0) {
-      setAwningLength(awning[0]);
+      const currentLen = parseInt(awning[0]);
+      if (currentLen > maxAwningLen) {
+        const validOpts = AWNING_OPTIONS.filter(o => parseInt(o.id) <= maxAwningLen);
+        const bestOpt = validOpts[validOpts.length - 1];
+        if (bestOpt) {
+          setAwningLength(bestOpt.id);
+          setAwningRaw([bestOpt.id]);
+        }
+      } else {
+        setAwningLength(awning[0]);
+      }
     }
-  }, [awning]);
+  }, [length, awning, maxAwningLen, setAwningRaw]);
 
   const awningLengthOptions = AWNING_OPTIONS.filter(opt => {
     const optLen = parseInt(opt.id);
-    const trailerLen = parseInt(length || '24');
-    return optLen <= trailerLen;
-  }).map(opt => {
-    const optLen = parseInt(opt.id);
-    const trailerLen = parseInt(length || '24');
-    let locked = false;
-    if (optLen >= 24 && trailerLen < 32) locked = true;
-    else if (optLen >= 18 && optLen <= 22 && trailerLen <= 28) locked = true;
-    else if (optLen === 16 && trailerLen <= 26) locked = true;
-
-    return {
-      ...opt,
-      locked
-    };
+    return optLen <= maxAwningLen;
   });
 
   const getAwningBadge = (len) => {
@@ -203,25 +203,18 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
       {show('EXTERIOR ACCESSORIES') && (
         <OptionSection title="EXTERIOR ACCESSORIES">
-          <div className="flex flex-wrap gap-2">
-            {EXTERIOR_ACCESSORIES_OPTIONS.map((opt) => (
-              <OptionPill
-                key={opt.id}
-                label={opt.label}
-                price={opt.price} badge={opt.badge}
-                isStandard={opt.isStandard}
-                isSelected={exteriorAccessories === opt.id}
-                onClick={() => {
-                  setExteriorAccessories(opt.id);
-                  if (opt.id === 'rearwings') {
-                    setFocusedCamera("Rear Spoiler Wing Camera");
-                  } else if (opt.id === 'rearwingspoiler') {
-                    setFocusedCamera("Rear Spoiler Wing w_ Angled Lights Camera");
-                  }
-                }}
-              />
-            ))}
-          </div>
+          <ToggleSwitch
+            label="REAR SPOILER WING W/ (2) RACING LIGHTS (STANDALONE)"
+            subtext="Rear wing w/ 2 racing lights — available separately on any build"
+            price={540}
+            checked={exteriorAccessories === 'rearwingspoiler'}
+            onChange={(val) => {
+              setExteriorAccessories(val ? 'rearwingspoiler' : null);
+              if (val) {
+                setFocusedCamera("Rear Spoiler Wing w_ Angled Lights Camera");
+              }
+            }}
+          />
           <div className="border-t border-[#5D5E60] my-5" />
           <ToggleSwitch
             label="INCLUDE STAIRS"
@@ -244,53 +237,49 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
       {show('AWNINGS') && (
         <OptionSection title="AWNINGS">
-          {parseFloat(length) < 24 ? (
-            <p className="text-gray-400 text-xs tracking-wider mb-4 -mt-3">
-              * Awning options are hidden for trailers under 24ft length.
-            </p>
-          ) : (
-            <>
-              <img
-                src="/Awnings.webp"
-                alt="Awning preview"
-                className="w-full rounded-xl object-cover mb-4"
-                onError={(e) => { e.currentTarget.style.display = 'none' }}
+          <img
+            src="/Awnings.webp"
+            alt="Awning preview"
+            className="w-full rounded-xl object-cover mb-4"
+            onError={(e) => { e.currentTarget.style.display = 'none' }}
+          />
+          <div className="flex flex-col gap-2">
+            <OptionPill
+              label="Electric Awning"
+              isSelected={awning?.length > 0}
+              onClick={() => {
+                if (awning?.length > 0) {
+                  setAwningRaw([])
+                } else {
+                  let selectedLen = awningLength;
+                  if (parseInt(selectedLen) > maxAwningLen) {
+                    const validOpts = AWNING_OPTIONS.filter(o => parseInt(o.id) <= maxAwningLen);
+                    selectedLen = validOpts[validOpts.length - 1]?.id || `${maxAwningLen}ft`;
+                    setAwningLength(selectedLen);
+                  }
+                  setAwningRaw([selectedLen])
+                  setFocusedCamera("Electric Awning Camera")
+                }
+              }}
+            />
+          </div>
+          {awning?.length > 0 && (
+            <div className="mt-4">
+              <CarouselSlider
+                options={awningLengthOptions}
+                value={awningLength}
+                onChange={(val) => {
+                  setAwningLength(val)
+                  setAwningRaw([val])
+                  setFocusedCamera("Electric Awning Camera")
+                }}
+                badge={getAwningBadge(awningLength)}
+                formatLabel={(opt) => opt.label}
               />
-              <div className="flex flex-col gap-2">
-                <OptionPill
-                  label="Electric Awning"
-                  isSelected={awning?.length > 0}
-                  onClick={() => {
-                    if (awning?.length > 0) {
-                      setAwningRaw([])
-                    } else {
-                      setAwningRaw([awningLength])
-                      setFocusedCamera("Electric Awning Camera")
-                    }
-                  }}
-                />
-              </div>
-              {awning?.length > 0 && (
-                <div className="mt-4">
-                  <CarouselSlider
-                    options={awningLengthOptions.map(opt => ({
-                      ...opt,
-                      lockedReason: opt.locked 
-                        ? `Some larger awning sizes are disabled to fit your current trailer. ${opt.label} requires ${opt.label === '16ft' ? '28ft+' : opt.label === '24ft' ? '32ft+' : '30ft+'}` 
-                        : null
-                    }))}
-                    value={awningLength}
-                    onChange={(val) => {
-                      setAwningLength(val)
-                      setAwningRaw([val])
-                      setFocusedCamera("Electric Awning Camera")
-                    }}
-                    badge={getAwningBadge(awningLength)}
-                    formatLabel={(opt) => opt.label}
-                  />
-                </div>
-              )}
-            </>
+              {/* <p className="text-gray-400 text-[11px] text-center mt-2">
+                Max awning size is {maxAwningLen}ft (max 22ft).
+              </p> */}
+            </div>
           )}
         </OptionSection>
       )}
