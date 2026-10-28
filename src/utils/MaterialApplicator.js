@@ -11,7 +11,7 @@ function blenderPathToWeb(blenderPath) {
     return `/Materials/${filename}`
 }
 
-function pathToKey(webPath) {
+export function pathToKey(webPath) {
     return webPath.replace(/[^a-zA-Z0-9]/g, '_').replace(/^_+/, '')
 }
 

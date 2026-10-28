@@ -7,7 +7,7 @@ import { applyDimensionDeformations, applyConcessionDoorDeformations, applyWindo
 import { BlenderNodes } from '../utils/BlenderNodes'
 import { useConfigurator } from '../context/ConfiguratorContext'
 import { patchTriplanarMaterial, generateBoxProjectionUVs } from '../utils/TriplanarMaterial'
-import { MATERIAL_DEFS_NORM, STATIC_TEXTURE_PATHS, applyMaterialDef, isSpecialMaterial, normMatName } from '../utils/MaterialApplicator'
+import { MATERIAL_DEFS_NORM, STATIC_TEXTURE_PATHS, applyMaterialDef, isSpecialMaterial, normMatName, pathToKey } from '../utils/MaterialApplicator'
 import { COLOR_OPTIONS } from '../constants/configData'
 
 const LERP_SPEED = 0.18
@@ -362,6 +362,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 if (sceneName === 'wheels') {
                     // console.log(`[DEBUG ${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
                 }
+                if (sceneName === 'cabinetsGLB' && child.name.toLowerCase().includes('tool')) {
+                    console.log(`[DEBUG CABINET TOOLBOX] mesh: "${child.name}" | materials: [${mats.join(', ')}]`, child.material);
+                }
                 if (sceneName === 'rearDoors') {
                     console.log(`[DEBUG rearDoors mesh available] "${child.name}" | materials: [${mats.join(', ')}]`);
                 }
@@ -511,6 +514,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         allScenes.forEach((scene, sceneIdx) => {
             scene.traverse(child => {
                 if (!child.isMesh) return
+                if (child.name.toLowerCase().includes('toolbox')) return
                 const isArray = Array.isArray(child.material)
                 const mats = isArray ? child.material : [child.material]
 
@@ -615,6 +619,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         allScenes.forEach(scene => {
             scene.traverse(child => {
                 if (!child.isMesh) return
+                if (child.name.toLowerCase().includes('toolbox')) return
                 const isArray = Array.isArray(child.material)
                 const mats = isArray ? child.material : [child.material]
                 mats.forEach((mat, i) => {
@@ -991,6 +996,61 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         child.userData.origMatsGen[i] = mat.clone();
                     }
                     const originalMat = child.userData.origMatsGen[i];
+
+                    const isToolboxMesh = child.name.toLowerCase().includes('toolbox');
+                    if (isToolboxMesh) {
+                        const rawNorm = normMatName(originalMat.name);
+                        let toolboxMat = originalMat.clone();
+                        
+                        if (rawNorm.includes('red')) {
+                            // Red trim
+                            const redTex = staticTextures[pathToKey('/Materials/Red_Base_color.jpg')];
+                            if (redTex) {
+                                redTex.colorSpace = THREE.SRGBColorSpace;
+                                toolboxMat.map = redTex;
+                                toolboxMat.color.set('#FFFFFF');
+                            } else {
+                                toolboxMat.map = null;
+                                toolboxMat.color.set('#B31217'); // Rich toolbox red
+                            }
+                            toolboxMat.metalness = 0.8;
+                            toolboxMat.roughness = 0.25;
+                        } else if (rawNorm.includes('chrome')) {
+                            // Chrome handles / accents
+                            const chromeTex = staticTextures[pathToKey('/Materials/Chrome_BaseColor.png')];
+                            if (chromeTex) {
+                                chromeTex.colorSpace = THREE.SRGBColorSpace;
+                                toolboxMat.map = chromeTex;
+                                toolboxMat.color.set('#FFFFFF');
+                            } else {
+                                toolboxMat.map = null;
+                                toolboxMat.color.set('#E5E5E5');
+                            }
+                            toolboxMat.metalness = 0.95;
+                            toolboxMat.roughness = 0.1;
+                        } else {
+                            // Black rough front body / drawers
+                            const blackTex = staticTextures[pathToKey('/Materials/Black_ROUGH_Base_color.jpg')];
+                            if (blackTex) {
+                                blackTex.colorSpace = THREE.SRGBColorSpace;
+                                toolboxMat.map = blackTex;
+                                toolboxMat.color.set('#FFFFFF');
+                            } else {
+                                toolboxMat.map = null;
+                                toolboxMat.color.set('#1E1E1E'); // Matte black
+                            }
+                            toolboxMat.metalness = 0.1;
+                            toolboxMat.roughness = 0.7;
+                        }
+
+                        toolboxMat.transparent = false;
+                        toolboxMat.opacity = 1.0;
+                        toolboxMat.needsUpdate = true;
+                        
+                        if (isArray) child.material[i] = toolboxMat;
+                        else child.material = toolboxMat;
+                        return;
+                    }
 
                     let mappedName = getBlackoutMapped(normMatName(originalMat.name));
                     
