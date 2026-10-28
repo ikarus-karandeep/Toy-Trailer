@@ -103,6 +103,11 @@ export const EXTERIOR_ACCESSORIES_OPTIONS = [
   { id: 'rearwingspoiler', label: 'REAR SPOILER WING W/ (2) RACING LIGHTS (STANDALONE)', price: 540, subtext: 'Rear wing — included in Race Package, available separately on any build' },
 ];
 
+export const LADDER_RACK_OPTIONS = [
+  { id: 'standard', label: 'STANDARD LADDER RACK', price: 250 },
+  { id: 'lowprofile', label: 'LOW PROFILE LADDER RACK', price: 250 },
+];
+
 export const AWNING_OPTIONS = [
   { id: '8ft', label: '8ft', price: 0 },
   { id: '10ft', label: '10ft', price: 0 },
@@ -215,6 +220,7 @@ export const FLOOR_MATERIAL_OPTIONS = [
 ];
 
 export const FLOOR_OVERLAY_OPTIONS = [
+  { id: 'plywood', label: 'PLYWOOD', isStandard: true },
   { id: 'rtp', label: 'RTP', price: 35, badge: '+$35/LFT', subtext: 'Rubber tread plate over plywood', packageBadge: 'Race / Contractor', image: '/RTP.png' },
   { id: 'coin', label: 'COIN', price: 35, badge: '+$35/LFT', subtext: 'Coin pattern over plywood', packageBadge: 'Race / Contractor', image: '/coin.png' },
   { id: 'tile', label: 'TILE FLOOR', price: 440, image: '/Tile floor.png' },
@@ -287,8 +293,8 @@ export const OFF_GRID_POWER_OPTIONS = [
 ];
 
 export const INTERIOR_LIGHTING_OPTIONS = [
-  { id: '12vleddome',   label: '12V LED DOME LIGHT',                 price: 20  },
-  { id: '12vflatpanel', label: '12V 24" FLAT PANEL LED',             price: 135 },
+  { id: '12vleddome',   label: '2 X 12V LED DOME LIGHT',            price: 20  },
+  { id: '12vflatpanel', label: '2 X 12V 24" FLAT PANEL LED',         price: 135 },
   { id: 'ledrope',      label: 'LED ROPE LIGHTING',                   price: null },
 ];
 

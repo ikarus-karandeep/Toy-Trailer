@@ -72,6 +72,8 @@ Object.values(materialData).forEach(componentSlots => {
             let matchingSwatch = swatchesByNormName.get(baseName);
             if (normName === 'matstripes') {
                 matchingSwatch = swatchesByNormName.get('reflecivestripes') || swatchesByNormName.get('reflectivestripes');
+            } else if (normName === 'matrooftrim') {
+                matchingSwatch = swatchesByNormName.get('silverrooftrim');
             } else if (!matchingSwatch) {
                 for (const [sNormName, swatch] of swatchesByNormName.entries()) {
                     if (sNormName.includes(baseName)) {

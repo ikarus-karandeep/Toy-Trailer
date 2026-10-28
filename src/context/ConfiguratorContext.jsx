@@ -52,7 +52,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     }
   }, [spreadAxle])
   const [axleAngled, setAxleAngled] = useState(ic.axleAngled ?? false)
-  const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? true)
+  const [axleAtp, setAxleAtp] = useState(ic.axleAtp ?? false)
   // axleRating is DERIVED from axleCount + axleSuspension + axleCapacity
   // so the 3-D model (which reads axleRating) stays in sync automatically.
   const axleRating = useMemo(() => {
@@ -65,7 +65,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories && ic.exteriorAccessories !== 'rearwings' ? ic.exteriorAccessories : null)
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
   const [roofBuild, setRoofBuild] = useState(ic.roofBuild ?? 'onepieceroof')
-  const [protectionType, setProtectionType] = useState(ic.protectionType ?? 'atp')
+  const [protectionType, setProtectionType] = useState(ic.protectionType ?? null)
   const [protectionSize, setProtectionSize] = useState(ic.protectionSize ?? '24')
   const [frontProtection, setFrontProtection] = useState(ic.frontProtection ?? 'polishedcaps')
   const [lugType, setLugType] = useState(ic.lugType ?? '5lug')
@@ -79,7 +79,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Interior
   const [floor, setFloor] = useState(ic.floor ?? '34plywood')
-  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay && ic.floorOverlay !== 'atp' ? ic.floorOverlay : 'rtp')
+  const [floorOverlay, setFloorOverlay] = useState(ic.floorOverlay && ic.floorOverlay !== 'atp' ? ic.floorOverlay : 'plywood')
   const [floorInsulation, setFloorInsulation] = useState(ic.floorInsulation ?? null)
   const [walls, setWalls] = useState(ic.walls ?? 'white_metal_walls')
   const [ceiling, setCeiling] = useState(ic.ceiling ?? 'white_metal_ceiling')
@@ -116,7 +116,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Loading
   const [rampType, setRampType] = useState(ic.rampType ?? 'doublereardoors')
-  const [atpRamp, setAtpRamp] = useState(ic.atpRamp ?? true)
+  const [atpRamp, setAtpRamp] = useState(ic.atpRamp ?? false)
 
 
 

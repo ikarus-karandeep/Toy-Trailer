@@ -25,6 +25,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     sinkPackage, setSinkPackage,
     batteryBox, setBatteryBox,
     lShapeCounter, setLShapeCounter,
+    width,
     frontStyle,
     length,
     cabinets,
@@ -47,13 +48,13 @@ export default function AddOnsPanel({ activeSectionTitle }) {
   const [fullBathOpen, setFullBathOpen] = useState(true)
 
   useEffect(() => {
-    const hasGenBox = frontStyle === 'flatfront' && generatorBox && generatorBox !== 'none';
+    const hasGenBox = generatorBox && generatorBox !== 'none';
     if (hasGenBox) {
       if (batteryBox) {
         setBatteryBox(false);
       }
     }
-  }, [frontStyle, generatorBox, batteryBox, setBatteryBox]);
+  }, [generatorBox, batteryBox, setBatteryBox]);
 
   const show = (title) => {
     if (!activeSectionTitle) return true
@@ -285,22 +286,32 @@ export default function AddOnsPanel({ activeSectionTitle }) {
             <div>
               <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">GENERATOR BOX (34"H X 36"W X 26"D)</h4>
               <div className="flex flex-col gap-2 mt-4">
-                {GENERATOR_BOX_OPTIONS.map((opt) => (
-                  <OptionPill
-                    key={opt.id}
-                    label={opt.label}
-                    price={opt.price} badge={opt.badge}
-                    isSelected={generatorBox === opt.id}
-                    isLocked={frontStyle !== 'flatfront'}
-                    disabledReason={frontStyle !== 'flatfront' ? "Requires flat front + Extended Tongue" : null}
-                    onClick={() => {
-                      if (frontStyle === 'flatfront') {
-                        setGeneratorBox(opt.id)
-                        if (opt.id !== 'none') setFocusedCamera("Tongue Mounted Generator Box Camera")
-                      }
-                    }}
-                  />
-                ))}
+                {GENERATOR_BOX_OPTIONS.map((opt) => {
+                  const isGooseneck = width === '8.5ftgn' || frontStyle === 'gooseneck';
+                  return (
+                    <OptionPill
+                      key={opt.id}
+                      label={opt.label}
+                      price={opt.price} badge={opt.badge}
+                      isSelected={generatorBox === opt.id}
+                      isLocked={isGooseneck}
+                      disabledReason={isGooseneck ? "Not available on Gooseneck models" : null}
+                      onClick={() => {
+                        if (isGooseneck) return;
+                        setGeneratorBox(opt.id);
+                        if (opt.id !== 'none') {
+                          if (frontStyle === 'extendedvnose') {
+                            setFocusedCamera("Tongue Mounted Generator Box Extended V-Nose Camera");
+                          } else if (frontStyle === 'flatfront') {
+                            setFocusedCamera("Tongue Mounted Generator Box Flat Front Camera");
+                          } else {
+                            setFocusedCamera("Tongue Mounted Generator Box V-Nose Camera");
+                          }
+                        }
+                      }}
+                    />
+                  );
+                })}
               </div>
             </div>
           </OptionSection>

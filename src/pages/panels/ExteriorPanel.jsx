@@ -15,6 +15,7 @@ import {
   LUG_OPTIONS,
   SIDE_DOOR_OPTIONS,
   AWNING_OPTIONS,
+  LADDER_RACK_OPTIONS,
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
@@ -41,6 +42,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     width, length,
     stairs, setStairs,
     ladderRacks, setLadderRacks,
+    axleAtp, setAxleAtp,
     awning, setAwningRaw,
     viewMode, setViewMode,
     setFocusedCamera
@@ -209,23 +211,6 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               }
             }}
           />
-          <div className="border-t border-[#5D5E60] my-5" />
-          <ToggleSwitch
-            label="INCLUDE STAIRS"
-            checked={stairs}
-            onChange={(val) => {
-              setStairs(val);
-              if (val) {
-                if (frontStyle === 'flatfront') {
-                  setFocusedCamera("Stair (Flat Front) Camera");
-                } else {
-                  setFocusedCamera("Stair (V-Nose) Camera");
-                }
-              }
-            }}
-            disabled={width === '8.5ftgn' || frontStyle === 'extendedvnose'}
-            disabledReason={(width === '8.5ftgn' || frontStyle === 'extendedvnose') ? `Cannot add stairs on ${(width === '8.5ftgn') ? 'gooseneck model' : 'extended v-nose'}` : null}
-          />
         </OptionSection>
       )}
 
@@ -342,13 +327,41 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
       {show('LADDER RACKS') && (
         <OptionSection title="LADDER RACKS">
+          <div className="flex flex-col gap-2">
+            {LADDER_RACK_OPTIONS.map((opt) => {
+              const isSelected = ladderRacks === opt.id || (opt.id === 'standard' && ladderRacks === true)
+              return (
+                <OptionPill
+                  key={opt.id}
+                  fullWidth={true}
+                  label={opt.label}
+                  isSelected={isSelected}
+                  onClick={() => {
+                    const nextVal = isSelected ? false : opt.id
+                    setLadderRacks(nextVal)
+                    if (nextVal) setFocusedCamera("Top Supports Camera")
+                  }}
+                />
+              )
+            })}
+          </div>
+          <div className="border-t border-[#5D5E60] my-5" />
           <ToggleSwitch
-            label="INCLUDE LADDER RACKS"
-            checked={ladderRacks}
+            label="ROOF LADDER"
+            price={150}
+            checked={stairs}
             onChange={(val) => {
-              setLadderRacks(val);
-              if (val) setFocusedCamera("Top Supports Camera");
+              setStairs(val);
+              if (val) {
+                if (frontStyle === 'flatfront') {
+                  setFocusedCamera("Stair (Flat Front) Camera");
+                } else {
+                  setFocusedCamera("Stair (V-Nose) Camera");
+                }
+              }
             }}
+            disabled={width === '8.5ftgn' || frontStyle === 'extendedvnose'}
+            disabledReason={(width === '8.5ftgn' || frontStyle === 'extendedvnose') ? `Cannot add roof ladder on ${(width === '8.5ftgn') ? 'gooseneck model' : 'extended v-nose'}` : null}
           />
         </OptionSection>
       )}
@@ -362,36 +375,50 @@ export default function ExteriorPanel({ activeSectionTitle }) {
       <div>
         <h4 className="text-white text-[11px] md:text-sm font-normal uppercase tracking-wider mb-3">Type</h4>
         <div className="flex flex-wrap gap-2">
-          {PROTECTION_TYPE_OPTIONS.map((opt) => (
-            <OptionPill
-              key={opt.id}
-              label={opt.label}
-              price={opt.price} badge={opt.badge}
-              isStandard={opt.isStandard}
-              isSelected={protectionType === opt.id}
-              isLocked={exteriorFinish === 'blackout' && opt.id !== 'atp'}
-              disabledReason={exteriorFinish === 'blackout' && opt.id !== 'atp' ? "Not available with blackout package" : null}
-              onClick={() => {
-                if (exteriorFinish === 'blackout' && opt.id !== 'atp') return;
-                setProtectionType(opt.id);
-              }}
-            />
-          ))}
+          {PROTECTION_TYPE_OPTIONS.map((opt) => {
+            const isSel = protectionType === opt.id && axleAtp !== false;
+            return (
+              <OptionPill
+                key={opt.id}
+                label={opt.label}
+                price={opt.price} badge={opt.badge}
+                isStandard={opt.isStandard}
+                isSelected={isSel}
+                isLocked={exteriorFinish === 'blackout' && opt.id !== 'atp'}
+                disabledReason={exteriorFinish === 'blackout' && opt.id !== 'atp' ? "Not available with blackout package" : null}
+                onClick={() => {
+                  if (exteriorFinish === 'blackout' && opt.id !== 'atp') return;
+                  if (isSel) {
+                    setProtectionType(null);
+                    setAxleAtp(false);
+                  } else {
+                    setProtectionType(opt.id);
+                    setAxleAtp(true);
+                    if (!protectionSize) setProtectionSize('24');
+                  }
+                }}
+              />
+            );
+          })}
         </div>
 
-        <h4 className="text-white text-[11px] md:text-sm font-normal uppercase tracking-wider mb-3 mt-6">Size</h4>
-        <div className="flex flex-wrap gap-2">
-          {PROTECTION_SIZE_OPTIONS.map((opt) => (
-            <OptionPill
-              key={opt.id}
-              label={opt.label}
-              price={opt.price} badge={opt.badge}
-              isStandard={opt.isStandard}
-              isSelected={protectionSize === opt.id}
-              onClick={() => setProtectionSize(protectionSize === opt.id ? null : opt.id)}
-            />
-          ))}
-        </div>
+        {(protectionType === 'atp' && axleAtp !== false) && (
+          <>
+            <h4 className="text-white text-[11px] md:text-sm font-normal uppercase tracking-wider mb-3 mt-6">Size</h4>
+            <div className="flex flex-wrap gap-2">
+              {PROTECTION_SIZE_OPTIONS.map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price} badge={opt.badge}
+                  isStandard={opt.isStandard}
+                  isSelected={protectionSize === opt.id}
+                  onClick={() => setProtectionSize(opt.id)}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     )}
 

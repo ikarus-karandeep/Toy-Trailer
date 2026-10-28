@@ -165,7 +165,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   price={opt.price} badge={opt.badge}
                   image={opt.image}
                   isSelected={floorOverlay === opt.id}
-                  onClick={() => setFloorOverlay(opt.id === floorOverlay ? null : opt.id)}
+                  onClick={() => setFloorOverlay(opt.id === floorOverlay ? 'plywood' : opt.id)}
                 />
               ))}
             </div>

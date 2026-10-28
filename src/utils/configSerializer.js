@@ -21,19 +21,19 @@ import { PACKAGE_INITIAL_CONFIGS } from '../constants/packageConfigs'
 export const CONFIG_DEFAULTS = {
   width: '8.5ft', length: '32', frameSize: '6in', axleCount: 'tandem',
   axleSuspension: 'torsion', axleCapacity: '7000lb', interiorHeight: '8ft6',
-  spreadAxle: false, axleAngled: false, axleAtp: true,
+  spreadAxle: false, axleAngled: false, axleAtp: false,
   exteriorFinish: null, selectedColor: 'brandywine', exteriorAccessories: null,
   frontStyle: 'vnose24', roofBuild: 'onepieceroof',
-  protectionType: 'atp', protectionSize: '24', frontProtection: 'polishedcaps',
+  protectionType: null, protectionSize: '24', frontProtection: 'polishedcaps',
   lugType: '5lug', tireSize: '15', wheelType: 'standardsilver', spareTire: false,
   sideDoorsType: 'flatpanel', driverSideDoor: 'none', passengerSideDoor: '36x72', sideDoorBarLock: false,
-  floor: '34plywood', floorOverlay: 'rtp', floorInsulation: null, walls: 'white_metal_walls',
+  floor: '34plywood', floorOverlay: 'plywood', floorInsulation: null, walls: 'white_metal_walls',
   ceiling: 'white_metal_ceiling', wallInsulation: null, ceilingInsulation: null, atpWheelWells: false,
   cabinets: ['frontbase36'], blackoutCabinetDoors: false, toolBox: 'none', leftSide: true, rightSide: true,
   electrical: 'none', battery: '12vbatterybox', lights: ['dome', 'racing'],
   interiorLights: { '12vleddome': 1, '12vflatpanel': 0 }, exteriorLights: [],
   ledRope: false, ventilation: 'none', climateControl: 'none', acPrep: false,
-  receptacles: { '110vinterior': 0, '110vgfi': 0 }, rampType: 'doublereardoors', atpRamp: true,
+  receptacles: { '110vinterior': 0, '110vgfi': 0 }, rampType: 'doublereardoors', atpRamp: false,
   rearDoor: true, tieDowns: [], dRings: { floordrings: 0 }, eTracks: { wall: 0, floor: 0 },
   jacks: [], waterPackage: 'largewater', bathroom: null, awning: [], sinkPackage: null,
   angledLights: false, stairs: false, vNoseETrack: false, batteryBox: false,
@@ -186,7 +186,10 @@ export function getItemizedQuote(ctx) {
     if (aOpt) appearanceItems.push({ label: `ELECTRIC AWNING ${aOpt.label}`, price: aOpt.price || 0, subtext: 'Solera electric retractable awning' })
   }
 
-  if (ladderRacks) appearanceItems.push({ label: 'LADDER RACKS', price: 250 })
+  if (ladderRacks) {
+    const rackLabel = ladderRacks === 'lowprofile' ? 'LOW PROFILE LADDER RACK' : 'STANDARD LADDER RACK'
+    appearanceItems.push({ label: rackLabel, price: 250 })
+  }
 
   const fs = find(FRONT_STYLE_OPTIONS, frontStyle)
   if (fs && !fs.isStandard) appearanceItems.push({ label: fs.label, price: fs.price })
@@ -198,14 +201,16 @@ export function getItemizedQuote(ctx) {
     appearanceItems.push({ label: rb.label, price })
   }
 
-  const pt = find(PROTECTION_OPTIONS, protectionType)
-  if (pt && !pt.isStandard) appearanceItems.push({ label: pt.label, price: pt.price })
+  if (protectionType === 'atp' && ctx.axleAtp !== false) {
+    const pt = find(PROTECTION_OPTIONS, protectionType)
+    if (pt && !pt.isStandard) appearanceItems.push({ label: pt.label, price: pt.price })
 
-  const ps = find(PROTECTION_OPTIONS, protectionSize)
-  if (ps && !ps.isStandard) {
-    let price = ps.price
-    if (protectionSize === '24' || protectionSize === '12') price *= parseInt(ctx.length) || 0
-    appearanceItems.push({ label: ps.label, price })
+    const ps = find(PROTECTION_OPTIONS, protectionSize)
+    if (ps && !ps.isStandard) {
+      let price = ps.price
+      if (protectionSize === '24' || protectionSize === '12') price *= parseInt(ctx.length) || 0
+      appearanceItems.push({ label: ps.label, price })
+    }
   }
 
   const fp = find(PROTECTION_OPTIONS, frontProtection)
@@ -450,7 +455,7 @@ export function getItemizedQuote(ctx) {
     if (bOpt) addOnsItems.push({ label: bOpt.label, price: bOpt.price })
   }
 
-  if (stairs) addOnsItems.push({ label: 'STAIRS', price: 150 })
+  if (stairs) addOnsItems.push({ label: 'ROOF LADDER', price: 150 })
   if (batteryBox) addOnsItems.push({ label: 'BATTERY BOX', price: 120 })
 
   const addOnsSubtotal = addOnsItems.reduce((acc, i) => acc + (i.price || 0), 0)

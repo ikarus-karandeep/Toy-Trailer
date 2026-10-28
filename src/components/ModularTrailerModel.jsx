@@ -135,8 +135,8 @@ const REAR_DOOR_MESH_MAP = {
     barndoors: ['Barn Door', 'Barn_Door'],
     doublereardoors: ['Barn Door', 'Barn_Door'],
     heavyduty: ['Heavy Duty Ramp', 'Heavy_Duty_Ramp'],
-    superduty: ['Heavy Duty Ramp', 'Heavy_Duty_Ramp'], 
-    rampdropjacks: ['Heavy Duty Ramp w/ Flap', 'Heavy_Duty_Ramp_w_Flap', 'Heavy Duty Ramp', 'Heavy_Duty_Ramp']
+    superduty: ['Heavy Duty Ramp w/ Flap', 'Heavy_Duty_Ramp_w_Flap'], 
+    rampdropjacks: ['Heavy Duty Ramp w/ Flap', 'Heavy_Duty_Ramp_w_Flap']
 }
 
 // ── Front Style addons: Super Switch per addon type ────────────────────────
@@ -235,13 +235,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const isCabinetBlackout = config.blackoutCabinetDoors;
     const getBlackoutMapped = (normName) => {
         if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'whiteceremiccabinet')) return 'blackceremiccabinet';
-        if (!isBlackout) return normName;
+        if (!isBlackout) {
+            if (normName === 'matrooftrim') return 'silverrooftrim';
+            return normName;
+        }
         if (!normName.startsWith('mat')) return normName;
-        if (normName === 'matshell' || normName === 'matshelldecal') return normName;
-        if (normName.includes('atp') && !normName.includes('black')) return 'atpblack';
-        if (normName === 'matstripes' || normName.includes('stripes') && !normName.includes('black')) return 'blackstripes';
-        if (normName.includes('rim') && !normName.includes('black')) return 'blacksteelwheelrim';
-        if (normName.includes('grates') && !normName.includes('black') && !normName.includes('decal')) return 'blackedmetallicgrates';
+        // Only trims and stripes turn black in Blackout mode
+        if (normName === 'matrooftrim') return 'blackrooftrim';
+        if (normName === 'matstripes' || normName.includes('stripes')) return 'blackstripes';
         return normName;
     }
 
@@ -362,7 +363,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     // console.log(`[DEBUG ${sceneName}] mesh: "${child.name}" | materials: [${mats.join(', ')}] | userData:`, JSON.parse(JSON.stringify(child.userData)))
                 }
                 if (sceneName === 'rearDoors') {
-                    // console.log(`[DEBUG rearDoors mesh available] "${child.name}"`);
+                    console.log(`[DEBUG rearDoors mesh available] "${child.name}" | materials: [${mats.join(', ')}]`);
                 }
             })
         })
@@ -523,7 +524,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     const useTriplanar = true
                     
 
-                    if (useTriplanar && !isDecal && !isBlackout) {
+                    if (useTriplanar && !isDecal) {
                         // Clone base material preserving GLB PBR properties, then patch shader
                         const base = mat.clone()
                         base.map         = texture
@@ -535,14 +536,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         const patched = patchTriplanarMaterial(base, 0.06)
                         if (isArray) child.material[i] = patched
                         else child.material = patched
-                    } else if (!isDecal && isBlackout) {
-                        let next = mat.clone()
-                        const origDef = MATERIAL_DEFS_NORM.get('blackshell')
-                        if (origDef) {
-                            next = applyMaterialDef(next, origDef, staticTextures)
-                        }
-                        if (isArray) child.material[i] = next
-                        else child.material = next
                     } else {
                         let next = mat.clone()
                         if (isDecal) {
@@ -653,9 +646,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         const isInterior = nameLower.includes('interior') || nameLower.includes('floor') || nameLower.includes('cealing');
                         
                         if (!isInterior && !isDecal) {
-                            if (isBlackout) {
-                                overrideDef = MATERIAL_DEFS_NORM.get('atpblack');
-                            } else if (config.protectionType === 'anodized') {
+                            if (config.protectionType === 'anodized') {
                                 overrideDef = MATERIAL_DEFS_NORM.get('atpanodized');
                             } else if (config.protectionType === 'coloredmetal') {
                                 overrideDef = MATERIAL_DEFS_NORM.get('atpcoloredmetal');
@@ -773,48 +764,25 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     }
                     const original = child.userData.origMatsWheelCover[i];
 
-                    if (config.axleAtp) {
-                        let next = original.clone()
-                        
-                        // Increase scale for corvette fender
-                        const isCorvette = child.name.toLowerCase().includes('corvette');
-                        const repeatScale = isCorvette ? 5 : 20;
+                    // MAT_WheelCover: Always keep ATP texture
+                    let next = original.clone()
+                    
+                    // Increase scale for corvette fender
+                    const isCorvette = child.name.toLowerCase().includes('corvette');
+                    const repeatScale = isCorvette ? 5 : 20;
 
-                        if (isBlackout) {
-                            const overrideDef = MATERIAL_DEFS_NORM.get('atpblack');
-                            if (overrideDef) {
-                                next = applyMaterialDef(next, overrideDef, staticTextures);
-                                if (next.normalMap) {
-                                    const scaledNormal = next.normalMap.clone();
-                                    scaledNormal.repeat.set(repeatScale, repeatScale);
-                                    scaledNormal.needsUpdate = true;
-                                    next.normalMap = scaledNormal;
-                                }
-                            }
-                        } else {
-                            const scaledNormal = normalMap.clone();
-                            scaledNormal.flipY = false;
-                            scaledNormal.repeat.set(repeatScale, repeatScale);
-                            scaledNormal.needsUpdate = true;
-                            next.normalMap = scaledNormal;
-                            next.normalScale = new THREE.Vector2(1.0, 1.0);
-                            next.metalness   = 1;
-                            next.roughness   = 0.1;
-                        }
-                        next.needsUpdate = true
-                        if (isArray) child.material[i] = next
-                        else child.material = next
-                    } else {
-                        if (!texture) return
-                        const next = original.clone()
-                        next.map         = texture
-                        next.normalMap   = simpleNoise
-                        next.normalScale = new THREE.Vector2(0.05, 0.05)
-                        next.roughness   = 0.1
-                        next.needsUpdate = true
-                        if (isArray) child.material[i] = next
-                        else child.material = next
-                    }
+                    const scaledNormal = normalMap.clone();
+                    scaledNormal.flipY = false;
+                    scaledNormal.repeat.set(repeatScale, repeatScale);
+                    scaledNormal.needsUpdate = true;
+                    next.normalMap = scaledNormal;
+                    next.normalScale = new THREE.Vector2(1.0, 1.0);
+                    next.metalness   = 1;
+                    next.roughness   = 0.1;
+
+                    next.needsUpdate = true
+                    if (isArray) child.material[i] = next
+                    else child.material = next
                 })
             })
         })
@@ -831,8 +799,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         let rimMatName = config.wheelType === 'spideraluminum' ? 'aluminiumradialrim'
                        : config.wheelType === 'blacksteel' ? 'blacksteelwheelrim' 
                        : 'standardsilverrim'
-        
-        if (isBlackout) rimMatName = 'blacksteelwheelrim';
 
         const def = MATERIAL_DEFS_NORM.get(rimMatName)
         // console.log('[DEBUG RIMS] wheelType:', config.wheelType, '| rimMatName:', rimMatName)
@@ -872,7 +838,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     // ── Apply Floor Overlay material to MAT_Interior_Flooring ───────────────
     useEffect(() => {
         let floorMatName = 'matinteriorflooring' // Default fallback to original JSON definition
-        if (config.floorOverlay === 'atp') floorMatName = 'atpinteriorflooring'
+        if (config.floorOverlay === 'plywood') floorMatName = 'plywoodinteriorwalls'
+        else if (config.floorOverlay === 'atp') floorMatName = 'atpinteriorflooring'
         else if (config.floorOverlay === 'rtp') floorMatName = 'rtpinteriorflooring'
         else if (config.floorOverlay === 'coin') floorMatName = 'coininteriorflooring'
         else if (config.floorOverlay === 'tile') floorMatName = 'tileinteriorflooring'
@@ -1033,16 +1000,58 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         else child.material = originalMat
                         return;
                     }
+
+                    // Rear door interior surface materials (MAT_Rear_Door_ATP on Barn Door and Ramp, and Rubber_Flooring on Ramp):
+                    // - When "ATP/RTP RAMP & FLAP" toggle is OFF: interior door surfaces use Plywood by default.
+                    // - When "ATP/RTP RAMP & FLAP" toggle is ON: interior door surfaces reflect the trailer's floor finish (RTP / COIN / TILE / ATP).
+                    const normOrig = normMatName(originalMat.name);
+                    const isRearDoorSurface = mappedName === 'matreardooratp' || normOrig === 'matreardooratp' || 
+                        ((child.name.toLowerCase().includes('ramp') || child.name.toLowerCase().includes('barn')) && (mappedName === 'rubberflooring' || normOrig === 'rubberflooring'));
+
+                    if (isRearDoorSurface) {
+                        if (!config.atpRamp) {
+                            mappedName = 'plywoodinteriorwalls';
+                        } else {
+                            // Match the selected floor overlay (rtp, coin, tile, atp, plywood)
+                            if (config.floorOverlay === 'coin') {
+                                mappedName = 'coininteriorflooring';
+                            } else if (config.floorOverlay === 'tile') {
+                                mappedName = 'tileinteriorflooring';
+                            } else if (config.floorOverlay === 'rtp') {
+                                mappedName = 'rtpinteriorflooring';
+                            } else if (config.floorOverlay === 'plywood') {
+                                mappedName = 'plywoodinteriorwalls';
+                            } else {
+                                mappedName = 'matatp';
+                            }
+                        }
+                    }
                     
                     const def = MATERIAL_DEFS_NORM.get(mappedName)
                     
                     if (!def) {
+                        if (mappedName === 'plywoodinteriorwalls' || mappedName === 'matreardooratp') {
+                            console.warn(`[DEBUG REAR DOOR ATP] Missing def for "${mappedName}"!`);
+                        }
                         if (isArray) child.material[i] = originalMat
                         else child.material = originalMat
                         return
                     }
                     
                     let next = applyMaterialDef(originalMat, def, staticTextures)
+                    
+                    // Match world UV/Triplanar scale to floor or walls
+                    if (isRearDoorSurface) {
+                        if (!config.atpRamp) {
+                            next = patchTriplanarMaterial(next);
+                        } else {
+                            let scale = 5;
+                            if (config.floorOverlay === 'coin') scale = 15;
+                            else if (config.floorOverlay === 'tile') scale = 2;
+                            next = patchTriplanarMaterial(next, scale);
+                        }
+                        next.needsUpdate = true;
+                    }
                     
                     // Scale the cabinet wood texture so the grain isn't stretched
                     if (mappedName === 'cabinetwood' && next.map) {
@@ -1097,7 +1106,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         })
         invalidate()
     }, [
-        config.frontStyle, staticTextures, isBlackout, config.blackoutCabinetDoors,
+        config.frontStyle, config.atpRamp, config.floorOverlay, staticTextures, isBlackout, config.blackoutCabinetDoors,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
@@ -1161,8 +1170,9 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         }
         
-        // Add ATP Barn Door (size-driven) if atpRamp is true and double rear doors is selected
-        if (config.atpRamp && config.rampType === 'doublereardoors') {
+        // ATP Barn Door (size-driven) shown when double rear doors is selected and ATP protection is active
+        const isAtpActive = config.protectionType === 'atp' && config.axleAtp !== false;
+        if (config.rampType === 'doublereardoors' && isAtpActive) {
             const atpBarnSize = config.protectionSize || '24'
             activeRearDoorMeshes.push(`ATP Barn Door ${atpBarnSize}in`)
             activeRearDoorMeshes.push(`ATP_Barn_Door_${atpBarnSize}in`)
@@ -1290,22 +1300,33 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         }
 
         // Generator Box options mapped to Tongue Mounted Generator Box
-        // console.log('[DEBUG GENERATOR] config.generatorBox:', config.generatorBox);
-        if (config.generatorBox && config.generatorBox !== 'none' && config.frontStyle === 'flatfront') {
+        // Handles frontStyle variants:
+        // - "Tongue Mounted Generator Box Extended V-Nose"
+        // - "Tongue Mounted Generator Box Flat Front"
+        // - "Tongue Mounted Generator Box V-Nose"
+        const isGooseneckGen = config.width === '8.5ftgn' || config.frontStyle === 'gooseneck';
+        if (config.generatorBox && config.generatorBox !== 'none' && !isGooseneckGen) {
+            let targetVariantToken = 'v-nose';
+            if (config.frontStyle === 'extendedvnose') {
+                targetVariantToken = 'extended v-nose';
+            } else if (config.frontStyle === 'flatfront') {
+                targetVariantToken = 'flat front';
+            } else {
+                targetVariantToken = 'v-nose';
+            }
+
             allAddonMeshNames.forEach(n => {
                 const lower = n.toLowerCase();
+                if (!lower.includes('tongue') || !lower.includes('generator')) return;
                 
-                // "tounge mounted mesh will always come" for all 4 options
-                if (lower.includes('tongue_mounted_generator')) activeAddonMeshes.push(n);
-                
-                if (config.generatorBox === 'lidonly' && lower.includes('lid_only')) {
-                    activeAddonMeshes.push(n);
-                } else if (config.generatorBox === 'venteddoor' && lower.includes('vented_door_only')) {
-                    activeAddonMeshes.push(n);
-                } else if ((config.generatorBox === 'complete' || config.generatorBox === 'venteddoorslides') && (lower.includes('vented_door_only') || lower.includes('slides+tray'))) {
-                    activeAddonMeshes.push(n);
-                } else if (config.generatorBox === 'insulated' && lower.includes('slides+tray')) {
-                    activeAddonMeshes.push(n);
+                // Match the specific frontStyle variant (e.g. Extended V-Nose, Flat Front, V-Nose)
+                if (targetVariantToken === 'extended v-nose') {
+                    if (lower.includes('extended')) activeAddonMeshes.push(n);
+                } else if (targetVariantToken === 'flat front') {
+                    if (lower.includes('flat')) activeAddonMeshes.push(n);
+                } else {
+                    // Standard V-Nose (vnose24, slantvnose): match v-nose but not extended
+                    if (lower.includes('v-nose') && !lower.includes('extended')) activeAddonMeshes.push(n);
                 }
             });
         }
@@ -1994,9 +2015,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const ladderRacksGroup = useMemo(() => {
         if (!config.ladderRacks) return null
 
+        const isLowProfile = config.ladderRacks === 'lowprofile'
         let rackTemplate = null
         addons.traverse(child => {
-            if (child.isMesh && child.name === 'Top_Supports' && !child.name.toLowerCase().includes('proxy')) rackTemplate = child
+            if (!child.isMesh || child.name.toLowerCase().includes('proxy')) return
+            const cName = child.name.toLowerCase()
+            if (isLowProfile) {
+                if (cName.includes('low') && cName.includes('ladder')) rackTemplate = child
+            } else {
+                if (child.name === 'Top_Supports' || (cName.includes('support') && !cName.includes('low'))) rackTemplate = child
+            }
         })
         if (!rackTemplate) return null
 

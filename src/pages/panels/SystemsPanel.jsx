@@ -185,17 +185,6 @@ export default function SystemsPanel({ activeSectionTitle }) {
                       badge={opt.badge}
                       fullWidth={true}
                       isSelected={qty > 0}
-                      quantity={qty > 0 ? qty : undefined}
-                      onQuantityChange={(newQty) => {
-                        setInteriorLights(prev => ({
-                          ...prev,
-                          [opt.id]: Math.max(0, newQty),
-                          ...(newQty > 0 ? { [otherLightId]: 0 } : {})
-                        }))
-                        if (newQty > 0) {
-                          setFocusedCamera(opt.id === '12vleddome' ? 'Dome Light Camera' : 'Flat Panel Light Camera')
-                        }
-                      }}
                       onClick={() => {
                         const newQty = qty === 0 ? 1 : 0
                         setInteriorLights(prev => ({

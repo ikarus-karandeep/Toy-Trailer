@@ -235,7 +235,7 @@ export default function SummaryPanel() {
         if (fo && !fo.isStandard) {
           let foPrice = fo.price || 0;
           if (['atp', 'rtp', 'coin'].includes(ctx.floorOverlay)) foPrice *= (parseInt(ctx.length) || 0);
-          items.push({ label: `FLOOR OVERLAY: ${fo.label}`, price: foPrice, onRemove: () => ctx.setFloorOverlay(null) });
+          items.push({ label: `FLOOR OVERLAY: ${fo.label}`, price: foPrice, onRemove: () => ctx.setFloorOverlay('plywood') });
         }
       }
       if (ctx.floorInsulation) {
@@ -296,7 +296,7 @@ export default function SummaryPanel() {
       const wp = find(WATER_PACKAGE_OPTIONS, waterPackage); if (wp && wp.id !== 'none') items.push({ label: wp.label, price: wp.price })
       if (sinkPackage) { const sp = find(SINK_PACKAGE_OPTIONS, sinkPackage); if (sp) items.push({ label: sp.label, price: sp.price, onRemove: () => ctx.setSinkPackage(null) }) }
       if (bathroom) { const o = find(BATHROOM_OPTIONS, bathroom); if (o) items.push({ label: o.label, price: o.price, onRemove: () => setBathroom(null) }) }
-      if (stairs) { items.push({ label: 'STAIRS', price: 150, onRemove: () => setStairs(false) }) }
+      if (stairs) { items.push({ label: 'ROOF LADDER', price: 150, onRemove: () => setStairs(false) }) }
 
       if (batteryBox) { items.push({ label: 'BATTERY BOX', price: 120, onRemove: () => setBatteryBox(false) }) }
       if (escapeDoor && escapeDoor !== 'none') { 
@@ -341,7 +341,10 @@ export default function SummaryPanel() {
           items.push({ label: `ELECTRIC AWNING ${aOpt.label}`, price: aOpt.price || 0, subtext: 'Solera electric retractable awning', onRemove: () => ctx.setAwningRaw([]) });
         }
       }
-      if (ladderRacks) { items.push({ label: 'LADDER RACKS', price: 250, onRemove: () => setLadderRacks(false) }) }
+      if (ladderRacks) {
+        const rackLabel = ladderRacks === 'lowprofile' ? 'LOW PROFILE LADDER RACK' : 'STANDARD LADDER RACK'
+        items.push({ label: rackLabel, price: 250, onRemove: () => setLadderRacks(false) })
+      }
       const fs = find(FRONT_STYLE_OPTIONS, frontStyle); if (fs && !fs.isStandard) items.push({ label: fs.label, price: fs.price })
 
       const rb = find(ROOF_BUILD_OPTIONS, roofBuild); 
@@ -350,12 +353,14 @@ export default function SummaryPanel() {
         if (roofBuild === 'onepieceroof') price *= parseInt(ctx.length) || 0;
         items.push({ label: rb.label, price });
       }
-      const pt = find(PROTECTION_OPTIONS, protectionType); if (pt && !pt.isStandard) items.push({ label: pt.label, price: pt.price })
-      const ps = find(PROTECTION_OPTIONS, protectionSize); 
-      if (ps && !ps.isStandard) {
-        let price = ps.price;
-        if (protectionSize === '24' || protectionSize === '12') price *= parseInt(ctx.length) || 0;
-        items.push({ label: ps.label, price });
+      if (protectionType === 'atp' && ctx.axleAtp !== false) {
+        const pt = find(PROTECTION_OPTIONS, protectionType); if (pt && !pt.isStandard) items.push({ label: pt.label, price: pt.price })
+        const ps = find(PROTECTION_OPTIONS, protectionSize); 
+        if (ps && !ps.isStandard) {
+          let price = ps.price;
+          if (protectionSize === '24' || protectionSize === '12') price *= parseInt(ctx.length) || 0;
+          items.push({ label: ps.label, price });
+        }
       }
       const fp = find(PROTECTION_OPTIONS, frontProtection); if (fp && !fp.isStandard) items.push({ label: fp.label, price: fp.price })
       const lt = find(LUG_OPTIONS, lugType); if (lt && !lt.isStandard) items.push({ label: lt.label, price: lt.price })

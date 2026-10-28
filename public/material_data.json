@@ -155,6 +155,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "4": {
+      "material_name": "MAT_Wheels_Wells",
+      "base_color": "#B0E17B",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Left_Wall": {
@@ -321,6 +333,18 @@
     "3": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Wheels_Wells",
+      "base_color": "#B0E17B",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -4529,18 +4553,6 @@
       }
     },
     "2": {
-      "material_name": "MAT_Cabinets",
-      "base_color": "#C47C66",
-      "roughness": 0.5,
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "3": {
       "material_name": "Red_Chrome",
       "base_color": "//..\\Textures\\Red_Base_color.jpg",
       "roughness": "//..\\Textures\\Red_Roughness.jpg",
@@ -5384,6 +5396,18 @@
       "base_color": "//..\\Textures\\White_BaseColor.jpg",
       "roughness": 0.15,
       "metalness": 0.3,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "10": {
+      "material_name": "MAT_Wheels_Wells",
+      "base_color": "#B0E17B",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -6784,6 +6808,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "8": {
+      "material_name": "MAT_Wheels_Wells",
+      "base_color": "#B0E17B",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Concession Door L": {
@@ -6950,6 +6986,18 @@
     "7": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "8": {
+      "material_name": "MAT_Wheels_Wells",
+      "base_color": "#B0E17B",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -7961,58 +8009,6 @@
       }
     }
   },
-  "Vented Door Only": {
-    "0": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
-      "material_name": "Standard Silver_Rim",
-      "base_color": "#898989",
-      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "2": {
-      "material_name": "Vents",
-      "base_color": "//..\\Textures\\Fence_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Fence_Roughness.jpg",
-      "metalness": "//..\\Textures\\Fence_Metallic.jpg",
-      "normal": "//..\\Textures\\Fence_Normal.jpg",
-      "alpha": "//..\\Textures\\Fence_Opacity.jpg",
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
-  "Slides+Tray": {
-    "0": {
-      "material_name": "Standard Silver_Rim",
-      "base_color": "#898989",
-      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    }
-  },
   "Tongue Mounted Generator Box": {
     "0": {
       "material_name": "Black Alloy",
@@ -8037,22 +8033,8 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
-    }
-  },
-  "Lid Only": {
-    "0": {
-      "material_name": "Black Alloy",
-      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
     },
-    "1": {
+    "2": {
       "material_name": "Standard Silver_Rim",
       "base_color": "#898989",
       "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",

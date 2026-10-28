@@ -227,11 +227,12 @@ export function usePricing(ctx) {
     if (ctx.roofBuild === 'onepieceroof') roofBuildPrice *= parseInt(ctx.length) || 0;
     appearance += roofBuildPrice;
 
-    appearance += findPrice(PROTECTION_OPTIONS, ctx.protectionType);
-
-    let protectionSizePrice = findPrice(PROTECTION_OPTIONS, ctx.protectionSize);
-    if (ctx.protectionSize === '24' || ctx.protectionSize === '12') protectionSizePrice *= parseInt(ctx.length) || 0;
-    appearance += protectionSizePrice;
+    if (ctx.protectionType === 'atp' && ctx.axleAtp !== false) {
+      appearance += findPrice(PROTECTION_OPTIONS, ctx.protectionType);
+      let protectionSizePrice = findPrice(PROTECTION_OPTIONS, ctx.protectionSize);
+      if (ctx.protectionSize === '24' || ctx.protectionSize === '12') protectionSizePrice *= parseInt(ctx.length) || 0;
+      appearance += protectionSizePrice;
+    }
     appearance += findPrice(PROTECTION_OPTIONS, ctx.frontProtection);
     appearance += findPrice(LUG_OPTIONS, ctx.lugType);
     appearance += findPrice(TIRE_SIZE_OPTIONS, ctx.tireSize);

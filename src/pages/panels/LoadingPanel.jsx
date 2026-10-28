@@ -394,7 +394,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
           </div>
 
           <div>
-            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-3">E-TRACKS</h4>
+            <h4 className="text-white text-sm font-semibold uppercase tracking-wider mb-1">E-TRACKS</h4>
+            <p className="text-gray-400 text-xs tracking-wider mb-3">We collect your desired height / width in production or directly.</p>
             <div className="flex flex-col gap-2">
               {E_TRACKS_OPTIONS.map((opt) => {
                 const qty = (eTracks && typeof eTracks[opt.id] === 'number' && eTracks[opt.id] > 0)
