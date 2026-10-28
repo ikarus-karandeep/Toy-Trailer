@@ -93,6 +93,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "1": {
+      "material_name": "MAT_Roof_Trim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Base_Interior_L": {
@@ -442,11 +454,35 @@
     },
     "10": {
       "material_name": "Decals",
-      "base_color": "#FFFFFF",
+      "base_color": "//..\\Textures\\Black_Diamond_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
       "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "11": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "12": {
+      "material_name": "MAT_Roof_Trim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -564,7 +600,7 @@
     },
     "9": {
       "material_name": "Decals",
-      "base_color": "#FFFFFF",
+      "base_color": "//..\\Textures\\Black_Diamond_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
@@ -698,11 +734,35 @@
     },
     "10": {
       "material_name": "Decals",
-      "base_color": "#FFFFFF",
+      "base_color": "//..\\Textures\\Black_Diamond_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
       "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "11": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "12": {
+      "material_name": "MAT_Roof_Trim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -820,11 +880,35 @@
     },
     "9": {
       "material_name": "Decals",
-      "base_color": "#FFFFFF",
+      "base_color": "//..\\Textures\\Black_Diamond_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
       "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "10": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "11": {
+      "material_name": "MAT_Roof_Trim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -978,11 +1062,23 @@
     },
     "12": {
       "material_name": "Decals",
-      "base_color": "#FFFFFF",
+      "base_color": "//..\\Textures\\Black_Diamond_Base_color.jpg",
       "roughness": 1.0,
       "metalness": 0.0,
       "normal": false,
       "alpha": "//..\\Textures\\Black_Diamond_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "13": {
+      "material_name": "MAT_Roof_Trim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -1401,6 +1497,18 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "7": {
+      "material_name": "LED_Lights",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#E8C788",
+        "strength": 10.0
+      }
     }
   },
   "36x72 Door Panel R": {
@@ -1479,6 +1587,30 @@
     "6": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "7": {
+      "material_name": "LED_Lights",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#E8C788",
+        "strength": 10.0
+      }
+    },
+    "8": {
+      "material_name": "White",
+      "base_color": "#E7E7E7",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -1659,6 +1791,30 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
+    },
+    "7": {
+      "material_name": "LED_Lights",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#E8C788",
+        "strength": 10.0
+      }
+    },
+    "8": {
+      "material_name": "White",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "36x78 Door Panel L Proxy": {},
@@ -1753,18 +1909,6 @@
   "48x78 Door Panel R Proxy": {},
   "48x78 Door Panel R": {
     "0": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "1": {
       "material_name": "Black Rubber_Membranes",
       "base_color": "//..\\Textures\\Roof_BaseColor.png",
       "roughness": "//..\\Textures\\Roof_Roughness.png",
@@ -1776,7 +1920,7 @@
         "strength": 0.0
       }
     },
-    "2": {
+    "1": {
       "material_name": "MAT_Stripes",
       "base_color": "#5D38AE",
       "roughness": 0.1178,
@@ -1788,7 +1932,7 @@
         "strength": 0.0
       }
     },
-    "3": {
+    "2": {
       "material_name": "Chrome",
       "base_color": "//..\\Textures\\Chrome_BaseColor.png",
       "roughness": "//..\\Textures\\Chrome_Roughness.png",
@@ -1800,7 +1944,7 @@
         "strength": 0.0
       }
     },
-    "4": {
+    "3": {
       "material_name": "MAT_Interior_Walls",
       "base_color": "#D1AD94",
       "roughness": 0.5,
@@ -1812,7 +1956,7 @@
         "strength": 0.0
       }
     },
-    "5": {
+    "4": {
       "material_name": "MAT_Interior_Flooring",
       "base_color": "#D4BD67",
       "roughness": 0.5,
@@ -1824,9 +1968,33 @@
         "strength": 0.0
       }
     },
-    "6": {
+    "5": {
       "material_name": "MAT_Interior_Cealing",
       "base_color": "#3A22D9",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "6": {
+      "material_name": "LED_Lights",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#E8C788",
+        "strength": 10.0
+      }
+    },
+    "7": {
+      "material_name": "White",
+      "base_color": "#E7E7E7",
       "roughness": 0.5,
       "metalness": 0.0,
       "normal": false,
@@ -2733,7 +2901,7 @@
       }
     }
   },
-  "2X Axle Flat Side": {
+  "2X Spread Axle Flat Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -2771,7 +2939,7 @@
       }
     }
   },
-  "3X Axle Flat Side": {
+  "3X Non Spread Axle Flat Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -2809,7 +2977,7 @@
       }
     }
   },
-  "2X Axle Angled Side": {
+  "2X Non Spread Axle Flat Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -2847,7 +3015,159 @@
       }
     }
   },
-  "3X Axle Angled Side": {
+  "3X Spread Axle Flat Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Spread Axle Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Non Spread Axle Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle Angled Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -2927,7 +3247,7 @@
       }
     }
   },
-  "3X ATP Flat Side 24in": {
+  "3X Non Spread Axle ATP Flat Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -2941,7 +3261,7 @@
       }
     }
   },
-  "2X ATP Flat Side 24in": {
+  "2X Spread Axle ATP Flat Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -2955,7 +3275,7 @@
       }
     }
   },
-  "3X ATP Flat Side 12in": {
+  "3X Non Spread Axle ATP Flat Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -2969,7 +3289,7 @@
       }
     }
   },
-  "2X ATP Flat Side 12in": {
+  "2X Spread Axle ATP Flat Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -2983,7 +3303,7 @@
       }
     }
   },
-  "2X ATP Angled Side 24in": {
+  "2X Non Spread Axle ATP Flat Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -2997,7 +3317,7 @@
       }
     }
   },
-  "3X ATP Angled Side 24in": {
+  "2X Non Spread Axle ATP Flat Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3011,7 +3331,7 @@
       }
     }
   },
-  "3X ATP Angled Side 12in": {
+  "3X Spread Axle ATP Flat Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3025,7 +3345,7 @@
       }
     }
   },
-  "2X ATP Angled Side 12in": {
+  "3X Spread Axle ATP Flat Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3039,7 +3359,119 @@
       }
     }
   },
-  "2X Corvette Fender Flat Side": {
+  "2X Spread Axle ATP Angled Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Non Spread Axle ATP Angled Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Non Spread Axle ATP Angled Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Spread Axle ATP Angled Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle ATP Angled Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle ATP Angled Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle ATP Angled Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle ATP Angled Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Spread Axle Corvette Fender Flat Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -3077,7 +3509,7 @@
       }
     }
   },
-  "2X Corvette Fender Angled Side": {
+  "2X Spread Axle Corvette Fender Angled Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -3115,7 +3547,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Angled Side 24in": {
+  "ATP 2X Spread Axle Corvette Fender Angled Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3129,7 +3561,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Flat Side 24in": {
+  "ATP 2X Spread Axle Corvette Fender Flat Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3143,7 +3575,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Flat Side 12in": {
+  "ATP 2X Spread Axle Corvette Fender Flat Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3157,7 +3589,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Angled Side 12in": {
+  "ATP 2X Spread Axle Corvette Fender Angled Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3171,7 +3603,7 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Flat Side 24in": {
+  "ATP 3X Non Spread Axle Corvette Fender Flat Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3185,7 +3617,7 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Flat Side 12in": {
+  "ATP 3X Non Spread Axle Corvette Fender Flat Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3199,7 +3631,7 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Angled Side 24in": {
+  "ATP 3X Non Spread Axle Corvette Fender Angled Side 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3213,7 +3645,7 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Angled Side 12in": {
+  "ATP 3X Non Spread Axle Corvette Fender Angled Side 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -3227,7 +3659,7 @@
       }
     }
   },
-  "3X Corvette Fender Flat Side": {
+  "3X Non Spread Axle Corvette Fender Flat Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -3265,7 +3697,271 @@
       }
     }
   },
-  "3X Corvette Fender Angled Side": {
+  "3X Non Spread Axle Corvette Fender Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle Corvette Fender Flat Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle Corvette Fender Angled Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Corvette Fender Angled Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Corvette Fender Flat Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Corvette Fender Flat Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Corvette Fender Angled Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Corvette Fender Flat Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Corvette Fender Flat Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Corvette Fender Angled Side 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Corvette Fender Angled Side 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle Corvette Fender Flat Side": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle Corvette Fender Angled Side": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -3763,18 +4459,6 @@
         "color": "#FFFFFF",
         "strength": 0.0
       }
-    },
-    "4": {
-      "material_name": "BlackROUGH",
-      "base_color": "//..\\Textures\\Black_ROUGH_Base_color.jpg",
-      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
-      "metalness": 0.0,
-      "normal": false,
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
     }
   },
   "Slot": {
@@ -4011,7 +4695,7 @@
       }
     }
   },
-  "Racing Lights ": {
+  "Racing Lights": {
     "0": {
       "material_name": "Trailer Lights_Transmission",
       "base_color": "#E7E7E7",
@@ -4085,6 +4769,18 @@
         "color": "//..\\Textures\\Number_Plate_Emissive.png",
         "strength": 25.0
       }
+    },
+    "3": {
+      "material_name": "MAT_Roof_Trim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
     }
   },
   "Rear Spoiler Wing w_ Angled Lights": {
@@ -4129,6 +4825,18 @@
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "4": {
+      "material_name": "MAT_Roof_Trim",
+      "base_color": "#E7E7E7",
+      "roughness": 0.5,
+      "metalness": 0.0,
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4445,11 +5153,11 @@
   },
   "Electric Awning": {
     "0": {
-      "material_name": "Aluminium Radial_Rim",
-      "base_color": "//..\\Textures\\Aluminum_Rim_Base_color.jpg",
-      "roughness": "//..\\Textures\\Aluminum_Rim_Roughness.jpg",
-      "metalness": "//..\\Textures\\Aluminum_Rim_Metallic.jpg",
-      "normal": "//..\\Textures\\Aluminum_Rim_Normal.jpg",
+      "material_name": "Electric Awning",
+      "base_color": "//..\\Textures\\White_BaseColor.jpg",
+      "roughness": 0.5,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Fabric Strap_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
@@ -4457,46 +5165,36 @@
       }
     },
     "1": {
-      "material_name": "Awning_DECAL",
-      "base_color": "#7B7D81",
-      "roughness": 0.09,
-      "metalness": 0.0,
-      "normal": "E:\\Vivek Singh Bisht\\Tupperwear\\For Screws\\Textures\\Trailer_Detailing_Decals_Normal.jpg",
-      "alpha": "E:\\Vivek Singh Bisht\\Tupperwear\\For Screws\\Textures\\Trailer_Detailing_Decals_Opacity.jpg",
+      "material_name": "Black Rubber_Membranes",
+      "base_color": "//..\\Textures\\Roof_BaseColor.png",
+      "roughness": "//..\\Textures\\Roof_Roughness.png",
+      "metalness": "//..\\Textures\\Roof_Metallic.png",
+      "normal": "//..\\Textures\\Roof_Normal.png",
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
       }
-    },
-    "2": {
-      "material_name": "MAT_Shell",
-      "base_color": "#627F62",
-      "roughness": 0.09,
+    }
+  },
+  "Interior Speakers": {
+    "0": {
+      "material_name": "Interior_Speakers_Mesh",
+      "base_color": "//..\\Textures\\Interior_Speakers_Opacity.jpg",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Simple_Noise.png",
+      "normal": "//..\\Textures\\Interior_Speakers_Normal.jpg",
       "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
       }
     },
-    "3": {
-      "material_name": "Tarp",
-      "base_color": "//..\\Textures\\Tarp_BaseColor.jpg",
-      "roughness": "//..\\Textures\\Tarp_Roughness.jpg",
+    "1": {
+      "material_name": "Interior_Speakers",
+      "base_color": "//..\\Textures\\White_BaseColor.jpg",
+      "roughness": 0.5,
       "metalness": 0.0,
-      "normal": "//..\\Textures\\Tarp_Normal.jpg",
-      "alpha": 1.0,
-      "emission": {
-        "color": "#FFFFFF",
-        "strength": 0.0
-      }
-    },
-    "4": {
-      "material_name": "Chrome",
-      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
-      "roughness": "//..\\Textures\\Chrome_Roughness.png",
-      "metalness": "//..\\Textures\\Chrome_Metallic.png",
       "normal": false,
       "alpha": 1.0,
       "emission": {
@@ -4628,7 +5326,7 @@
       }
     }
   },
-  "2X Corvette Fender Flat Side For GED": {
+  "2X Spread Axle Corvette Fender Flat Side For GED": {
     "0": {
       "material_name": "MAT_WheelCover",
       "base_color": "#9EC65E",
@@ -4666,7 +5364,7 @@
       }
     }
   },
-  "2X Corvette Fender Angled Side For GED": {
+  "2X Spread Axle Corvette Fender Angled Side For GED": {
     "0": {
       "material_name": "MAT_WheelCover",
       "base_color": "#9EC65E",
@@ -4704,7 +5402,7 @@
       }
     }
   },
-  "2X Axle Angled Side For GED": {
+  "2X Spread Axle Angled Side For GED": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -4742,7 +5440,7 @@
       }
     }
   },
-  "2X Axle Flat Side For GED": {
+  "2X Spread Axle Flat Side For GED": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -4780,7 +5478,7 @@
       }
     }
   },
-  "3X Axle Angled Side For GED": {
+  "3X Non Spread Axle Angled Side For GED": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -4818,7 +5516,7 @@
       }
     }
   },
-  "3X Axle Flat Side For GED": {
+  "3X Non Spread Axle Flat Side For GED": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -4856,7 +5554,7 @@
       }
     }
   },
-  "3X Corvette Fender Flat Side For GED": {
+  "3X Non Spread Axle Corvette Fender Flat Side For GED": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -4894,7 +5592,7 @@
       }
     }
   },
-  "3X Corvette Fender Angled Side For GED": {
+  "3X Non Spread Axle Corvette Fender Angled Side For GED": {
     "0": {
       "material_name": "MAT_Shell",
       "base_color": "#627F62",
@@ -4932,7 +5630,311 @@
       }
     }
   },
-  "ATP 2X Axle Angled Side GED 24in": {
+  "2X Non Spread Axle Corvette Fender Flat Side For GED": {
+    "0": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle Corvette Fender Angled Side For GED": {
+    "0": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle Angled Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "2X Non Spread Axle Flat Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle Angled Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle Flat Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle Corvette Fender Flat Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "3X Spread Axle Corvette Fender Angled Side For GED": {
+    "0": {
+      "material_name": "MAT_Shell",
+      "base_color": "#627F62",
+      "roughness": 0.09,
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Simple_Noise.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "MAT_WheelCover",
+      "base_color": "#9EC65E",
+      "roughness": 0.7284,
+      "metalness": 0.1343,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "MAT_Stripes",
+      "base_color": "#5D38AE",
+      "roughness": 0.1178,
+      "metalness": 0.4773,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Spread Axle Angled Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -4946,7 +5948,7 @@
       }
     }
   },
-  "ATP 2X Axle Flat Side GED 24in": {
+  "ATP 2X Spread Axle Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -4960,7 +5962,7 @@
       }
     }
   },
-  "ATP 3X Axle Angled Side GED 24in": {
+  "ATP 3X Non Spread Axle Angled Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -4974,7 +5976,7 @@
       }
     }
   },
-  "ATP 3X Axle Flat Side GED 24in": {
+  "ATP 3X Non Spread Axle Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -4988,7 +5990,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Flat Side GED 24in": {
+  "ATP 2X Spread Axle Corvette Fender Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5002,7 +6004,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Angled Side GED 24in": {
+  "ATP 2X Spread Axle Corvette Fender Angled Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5016,7 +6018,7 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Flat Side GED 24in": {
+  "ATP 3X Non Spread Axle Corvette Fender Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5030,7 +6032,7 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Angled Side GED 24in": {
+  "ATP 3X Non Spread Axle Corvette Fender Angled Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5044,7 +6046,7 @@
       }
     }
   },
-  "ATP 2X Axle Angled Side GED 12in": {
+  "ATP 2X Non Spread Axle Angled Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5058,7 +6060,7 @@
       }
     }
   },
-  "ATP 2X Axle Flat Side GED 12in": {
+  "ATP 2X Non Spread Axle Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5072,7 +6074,7 @@
       }
     }
   },
-  "ATP 3X Axle Angled Side GED 12in": {
+  "ATP 2X Non Spread Axle Corvette Fender Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5086,7 +6088,7 @@
       }
     }
   },
-  "ATP 3X Axle Flat Side GED 12in": {
+  "ATP 2X Non Spread Axle Corvette Fender Angled Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5100,7 +6102,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Flat Side GED 12in": {
+  "ATP 3X Spread Axle Angled Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5114,7 +6116,7 @@
       }
     }
   },
-  "ATP 2X Corvette Fender Angled Side GED 12in": {
+  "ATP 3X Spread Axle Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5128,7 +6130,7 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Flat Side GED 12in": {
+  "ATP 3X Spread Axle Corvette Fender Flat Side GED 24in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5142,7 +6144,231 @@
       }
     }
   },
-  "ATP 3X Corvette Fender Angled Side GED 12in": {
+  "ATP 3X Spread Axle Corvette Fender Angled Side GED 24in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Spread Axle Angled Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Spread Axle Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Non Spread Axle Angled Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Non Spread Axle Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Spread Axle Corvette Fender Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Spread Axle Corvette Fender Angled Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Non Spread Axle Corvette Fender Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Non Spread Axle Corvette Fender Angled Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Angled Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Corvette Fender Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 2X Non Spread Axle Corvette Fender Angled Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Angled Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Corvette Fender Flat Side GED 12in": {
+    "0": {
+      "material_name": "MAT_ATP",
+      "base_color": "#97B8C8",
+      "roughness": 0.8281,
+      "metalness": 0.1403,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "ATP 3X Spread Axle Corvette Fender Angled Side GED 12in": {
     "0": {
       "material_name": "MAT_ATP",
       "base_color": "#97B8C8",
@@ -5974,7 +7200,7 @@
       }
     }
   },
-  "Mini Split AC": {
+  "Mini Split AC Flat Front": {
     "0": {
       "material_name": "White_Ceremic",
       "base_color": "#E7E7E7",
@@ -6314,6 +7540,76 @@
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
       "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
       "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Low Profile Ladder Rack": {
+    "0": {
+      "material_name": "Steel_Painted",
+      "base_color": "//..\\Textures\\Steel_Painted_Base_color.jpg",
+      "roughness": "//..\\Textures\\Steel_Painted_Roughness.jpg",
+      "metalness": 0.0,
+      "normal": "//..\\Textures\\Steel_Painted_Normal.png",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC V-Nose": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC Gooseneck 8_5\u00d728.001": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC Slant V-Nose": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Mini Split AC Extended V-Nose": {
+    "0": {
+      "material_name": "White_Ceremic",
+      "base_color": "#E7E7E7",
+      "roughness": 0.2144,
+      "metalness": 0.0744,
       "normal": false,
       "alpha": 1.0,
       "emission": {

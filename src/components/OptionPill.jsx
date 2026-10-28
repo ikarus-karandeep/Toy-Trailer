@@ -15,9 +15,11 @@ export default function OptionPill({
   onSettingsClick,
   quantity,
   onQuantityChange,
+  maxQuantity,
   onClick,
   packageBadge = null,
   image = null,
+  fullWidth = false,
 }) {
   const [tooltipPos, setTooltipPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
   const [showMobileReason, setShowMobileReason] = useState(false);
@@ -54,6 +56,8 @@ export default function OptionPill({
   };
 
   const isInteractive = !isLocked && !disabled;
+  const hasQuantity = quantity !== undefined;
+  const isFull = fullWidth || hasQuantity;
 
   return (
     <div
@@ -68,7 +72,11 @@ export default function OptionPill({
         }
       }}
       onMouseEnter={handleMouseEnter}
-      className={`group w-fit relative flex items-center justify-center gap-3 px-8 py-3 rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
+      className={`group relative flex items-center ${
+        isFull
+          ? 'w-full justify-between px-4 md:px-5 py-2.5 min-h-[44px]'
+          : 'w-fit justify-center gap-3 px-8 py-3 min-h-[44px]'
+      } rounded-full border text-[12px] md:text-[14px] font-normal uppercase transition-all duration-150 text-left ${
         isLocked
           ? 'border-[#3a3a3a]/70 text-gray-500/70 bg-[#2a2a2a]/70 cursor-not-allowed'
           : disabled
@@ -119,7 +127,7 @@ export default function OptionPill({
         </div>
       )}
 
-      <span className="relative z-10 flex items-center justify-center gap-2 min-w-0">
+      <span className={`relative z-10 flex items-center ${isFull ? 'gap-2 min-w-0 flex-1 justify-start' : 'justify-center gap-2 min-w-0'}`}>
         <span className="leading-snug">{label}</span>
         {isSelected && packageBadge && packageBadge.badge && (
           <img 
@@ -190,25 +198,30 @@ export default function OptionPill({
           )}
 
           {quantity !== undefined && quantity > 0 && !isLocked && (
-            <div className="flex items-center gap-2 md:gap-3 bg-[#111111] rounded-full px-1.5 py-1.5 border border-[#2a2a2a]/50">
+            <div className="flex items-center gap-1.5 md:gap-2 bg-[#111111] rounded-full px-1.5 py-0.5 border border-[#2a2a2a]/50 flex-shrink-0 ml-2">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   if (onQuantityChange) onQuantityChange(Math.max(0, quantity - 1));
                 }}
-                className="w-7 h-7 md:w-8 md:h-8 shrink-0 rounded-full border border-[#DA634B] flex items-center justify-center text-white bg-[#DA634B]/20 hover:bg-[#DA634B]/40 text-xl font-light leading-none pb-1 transition-colors"
+                className="w-6 h-6 md:w-6.5 md:h-6.5 shrink-0 rounded-full border border-[#DA634B] flex items-center justify-center text-white bg-[#DA634B]/20 hover:bg-[#DA634B]/40 text-lg font-light leading-none pb-0.5 transition-colors"
               >
                 -
               </button>
-              <span className="text-[14px] md:text-[15px] font-medium min-w-[3.5rem] text-center tracking-wide text-white whitespace-nowrap">
+              <span className="text-[12px] md:text-[13px] font-medium min-w-[2.8rem] text-center tracking-wide text-white whitespace-nowrap">
                 {quantity} · ${price != null ? price.toLocaleString() : '000'}
               </span>
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (maxQuantity !== undefined && quantity >= maxQuantity) return;
                   if (onQuantityChange) onQuantityChange(quantity + 1);
                 }}
-                className="w-7 h-7 md:w-8 md:h-8 shrink-0 rounded-full border border-[#DA634B] flex items-center justify-center text-white bg-[#DA634B]/20 hover:bg-[#DA634B]/40 text-xl font-light leading-none pb-1 transition-colors"
+                disabled={maxQuantity !== undefined && quantity >= maxQuantity}
+                className={`w-6 h-6 md:w-6.5 md:h-6.5 shrink-0 rounded-full border border-[#DA634B] flex items-center justify-center text-white bg-[#DA634B]/20 hover:bg-[#DA634B]/40 text-lg font-light leading-none pb-0.5 transition-colors ${
+                  maxQuantity !== undefined && quantity >= maxQuantity ? 'opacity-40 cursor-not-allowed' : ''
+                }`}
               >
                 +
               </button>

@@ -169,6 +169,8 @@ export function usePricing(ctx) {
         if (id === 'wall' || id === 'floor') {
           const len = parseInt(ctx.length) || 0;
           price *= len;
+          const qty = (ctx.eTracks && typeof ctx.eTracks[id] === 'number' && ctx.eTracks[id] > 0) ? ctx.eTracks[id] : 1;
+          price *= qty;
         } else if (ctx.dRings && typeof ctx.dRings[id] === 'number' && ctx.dRings[id] > 0) {
           price *= ctx.dRings[id];
         }
@@ -302,7 +304,7 @@ export function usePricing(ctx) {
     ctx.rearSpoiler, ctx.ladderRacks, ctx.sidewallVents, ctx.recessedTireBox, ctx.interiorTireMount,
     ctx.exteriorFinish, ctx.exteriorAccessories, ctx.frontStyle, ctx.roofBuild,
     ctx.protectionType, ctx.protectionSize, ctx.frontProtection, ctx.lugType, ctx.tireSize, ctx.wheelType,
-    ctx.spareTire, ctx.floor, ctx.floorOverlay, ctx.floorInsulation, ctx.walls, ctx.ceiling, ctx.wallInsulation, ctx.ceilingInsulation, ctx.atpWheelWells, ctx.cabinets, ctx.toolBox, ctx.dRings,
+    ctx.spareTire, ctx.floor, ctx.floorOverlay, ctx.floorInsulation, ctx.walls, ctx.ceiling, ctx.wallInsulation, ctx.ceilingInsulation, ctx.atpWheelWells, ctx.cabinets, ctx.toolBox, ctx.dRings, ctx.eTracks,
     ctx.driverSideDoor, ctx.passengerSideDoor, ctx.sideDoorBarLock, ctx.concessionDoor,
     ctx.glassScreen, ctx.concessionWidth, ctx.concessionHeight
   ]);

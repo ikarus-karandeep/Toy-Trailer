@@ -20,6 +20,7 @@ export default function SystemsPanel({ activeSectionTitle }) {
   const {
     electrical, setElectrical,
     climateControl, setClimateControl,
+    cabinets, setCabinetsRaw,
     ventilation, setVentilation,
     acPrep, setAcPrep,
     receptacles, setReceptacles,
@@ -72,20 +73,12 @@ export default function SystemsPanel({ activeSectionTitle }) {
                           ...prev, 
                           '110vinterior': (prev['110vinterior'] || 0) + 2 
                         }));
-                        setInteriorLights(prev => ({ 
-                          ...prev, 
-                          '12vflatpanel': (prev['12vflatpanel'] || 0) + 1 
-                        }));
                       }
                     } else if (opt.id === 'none') {
                       if (prevElectrical === '30amp' || prevElectrical === '50amp') {
                         setReceptacles(prev => ({ 
                           ...prev, 
                           '110vinterior': Math.max((prev['110vinterior'] || 0) - 2, 0) 
-                        }));
-                        setInteriorLights(prev => ({ 
-                          ...prev, 
-                          '12vflatpanel': Math.max((prev['12vflatpanel'] || 0) - 1, 0) 
                         }));
                       }
                     }
@@ -173,50 +166,66 @@ export default function SystemsPanel({ activeSectionTitle }) {
           <div className="mb-6 contents">
             <div className="mb-6">
             <h4 className="text-white text-sm font-normal uppercase tracking-wider mb-1">INTERIOR LIGHTING</h4>
-            <p className="text-gray-400 text-xs tracking-wider mb-4">Required for AC + Bathroom Build</p>
+            <p className="text-gray-400 text-xs tracking-wider mb-4">12V dome lights are standard</p>
             <div className="flex justify-center mb-4">
               <img src="/Light.png" className="w-[90px] sm:w-[110px] md:w-[130px] lg:w-[150px] mx-auto object-contain my-3" />
             </div>
-            <div className="flex flex-col gap-2">
-              {INTERIOR_LIGHTING_OPTIONS.map((opt) => {
-                if (opt.id === 'ledrope') {
+            <div className="flex flex-col gap-3">
+              {/* Single unified vertical group for mutually exclusive interior lights */}
+              <div className="flex flex-col bg-[#282828] rounded-2xl md:rounded-3xl border border-[#5C5C5C] p-1.5 gap-1.5">
+                {INTERIOR_LIGHTING_OPTIONS.filter(o => o.id !== 'ledrope').map((opt, idx) => {
+                  const qty = interiorLights[opt.id] || 0
+                  const otherLightId = opt.id === '12vleddome' ? '12vflatpanel' : '12vleddome'
+                  
                   return (
                     <OptionPill
                       key={opt.id}
                       label={opt.label}
-                      price={opt.price} badge={opt.badge}
-                      isSelected={ledRope}
+                      price={opt.price}
+                      badge={opt.badge}
+                      fullWidth={true}
+                      isSelected={qty > 0}
+                      quantity={qty > 0 ? qty : undefined}
+                      onQuantityChange={(newQty) => {
+                        setInteriorLights(prev => ({
+                          ...prev,
+                          [opt.id]: Math.max(0, newQty),
+                          ...(newQty > 0 ? { [otherLightId]: 0 } : {})
+                        }))
+                        if (newQty > 0) {
+                          setFocusedCamera(opt.id === '12vleddome' ? 'Dome Light Camera' : 'Flat Panel Light Camera')
+                        }
+                      }}
                       onClick={() => {
-                        setLedRope(!ledRope)
-                        if (!ledRope) setFocusedCamera("LED Rope Light Camera")
+                        const newQty = qty === 0 ? 1 : 0
+                        setInteriorLights(prev => ({
+                          ...prev,
+                          [opt.id]: newQty,
+                          ...(newQty > 0 ? { [otherLightId]: 0 } : {})
+                        }))
+                        if (newQty > 0) {
+                          setFocusedCamera(opt.id === '12vleddome' ? 'Dome Light Camera' : 'Flat Panel Light Camera')
+                        }
                       }}
                     />
                   )
-                }
-                const qty = interiorLights[opt.id] || 0
-                return (
-                  <OptionPill
-                    key={opt.id}
-                    label={opt.label}
-                    price={opt.price} badge={opt.badge}
-                    isSelected={qty > 0}
-                    quantity={qty > 0 ? qty : undefined}
-                    onQuantityChange={(newQty) => {
-                      updateQuantity(setInteriorLights, opt.id, newQty)
-                      if (newQty > 0) {
-                        setFocusedCamera(opt.id === '12vleddome' ? 'Dome Light Camera' : 'Flat Panel Light Camera')
-                      }
-                    }}
-                    onClick={() => {
-                      const newQty = qty === 0 ? 1 : 0
-                      updateQuantity(setInteriorLights, opt.id, newQty)
-                      if (newQty > 0) {
-                        setFocusedCamera(opt.id === '12vleddome' ? 'Dome Light Camera' : 'Flat Panel Light Camera')
-                      }
-                    }}
-                  />
-                )
-              })}
+                })}
+              </div>
+
+              {/* LED Rope Lighting as distinct add-on */}
+              {INTERIOR_LIGHTING_OPTIONS.filter(o => o.id === 'ledrope').map((opt) => (
+                <OptionPill
+                  key={opt.id}
+                  label={opt.label}
+                  price={opt.price}
+                  badge={opt.badge}
+                  isSelected={ledRope}
+                  onClick={() => {
+                    setLedRope(!ledRope)
+                    if (!ledRope) setFocusedCamera("LED Rope Light Camera")
+                  }}
+                />
+              ))}
             </div>
           </div>
           </div>
@@ -305,10 +314,21 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   isSelected={climateControl === opt.id}
                   onClick={() => {
                     const newValue = opt.id === climateControl ? 'none' : opt.id;
-                    setClimateControl(newValue);
-                    if (newValue !== 'none') {
-                      setFocusedCamera("AC Unit Camera");
+                    if (newValue === 'none') {
+                      setClimateControl('none');
+                      return;
                     }
+
+                    // Check if overhead cabinets are installed
+                    const hasOverhead = cabinets && (cabinets.includes('frontoverhead16') || cabinets.includes('wallrun16'));
+                    if (hasOverhead) {
+                      const proceed = window.confirm("Overhead Cabinets are currently installed. Would you like to replace the cabinets with the AC unit?");
+                      if (!proceed) return;
+                      setCabinetsRaw(cabinets.filter(c => c !== 'frontoverhead16' && c !== 'wallrun16'));
+                    }
+
+                    setClimateControl(newValue);
+                    setFocusedCamera("AC Unit Camera");
                   }}
                   packageBadge={getBadge(opt.id)}
                 />
@@ -339,10 +359,21 @@ export default function SystemsPanel({ activeSectionTitle }) {
                   isSelected={climateControl === opt.id}
                   onClick={() => {
                     const newValue = opt.id === climateControl ? 'none' : opt.id;
-                    setClimateControl(newValue);
-                    if (newValue !== 'none') {
-                      setFocusedCamera("Mini Split AC Camera");
+                    if (newValue === 'none') {
+                      setClimateControl('none');
+                      return;
                     }
+
+                    // Check if overhead cabinets are installed
+                    const hasOverhead = cabinets && (cabinets.includes('frontoverhead16') || cabinets.includes('wallrun16'));
+                    if (hasOverhead) {
+                      const proceed = window.confirm("Overhead Cabinets are currently installed. Would you like to replace the cabinets with the AC unit?");
+                      if (!proceed) return;
+                      setCabinetsRaw(cabinets.filter(c => c !== 'frontoverhead16' && c !== 'wallrun16'));
+                    }
+
+                    setClimateControl(newValue);
+                    setFocusedCamera("Mini Split AC Camera");
                   }}
                   packageBadge={getBadge(opt.id)}
                 />

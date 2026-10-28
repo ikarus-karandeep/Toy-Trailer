@@ -132,10 +132,11 @@ const DOOR_MESH_MAP = {
 // Menu Switch: selects which mesh to show based on rampType.
 // Object Info (Original/Relative) → world-transform handled by the deform system.
 const REAR_DOOR_MESH_MAP = {
-    barndoors: 'Barn_Door',
-    heavyduty: 'Heavy_Duty_Ramp',
-    superduty: 'Super_Duty_Ramp', 
-    rampdropjacks: 'Heavy_Duty_Ramp_w_Flap' // Guessing the exact name based on typical exporter behavior
+    barndoors: ['Barn Door', 'Barn_Door'],
+    doublereardoors: ['Barn Door', 'Barn_Door'],
+    heavyduty: ['Heavy Duty Ramp', 'Heavy_Duty_Ramp'],
+    superduty: ['Heavy Duty Ramp', 'Heavy_Duty_Ramp'], 
+    rampdropjacks: ['Heavy Duty Ramp w/ Flap', 'Heavy_Duty_Ramp_w_Flap', 'Heavy Duty Ramp', 'Heavy_Duty_Ramp']
 }
 
 // ── Front Style addons: Super Switch per addon type ────────────────────────
@@ -146,26 +147,32 @@ const FRONT_STYLE_ADDON_MESH_MAP = {
     vnose: {
         stairs: 'Stair_(V-Nose)',
         battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+        minisplit: 'Mini Split AC V-Nose',
     },
     vnose24: {
         stairs: 'Stair_(V-Nose)',
         battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+        minisplit: 'Mini Split AC V-Nose',
     },
     flatfront: {
         stairs: 'Stair_(Flat_Front)',
         battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+        minisplit: 'Mini Split AC Flat Front',
     },
     slantvnose: {
         stairs: 'Stair_(V-Nose)',
         battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+        minisplit: 'Mini Split AC Slant V-Nose',
     },
     extendedvnose: {
         stairs: 'Stair_(V-Nose)',
         battery: 'ATP_Battery_Box(Extended_V-Nose)',
+        minisplit: 'Mini Split AC Extended V-Nose',
     },
     gooseneck: {
         stairs: 'Stair_(V-Nose)',
         battery: 'ATP_Battery_Box(Flat_Front,_V-Nose,_Slant_V-Nose)',
+        minisplit: 'Mini Split AC Gooseneck 8_5×28',
     },
 }
 
@@ -213,14 +220,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     let effectiveDriverDoor = config.driverSideDoor || 'none'
     let effectivePassengerDoor = config.passengerSideDoor || 'none'
-
-    if (parseFloat(config.length) < 24) {
-        effectiveDriverDoor = 'none'
-        effectivePassengerDoor = 'none'
-    } else if (parseFloat(config.length) < 23.5) {
-        if (effectiveDriverDoor !== 'none' && effectiveDriverDoor !== '36x72') effectiveDriverDoor = '36x72'
-        if (effectivePassengerDoor !== 'none' && effectivePassengerDoor !== '36x72') effectivePassengerDoor = '36x72'
-    }
 
     const hasSinkForLShape = config.sinkPackage && config.sinkPackage !== 'none';
     const hasBaseCabinetForLShape = config.cabinets && config.cabinets.some(c => ['wallrun36', 'frontbase36'].includes(c));
@@ -1155,7 +1154,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         
         const activeRearDoorMeshes = []
         if (config.rearDoor && rearDoorMesh) {
-            activeRearDoorMeshes.push(rearDoorMesh)
+            if (Array.isArray(rearDoorMesh)) {
+                activeRearDoorMeshes.push(...rearDoorMesh)
+            } else {
+                activeRearDoorMeshes.push(rearDoorMesh)
+            }
         }
         
         // Add ATP Barn Door (size-driven) if atpRamp is true and double rear doors is selected
@@ -1477,7 +1480,14 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         if (config.climateControl === '135kbtu' || config.climateControl === '15kbtu') {
             activeAddonMeshes.push('AC_Unit')
         } else if (config.climateControl === '12kminisplit' || config.climateControl === '18kminisplit' || config.climateControl === '24kminisplit') {
-            activeAddonMeshes.push('Mini_Split_AC')
+            const msMesh = frontStyleAddon?.minisplit || 'Mini_Split_AC';
+            activeAddonMeshes.push(msMesh);
+            activeAddonMeshes.push(`${msMesh}.001`);
+            activeAddonMeshes.push(msMesh.replace(/_/g, ' '));
+            activeAddonMeshes.push(`${msMesh.replace(/_/g, ' ')}.001`);
+            activeAddonMeshes.push(msMesh.replace(/ /g, '_'));
+            activeAddonMeshes.push(`${msMesh.replace(/ /g, '_')}.001`);
+            activeAddonMeshes.push('Mini_Split_AC');
         }
 
         // ── tongue.glb: always visible, variant switches with front style
@@ -1772,7 +1782,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // console.log('=========================');
 
         const activeCargoMeshes = []
-        if (config.tieDowns?.includes('drings')) {
+        if (config.tieDowns?.includes('drings') || config.tieDowns?.includes('floordrings') || (config.dRings?.floordrings > 0)) {
             cargo.traverse(child => {
                 if (child.isMesh) {
                     const nameLower = child.name.toLowerCase();
@@ -1919,7 +1929,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         config.cabinets, config.toolBox,
         config.driverSideDoor, config.passengerSideDoor,
         config.stairs, config.batteryBox, config.vNoseETrack, config.angledLights,
-        config.escapeDoor, config.concessionDoor, config.glassScreen, config.generatorBox, config.lShapeCounter, config.genDoor, config.winchSystem, config.tieDowns,
+        config.escapeDoor, config.concessionDoor, config.glassScreen, config.generatorBox, config.lShapeCounter, config.genDoor, config.winchSystem, config.tieDowns, config.eTracks, config.dRings,
         config.windows, config.windowSizes,
         config.extendedTripleTongue, config.radioPackageSpeaker, config.exteriorAccessories,
         config.climateControl, config.jacks, config.lights, config.ventilation, config.receptacles,
@@ -2574,7 +2584,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         smallPointsGeometry.setAttribute('position', new THREE.BufferAttribute(smallPoints, 3))
 
         // ── Globally enforce D-Rings visibility across all scenes ──
-        const showDRings = config.tieDowns?.includes('drings')
+        const showDRings = config.tieDowns?.includes('drings') || config.tieDowns?.includes('floordrings') || (config.dRings?.floordrings > 0)
         activeScenesRef.current.forEach(scene => {
             scene.traverse(child => {
                 if (child.isMesh) {
@@ -2635,7 +2645,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         })
 
         // Floor E-Track: per-floor generation with proxy cutouts (so E-track doesn't go across door thresholds)
-        if (floorTemplates.length > 0 && config.tieDowns?.includes('floor')) {
+        if (floorTemplates.length > 0 && (config.tieDowns?.includes('floor') || (config.eTracks?.floor > 0))) {
             floorTemplates.forEach(floorTemplate => {
                 floorTemplate.updateWorldMatrix(true, false)
                 const wm = floorTemplate.matrixWorld
@@ -2715,7 +2725,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         // Wall & Small E-Track: per-wall generation with Z-aware proxy side detection.
         const templatesToProcess = [];
-        if (wallTemplates.length > 0 && config.tieDowns?.includes('wall')) {
+        if (wallTemplates.length > 0 && (config.tieDowns?.includes('wall') || (config.eTracks?.wall > 0))) {
             templatesToProcess.push(...wallTemplates);
         }
         if (smallTemplates.length > 0 && config.tieDowns?.includes('small')) {

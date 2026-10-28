@@ -73,8 +73,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [wheelType, setWheelType] = useState(ic.wheelType ?? 'standardsilver')
   const [spareTire, setSpareTire] = useState(ic.spareTire ?? false)
   const [sideDoorsType, setSideDoorsType] = useState(ic.sideDoorsType ?? 'flatpanel')
-  const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? '36x78')
-  const [passengerSideDoor, setPassengerSideDoor] = useState(ic.passengerSideDoor ?? 'none')
+  const [driverSideDoor, setDriverSideDoor] = useState(ic.driverSideDoor ?? 'none')
+  const [passengerSideDoor, setPassengerSideDoor] = useState(ic.passengerSideDoor ?? '36x72')
   const [sideDoorBarLock, setSideDoorBarLock] = useState(ic.sideDoorBarLock ?? false)
 
   // Interior
@@ -103,27 +103,14 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [electrical, setElectrical] = useState(ic.electrical ?? 'none')
   const [battery, setBattery] = useState(ic.battery ?? '12vbatterybox')
   const [lights, setLightsRaw] = useState(ic.lights ?? ['dome', 'racing'])
-  const [interiorLights, setInteriorLights] = useState(ic.interiorLights ?? { '12vleddome': 0, '12vflatpanel': 0 })
+  const [interiorLights, setInteriorLights] = useState(ic.interiorLights ?? { '12vleddome': 1, '12vflatpanel': 0 })
   const [ledRope, setLedRope] = useState(ic.ledRope ?? false)
   const [ventilation, setVentilation] = useState(ic.ventilation ?? 'none')
   const [climateControl, setClimateControl] = useState(ic.climateControl ?? 'none')
   const [acPrep, setAcPrep] = useState(ic.acPrep ?? false)
   const [receptacles, setReceptacles] = useState(ic.receptacles ?? { '110vinterior': 0, '110vgfi': 0 })
 
-  // Automatically select 30amp electrical package if an AC unit is selected and no electrical package exists
-  useEffect(() => {
-    if (climateControl !== 'none' && electrical === 'none') {
-      setElectrical('30amp');
-      setReceptacles(prev => ({ 
-        ...prev, 
-        '110vinterior': (prev['110vinterior'] || 0) + 2 
-      }));
-      setInteriorLights(prev => ({ 
-        ...prev, 
-        '12vflatpanel': (prev['12vflatpanel'] || 0) + 1 
-      }));
-    }
-  }, [climateControl, electrical])
+
 
   const [exteriorLights, setExteriorLights] = useState(ic.exteriorLights ?? [])
 
@@ -131,22 +118,25 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [rampType, setRampType] = useState(ic.rampType ?? 'doublereardoors')
   const [atpRamp, setAtpRamp] = useState(ic.atpRamp ?? true)
 
-  useEffect(() => {
-    if (rampType === 'doublereardoors') {
-      setAtpRamp(true);
-    } else {
-      setAtpRamp(false);
-    }
-  }, [rampType])
-
 
 
   const [rearDoor, setRearDoor] = useState(ic.rearDoor ?? true)
-  const [tieDowns, setTieDownsRaw] = useState(ic.tieDowns ?? ['drings'])
-  const [dRings, setDRings] = useState(ic.dRings ?? {
-    drings: 0,
-    walldrings: 0,
-    floordrings: 0,
+  const [tieDowns, setTieDownsRaw] = useState(() => (ic.tieDowns ? ic.tieDowns.filter(t => t !== 'drings') : []))
+  const [dRings, setDRings] = useState(() => {
+    const initial = ic.dRings ? { ...ic.dRings } : {};
+    delete initial.drings;
+    delete initial.walldrings;
+    const hasFloor = ic.tieDowns?.includes('floordrings');
+    return {
+      floordrings: initial.floordrings !== undefined ? initial.floordrings : (hasFloor ? 1 : 0),
+    };
+  })
+  const [eTracks, setETracks] = useState(() => {
+    const fromIc = ic.eTracks || {};
+    return {
+      wall: fromIc.wall !== undefined ? fromIc.wall : (ic.tieDowns?.includes('wall') ? 1 : 0),
+      floor: fromIc.floor !== undefined ? fromIc.floor : (ic.tieDowns?.includes('floor') ? 1 : 0),
+    };
   })
   const [jacks, setJacksRaw] = useState(ic.jacks ?? [])
 
@@ -320,8 +310,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     rearSpoiler, ladderRacks, sidewallVents, recessedTireBox, interiorTireMount,
     exteriorFinish, exteriorAccessories, frontStyle, roofBuild,
     protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType,
-    spareTire, floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, toolBox, dRings,
-    windows, dRings, acPrep, sideDoorBarLock, driverSideDoor, passengerSideDoor,
+    spareTire, floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, toolBox, dRings, eTracks,
+    windows, acPrep, sideDoorBarLock, driverSideDoor, passengerSideDoor,
     concessionDoor, glassScreen, concessionWidth, concessionHeight
   })
 
@@ -347,7 +337,15 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     //   setSelectedColor('brandywine');
     // }
 
-    setTieDownsRaw(pkgConfig.tieDowns ?? []);
+    const pkgTieDowns = (pkgConfig.tieDowns ?? []).filter(t => t !== 'drings');
+    setTieDownsRaw(pkgTieDowns);
+    setETracks(pkgConfig.eTracks ?? {
+      wall: pkgTieDowns.includes('wall') ? 1 : 0,
+      floor: pkgTieDowns.includes('floor') ? 1 : 0,
+    });
+    setDRings(pkgConfig.dRings ?? {
+      floordrings: pkgTieDowns.includes('floordrings') ? 1 : 0,
+    });
     setSpreadAxle(pkgConfig.spreadAxle ?? false);
     setAxleCapacity(pkgConfig.axleCapacity ?? '3500lb');
     setAxleSuspension(pkgConfig.axleSuspension ?? 'torsion');
@@ -422,6 +420,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     rearDoor, setRearDoor,
     tieDowns, setTieDownsRaw, toggleTieDown,
     dRings, setDRings,
+    eTracks, setETracks,
     jacks, setJacksRaw, toggleJack,
     waterPackage, setWaterPackage,
     bathroom, setBathroom,
@@ -461,7 +460,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
     floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
     electrical, battery, lights, interiorLights, exteriorLights, ledRope, ventilation, climateControl, acPrep, receptacles,
-    rampType, atpRamp, rearDoor, tieDowns, dRings, jacks,
+    rampType, atpRamp, rearDoor, tieDowns, dRings, eTracks, jacks,
     waterPackage, bathroom, awning, sinkPackage,
     angledLights, stairs, vNoseETrack, batteryBox,
     escapeDoor, concessionDoor, glassScreen, generatorBox, concessionWidth, concessionHeight, lShapeCounter, genDoor, winchSystem,

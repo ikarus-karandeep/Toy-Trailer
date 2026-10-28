@@ -81,12 +81,6 @@ export default function ExteriorPanel({ activeSectionTitle }) {
 
   const getBadge = usePackageBadge()
 
-  const isShortTrailer = parseFloat(length) < 23.5
-
-  useEffect(() => {
-    if (isShortTrailer) setSideDoorsType('flatpanel')
-  }, [isShortTrailer])
-
   const show = (title) => {
     if (!activeSectionTitle) return true
     if (activeSectionTitle === 'EXTERIOR ACCESSORIES' && (title === 'LADDER RACKS' || title === 'AWNINGS')) return true

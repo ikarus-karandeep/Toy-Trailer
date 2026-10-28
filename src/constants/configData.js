@@ -235,7 +235,6 @@ export const WALL_INSULATION_OPTIONS = [
 ];
 
 export const CEILING_MATERIAL_OPTIONS = [
-  { id: 'thermaply', label: 'THERMA-PLY', isStandard: true },
   { id: 'white_metal_ceiling', label: 'ALUMINUM INTERIOR CEILING', price: 30, badge: '+$30/LFT', subtext: 'White metal ceiling liner' },
   { id: 'atp_ceiling', label: 'ATP CEILING (DIAMOND PLATE CEILING)', price: null },
 ];
@@ -289,7 +288,7 @@ export const OFF_GRID_POWER_OPTIONS = [
 
 export const INTERIOR_LIGHTING_OPTIONS = [
   { id: '12vleddome',   label: '12V LED DOME LIGHT',                 price: 20  },
-  { id: '12vflatpanel', label: '12V 24" FLAT PANEL LED (2 INCLUDED)', price: 135 },
+  { id: '12vflatpanel', label: '12V 24" FLAT PANEL LED',             price: 135 },
   { id: 'ledrope',      label: 'LED ROPE LIGHTING',                   price: null },
 ];
 
@@ -364,9 +363,7 @@ export const WINDOWS_EGRESS_OPTIONS = [
   { id: 'egress', label: 'EGRESS', price: null },
 ];
 
-export const D_RINGS_OPTIONS = [
-  { id: 'drings', label: 'D-RINGS (4) (6000LBS)' },
-];
+export const D_RINGS_OPTIONS = [];
 
 export const ADDITIONAL_D_RINGS_OPTIONS = [
   { id: 'floordrings', label: 'ADDITIONAL FLOOR D-RINGS + BACKER', price: 23 },

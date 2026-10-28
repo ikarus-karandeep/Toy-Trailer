@@ -15,8 +15,8 @@ export function usePackageTabCounts() {
       case 'spideraluminum': return ctx.wheelType === 'spideraluminum'
       case 'blackout': return ctx.exteriorFinish === 'blackout'
       case 'dropspring': return ctx.axleSuspension === 'dropspring'
-      case '7000lb': return ctx.axleCapacity === '7000lb'
-      case 'drings': return ctx.tieDowns.includes('drings')
+      case 'floordrings':
+      case 'drings': return ctx.tieDowns.includes('drings') || ctx.tieDowns.includes('floordrings') || (ctx.dRings?.floordrings > 0)
       case 'wall': return ctx.tieDowns.includes('wall')
       case 'floor': return ctx.tieDowns.includes('floor')
       case '30amp': return ctx.electrical === '30amp'
@@ -42,6 +42,7 @@ export function usePackageTabCounts() {
       case 'dropspring':
       case '7000lb': return 'SIZE & CAPACITY'
       
+      case 'floordrings':
       case 'drings':
       case 'wall':
       case 'floor':

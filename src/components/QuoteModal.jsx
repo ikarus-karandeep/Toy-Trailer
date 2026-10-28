@@ -41,16 +41,31 @@ export default function QuoteModal({ isOpen, onClose }) {
   const shareUrl = buildConfigShareUrl(ctx, 'quote')
   const configuratorUrl = buildConfigShareUrl(ctx, 'configurator')
 
+  // Derive current quote by merging customer submission metadata with live configuration
+  const currentQuote = submittedQuote ? {
+    ...submittedQuote,
+    trailerSummary: {
+      width: ctx.width,
+      length: ctx.length,
+      color: ctx.selectedColor,
+      packageId: ctx.packageId
+    },
+    quoteData,
+    shareUrl,
+    configuratorUrl,
+    totalPrice: quoteData.grandTotal
+  } : null
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!customerName.trim() || !customerEmail.trim()) return
 
     setIsSubmitting(true)
     setTimeout(() => {
-      const quoteId = `QT-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`
+      const quoteId = submittedQuote?.id || `QT-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`
       const newQuote = {
         id: quoteId,
-        date: new Date().toLocaleDateString('en-US', {
+        date: submittedQuote?.date || new Date().toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
@@ -81,7 +96,7 @@ export default function QuoteModal({ isOpen, onClose }) {
   }
 
   const handleCopyLink = () => {
-    const urlToCopy = submittedQuote ? submittedQuote.shareUrl : shareUrl
+    const urlToCopy = currentQuote ? currentQuote.shareUrl : shareUrl
     navigator.clipboard?.writeText(urlToCopy).then(() => {
       setCopiedLink(true)
       setTimeout(() => setCopiedLink(false), 2500)
@@ -108,11 +123,11 @@ export default function QuoteModal({ isOpen, onClose }) {
           <div className="flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-[#DA634B]" />
             <h2 className="text-xs sm:text-sm font-bold tracking-widest uppercase text-gray-200">
-              {submittedQuote ? 'Itemized Build Quote' : 'Configure & Request Quote'}
+              {currentQuote ? 'Itemized Build Quote' : 'Configure & Request Quote'}
             </h2>
-            {submittedQuote && (
+            {currentQuote && (
               <span className="font-mono text-[11px] text-[#DA634B] bg-[#DA634B]/10 px-2 py-0.5 rounded border border-[#DA634B]/20">
-                {submittedQuote.id}
+                {currentQuote.id}
               </span>
             )}
           </div>
@@ -131,7 +146,7 @@ export default function QuoteModal({ isOpen, onClose }) {
         {/* Modal Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 [scrollbar-width:thin] [scrollbar-color:#333_transparent]">
 
-          {!submittedQuote ? (
+          {!currentQuote ? (
             /* ───────────────────────────────────────────────────────────── */
             /* 1. SUBMISSION FORM VIEW                                        */
             /* ───────────────────────────────────────────────────────────── */
@@ -272,17 +287,17 @@ export default function QuoteModal({ isOpen, onClose }) {
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                         Active Estimate
                       </span>
-                      <span className="text-xs text-gray-400">· {submittedQuote.date}</span>
+                      <span className="text-xs text-gray-400">· {currentQuote.date}</span>
                     </div>
 
                     <div>
                       <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight uppercase">
-                        {submittedQuote.trailerSummary?.width} × {submittedQuote.trailerSummary?.length}' Custom Build
+                        {currentQuote.trailerSummary?.width} × {currentQuote.trailerSummary?.length}' Custom Build
                       </h3>
                       <p className="text-sm text-gray-300 mt-0.5">
-                        Prepared for <strong className="text-white">{submittedQuote.customer?.name || 'Customer'}</strong>
-                        {submittedQuote.customer?.email ? (
-                          <span className="text-gray-400 text-xs font-normal"> ({submittedQuote.customer.email})</span>
+                        Prepared for <strong className="text-white">{currentQuote.customer?.name || 'Customer'}</strong>
+                        {currentQuote.customer?.email ? (
+                          <span className="text-gray-400 text-xs font-normal"> ({currentQuote.customer.email})</span>
                         ) : null}
                         <button
                           type="button"
@@ -296,11 +311,11 @@ export default function QuoteModal({ isOpen, onClose }) {
 
                     <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-gray-400">
                       <span className="bg-[#242424] px-2.5 py-1 rounded-md border border-[#303030] capitalize">
-                        Color: <strong className="text-gray-200">{submittedQuote.trailerSummary?.color}</strong>
+                        Color: <strong className="text-gray-200">{currentQuote.trailerSummary?.color}</strong>
                       </span>
-                      {submittedQuote.trailerSummary?.packageId && (
+                      {currentQuote.trailerSummary?.packageId && (
                         <span className="bg-[#242424] px-2.5 py-1 rounded-md border border-[#303030] capitalize">
-                          Package: <strong className="text-gray-200">{submittedQuote.trailerSummary.packageId.replace('-', ' ')}</strong>
+                          Package: <strong className="text-gray-200">{currentQuote.trailerSummary.packageId.replace('-', ' ')}</strong>
                         </span>
                       )}
                     </div>
@@ -311,13 +326,13 @@ export default function QuoteModal({ isOpen, onClose }) {
                     <div className="text-left lg:text-right">
                       <span className="text-[10px] tracking-widest uppercase font-semibold text-gray-400 block">Total Estimated Price</span>
                       <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                        ${(submittedQuote.totalPrice || ctx.totalPrice).toLocaleString()}
+                        ${currentQuote.totalPrice.toLocaleString()}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                       <button
-                        onClick={() => generateQuotePDF(submittedQuote)}
+                        onClick={() => generateQuotePDF(currentQuote)}
                         className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#DA634B] hover:bg-[#c5573f] text-white text-xs font-bold tracking-wider uppercase transition-all shadow-md active:scale-[0.98]"
                       >
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -393,12 +408,12 @@ export default function QuoteModal({ isOpen, onClose }) {
                     Itemized Specifications & Pricing
                   </h4>
                   <span className="text-[11px] text-gray-500">
-                    {(submittedQuote.quoteData?.categories || quoteData.categories).length} Categories Configured
+                    {currentQuote.quoteData.categories.length} Categories Configured
                   </span>
                 </div>
 
                 <div className="space-y-3">
-                  {(submittedQuote.quoteData?.categories || quoteData.categories).map((cat) => (
+                  {currentQuote.quoteData.categories.map((cat) => (
                     <div key={cat.title} className="bg-[#1a1a1a] border border-[#282828] rounded-xl overflow-hidden shadow-sm">
                       <div className="px-4 py-2.5 bg-[#202020] border-b border-[#292929] flex items-center justify-between">
                         <span className="text-xs font-bold tracking-wider uppercase text-gray-200">
@@ -440,19 +455,19 @@ export default function QuoteModal({ isOpen, onClose }) {
                   <div className="bg-[#202020] p-3 rounded-xl border border-[#2b2b2b]">
                     <span className="text-[10px] text-gray-400 uppercase tracking-wider block font-semibold">Foundation & Build</span>
                     <span className="text-base font-bold text-white mt-1 block">
-                      ${(submittedQuote.quoteData?.pricing?.trailerBuild ?? ctx.pricing?.trailerBuild ?? 0).toLocaleString()}
+                      ${(currentQuote.quoteData?.pricing?.trailerBuild ?? ctx.pricing?.trailerBuild ?? 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="bg-[#202020] p-3 rounded-xl border border-[#2b2b2b]">
                     <span className="text-[10px] text-gray-400 uppercase tracking-wider block font-semibold">Systems & Add-Ons</span>
                     <span className="text-base font-bold text-white mt-1 block">
-                      ${(submittedQuote.quoteData?.pricing?.configurations ?? ctx.pricing?.configurations ?? 0).toLocaleString()}
+                      ${(currentQuote.quoteData?.pricing?.configurations ?? ctx.pricing?.configurations ?? 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="bg-[#202020] p-3 rounded-xl border border-[#2b2b2b]">
                     <span className="text-[10px] text-gray-400 uppercase tracking-wider block font-semibold">Appearance & Style</span>
                     <span className="text-base font-bold text-white mt-1 block">
-                      ${(submittedQuote.quoteData?.pricing?.appearance ?? ctx.pricing?.appearance ?? 0).toLocaleString()}
+                      ${(currentQuote.quoteData?.pricing?.appearance ?? ctx.pricing?.appearance ?? 0).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -463,7 +478,7 @@ export default function QuoteModal({ isOpen, onClose }) {
                     <span className="text-[11px] text-gray-500">Excludes local taxes, registration & delivery</span>
                   </div>
                   <span className="text-2xl sm:text-3xl font-extrabold text-[#DA634B]">
-                    ${(submittedQuote.totalPrice || ctx.totalPrice).toLocaleString()}
+                    ${currentQuote.totalPrice.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -488,7 +503,7 @@ export default function QuoteModal({ isOpen, onClose }) {
                   </button>
 
                   <button
-                    onClick={() => generateQuotePDF(submittedQuote)}
+                    onClick={() => generateQuotePDF(currentQuote)}
                     className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-[#DA634B] hover:bg-[#c5573f] text-white text-xs font-bold tracking-wider uppercase transition-all shadow-md"
                   >
                     Download PDF

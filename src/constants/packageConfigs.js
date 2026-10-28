@@ -17,8 +17,8 @@ export const PACKAGE_BADGES = {
  * Used by panels to show the package badge on pre-selected options.
  */
 export const PACKAGE_OPTION_IDS = {
-  'track-pack': new Set(['rearwingspoiler', 'spideraluminum', 'blackout', 'torsion', '7000lb', 'drings', 'wall', 'floor']),
-  'job-site':   new Set(['30amp', 'drings', 'wall', 'floor', '5000relectric', 'frontbase36', 'frontoverhead16']),
+  'track-pack': new Set(['rearwingspoiler', 'spideraluminum', 'blackout', 'torsion', '7000lb', 'wall', 'floor']),
+  'job-site':   new Set(['30amp', 'wall', 'floor', '5000relectric', 'frontbase36', 'frontoverhead16']),
   'base-camp':  new Set(['50amp', '18kminisplit', '5000relectric', 'frontbase36', 'frontoverhead16', 'white_metal_walls', 'white_metal_ceiling']),
   'no-package': new Set(),
 }
@@ -34,9 +34,10 @@ export const PACKAGE_INITIAL_CONFIGS = {
     angledLights: true,
     // BLACKOUT PKG - EXTERIOR
     exteriorFinish: 'blackout',
-    // FLOOR + WALL E-TRACK + D-RINGS
+    // FLOOR + WALL E-TRACK
     // E-Track IDs: 'wall' and 'floor' (from E_TRACKS_OPTIONS in configData)
-    tieDowns: ['drings', 'wall', 'floor'],
+    tieDowns: ['wall', 'floor'],
+    eTracks: { wall: 1, floor: 1 },
     // SPREAD AXLES W/CORVETTE FENDERS
     spreadAxle: false,
     // 7000LB TORSION
@@ -49,8 +50,9 @@ export const PACKAGE_INITIAL_CONFIGS = {
     cabinets: ['frontbase36', 'frontoverhead16'],
     // ELECTRIC JACKS
     jacks: ['5000relectric'],
-    // FLOOR + WALL E-TRACK + D-RINGS
-    tieDowns: ['drings', 'wall', 'floor'],
+    // FLOOR + WALL E-TRACK
+    tieDowns: ['wall', 'floor'],
+    eTracks: { wall: 1, floor: 1 },
     // 30 AMP ELECTRICAL
     electrical: '30amp',
     // RECESSED TIRE BOX

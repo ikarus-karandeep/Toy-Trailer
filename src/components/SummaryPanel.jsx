@@ -75,7 +75,7 @@ export default function SummaryPanel() {
     const {
       width, length, interiorHeight, axleAngled, axleAtp, axleRating, axleCount, axleSuspension, axleCapacity,
       electrical, battery, lights, toggleLight, ventilation, climateControl,
-      rampType, atpRamp, rearDoor, tieDowns, toggleTieDown, jacks, toggleJack,
+      rampType, atpRamp, rearDoor, tieDowns, toggleTieDown, dRings, setDRings, eTracks, setETracks, jacks, toggleJack,
       waterPackage, setWaterPackage, bathroom, setBathroom, awning, toggleAwning, sinkPackage,
       exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire, setSpareTire,
       floor, walls, ceiling, cabinets, toggleCabinet, toolBox, stairs, setStairs,
@@ -191,10 +191,31 @@ export default function SummaryPanel() {
         if (o) {
           if (id === 'wall' || id === 'floor') {
             const len = parseInt(ctx.length) || 0;
-            items.push({ label: `${len}'x ${o.label}`, price: (o.price || 0) * len, onRemove: () => toggleTieDown(id) });
+            const qty = (ctx.eTracks && typeof ctx.eTracks[id] === 'number' && ctx.eTracks[id] > 0) ? ctx.eTracks[id] : 1;
+            const price = (o.price || 0) * len * qty;
+            const label = qty > 1 ? `${qty} rows (${len}' each) ${o.label}` : `${len}'x ${o.label}`;
+            items.push({
+              label,
+              price,
+              unitPrice: (o.price || 0) * len,
+              qty,
+              onRemove: () => {
+                toggleTieDown(id);
+                if (ctx.setETracks) ctx.setETracks(prev => ({ ...prev, [id]: 0 }));
+              }
+            });
           } else {
             const qty = (ctx.dRings && typeof ctx.dRings[id] === 'number' && ctx.dRings[id] > 0) ? ctx.dRings[id] : 1;
-            items.push({ label: qty > 1 ? `${qty}x ${o.label}` : o.label, price: (o.price || 0) * qty, onRemove: () => toggleTieDown(id) });
+            items.push({
+              label: qty > 1 ? `${qty}x ${o.label}` : o.label,
+              price: (o.price || 0) * qty,
+              unitPrice: o.price || 0,
+              qty,
+              onRemove: () => {
+                toggleTieDown(id);
+                if (ctx.setDRings) ctx.setDRings(prev => ({ ...prev, [id]: 0 }));
+              }
+            });
           }
         }
       })

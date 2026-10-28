@@ -210,8 +210,11 @@ export class BlenderNodes {
             // console.log(`[BlenderNodes] switchMesh → no targetName, hiding all`)
             return false
         }
-        // Target may be a Group (multi-primitive mesh) or a plain Mesh — find by name and show all descendants
-        const target = scene.getObjectByName(targetName)
+        let target = scene.getObjectByName(targetName)
+        if (!target) {
+            const alt = targetName.includes('_') ? targetName.replace(/_/g, ' ') : targetName.replace(/ /g, '_')
+            target = scene.getObjectByName(alt)
+        }
         if (target) {
             // console.log(`[BlenderNodes] switchMesh → found "${targetName}", showing`)
             BlenderNodes._applyWithProxy(scene, target, true)
@@ -242,9 +245,13 @@ export class BlenderNodes {
         console.log(`[BlenderNodes] switchMeshes → active list: [${targetNames.join(', ')}]`)
         let matched = 0
         for (const name of targetNames) {
-            const target = scene.getObjectByName(name)
+            let target = scene.getObjectByName(name)
+            if (!target) {
+                const alt = name.includes('_') ? name.replace(/_/g, ' ') : name.replace(/ /g, '_')
+                target = scene.getObjectByName(alt)
+            }
             if (target) {
-                console.log(`[BlenderNodes] switchMeshes → showing "${name}"`)
+                console.log(`[BlenderNodes] switchMeshes → showing "${target.name}"`)
                 BlenderNodes._applyWithProxy(scene, target, true)
                 matched++
             } else {

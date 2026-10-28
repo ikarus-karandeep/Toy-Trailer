@@ -31,6 +31,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
     cabinets, toggleCabinet, setCabinetsRaw,
     blackoutCabinetDoors, setBlackoutCabinetDoors,
     toolBox, setToolBox,
+    climateControl, setClimateControl,
     length, axleCount, frontStyle,
     bathroom,
     genDoor,
@@ -342,6 +343,13 @@ export default function InteriorPanel({ activeSectionTitle }) {
                     onClick={() => {
                       if (isLocked) return;
                       if (!cabinets.includes(opt.id)) {
+                        // Check if an AC unit is installed
+                        if (climateControl && climateControl !== 'none') {
+                          const proceed = window.confirm("An AC unit is currently installed in this location. Would you like to replace the AC with the overhead cabinet?");
+                          if (!proceed) return;
+                          setClimateControl('none');
+                        }
+
                         // Remove other overhead cabinets when selecting one
                         const overheadIds = OVERHEAD_CABINET_OPTIONS.map(o => o.id);
                         const toRemove = [...overheadIds, 'wallrun16'];
@@ -514,6 +522,13 @@ export default function InteriorPanel({ activeSectionTitle }) {
                     onClick={() => {
                       if (isLocked) return;
                       if (!cabinets.includes(opt.id)) {
+                        // Check if an AC unit is installed
+                        if (climateControl && climateControl !== 'none') {
+                          const proceed = window.confirm("An AC unit is currently installed in this location. Would you like to replace the AC with the overhead cabinet?");
+                          if (!proceed) return;
+                          setClimateControl('none');
+                        }
+
                         const newCabinets = cabinets.filter(c => c !== 'frontoverhead16');
                         setCabinetsRaw([...newCabinets, opt.id]);
                         setFocusedCamera("Overhead_Wall_Run_Cabinet_Camera");
