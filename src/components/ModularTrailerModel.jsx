@@ -1067,10 +1067,11 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     let mappedName = getBlackoutMapped(normOrig);
                     
                     // MAT_Cabinets_Countertop:
-                    // If custom colors or blackout is off, use chrome material on MAT_Cabinets_Countertop
+                    // Apply Cabinet_Countertop material (remove chrome)
                     const isCountertop = mappedName === 'matcabinetscountertop' || 
                         normOrig.startsWith('matcabinetscountertop') || 
                         normOrig.includes('cabinetscountertop') ||
+                        normOrig.includes('cabinetcountertop') ||
                         child.name.toLowerCase().includes('countertop') ||
                         child.name.toLowerCase().includes('counter_top');
 
@@ -1085,20 +1086,16 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                             if (isArray) child.material[i] = blackMat;
                             else child.material = blackMat;
                         } else {
-                            // Chrome material when blackout is off
-                            const chromeDef = MATERIAL_DEFS_NORM.get('chrome');
-                            let chromeMat = chromeDef ? applyMaterialDef(originalMat, chromeDef, staticTextures) : originalMat.clone();
-                            const chromeTex = staticTextures[pathToKey('/Materials/Chrome_BaseColor.png')];
-                            if (chromeTex) {
-                                chromeTex.colorSpace = THREE.SRGBColorSpace;
-                                chromeMat.map = chromeTex;
-                            }
-                            chromeMat.color.set('#FFFFFF');
-                            chromeMat.metalness = 0.95;
-                            chromeMat.roughness = 0.08;
-                            chromeMat.needsUpdate = true;
-                            if (isArray) child.material[i] = chromeMat;
-                            else child.material = chromeMat;
+                            // Apply Cabinet_Countertop material definition
+                            const countertopDef = MATERIAL_DEFS_NORM.get('cabinetcountertop') || MATERIAL_DEFS_NORM.get('matcabinetscountertop');
+                            let countertopMat = countertopDef ? applyMaterialDef(originalMat, countertopDef, staticTextures) : originalMat.clone();
+                            countertopMat.map = null;
+                            countertopMat.color.set(countertopDef?.base_color || '#E7E7E7');
+                            countertopMat.metalness = countertopDef?.metalness !== undefined ? countertopDef.metalness : 1.0;
+                            countertopMat.roughness = countertopDef?.roughness !== undefined ? countertopDef.roughness : 0.3;
+                            countertopMat.needsUpdate = true;
+                            if (isArray) child.material[i] = countertopMat;
+                            else child.material = countertopMat;
                         }
                         return;
                     }
@@ -1138,7 +1135,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                                 atpMat.metalness = 0.85;
                                 atpMat.roughness = 0.15;
                                 atpMat.color.set('#CBCBCB');
-                                atpMat = patchTriplanarMaterial(atpMat, 10);
+                                atpMat = patchTriplanarMaterial(atpMat, 5.5);
                                 atpMat.needsUpdate = true;
                                 if (isArray) child.material[i] = atpMat;
                                 else child.material = atpMat;
@@ -1229,7 +1226,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                             atpMat.metalness = 0.85;
                             atpMat.roughness = 0.15;
                             atpMat.color.set('#CBCBCB');
-                            atpMat = patchTriplanarMaterial(atpMat, 10);
+                            atpMat = patchTriplanarMaterial(atpMat, 5.5);
                             atpMat.needsUpdate = true;
                             next = atpMat;
                         }

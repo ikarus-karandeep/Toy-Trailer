@@ -76,6 +76,8 @@ Object.values(materialData).forEach(componentSlots => {
                 matchingSwatch = swatchesByNormName.get('reflecivestripes') || swatchesByNormName.get('reflectivestripes');
             } else if (normName === 'matrooftrim') {
                 matchingSwatch = swatchesByNormName.get('silverrooftrim');
+            } else if (normName.includes('countertop')) {
+                matchingSwatch = swatchesByNormName.get('cabinetcountertop');
             } else if (!matchingSwatch) {
                 for (const [sNormName, swatch] of swatchesByNormName.entries()) {
                     if (sNormName.includes(baseName)) {
@@ -110,6 +112,10 @@ swatchesByNormName.forEach((swatch, normName) => {
         MATERIAL_DEFS_NORM.set(normName, swatch)
     }
 })
+
+if (swatchesByNormName.has('cabinetcountertop')) {
+    MATERIAL_DEFS_NORM.set('matcabinetscountertop', swatchesByNormName.get('cabinetcountertop'));
+}
 
 // Collect texture paths only from non-special materials so textures owned by
 // special effects (e.g. Simple_Noise owned by the MAT_Shell effect) are not
