@@ -4215,7 +4215,7 @@
       }
     }
   },
-  "D-Rings": {
+  "D-Rings Pair 1": {
     "0": {
       "material_name": "Standard Silver_Rim",
       "base_color": "#898989",
@@ -4363,6 +4363,20 @@
       "metalness": "//..\\Textures\\Interior decals_Metallic.jpg",
       "normal": "//..\\Textures\\Interior decals_Normal.jpg",
       "alpha": "//..\\Textures\\Interior decals_Opacity.jpg",
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "D-Rings Pair 2": {
+    "0": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#898989",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
       "emission": {
         "color": "#FFFFFF",
         "strength": 0.0
@@ -8009,7 +8023,83 @@
       }
     }
   },
-  "Tongue Mounted Generator Box": {
+  "Tongue Mounted Generator Box Flat Front": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#898989",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Tongue Mounted Generator Box V-Nose": {
+    "0": {
+      "material_name": "Black Alloy",
+      "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",
+      "roughness": "//..\\Textures\\Black_Alloy_Roughness.png",
+      "metalness": "//..\\Textures\\Black_Alloy_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "1": {
+      "material_name": "Chrome",
+      "base_color": "//..\\Textures\\Chrome_BaseColor.png",
+      "roughness": "//..\\Textures\\Chrome_Roughness.png",
+      "metalness": "//..\\Textures\\Chrome_Metallic.png",
+      "normal": false,
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    },
+    "2": {
+      "material_name": "Standard Silver_Rim",
+      "base_color": "#898989",
+      "roughness": "//..\\Textures\\Black Steel_Rim_Roughness.jpg",
+      "metalness": "//..\\Textures\\Black Steel_Rim_Metallic.jpg",
+      "normal": "//..\\Textures\\Black Steel_Rim_Normal.jpg",
+      "alpha": 1.0,
+      "emission": {
+        "color": "#FFFFFF",
+        "strength": 0.0
+      }
+    }
+  },
+  "Tongue Mounted Generator Box Extended V-Nose": {
     "0": {
       "material_name": "Black Alloy",
       "base_color": "//..\\Textures\\Black_Alloy_BaseColor.png",

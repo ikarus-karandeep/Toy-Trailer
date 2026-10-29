@@ -178,23 +178,22 @@ const FRONT_STYLE_ADDON_MESH_MAP = {
 
 // ── Shell color textures: config selectedColor → BaseColor file ──────────────
 const SHELL_TEXTURES = {
-    pink:       '/Materials/Pink_Shell_BaseColor.jpg',
-    pewter:     '/Materials/Pewter_Shell_BaseColor.jpg',
-    emerald:    '/Materials/Emerald Green_Shell_BaseColor.jpg',
-    brandywine: '/Materials/Brandy Wine_Shell_BaseColor.jpg',
-    sierra:     '/Materials/Sierra Desert_Shell_BaseColor.jpg',
-    orange:     '/Materials/Orange_Shell_BaseColor.jpg',
-    purple:     '/Materials/Purple_Shell_BaseColor.jpg',
-    yellow:     '/Materials/Yellow_Shell_BaseColor.jpg',
-    black:      '/Materials/Blackl_BaseColor.jpg',
-    white:      '/Materials/White_BaseColor.jpg',
-    electricblue:      '/Materials/Electric Blue_BaseColor.jpg',
-    charcolgrey:      '/Materials/Charcoal Grey_BaseColor.jpg',
-    silver:      '/Materials/Sillver_BaseColor.jpg',
-    red:      '/Materials/Red_BaseColor.jpg',
-    indigoblue:      '/Materials/Indigo Blue_BaseColor.jpg',
-   electricgreen:      '/Materials/Electric Green_BaseColor.jpg',
-
+    white:            '/Materials/White_Shell_BaseColor.jpg',
+    orangeconcession: '/Materials/Orange Concession_Shell_BaseColor.jpg',
+    sierra:           '/Materials/Arizona Beige_Shell_BaseColor.jpg',
+    electricblue:     '/Materials/Deep Blue_Shell_BaseColor.jpg',
+    red:              '/Materials/Red_Shell_BaseColor.jpg',
+    charcolgrey:      '/Materials/Charcoal Gray_Shell_BaseColor.jpg',
+    black:            '/Materials/Black_Shell_BaseColor.jpg',
+    matteblack:       '/Materials/Black_Shell_BaseColor.jpg',
+    electricgreen:    '/Materials/Electric Green_Shell_BaseColor.jpg',
+    indigoblue:       '/Materials/Indigo Blue_Shell_BaseColor.jpg',
+    silver:           '/Materials/Silver Frost_Shell_BaseColor.jpg',
+    yellow:           '/Materials/Penske Yellow_Shell_BaseColor.jpg',
+    penskeyellow2:    '/Materials/Penske Yellow 2_Shell_BaseColor.jpg',
+    pewter:           '/Materials/Pewter_Shell_BaseColor.jpg',
+    brandywine:       '/Materials/Barandywine_Shell_BaseColor.jpg',
+    orange:           '/Materials/Orange_Shell_BaseColor.jpg',
 }
 
 // ── Extended Triple Tongue: 2 mesh variants (one per front style) ───────────
@@ -234,7 +233,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     const isBlackout = config.exteriorFinish === 'blackout';
     const isCabinetBlackout = config.blackoutCabinetDoors;
     const getBlackoutMapped = (normName) => {
-        if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'whiteceremiccabinet')) return 'blackceremiccabinet';
+        if (isCabinetBlackout && (normName === 'matcabinets' || normName === 'whiteceremiccabinet' || normName.includes('cabinetscountertop'))) return 'blackceremiccabinet';
         if (!isBlackout) {
             if (normName === 'matrooftrim') return 'silverrooftrim';
             return normName;
@@ -294,6 +293,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
     })
     const dirtyRef = useRef(true)
     const activeScenesRef = useRef([])
+    const dRingPair1OffsetRef = useRef(0)
+    const dRingPair2OffsetRef = useRef(0)
     
     // Force a re-render after initial mount to bypass WebGL first-frame texture upload bugs
     const [isMounted, setIsMounted] = useState(false);
@@ -531,12 +532,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     if (useTriplanar && !isDecal) {
                         // Clone base material preserving GLB PBR properties, then patch shader
                         const base = mat.clone()
+                        const isMatte = config.selectedColor === 'matteblack';
                         base.map         = texture
                         base.color       = new THREE.Color(0xffffff)
                         base.metalness   = 0.0
                         base.normalMap   = simpleNoise
                         base.normalScale = new THREE.Vector2(0.07, 0.07)
-                        base.roughness   = 0.05
+                        base.roughness   = isMatte ? 0.85 : 0.05
                         const patched = patchTriplanarMaterial(base, 0.06)
                         if (isArray) child.material[i] = patched
                         else child.material = patched
@@ -549,12 +551,13 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                             }
                             next.color.set(isBlackout ? '#1a1a1a' : shellHex)
                         } else {
+                            const isMatte = config.selectedColor === 'matteblack';
                             next.map         = texture
                             next.color       = new THREE.Color(0xffffff)
                             next.metalness   = 0.0
                             next.normalMap   = simpleNoise
                             next.normalScale = new THREE.Vector2(0.07, 0.07)
-                            next.roughness   = 0.05
+                            next.roughness   = isMatte ? 0.85 : 0.05
                         }
                         if (isArray) child.material[i] = next
                         else child.material = next
@@ -840,7 +843,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // console.log(`[DEBUG RIMS] Total rim meshes updated:`, rimMeshesFound);
     }, [config.wheelType, wheels, axleConfig, addons, staticTextures, isBlackout, invalidate])
 
-    // ── Apply Floor Overlay material to MAT_Interior_Flooring ───────────────
+    // ── Apply Floor Overlay material to MAT_Interior_Flooring & MAT_Wheels_Wells ───
     useEffect(() => {
         let floorMatName = 'matinteriorflooring' // Default fallback to original JSON definition
         if (config.floorOverlay === 'plywood') floorMatName = 'plywoodinteriorwalls'
@@ -851,6 +854,12 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
         const def = MATERIAL_DEFS_NORM.get(floorMatName)
         if (!def) return
+
+        let wheelWellMatName = floorMatName
+        if (config.atpWheelWells) {
+            wheelWellMatName = 'atpinteriorflooring'
+        }
+        const wheelWellDef = MATERIAL_DEFS_NORM.get(wheelWellMatName) || def
 
         const allScenes = [
             base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
@@ -867,15 +876,17 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 mats.forEach((mat, i) => {
                     if (!mat) return
                     const normalized = mat.name?.replace(/[\s_]+/g, '').toLowerCase()
-                    if (normalized !== 'matinteriorflooring') return
+                    const isFloor = normalized === 'matinteriorflooring'
+                    const isWheelWell = normalized.startsWith('matwheelswells') || normalized.includes('wheelswells')
+                    if (!isFloor && !isWheelWell) return
                     
-                    let next = applyMaterialDef(mat, def, staticTextures)
-                    
-                    const nameLower = child.name.toLowerCase()
+                    const targetDef = isWheelWell ? wheelWellDef : def
+                    let next = applyMaterialDef(mat, targetDef, staticTextures)
                     
                     let scale = 5
-                    if (config.floorOverlay === 'coin') scale = 15
-                    else if (config.floorOverlay === 'tile') scale = 2
+                    const activeOverlay = isWheelWell && config.atpWheelWells ? 'atp' : config.floorOverlay
+                    if (activeOverlay === 'coin') scale = 15
+                    else if (activeOverlay === 'tile') scale = 2
                     
                     next = patchTriplanarMaterial(next, scale)
                     
@@ -887,7 +898,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             })
         })
         invalidate()
-    }, [config.floorOverlay, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures, invalidate])
+    }, [config.floorOverlay, config.atpWheelWells, base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish, tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor, escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo, staticTextures, invalidate])
 
     // ── Apply Ceiling material to MAT_Interior_Cealing ───────────────
     useEffect(() => {
@@ -984,6 +995,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         ]
         allScenes.forEach(scene => {
             const isGooseneckScene = (scene === frontStyle) && config.frontStyle && config.frontStyle.toLowerCase().includes('gooseneck');
+            const isCabinetsScene = (scene === cabinetsGLB);
             
             scene.traverse(child => {
                 if (!child.isMesh) return
@@ -1051,20 +1063,96 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                         else child.material = toolboxMat;
                         return;
                     }
-
-                    let mappedName = getBlackoutMapped(normMatName(originalMat.name));
+                    const normOrig = normMatName(originalMat.name);
+                    let mappedName = getBlackoutMapped(normOrig);
                     
-                    // User wanted MAT_Cabinets to retain its raw GLB material
-                    if (mappedName === 'matcabinets') {
-                        if (isArray) child.material[i] = originalMat
-                        else child.material = originalMat
+                    // MAT_Cabinets_Countertop:
+                    // If custom colors or blackout is off, use chrome material on MAT_Cabinets_Countertop
+                    const isCountertop = mappedName === 'matcabinetscountertop' || 
+                        normOrig.startsWith('matcabinetscountertop') || 
+                        normOrig.includes('cabinetscountertop') ||
+                        child.name.toLowerCase().includes('countertop') ||
+                        child.name.toLowerCase().includes('counter_top');
+
+                    if (isCountertop) {
+                        if (isCabinetBlackout) {
+                            const blackDef = MATERIAL_DEFS_NORM.get('blackceremiccabinet') || MATERIAL_DEFS_NORM.get('blackceremic');
+                            let blackMat = blackDef ? applyMaterialDef(originalMat, blackDef, staticTextures) : originalMat.clone();
+                            blackMat.color.set('#2B2B2B');
+                            blackMat.roughness = 0.25;
+                            blackMat.metalness = 0.1;
+                            blackMat.needsUpdate = true;
+                            if (isArray) child.material[i] = blackMat;
+                            else child.material = blackMat;
+                        } else {
+                            // Chrome material when blackout is off
+                            const chromeDef = MATERIAL_DEFS_NORM.get('chrome');
+                            let chromeMat = chromeDef ? applyMaterialDef(originalMat, chromeDef, staticTextures) : originalMat.clone();
+                            const chromeTex = staticTextures[pathToKey('/Materials/Chrome_BaseColor.png')];
+                            if (chromeTex) {
+                                chromeTex.colorSpace = THREE.SRGBColorSpace;
+                                chromeMat.map = chromeTex;
+                            }
+                            chromeMat.color.set('#FFFFFF');
+                            chromeMat.metalness = 0.95;
+                            chromeMat.roughness = 0.08;
+                            chromeMat.needsUpdate = true;
+                            if (isArray) child.material[i] = chromeMat;
+                            else child.material = chromeMat;
+                        }
+                        return;
+                    }
+
+                    // MAT_Cabinets: apply custom cabinetColor texture/tint when useCustomCabinetColor is true, else use ATP material
+                    const isCabinetMeshOrScene = isCabinetsScene || child.name.toLowerCase().includes('cabinet');
+                    if (mappedName === 'matcabinets' || (isCabinetMeshOrScene && normOrig === 'matcabinets')) {
+                        if (isCabinetMeshOrScene && !isCabinetBlackout) {
+                            if (config.useCustomCabinetColor) {
+                                const cabinetColorOpt = COLOR_OPTIONS.find(c => c.id === (config.cabinetColor || 'white'));
+                                const cabinetHex = cabinetColorOpt ? cabinetColorOpt.color : '#ffffff';
+                                const tintedMat = originalMat.clone();
+                                const cabinetTex = shellTextures[config.cabinetColor || 'white'];
+                                if (cabinetTex) {
+                                    cabinetTex.colorSpace = THREE.SRGBColorSpace;
+                                    tintedMat.map = cabinetTex;
+                                    tintedMat.color.set('#FFFFFF');
+                                } else {
+                                    tintedMat.map = null;
+                                    tintedMat.color.set(cabinetHex);
+                                }
+                                if (config.cabinetColor === 'matteblack') {
+                                    tintedMat.roughness = 0.85;
+                                    tintedMat.metalness = 0.0;
+                                } else {
+                                    tintedMat.roughness = 0.25;
+                                    tintedMat.metalness = 0.1;
+                                }
+                                tintedMat.needsUpdate = true;
+                                if (isArray) child.material[i] = tintedMat;
+                                else child.material = tintedMat;
+                            } else {
+                                const atpDef = MATERIAL_DEFS_NORM.get('atpsilver') || MATERIAL_DEFS_NORM.get('matatp');
+                                let atpMat = atpDef ? applyMaterialDef(originalMat, atpDef, staticTextures) : originalMat.clone();
+                                if (normalMap) atpMat.normalMap = normalMap;
+                                atpMat.normalScale = new THREE.Vector2(1.0, -1.0);
+                                atpMat.metalness = 0.85;
+                                atpMat.roughness = 0.15;
+                                atpMat.color.set('#CBCBCB');
+                                atpMat = patchTriplanarMaterial(atpMat, 10);
+                                atpMat.needsUpdate = true;
+                                if (isArray) child.material[i] = atpMat;
+                                else child.material = atpMat;
+                            }
+                        } else {
+                            if (isArray) child.material[i] = originalMat;
+                            else child.material = originalMat;
+                        }
                         return;
                     }
 
                     // Rear door interior surface materials (MAT_Rear_Door_ATP on Barn Door and Ramp, and Rubber_Flooring on Ramp):
                     // - When "ATP/RTP RAMP & FLAP" toggle is OFF: interior door surfaces use Plywood by default.
                     // - When "ATP/RTP RAMP & FLAP" toggle is ON: interior door surfaces reflect the trailer's floor finish (RTP / COIN / TILE / ATP).
-                    const normOrig = normMatName(originalMat.name);
                     const isRearDoorSurface = mappedName === 'matreardooratp' || normOrig === 'matreardooratp' || 
                         ((child.name.toLowerCase().includes('ramp') || child.name.toLowerCase().includes('barn')) && (mappedName === 'rubberflooring' || normOrig === 'rubberflooring'));
 
@@ -1100,19 +1188,53 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                     
                     let next = applyMaterialDef(originalMat, def, staticTextures)
                     
-                    // Match world UV/Triplanar scale to floor or walls
+                    // Match world UV/Triplanar scale to floor
                     if (isRearDoorSurface) {
-                        if (!config.atpRamp) {
-                            next = patchTriplanarMaterial(next);
-                        } else {
-                            let scale = 5;
-                            if (config.floorOverlay === 'coin') scale = 15;
-                            else if (config.floorOverlay === 'tile') scale = 2;
-                            next = patchTriplanarMaterial(next, scale);
-                        }
+                        let scale = 5;
+                        const activeOverlay = config.atpRamp ? config.floorOverlay : 'plywood';
+                        if (activeOverlay === 'coin') scale = 15;
+                        else if (activeOverlay === 'tile') scale = 2;
+                        next = patchTriplanarMaterial(next, scale);
                         next.needsUpdate = true;
                     }
                     
+                    // Tint White_Ceremic cabinets by user's chosen cabinetColor or apply ATP material
+                    if (isCabinetMeshOrScene && !isCabinetBlackout && (mappedName === 'whiteceremiccabinet' || mappedName === 'whiteceremic')) {
+                        if (config.useCustomCabinetColor) {
+                            const cabinetColorOpt = COLOR_OPTIONS.find(c => c.id === (config.cabinetColor || 'white'));
+                            const cabinetHex = cabinetColorOpt ? cabinetColorOpt.color : '#ffffff';
+                            next = next.clone();
+                            const cabinetTex = shellTextures[config.cabinetColor || 'white'];
+                            if (cabinetTex) {
+                                cabinetTex.colorSpace = THREE.SRGBColorSpace;
+                                next.map = cabinetTex;
+                                next.color.set('#FFFFFF');
+                            } else {
+                                next.map = null;
+                                next.color.set(cabinetHex);
+                            }
+                            if (config.cabinetColor === 'matteblack') {
+                                next.roughness = 0.85;
+                                next.metalness = 0.0;
+                            } else {
+                                next.roughness = 0.25;
+                                next.metalness = 0.1;
+                            }
+                            next.needsUpdate = true;
+                        } else {
+                            const atpDef = MATERIAL_DEFS_NORM.get('atpsilver') || MATERIAL_DEFS_NORM.get('matatp');
+                            let atpMat = atpDef ? applyMaterialDef(originalMat, atpDef, staticTextures) : originalMat.clone();
+                            if (normalMap) atpMat.normalMap = normalMap;
+                            atpMat.normalScale = new THREE.Vector2(1.0, -1.0);
+                            atpMat.metalness = 0.85;
+                            atpMat.roughness = 0.15;
+                            atpMat.color.set('#CBCBCB');
+                            atpMat = patchTriplanarMaterial(atpMat, 10);
+                            atpMat.needsUpdate = true;
+                            next = atpMat;
+                        }
+                    }
+
                     // Scale the cabinet wood texture so the grain isn't stretched
                     if (mappedName === 'cabinetwood' && next.map) {
                         next.map = next.map.clone();
@@ -1166,7 +1288,7 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         })
         invalidate()
     }, [
-        config.frontStyle, config.atpRamp, config.floorOverlay, staticTextures, isBlackout, config.blackoutCabinetDoors,
+        config.frontStyle, config.atpRamp, config.floorOverlay, staticTextures, shellTextures, isBlackout, config.blackoutCabinetDoors, config.useCustomCabinetColor, config.cabinetColor,
         base, baseMeshes, frontStyle, rearDoors, sideDoors, extFinish,
         tongue, cabinetsGLB, awning, bathroom, spoiler, gullwingDoor,
         escapeDoorScene, concessionDoorScene, sinkScene, windowsScene, axleConfig, axle, wheels, addons, cargo,
@@ -1682,7 +1804,15 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
             }
         }
 
-        // Ladder Racks: instanced via useMemo (Top_Supports mesh is the template, never shown directly)
+        // Ladder Racks: show the existing paired mesh from the GLB directly
+        if (config.ladderRacks) {
+            if (config.ladderRacks === 'lowprofile') {
+                activeAddonMeshes.push('Low Profile Ladder Rack')
+                activeAddonMeshes.push('Low_Profile_Ladder_Rack')
+            } else {
+                activeAddonMeshes.push('Top_Supports')
+            }
+        }
 
         // console.log(`[DEBUG Ventilation] Current config.ventilation:`, config.ventilation)
         if (config.sidewallVents || config.ventilation === '2waysidewall') {
@@ -1891,18 +2021,142 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         // console.log('=========================');
 
         const activeCargoMeshes = []
-        if (config.tieDowns?.includes('drings') || config.tieDowns?.includes('floordrings') || (config.dRings?.floordrings > 0)) {
+        const dRingQty = (config.dRings && typeof config.dRings.floordrings === 'number')
+            ? config.dRings.floordrings
+            : ((config.tieDowns?.includes('drings') || config.tieDowns?.includes('floordrings')) ? 1 : 0);
+
+        // ── Measure the real rear-most edge (max X / green line) of any active front obstacle ──
+        let maxObstacleX = -Infinity;
+        let obstacleMeshName = '';
+
+        if (cabinetsGLB && activeCabinetMeshes.length > 0) {
+            cabinetsGLB.traverse(child => {
+                if (child.isMesh && child.visible && child.geometry) {
+                    const nameLower = child.name.toLowerCase();
+                    // Skip overhead cabinets hanging high above the floor
+                    if (nameLower.includes('overhead')) return;
+                    // Exclude side wheel wall cabinets or ceiling cabinets
+                    if (nameLower.includes('wheel') || nameLower.includes('ceiling')) return;
+
+                    if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
+                    child.updateWorldMatrix(true, false);
+                    const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld);
+                    if (box.max.x > maxObstacleX) {
+                        maxObstacleX = box.max.x;
+                        obstacleMeshName = child.name;
+                    }
+                }
+            });
+        }
+
+        if (sinkScene && config.sinkPackage === 'sink') {
+            sinkScene.traverse(child => {
+                if (child.isMesh && child.visible && child.geometry) {
+                    if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
+                    child.updateWorldMatrix(true, false);
+                    const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld);
+                    if (box.max.x > maxObstacleX) {
+                        maxObstacleX = box.max.x;
+                        obstacleMeshName = child.name;
+                    }
+                }
+            });
+        }
+
+        if (addons && lShapeActive) {
+            addons.traverse(child => {
+                if (child.isMesh && child.visible && child.geometry && child.name.toLowerCase().includes('l_shape_counter')) {
+                    if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
+                    child.updateWorldMatrix(true, false);
+                    const box = child.geometry.boundingBox.clone().applyMatrix4(child.matrixWorld);
+                    if (box.max.x > maxObstacleX) {
+                        maxObstacleX = box.max.x;
+                        obstacleMeshName = child.name;
+                    }
+                }
+            });
+        }
+
+        // D-Rings Pair 1 front edge in Cargo & Tie-Downs.glb is at X = -4.258m (center at -4.1675m)
+        // Pair 2 front edge is at X = -0.410m (center at -0.3195m)
+        // Target: Place Pair 1 front edge 2 feet (0.6096m) past the obstacle's rear-most edge (the green line)
+        const DRING_MARGIN_M = 2 * 0.3048; // 2 feet (0.6096m / 24 inches) past obstacle edge
+        const hasFrontObstacle = maxObstacleX > -Infinity;
+        const dRingPair1OffsetX = hasFrontObstacle
+            ? Math.max(0, (maxObstacleX + DRING_MARGIN_M) - (-4.258))
+            : 0;
+
+        // When Pair 1 changes position, place Pair 2 at exactly 10 feet 6 inches (3.2004m) distance from Pair 1
+        const TEN_FT_SIX_IN_M = 10.5 * 0.3048; // 3.2004m (10 feet 6 inches)
+        const PAIR1_DEFAULT_CENTER_X = -4.1675;
+        const PAIR2_DEFAULT_CENTER_X = -0.3195;
+        const dRingPair2OffsetX = (hasFrontObstacle && dRingPair1OffsetX > 0)
+            ? (PAIR1_DEFAULT_CENTER_X + dRingPair1OffsetX + TEN_FT_SIX_IN_M) - PAIR2_DEFAULT_CENTER_X
+            : 0;
+
+        dRingPair1OffsetRef.current = dRingPair1OffsetX;
+        dRingPair2OffsetRef.current = dRingPair2OffsetX;
+
+        const actualDistanceM = (-0.3195 + dRingPair2OffsetX) - (-4.1675 + dRingPair1OffsetX);
+        console.log(`[DEBUG DRINGS OBSTACLE] obstacleMesh: "${obstacleMeshName}", maxObstacleX (green line): ${maxObstacleX.toFixed(4)}m, margin: ${DRING_MARGIN_M.toFixed(4)}m, targetDringFrontX: ${(maxObstacleX + DRING_MARGIN_M).toFixed(4)}m, dRingPair1OffsetX: ${dRingPair1OffsetX.toFixed(4)}m`);
+        console.log(`[DEBUG DRINGS 10.5FT] Pair 1 Center: ${(-4.1675 + dRingPair1OffsetX).toFixed(4)}m | Pair 2 Center: ${(-0.3195 + dRingPair2OffsetX).toFixed(4)}m | Distance: ${actualDistanceM.toFixed(4)}m (${(actualDistanceM / 0.3048).toFixed(2)} ft)`);
+
+        if (dRingQty > 0) {
             cargo.traverse(child => {
                 if (child.isMesh) {
                     const nameLower = child.name.toLowerCase();
-                    if (nameLower.includes('d-ring') || nameLower.includes('d_ring') || nameLower.includes('d ring') || nameLower.includes('dring')) {
-                        activeCargoMeshes.push(child.name)
+                    const isDRing = nameLower.includes('d-ring') || nameLower.includes('d_ring') || nameLower.includes('d ring') || nameLower.includes('dring');
+                    if (isDRing) {
+                        const isPair2 = nameLower.includes('pair 2') || nameLower.includes('pair2') || nameLower.includes('pair_2');
+                        if (isPair2) {
+                            if (dRingQty >= 2) activeCargoMeshes.push(child.name);
+                        } else {
+                            if (dRingQty >= 1) activeCargoMeshes.push(child.name);
+                        }
                     }
                 }
             })
         }
         // We'll hide the static E-Tracks and generate them dynamically instead to multiply the mesh
         BlenderNodes.switchMeshes(cargo, activeCargoMeshes)
+
+        // Apply position offset to D-Rings Pair 1 & Pair 2 meshes and their cameras
+        cargo.traverse(child => {
+            const nameLower = child.name.toLowerCase();
+            const isDRing = nameLower.includes('d-ring') || nameLower.includes('d_ring') || nameLower.includes('d ring') || nameLower.includes('dring');
+            const isPair1 = nameLower.includes('pair 1') || nameLower.includes('pair1') || nameLower.includes('pair_1');
+            const isPair2 = nameLower.includes('pair 2') || nameLower.includes('pair2') || nameLower.includes('pair_2');
+
+            if (isDRing && isPair1) {
+                if (child.isMesh && !nameLower.includes('camera')) {
+                    const prevX = child.position.x;
+                    child.position.x = dRingPair1OffsetX;
+                    child.updateMatrix();
+                    child.updateMatrixWorld(true);
+                    console.log(`[DEBUG DRINGS MESH] "${child.name}": prevX=${prevX.toFixed(4)}, newX=${child.position.x.toFixed(4)}, offset=${dRingPair1OffsetX.toFixed(4)}m, visible=${child.visible}`);
+                } else if (nameLower.includes('camera')) {
+                    const prevCamX = child.position.x;
+                    child.position.x = -2.6167 + dRingPair1OffsetX;
+                    child.updateMatrix();
+                    child.updateMatrixWorld(true);
+                    console.log(`[DEBUG DRINGS CAMERA] "${child.name}": prevX=${prevCamX.toFixed(4)}, newX=${child.position.x.toFixed(4)}, offset=${dRingPair1OffsetX.toFixed(4)}m`);
+                }
+            } else if (isDRing && isPair2) {
+                if (child.isMesh && !nameLower.includes('camera')) {
+                    const prevX = child.position.x;
+                    child.position.x = dRingPair2OffsetX;
+                    child.updateMatrix();
+                    child.updateMatrixWorld(true);
+                    console.log(`[DEBUG DRINGS MESH] "${child.name}": prevX=${prevX.toFixed(4)}, newX=${child.position.x.toFixed(4)}, offset=${dRingPair2OffsetX.toFixed(4)}m, visible=${child.visible}`);
+                } else if (nameLower.includes('camera')) {
+                    const prevCamX = child.position.x;
+                    child.position.x = 1.2293 + dRingPair2OffsetX;
+                    child.updateMatrix();
+                    child.updateMatrixWorld(true);
+                    console.log(`[DEBUG DRINGS CAMERA] "${child.name}": prevX=${prevCamX.toFixed(4)}, newX=${child.position.x.toFixed(4)}, offset=${dRingPair2OffsetX.toFixed(4)}m`);
+                }
+            }
+        });
 
         // Axle Count determines the number of tyres (tandem vs triple)
         const axleCountStr = config.axleCount === 'triple' ? '3' : '2';
@@ -2072,72 +2326,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     activeScenesRef.current = activeScenes
 
-    const ladderRacksGroup = useMemo(() => {
-        if (!config.ladderRacks) return null
-
-        const isLowProfile = config.ladderRacks === 'lowprofile'
-        let rackTemplate = null
-        addons.traverse(child => {
-            if (!child.isMesh || child.name.toLowerCase().includes('proxy')) return
-            const cName = child.name.toLowerCase()
-            if (isLowProfile) {
-                if (cName.includes('low') && cName.includes('ladder')) rackTemplate = child
-            } else {
-                if (child.name === 'Top_Supports' || (cName.includes('support') && !cName.includes('low'))) rackTemplate = child
-            }
-        })
-        if (!rackTemplate) return null
-
-        // Trailer length calculation
-        const BASE_LENGTH_FT = 32
-        const BASE_CLAMP_FT = 27
-        const EXCESS_FACTOR = 1.000
-        const targetOffset1 = Math.min(lengthFt, BASE_CLAMP_FT)
-        const targetOffset2 = Math.max(lengthFt - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
-        const baseOffset1 = Math.min(BASE_LENGTH_FT, BASE_CLAMP_FT)
-        const baseOffset2 = Math.max(BASE_LENGTH_FT - BASE_CLAMP_FT, 0) * EXCESS_FACTOR
-        const deltaLength = ((targetOffset1 + targetOffset2) - (baseOffset1 + baseOffset2)) * FEET_TO_M
-        const trueRearX = -(BASE_LENGTH_FT * FEET_TO_M + deltaLength)
-
-        // Physical span of the racks along the trailer (with a slight 0.3m / 1ft inset matching the Offset node)
-        const offsetMeters = 0.3
-        const totalSpan = Math.abs(trueRearX) - offsetMeters
-
-        // Fixed 6ft gap between each rack
-        const RACK_SPACING_M = 6 * FEET_TO_M
-        const count = Math.max(2, Math.floor(totalSpan / RACK_SPACING_M) + 1)
-
-        // We must divide the local points by the object's scale, because setting instanced.scale
-        // scales the ENTIRE object including the point coordinates!
-        const sx = rackTemplate.scale.x || 1
-        const points = new Float32Array(count * 3)
-
-        for (let i = 0; i < count; i++) {
-            // Distribute along +X locally at fixed 6ft intervals.
-            // The template has a 180-degree rotation which will perfectly flip this array backwards over the roof of the trailer!
-            points[i * 3]     = (i * RACK_SPACING_M) / sx
-            points[i * 3 + 1] = 0
-            points[i * 3 + 2] = 0
-        }
-
-        const pointsGeometry = new THREE.BufferGeometry()
-        pointsGeometry.setAttribute('position', new THREE.BufferAttribute(points, 3))
-
-        const instanced = BlenderNodes.instanceOnPoints(pointsGeometry, rackTemplate)
-        instanced.position.copy(rackTemplate.position)
-        instanced.rotation.copy(rackTemplate.rotation)
-        instanced.scale.copy(rackTemplate.scale)
-
-        // The template's material is replaced asynchronously in a useEffect.
-        // Link the instanced mesh's material to the template's material property 
-        // so it receives the textured material when it loads.
-        Object.defineProperty(instanced, 'material', {
-            get: () => rackTemplate.material,
-            set: (v) => { rackTemplate.material = v }
-        })
-
-        return <primitive object={instanced} />
-    }, [addons, lengthFt, config.ladderRacks])
 
     const spareTireData = useMemo(() => {
         if (!config.spareTire) return null;
@@ -2380,7 +2568,8 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
 
     useEffect(() => {
         dirtyRef.current = true
-    }, [activeScenes, config.tieDowns, hasCabinet, visibilityVersion, config.windows, config.windowSizes])
+        invalidate()
+    }, [activeScenes, config.tieDowns, config.cabinets, config.sinkPackage, config.dRings, hasCabinet, visibilityVersion, config.windows, config.windowSizes, invalidate])
 
     useFrame(() => {
         if (!store.current.has('_globalZCenter')) return
@@ -2784,15 +2973,39 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
         const smallPointsGeometry = new THREE.BufferGeometry()
         smallPointsGeometry.setAttribute('position', new THREE.BufferAttribute(smallPoints, 3))
 
-        // ── Globally enforce D-Rings visibility across all scenes ──
-        const showDRings = config.tieDowns?.includes('drings') || config.tieDowns?.includes('floordrings') || (config.dRings?.floordrings > 0)
+        // ── Globally enforce D-Rings visibility and offset across all scenes ──
+        const dRingQtyEnforce = (config.dRings && typeof config.dRings.floordrings === 'number')
+            ? config.dRings.floordrings
+            : ((config.tieDowns?.includes('drings') || config.tieDowns?.includes('floordrings')) ? 1 : 0);
+
         activeScenesRef.current.forEach(scene => {
             scene.traverse(child => {
-                if (child.isMesh) {
-                    const nameLower = child.name.toLowerCase();
-                    if (nameLower.includes('d-ring') || nameLower.includes('d_ring') || nameLower.includes('d ring') || nameLower.includes('dring')) {
-                        child.visible = showDRings
+                const nameLower = child.name.toLowerCase();
+                const isDRing = nameLower.includes('d-ring') || nameLower.includes('d_ring') || nameLower.includes('d ring') || nameLower.includes('dring');
+                const isPair1 = nameLower.includes('pair 1') || nameLower.includes('pair1') || nameLower.includes('pair_1');
+                const isPair2 = nameLower.includes('pair 2') || nameLower.includes('pair2') || nameLower.includes('pair_2');
+                if (isDRing && child.isMesh && !nameLower.includes('camera')) {
+                    if (isPair2) {
+                        child.visible = dRingQtyEnforce >= 2;
+                        child.position.x = dRingPair2OffsetRef.current;
+                        child.updateMatrix();
+                        child.updateMatrixWorld(true);
+                    } else if (isPair1) {
+                        child.visible = dRingQtyEnforce >= 1;
+                        child.position.x = dRingPair1OffsetRef.current;
+                        child.updateMatrix();
+                        child.updateMatrixWorld(true);
                     }
+                }
+                if (isDRing && isPair1 && nameLower.includes('camera')) {
+                    child.position.x = -2.6167 + dRingPair1OffsetRef.current;
+                    child.updateMatrix();
+                    child.updateMatrixWorld(true);
+                }
+                if (isDRing && isPair2 && nameLower.includes('camera')) {
+                    child.position.x = 1.2293 + dRingPair2OffsetRef.current;
+                    child.updateMatrix();
+                    child.updateMatrixWorld(true);
                 }
             })
         })
@@ -3145,7 +3358,6 @@ export default function ModularTrailerModel({ widthFt, lengthFt, heightFt, envir
                 {activeScenes.map(scene => (
                     <primitive key={scene.uuid} object={scene} />
                 ))}
-                {ladderRacksGroup}
                 {spareTireData && (
                     <WheelInstances 
                         ref={spareTireMountRef}

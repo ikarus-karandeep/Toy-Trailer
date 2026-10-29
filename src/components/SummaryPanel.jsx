@@ -275,7 +275,12 @@ export default function SummaryPanel() {
             const isVNose = ctx.frontStyle && ctx.frontStyle !== 'flatfront';
             if (!isVNose) price = 0;
           }
-          items.push({ label: o.label, price, onRemove: () => toggleCabinet(id) });
+          const subtext = ctx.blackoutCabinetDoors
+            ? 'Blackout finish'
+            : ctx.useCustomCabinetColor
+            ? `Custom Color: ${find(COLOR_OPTIONS, ctx.cabinetColor)?.label || 'White'}`
+            : 'Standard ATP Diamond Plate finish';
+          items.push({ label: o.label, price, subtext, onRemove: () => toggleCabinet(id) });
         }
       })
       const tb = find(TOOL_BOX_OPTIONS, toolBox); if (tb && tb.id !== 'none') items.push({ label: `TOOL BOX: ${tb.label}`, price: tb.price })
@@ -334,6 +339,7 @@ export default function SummaryPanel() {
       }
       const col = find(COLOR_OPTIONS, selectedColor); if (col) items.push({ label: `COLOR: ${col.label}` })
       const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories); if (ea && !ea.isStandard) items.push({ label: ea.label, price: ea.price, subtext: ea.subtext, onRemove: () => setExteriorAccessories(null) })
+      if (radioPackageSpeaker) items.push({ label: 'RADIO PACKAGE SPEAKER', subtext: '4 interior speakers + 2 exterior speakers package', onRemove: () => setRadioPackageSpeaker(false) })
       if (ctx.awning && ctx.awning.length > 0) {
         const awningLen = ctx.awning[0];
         const aOpt = find(AWNING_OPTIONS, awningLen);

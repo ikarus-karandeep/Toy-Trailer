@@ -61,7 +61,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
 
   // Exterior
   const [exteriorFinish, setExteriorFinish] = useState(ic.exteriorFinish ?? null)
-  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'brandywine')
+  const [selectedColor, setSelectedColor] = useState(ic.selectedColor ?? 'black')
   const [exteriorAccessories, setExteriorAccessories] = useState(ic.exteriorAccessories && ic.exteriorAccessories !== 'rearwings' ? ic.exteriorAccessories : null)
   const [frontStyle, setFrontStyle] = useState(ic.frontStyle ?? 'vnose24')
   const [roofBuild, setRoofBuild] = useState(ic.roofBuild ?? 'onepieceroof')
@@ -88,12 +88,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
   const [atpWheelWells, setAtpWheelWells] = useState(ic.atpWheelWells ?? false)
   const [cabinets, setCabinetsRaw] = useState(ic.cabinets ?? ['frontbase36'])
   const [blackoutCabinetDoors, setBlackoutCabinetDoors] = useState(ic.blackoutCabinetDoors ?? false)
-
-  useEffect(() => {
-    if (exteriorFinish === 'blackout') {
-      setBlackoutCabinetDoors(true)
-    }
-  }, [exteriorFinish])
+  const [useCustomCabinetColor, setUseCustomCabinetColor] = useState(ic.useCustomCabinetColor ?? false)
+  const [cabinetColor, setCabinetColor] = useState(ic.cabinetColor ?? 'white')
 
   const [toolBox, setToolBox] = useState(ic.toolBox ?? 'none')
   const [leftSide, setLeftSide] = useState(ic.leftSide ?? true)
@@ -353,7 +349,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     setJacksRaw(pkgConfig.jacks ?? []);
     setElectrical(pkgConfig.electrical ?? '110v8space');
     setRecessedTireBox(pkgConfig.recessedTireBox ?? false);
-    setClimateControl(pkgConfig.climateControl ?? 'wirebrace');
+    setClimateControl(pkgConfig.climateControl ?? 'none');
     setWalls(pkgConfig.walls ?? 'white_metal_walls');
     setCeiling(pkgConfig.ceiling ?? 'white_metal_ceiling');
   }, []);
@@ -402,6 +398,8 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     atpWheelWells, setAtpWheelWells,
     cabinets, setCabinetsRaw, toggleCabinet,
     blackoutCabinetDoors, setBlackoutCabinetDoors,
+    useCustomCabinetColor, setUseCustomCabinetColor,
+    cabinetColor, setCabinetColor,
     toolBox, setToolBox,
     leftSide, setLeftSide,
     rightSide, setRightSide,
@@ -458,7 +456,7 @@ export function ConfiguratorProvider({ children, initialConfig: ic = {} }) {
     width, length, frameSize, axleCount, axleSuspension, axleCapacity, interiorHeight,
     spreadAxle, axleAngled, axleAtp, axleRating,
     exteriorFinish, selectedColor, exteriorAccessories, frontStyle, sideDoorsType, driverSideDoor, passengerSideDoor, sideDoorBarLock, roofBuild, protectionType, protectionSize, frontProtection, lugType, tireSize, wheelType, spareTire,
-    floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, blackoutCabinetDoors, toolBox, leftSide, rightSide,
+    floor, floorOverlay, floorInsulation, walls, ceiling, wallInsulation, ceilingInsulation, atpWheelWells, cabinets, blackoutCabinetDoors, useCustomCabinetColor, cabinetColor, toolBox, leftSide, rightSide,
     electrical, battery, lights, interiorLights, exteriorLights, ledRope, ventilation, climateControl, acPrep, receptacles,
     rampType, atpRamp, rearDoor, tieDowns, dRings, eTracks, jacks,
     waterPackage, bathroom, awning, sinkPackage,

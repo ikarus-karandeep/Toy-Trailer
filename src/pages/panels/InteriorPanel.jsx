@@ -15,12 +15,16 @@ import {
   WALL_RUN_OPTIONS,
   FULL_HEIGHT_CABINET_OPTIONS,
   WHEEL_WALL_CABINET_OPTIONS,
-  TOOL_BOX_OPTIONS
+  TOOL_BOX_OPTIONS,
+  ROOFTOP_AC_OPTIONS,
+  MINI_SPLIT_OPTIONS,
+  COLOR_OPTIONS
 } from '../../constants/configData'
 import OptionSection from '../../components/OptionSection'
 import OptionPill from '../../components/OptionPill'
 import DetailedOptionCard from '../../components/DetailedOptionCard'
 import ToggleSwitch from '../../components/ToggleSwitch'
+import ColorSwatch from '../../components/ColorSwatch'
 
 export default function InteriorPanel({ activeSectionTitle }) {
   const {
@@ -30,6 +34,8 @@ export default function InteriorPanel({ activeSectionTitle }) {
     ceiling, setCeiling,
     cabinets, toggleCabinet, setCabinetsRaw,
     blackoutCabinetDoors, setBlackoutCabinetDoors,
+    useCustomCabinetColor, setUseCustomCabinetColor,
+    cabinetColor, setCabinetColor,
     toolBox, setToolBox,
     climateControl, setClimateControl,
     length, axleCount, frontStyle,
@@ -67,12 +73,17 @@ export default function InteriorPanel({ activeSectionTitle }) {
   const hasSinkConflict = sinkPackage === 'sink';
   const hasBathroom = bathroom && bathroom !== 'none';
   const hasFullHeightConflict = hasPassengerDoor || hasBathroom || parseFloat(length) < 24;
+  const isACUnitInstalled = Boolean(climateControl && climateControl !== 'none' && [...ROOFTOP_AC_OPTIONS, ...MINI_SPLIT_OPTIONS].some(opt => opt.id === climateControl));
 
 
 
   useEffect(() => {
     let changed = false;
     let next = [...cabinets];
+    if (sinkPackage === 'sink' && (next.includes('wallrun36') || next.includes('frontbase36'))) {
+      next = next.filter(c => c !== 'wallrun36' && c !== 'frontbase36');
+      changed = true;
+    }
     if (next.includes('frontbase36') && next.includes('wallrun36')) {
       next = next.filter(c => c !== 'wallrun36');
       changed = true;
@@ -84,7 +95,13 @@ export default function InteriorPanel({ activeSectionTitle }) {
     if (changed) {
       setCabinetsRaw(next);
     }
-  }, [cabinets])
+  }, [cabinets, sinkPackage])
+
+  useEffect(() => {
+    if (!cabinets.includes('frontbase36') && toolBox && toolBox !== 'none') {
+      setToolBox('none');
+    }
+  }, [cabinets, toolBox, setToolBox])
 
   return (
     <div 
@@ -164,6 +181,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                   label={opt.label}
                   price={opt.price} badge={opt.badge}
                   image={opt.image}
+                  keepTextColorOnSelect={opt.keepTextColorOnSelect || opt.id === 'plywood' || opt.id === 'tile'}
                   isSelected={floorOverlay === opt.id}
                   onClick={() => setFloorOverlay(opt.id === floorOverlay ? 'plywood' : opt.id)}
                 />
@@ -344,7 +362,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                       if (isLocked) return;
                       if (!cabinets.includes(opt.id)) {
                         // Check if an AC unit is installed
-                        if (climateControl && climateControl !== 'none') {
+                        if (isACUnitInstalled) {
                           const proceed = window.confirm("An AC unit is currently installed in this location. Would you like to replace the AC with the overhead cabinet?");
                           if (!proceed) return;
                           setClimateControl('none');
@@ -377,6 +395,47 @@ export default function InteriorPanel({ activeSectionTitle }) {
               }}
             />
           </div>
+
+          {!blackoutCabinetDoors && (
+            <div className="space-y-3">
+              <ToggleSwitch
+                label="Use Custom Colors"
+                subtext="Enable to select custom colors, or use standard ATP diamond plate finish"
+                checked={useCustomCabinetColor}
+                onChange={(val) => {
+                  setUseCustomCabinetColor(val);
+                  setFocusedCamera("Front_Cabinets_Camera");
+                }}
+              />
+
+              {useCustomCabinetColor && (
+                <div className="bg-[#1a1a1a] rounded-2xl border border-[#2a2a2a] p-4">
+                  <div className="flex justify-center mb-4">
+                    <span className="border border-gray-500 rounded-full px-5 py-1.5 text-gray-300 text-[11px] font-medium tracking-widest uppercase">
+                      Cabinet Colors
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 gap-3">
+                    {COLOR_OPTIONS.map((opt) => (
+                      <ColorSwatch
+                        key={opt.id}
+                        id={opt.id}
+                        label={opt.label}
+                        color={opt.color}
+                        image={opt.image}
+                        isSelected={(cabinetColor || 'white') === opt.id}
+                        onClick={() => {
+                          setCabinetColor(opt.id);
+                          setFocusedCamera("Front_Cabinets_Camera");
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <p className='border-t border-[#5D5E60]'></p>
 
           <div className="mb-4">
@@ -455,7 +514,10 @@ export default function InteriorPanel({ activeSectionTitle }) {
               {WALL_RUN_OPTIONS.filter((opt) => opt.id === 'wallrun36').map((opt) => {
                 let isLocked = false;
                 let reason = null;
-                if (parseFloat(length) < 24) {
+                if (hasSinkConflict) {
+                  isLocked = true;
+                  reason = `${opt.label} cabinet is disabled because the Sink Package is currently applied.`;
+                } else if (parseFloat(length) < 24) {
                   isLocked = true;
                   reason = `${opt.label} cabinet is disabled for trailers under 24ft length.`;
                 } else if (hasWallRunConflict) {
@@ -523,7 +585,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
                       if (isLocked) return;
                       if (!cabinets.includes(opt.id)) {
                         // Check if an AC unit is installed
-                        if (climateControl && climateControl !== 'none') {
+                        if (isACUnitInstalled) {
                           const proceed = window.confirm("An AC unit is currently installed in this location. Would you like to replace the AC with the overhead cabinet?");
                           if (!proceed) return;
                           setClimateControl('none');
@@ -546,7 +608,7 @@ export default function InteriorPanel({ activeSectionTitle }) {
         </OptionSection>
       )}
 
-      {show('CABINETS') && (
+      {show('CABINETS') && cabinets.includes('frontbase36') && (
         <OptionSection title="BUILT - IN TOOL CABINET">
           <ToggleSwitch
             label="INCLUDE TOOL CABINET"

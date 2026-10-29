@@ -8,8 +8,42 @@ export default function QuoteModal({ isOpen, onClose }) {
   const [customerName, setCustomerName] = useState('')
   const [customerEmail, setCustomerEmail] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
+  const [phoneError, setPhoneError] = useState('')
   const [customerNotes, setCustomerNotes] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const formatPhoneNumber = (val) => {
+    if (val.startsWith('+')) {
+      return '+' + val.slice(1).replace(/[^0-9 \-]/g, '').slice(0, 16)
+    }
+    let digits = val.replace(/\D/g, '')
+    if (!digits) return ''
+    if (digits.length === 11 && digits.startsWith('1')) {
+      digits = digits.slice(1)
+    }
+    digits = digits.slice(0, 10)
+    if (digits.length <= 3) return digits
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`
+  }
+
+  const handlePhoneChange = (e) => {
+    const formatted = formatPhoneNumber(e.target.value)
+    setCustomerPhone(formatted)
+    const digits = formatted.replace(/\D/g, '')
+    if (digits.length === 0 || digits.length >= 10) {
+      setPhoneError('')
+    }
+  }
+
+  const handlePhoneBlur = () => {
+    const digits = customerPhone.replace(/\D/g, '')
+    if (customerPhone.trim() && digits.length < 10) {
+      setPhoneError('Please enter a valid 10-digit phone number')
+    } else {
+      setPhoneError('')
+    }
+  }
   const [submittedQuote, setSubmittedQuote] = useState(() => {
     if (typeof window !== 'undefined' && window.location.hash === '#quote') {
       const qd = getItemizedQuote(ctx)
@@ -59,6 +93,12 @@ export default function QuoteModal({ isOpen, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!customerName.trim() || !customerEmail.trim()) return
+
+    const digits = customerPhone.replace(/\D/g, '')
+    if (customerPhone.trim() && digits.length < 10) {
+      setPhoneError('Please enter a valid 10-digit phone number')
+      return
+    }
 
     setIsSubmitting(true)
     setTimeout(() => {
@@ -213,11 +253,17 @@ export default function QuoteModal({ isOpen, onClose }) {
                     </label>
                     <input
                       type="tel"
-                      placeholder="(555) 000-0000"
+                      inputMode="tel"
+                      maxLength={12}
+                      placeholder="555-000-0000"
                       value={customerPhone}
-                      onChange={(e) => setCustomerPhone(e.target.value)}
-                      className="w-full bg-[#181818] border border-[#333] focus:border-[#DA634B] rounded-xl px-4 py-3 text-sm text-white outline-none transition-colors"
+                      onChange={handlePhoneChange}
+                      onBlur={handlePhoneBlur}
+                      className={`w-full bg-[#181818] border ${phoneError ? 'border-red-500 focus:border-red-500' : 'border-[#333] focus:border-[#DA634B]'} rounded-xl px-4 py-3 text-sm text-white outline-none transition-colors`}
                     />
+                    {phoneError && (
+                      <p className="text-xs text-red-400 mt-1">{phoneError}</p>
+                    )}
                   </div>
                 </div>
 
@@ -297,7 +343,10 @@ export default function QuoteModal({ isOpen, onClose }) {
                       <p className="text-sm text-gray-300 mt-0.5">
                         Prepared for <strong className="text-white">{currentQuote.customer?.name || 'Customer'}</strong>
                         {currentQuote.customer?.email ? (
-                          <span className="text-gray-400 text-xs font-normal"> ({currentQuote.customer.email})</span>
+                          <span className="text-gray-400 text-xs font-normal"> · {currentQuote.customer.email}</span>
+                        ) : null}
+                        {currentQuote.customer?.phone ? (
+                          <span className="text-gray-400 text-xs font-normal"> · {currentQuote.customer.phone}</span>
                         ) : null}
                         <button
                           type="button"

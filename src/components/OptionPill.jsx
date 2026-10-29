@@ -20,6 +20,7 @@ export default function OptionPill({
   packageBadge = null,
   image = null,
   fullWidth = false,
+  keepTextColorOnSelect = false,
 }) {
   const [tooltipPos, setTooltipPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
   const [showMobileReason, setShowMobileReason] = useState(false);
@@ -82,7 +83,7 @@ export default function OptionPill({
           : disabled
             ? 'border-[#3a3a3a]/50 text-[#7a7a7a]/50 bg-[#282828]/50 cursor-not-allowed'
             : isSelected
-              ? 'border-[#DA634B] text-[#DA634B] bg-transparent cursor-pointer'
+              ? `border-[#DA634B] ${keepTextColorOnSelect ? 'text-gray-300 hover:text-white' : 'text-[#DA634B]'} bg-transparent cursor-pointer`
               : 'border-[#5C5C5C] text-gray-300 bg-[#282828] hover:border-[#7a7a7a] hover:text-white cursor-pointer'
       }`}
       style={{
@@ -168,7 +169,7 @@ export default function OptionPill({
         {!isStandard && !isLocked && (price != null || badge != null) && quantity === undefined && (
           <span className={`flex-shrink-0 font-normal text-[12px] lg:text-[14px] ${
              isSelected
-              ? 'text-[#DA634B]'
+              ? (keepTextColorOnSelect ? 'text-gray-300' : 'text-[#DA634B]')
               : ''
           }`}>
             · {badge ? badge : formatPrice(price)}

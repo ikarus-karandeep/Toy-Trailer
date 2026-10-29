@@ -1,6 +1,6 @@
 export const PANEL_SECTIONS = {
   'SIZE & CAPACITY': ['WIDTH', 'LENGTH', 'FRAME SIZE', 'INTERIOR HEIGHT', 'SPREAD AXLE W/ CORVETTE FENDERS', 'AXLE SUSPENSION', 'AXLE COUNT', 'AXLE CAPACITY'],
-  'EXTERIOR': ['EXTERIOR FINISH', 'EXTERIOR ACCESSORIES', 'AWNINGS', 'FRONT STYLE', 'ROOF BUILD', 'LADDER RACKS', 'TRAILER PROTECTION (SIDES & REAR)', 'TRAILER PROTECTION (FRONT)', 'WHEELS AND FINISHING'],
+  'EXTERIOR': ['EXTERIOR FINISH', 'EXTERIOR ACCESSORIES', 'RADIO PACKAGE SPEAKER', 'AWNINGS', 'FRONT STYLE', 'ROOF BUILD', 'LADDER RACKS', 'TRAILER PROTECTION (SIDES & REAR)', 'TRAILER PROTECTION (FRONT)', 'WHEELS AND FINISHING'],
   'INTERIOR': ['PIT PACK', 'FLOOR', 'FLOOR INSULATION', 'WALLS', 'WALL INSULATION', 'CEILING', 'CABINETS', 'WALL RUN', 'SPARE TIRE'],
   'SYSTEMS': ['ELECTRICAL', 'LIGHTS', 'CLIMATE CONTROL'],
   'LOADING': ['REAR ENTRANCE', 'SIDE DOOR', 'ESCAPE DOOR', 'WINDOWS', 'TIE DOWNS (MULTI-CHOICE)', 'ELECTRIC TONGUE JACK', 'STABILIZERS'],
@@ -120,21 +120,22 @@ export const AWNING_OPTIONS = [
 ];
 
 export const COLOR_OPTIONS = [
-  { id: 'white',        label: 'WHITE',          color: '#ffffff',  image: '/white.png' },
-  { id: 'black',        label: 'BLACK',          color: '#1a1a1a',  image: '/black.png' },
-  { id: 'charcolgrey',  label: 'CHARCOAL GREY',  color: '#555b63',  image: '/charcol grey.png' },
-  { id: 'silver',       label: 'SILVER',         color: '#b0b8c1',  image: '/Silver.png' },
-  { id: 'red',          label: 'RED',            color: '#cf1a1a',  image: '/red.png' },
-  { id: 'indigoblue',   label: 'INDIGO BLUE',    color: '#3f4aad',  image: '/indigo blue.png' },
-  { id: 'yellow',       label: 'YELLOW',         color: '#c8a800',  image: '/Yellow.png' },
-  { id: 'orange',       label: 'ORANGE',         color: '#e07820',  image: '/Orange.png' },
-  { id: 'electricblue', label: 'ELECTRIC BLUE',  color: '#0080ff',  image: '/electric blue.png' },
-  { id: 'electricgreen',label: 'ELECTRIC GREEN', color: '#1a8c2a',  image: '/electric green.png' },
-  { id: 'sierra',       label: 'SAHARA DESERT',  color: '#c49a5a',  image: '/sahara desert.png' },
-  { id: 'brandywine',   label: 'BRANDY WINE',    color: '#7a1f30',  image: '/Brandy Wine.png' },
-  { id: 'pink',         label: 'PINK',           color: '#d4357a',  image: '/Pink.png' },
-  { id: 'emerald',      label: 'EMERALD GREEN',  color: '#3a8c5c',  image: '/Emerald Green.png' },
-  { id: 'purple',       label: 'PURPLE',         color: '#6b2fa0',  image: '/Purple.png' },
+  { id: 'white',            label: 'WHITE',             color: '#ffffff',  image: '/white.png' },
+  { id: 'orangeconcession', label: 'ORANGE CONCESSION', color: '#e66b1e',  image: '/Orange.png' },
+  { id: 'sierra',           label: 'ARIZONA BEIGE',     color: '#c49a5a',  image: '/sahara desert.png' },
+  { id: 'electricblue',     label: 'DEEP BLUE',         color: '#183c6d',  image: '/electric blue.png' },
+  { id: 'red',              label: 'RED',               color: '#cf1a1a',  image: '/red.png' },
+  { id: 'charcolgrey',      label: 'CHARCOAL GRAY',     color: '#555b63',  image: '/charcol grey.png' },
+  { id: 'black',            label: 'BLACK',             color: '#1a1a1a',  image: '/black.png' },
+  { id: 'matteblack',       label: 'MATTE BLACK',       color: '#242424',  image: '/black.png' },
+  { id: 'electricgreen',    label: 'ELECTRIC GREEN',    color: '#1a8c2a',  image: '/electric green.png' },
+  { id: 'indigoblue',       label: 'INDIGO BLUE',       color: '#3f4aad',  image: '/indigo blue.png' },
+  { id: 'silver',           label: 'SILVER FROST',      color: '#b0b8c1',  image: '/Silver.png' },
+  { id: 'yellow',           label: 'PENSKE YELLOW',     color: '#c8a800',  image: '/Yellow.png' },
+  { id: 'penskeyellow2',    label: 'PENSKE YELLOW 2',   color: '#e29b1d',  image: '/Yellow.png' },
+  { id: 'pewter',           label: 'PEWTER',            color: '#8f9296',  image: '/pewter.svg' },
+  { id: 'brandywine',       label: 'BRANDYWINE',        color: '#7a1f30',  image: '/Brandy Wine.png' },
+  { id: 'orange',           label: 'ORANGE',            color: '#e07820',  image: '/Orange.png' },
 ];
 
 
@@ -220,10 +221,10 @@ export const FLOOR_MATERIAL_OPTIONS = [
 ];
 
 export const FLOOR_OVERLAY_OPTIONS = [
-  { id: 'plywood', label: 'PLYWOOD', isStandard: true },
+  { id: 'plywood', label: 'PLYWOOD', isStandard: true, image: '/plywood.png', keepTextColorOnSelect: true },
   { id: 'rtp', label: 'RTP', price: 35, badge: '+$35/LFT', subtext: 'Rubber tread plate over plywood', packageBadge: 'Race / Contractor', image: '/RTP.png' },
   { id: 'coin', label: 'COIN', price: 35, badge: '+$35/LFT', subtext: 'Coin pattern over plywood', packageBadge: 'Race / Contractor', image: '/coin.png' },
-  { id: 'tile', label: 'TILE FLOOR', price: 440, image: '/Tile floor.png' },
+  { id: 'tile', label: 'TILE FLOOR', price: 440, image: '/Tile floor.png', keepTextColorOnSelect: true },
 ];
 
 export const FLOOR_INSULATION_OPTIONS = [

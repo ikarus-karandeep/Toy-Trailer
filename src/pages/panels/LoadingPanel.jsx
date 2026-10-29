@@ -378,7 +378,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
                       updateQuantity(setDRings, opt.id, clamped)
                       if (clamped === 0 && tieDowns.includes(opt.id)) toggleTieDown(opt.id)
                       if (clamped > 0 && !tieDowns.includes(opt.id)) toggleTieDown(opt.id)
-                      if (clamped > 0) setFocusedCamera("D-Rings Camera")
+                      if (clamped === 1) setFocusedCamera("D-Rings Pair 1 Camera")
+                      else if (clamped === 2) setFocusedCamera("D-Rings Pair 2 Camera")
                     }}
                     onClick={() => {
                       const isCurrentlyActive = qty > 0 || tieDowns.includes(opt.id)
@@ -386,7 +387,8 @@ export default function LoadingPanel({ activeSectionTitle }) {
                       updateQuantity(setDRings, opt.id, newValue)
                       if (newValue === 0 && tieDowns.includes(opt.id)) toggleTieDown(opt.id)
                       if (newValue > 0 && !tieDowns.includes(opt.id)) toggleTieDown(opt.id)
-                      if (newValue > 0) setFocusedCamera("D-Rings Camera")
+                      if (newValue === 1) setFocusedCamera("D-Rings Pair 1 Camera")
+                      else if (newValue === 2) setFocusedCamera("D-Rings Pair 2 Camera")
                     }}
                   />
                 )

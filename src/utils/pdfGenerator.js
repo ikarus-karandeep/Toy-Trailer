@@ -236,11 +236,6 @@ export function generateQuotePDF(quote) {
     doc.setFontSize(7.5)
     doc.setTextColor(140, 140, 140)
     doc.text(
-      'Toy Trailers · Built For Performance & Durability · Toll Free: 1-800-555-0199',
-      margin,
-      pageHeight - 8
-    )
-    doc.text(
       `Page ${i} of ${totalPages}`,
       pageWidth - margin,
       pageHeight - 8,

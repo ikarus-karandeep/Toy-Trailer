@@ -1,5 +1,5 @@
 export default function ColorSwatch({ id, label, color, image, isSelected, onClick, disabled }) {
-  const isLightLabel = /white|silver/i.test(label)
+  const isLightLabel = /white|silver|yellow/i.test(label)
 
   return (
     <button
@@ -53,9 +53,7 @@ export default function ColorSwatch({ id, label, color, image, isSelected, onCli
             lineHeight: 1.25,
             fontSize: 'clamp(11px, 2vw, 14px)',
             letterSpacing: '0.08em',
-            // textShadow: isLightLabel
-            //   ? '0 1px 4px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.7)'
-            //   : '0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.7)',
+            textShadow: 'none',
           }}
         >
           {label}

@@ -22,14 +22,14 @@ export const CONFIG_DEFAULTS = {
   width: '8.5ft', length: '32', frameSize: '6in', axleCount: 'tandem',
   axleSuspension: 'torsion', axleCapacity: '7000lb', interiorHeight: '8ft6',
   spreadAxle: false, axleAngled: false, axleAtp: false,
-  exteriorFinish: null, selectedColor: 'brandywine', exteriorAccessories: null,
+  exteriorFinish: null, selectedColor: 'black', exteriorAccessories: null,
   frontStyle: 'vnose24', roofBuild: 'onepieceroof',
   protectionType: null, protectionSize: '24', frontProtection: 'polishedcaps',
   lugType: '5lug', tireSize: '15', wheelType: 'standardsilver', spareTire: false,
   sideDoorsType: 'flatpanel', driverSideDoor: 'none', passengerSideDoor: '36x72', sideDoorBarLock: false,
   floor: '34plywood', floorOverlay: 'plywood', floorInsulation: null, walls: 'white_metal_walls',
   ceiling: 'white_metal_ceiling', wallInsulation: null, ceilingInsulation: null, atpWheelWells: false,
-  cabinets: ['frontbase36'], blackoutCabinetDoors: false, toolBox: 'none', leftSide: true, rightSide: true,
+  cabinets: ['frontbase36'], blackoutCabinetDoors: false, useCustomCabinetColor: false, cabinetColor: 'white', toolBox: 'none', leftSide: true, rightSide: true,
   electrical: 'none', battery: '12vbatterybox', lights: ['dome', 'racing'],
   interiorLights: { '12vleddome': 1, '12vflatpanel': 0 }, exteriorLights: [],
   ledRope: false, ventilation: 'none', climateControl: 'none', acPrep: false,
@@ -180,6 +180,7 @@ export function getItemizedQuote(ctx) {
 
   const ea = find(EXTERIOR_ACCESSORIES_OPTIONS, exteriorAccessories)
   if (ea && !ea.isStandard) appearanceItems.push({ label: ea.label, price: ea.price, subtext: ea.subtext })
+  if (ctx.radioPackageSpeaker) appearanceItems.push({ label: 'RADIO PACKAGE SPEAKER', subtext: '4 interior speakers + 2 exterior speakers package', price: 0 })
 
   if (ctx.awning && ctx.awning.length > 0) {
     const aOpt = find(AWNING_OPTIONS, ctx.awning[0])
@@ -296,7 +297,14 @@ export function getItemizedQuote(ctx) {
   if (cabinets && cabinets.length > 0) {
     cabinets.forEach(id => {
       const c = find(CABINET_OPTIONS, id)
-      if (c && !c.isStandard) interiorItems.push({ label: c.label, price: c.price })
+      if (c && !c.isStandard) {
+        const subtext = ctx.blackoutCabinetDoors
+          ? 'Blackout finish'
+          : ctx.useCustomCabinetColor
+          ? `Custom Color: ${find(COLOR_OPTIONS, ctx.cabinetColor)?.label || 'White'}`
+          : 'Standard ATP Diamond Plate finish';
+        interiorItems.push({ label: c.label, price: c.price, subtext })
+      }
     })
   }
 

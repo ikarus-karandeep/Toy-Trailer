@@ -38,10 +38,12 @@ const SPECIAL_MATERIALS = new Set([
     'matinteriorwalls',
     'matatp',
     'matatpuvscale',
+    'matwheelswells',
 ])
 
 function isSpecialName(name) {
-    return SPECIAL_MATERIALS.has(normMatName(name))
+    const norm = normMatName(name)
+    return SPECIAL_MATERIALS.has(norm) || norm.startsWith('matwheelswells')
 }
 
 // Deduplicated material definitions — two maps for different lookup styles.

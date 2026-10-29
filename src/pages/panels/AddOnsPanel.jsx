@@ -21,7 +21,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
     bathroom, setBathroom, 
     generatorBox, setGeneratorBox,
     toolBox, setToolBox,
-    radioPackageSpeaker, setRadioPackageSpeaker,
     sinkPackage, setSinkPackage,
     batteryBox, setBatteryBox,
     lShapeCounter, setLShapeCounter,
@@ -69,8 +68,7 @@ export default function AddOnsPanel({ activeSectionTitle }) {
         'BUILT - IN TOOL CABINET', 
         'TONGUE MOUNTED GENERATOR BOX', 
         'ATP BATTERY BOX ON TONGUE', 
-        'L-SHAPE COUNTER/HIDDEN GENERATOR BOX', 
-        'RADIO PACKAGE SPEAKER'
+        'L-SHAPE COUNTER/HIDDEN GENERATOR BOX'
       ].includes(title)
     }
     return activeSectionTitle === title
@@ -364,20 +362,6 @@ export default function AddOnsPanel({ activeSectionTitle }) {
       )}
 
 
-      {show('RADIO PACKAGE SPEAKER') && (
-        <div className="contents">
-          <OptionSection title="RADIO PACKAGE SPEAKER">
-            <ToggleSwitch
-              label="INCLUDE RADIO PACKAGE SPEAKER"
-              checked={radioPackageSpeaker}
-              onChange={(val) => {
-                setRadioPackageSpeaker(val);
-                if (val) setFocusedCamera("Radio Package Speaker Camera");
-              }}
-            />
-          </OptionSection>
-        </div>
-      )}
     </>
   )
 }

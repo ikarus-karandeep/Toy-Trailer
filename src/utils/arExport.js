@@ -141,8 +141,8 @@ function extractGroupGeometry(geo, group) {
 function processMaterial(mat) {
   if (!mat) return mat
 
-  // 1. Decal: alphaMap-only → merge into RGBA canvas texture on MeshBasicMaterial
-  //    MeshBasicMaterial is required to bypass Apple Quick Look lit-shader transparency bug.
+  // 1. Decal: alphaMap-only → merge into RGBA canvas texture on MeshStandardMaterial
+  //    Must set transparent: true for Apple Quick Look / USDZ export (otherwise Quick Look treats it as opaque black).
   if (mat.alphaMap && !mat.map) {
     const img = mat.alphaMap.image
     if (img) {
@@ -158,9 +158,19 @@ function processMaterial(mat) {
       const R = mat.color.r * 255, G = mat.color.g * 255, B = mat.color.b * 255
       for (let i = 0; i < data.length; i += 4) {
         const a = data[i]
-        // Standard mask: a > 128 is opaque (logo), a < 128 is transparent (background)
-        if (a > 128) { data[i]=R; data[i+1]=G; data[i+2]=B; data[i+3]=255 }
-        else        { data[i]=0; data[i+1]=0; data[i+2]=0; data[i+3]=0 }
+        // Standard mask: a > 128 is opaque (logo/detail), a <= 128 is transparent (background)
+        if (a > 128) {
+          data[i] = R
+          data[i + 1] = G
+          data[i + 2] = B
+          data[i + 3] = 255
+        } else {
+          // Retain RGB color with alpha 0 to avoid dark borders due to bilinear texture filtering
+          data[i] = R
+          data[i + 1] = G
+          data[i + 2] = B
+          data[i + 3] = 0
+        }
       }
       ctx.putImageData(imgData, 0, 0)
 
@@ -171,8 +181,62 @@ function processMaterial(mat) {
       tex.wrapT = mat.alphaMap.wrapT
 
       const newMat = new THREE.MeshStandardMaterial({
-        name: mat.name, map: tex, color: 0xffffff,
-        transparent: false, alphaTest: 0.5, side: THREE.DoubleSide,
+        name: mat.name,
+        map: tex,
+        color: 0xffffff,
+        transparent: true,
+        alphaTest: 0.5,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        metalness: mat.metalness !== undefined ? mat.metalness : 0,
+        roughness: mat.roughness !== undefined ? mat.roughness : 1,
+        normalMap: mat.normalMap || null
+      })
+      newMat.userData = { ...(mat.userData || {}), isDecal: true }
+      return newMat
+    }
+  }
+
+  // 1b. Material with both map and alphaMap: bake alphaMap into map's alpha channel
+  if (mat.alphaMap && mat.map) {
+    const mapImg = mat.map.image
+    const alphaImg = mat.alphaMap.image
+    if (mapImg && alphaImg) {
+      const pot = (v) => { v--; v|=v>>1; v|=v>>2; v|=v>>4; v|=v>>8; v|=v>>16; return v+1 }
+      const potW = pot(mapImg.width || 512)
+      const potH = pot(mapImg.height || 512)
+      const canvas = document.createElement('canvas')
+      canvas.width = potW; canvas.height = potH
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(mapImg, 0, 0, potW, potH)
+      const imgData = ctx.getImageData(0, 0, potW, potH)
+      const data = imgData.data
+
+      const alphaCanvas = document.createElement('canvas')
+      alphaCanvas.width = potW; alphaCanvas.height = potH
+      const alphaCtx = alphaCanvas.getContext('2d')
+      alphaCtx.drawImage(alphaImg, 0, 0, potW, potH)
+      const alphaData = alphaCtx.getImageData(0, 0, potW, potH).data
+
+      for (let i = 0; i < data.length; i += 4) {
+        data[i + 3] = alphaData[i] > 128 ? 255 : 0
+      }
+      ctx.putImageData(imgData, 0, 0)
+
+      const tex = new THREE.CanvasTexture(canvas)
+      tex.colorSpace = THREE.SRGBColorSpace
+      tex.flipY = false
+      tex.wrapS = mat.map.wrapS
+      tex.wrapT = mat.map.wrapT
+
+      const newMat = new THREE.MeshStandardMaterial({
+        name: mat.name,
+        map: tex,
+        color: mat.color || 0xffffff,
+        transparent: true,
+        alphaTest: 0.5,
+        depthWrite: false,
+        side: THREE.DoubleSide,
         metalness: mat.metalness !== undefined ? mat.metalness : 0,
         roughness: mat.roughness !== undefined ? mat.roughness : 1,
         normalMap: mat.normalMap || null
@@ -204,6 +268,14 @@ function processMaterial(mat) {
   if (m.emissiveIntensity === 0) {
     m.emissive.set('#000000')
     m.emissiveMap = null
+  }
+
+  // 5. Decals or materials with alpha cutout → ensure transparent: true for iOS Quick Look
+  const isDecalMat = (m.userData && m.userData.isDecal) || (m.name || '').toLowerCase().includes('decal')
+  if (isDecalMat || m.alphaTest > 0) {
+    m.transparent = true
+    m.depthWrite = false
+    m.userData = { ...(m.userData || {}), isDecal: true }
   }
 
   return m

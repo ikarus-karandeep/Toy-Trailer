@@ -43,6 +43,7 @@ export default function ExteriorPanel({ activeSectionTitle }) {
     stairs, setStairs,
     ladderRacks, setLadderRacks,
     axleAtp, setAxleAtp,
+    radioPackageSpeaker, setRadioPackageSpeaker,
     awning, setAwningRaw,
     viewMode, setViewMode,
     setFocusedCamera
@@ -113,7 +114,6 @@ export default function ExteriorPanel({ activeSectionTitle }) {
                 if (opt.id === 'blackout') {
                   // setSelectedColor('black')
                   setProtectionType('atp')
-                  if (setBlackoutCabinetDoors) setBlackoutCabinetDoors(true)
                 }
               }
             }}
@@ -209,6 +209,20 @@ export default function ExteriorPanel({ activeSectionTitle }) {
               if (val) {
                 setFocusedCamera("Rear Spoiler Wing w_ Angled Lights Camera");
               }
+            }}
+          />
+        </OptionSection>
+      )}
+
+      {show('RADIO PACKAGE SPEAKER') && (
+        <OptionSection title="RADIO PACKAGE SPEAKER">
+          <ToggleSwitch
+            label="INCLUDE RADIO PACKAGE SPEAKER"
+            subtext="Package = 4 interior speakers + 2 exterior speakers package"
+            checked={radioPackageSpeaker}
+            onChange={(val) => {
+              setRadioPackageSpeaker(val);
+              if (val) setFocusedCamera("Radio Package Speaker Camera");
             }}
           />
         </OptionSection>
